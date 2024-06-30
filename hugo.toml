@@ -1,6 +1,6 @@
 
 baseurl = "https://fernandosimoes.com"
-title = "fernandosimoes.com"
+title = "homepage"
 theme = "smol-c"
 languagecode = "en"
 defaultcontentlanguage = "en"

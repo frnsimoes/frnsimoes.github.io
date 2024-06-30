@@ -1,18 +1,19 @@
-+++
-date =  2024-06-26
-# title =  "Working-on"
-+++
+<!-- +++ -->
+<!-- date =  2024-06-26 -->
+<!-- # title =  "Working-on" -->
+<!-- +++ -->
 <!---->
 <!---->
-Hello there! 
 
-I've been working remotely as a software engineer for three years, and I have a wide variety of interests in the computer science field. 
+Hello there! My name is Fernando.
 
-Check out my [Github](https://github.com/frnsimoes) and some of the [projects](/projects) I've done in the past. Also, if you are curious, take a look at what I'm [currently working on](/working-on) and at this [brief overview](/background) of what I studied before I started working as a software developer.
+I'm a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I'm really serious about deepening my foundational knowledge of [CS topics]. Before that, I was interested in philosophy and literature. If you're curious, you can find more about this history in this [brief overview] of things I've studied in the past.
 
-**Contact**
+This website is primarily an index page for things I'm studying and find interesting enough to write about. It's a random collection of thoughts, sometimes. And also an introduction letter. Don't hesitate to send me an [email] if you want to chat. You can also find me on [LinkedIn] and [Twitter].
 
-Don't hesitate to send me an email at fernandosimoes.dev[at]gmail.com if you want to chat.
-
-You can also find me on [LinkedIn](https://linkedin.com/in/frnsimoes) and [Twitter](https://x.com/frnsimoes).
-
+[CS topics]: https://github.com/frnsimoes/computer-science-studies
+[brief overview]: background
+[linkedin]: https://linkedin.com/in/frnsimoes
+[twitter]: https://x.com/frnsimoes
+[email]: mailto:fernandosimoes.dev@gmail.com
+[topics]: /topics

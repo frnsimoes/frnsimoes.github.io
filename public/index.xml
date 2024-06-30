@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>fernandosimoes.com</title>
+    <title>homepage</title>
     <link>https://fernandosimoes.com/</link>
-    <description>Recent content on fernandosimoes.com</description>
+    <description>Recent content on homepage</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <lastBuildDate>Wed, 26 Jun 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title></title>
-      <link>https://fernandosimoes.com/about/</link>
-      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/about/</guid>
-      <description>Hello there!&#xA;I&amp;rsquo;ve been working remotely as a software engineer for three years, and I have a wide variety of interests in the computer science field.&#xA;Check out my Github and some of the projects I&amp;rsquo;ve done in the past. Also, if you are curious, take a look at what I&amp;rsquo;m currently working on and at this brief overview of what I studied before I started working as a software developer.</description>
-    </item>
     <item>
       <title></title>
       <link>https://fernandosimoes.com/working-on/</link>
@@ -122,10 +115,31 @@
     </item>
     <item>
       <title></title>
+      <link>https://fernandosimoes.com/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/about/</guid>
+      <description>Hello there! My name is Fernando.&#xA;I&amp;rsquo;m a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I&amp;rsquo;m really serious about deepening my foundational knowledge of CS topics. Before that, I was interested in philosophy and literature. If you&amp;rsquo;re curious, you can find more about this history in this brief overview of things I&amp;rsquo;ve studied in the past.&#xA;This website is primarily an index page for things I&amp;rsquo;m studying and find interesting enough to write about.</description>
+    </item>
+    <item>
+      <title></title>
       <link>https://fernandosimoes.com/projects/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/projects/</guid>
       <description>List of little fun things I&amp;rsquo;ve done in the past:&#xA;2024-06 Persistent Proxy 2024-03 Fzf-notes 2023-12 Simple HTTP </description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/pt/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/about/</guid>
+      <description>Olá!&#xA;Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em temas fundamentais da computação. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um breve resumo dos meus estudos anteriores.&#xA;Este site é principalmente um índice de coisas que estou estudando e acho interessantes o suficiente para registrar de forma escrita, de maneira mais formal.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/topics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/topics/</guid>
+      <description></description>
     </item>
   </channel>
 </rss>

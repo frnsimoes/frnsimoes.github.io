@@ -1,7 +1,7 @@
 html {overflow-y: scroll}
 :root { 
-  --bgcolor: white; 
-  --fontcolor: #444; 
+  --bgcolor: #fafafa; 
+  --fontcolor: #363636; 
   --linkcolor: #00e; 
   --visitedcolor: #551a8b; 
   --precolor: #fff; 
@@ -25,8 +25,9 @@ html {overflow-y: scroll}
 body {
   max-width:800px;
   margin:40px auto;
-  padding:0 10px;
-  font:14px/1.5 monospace;
+  /* padding:0 10px; */
+  padding: 5em;
+  font:14px/1.5 Helvetica;
   color:var(--fontcolor); 
   background: var(--bgcolor);
 }
@@ -79,3 +80,4 @@ img {
   height: auto; 
   margin: auto;
 }
+
