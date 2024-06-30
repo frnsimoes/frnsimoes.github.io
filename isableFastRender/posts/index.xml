@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on fernandosimoes.com</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on fernandosimoes.com</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 03 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What is an HTTP message body?</title>
+      <link>http://localhost:1313/posts/what-is-an-http-message-body/</link>
+      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/what-is-an-http-message-body/</guid>
+      <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
+    </item>
+    <item>
+      <title>What&#39;s the size of a file on disk?</title>
+      <link>http://localhost:1313/posts/what-is-the-size-of-a-file-on-disk/</link>
+      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/what-is-the-size-of-a-file-on-disk/</guid>
+      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+    </item>
+    <item>
+      <title>I wrote an WSGI application!</title>
+      <link>http://localhost:1313/posts/i-wrote-a-simple-wsgi-app/</link>
+      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/i-wrote-a-simple-wsgi-app/</guid>
+      <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
+    </item>
+    <item>
+      <title>Unix trivia</title>
+      <link>http://localhost:1313/posts/unix-trivia/</link>
+      <pubDate>Sun, 25 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/unix-trivia/</guid>
+      <description>The history of Unix has many curious aspects: a huge company like AT&amp;amp;T, which at the time owned Bell Labs (and therefore Unix), didn&amp;rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.&#xA;Until 1989, AT&amp;amp;T couldn&amp;rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;amp;T&amp;rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.</description>
+    </item>
+    <item>
+      <title>What happens when you call a method in Python</title>
+      <link>http://localhost:1313/posts/what-happens-when-you-call-instance-methodxy/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/what-happens-when-you-call-instance-methodxy/</guid>
+      <description>A not-creative example (Bear with me).&#xA;class C: def sum_numbers(self, x, y): return x + y Who is sum_numbers? There is a difference in answers depending on who I ask.&#xA;If I ask class C if it knows sum_numbers, this is what it tells me:&#xA;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers &amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt; But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&#xA;&amp;gt;&amp;gt;&amp;gt; c = C() &amp;gt;&amp;gt;&amp;gt; c.</description>
+    </item>
+    <item>
+      <title>Invariants</title>
+      <link>http://localhost:1313/posts/invariants/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/invariants/</guid>
+      <description>A rule in Domain-Driven Design (DDD) states that &amp;ldquo;each entity should self-validate.&amp;rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</description>
+    </item>
+    <item>
+      <title>Resources list</title>
+      <link>http://localhost:1313/posts/list-post/</link>
+      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/list-post/</guid>
+      <description>The List Post: Resources How and what resources I used to get in love with software development Here is a list of things that I did to help myself learn how to program. I tried to create a chronological narrative, so, besides the list of resources, you can also follow the progress of interests and curiosities that I had.&#xA;From previous experiences, when I started I knew three things:&#xA;I knew that I had to get myself totally immersed in this new reality (this means: getting to know the people, the literature, the vocabulary, the mental map of everything).</description>
+    </item>
+  </channel>
+</rss>

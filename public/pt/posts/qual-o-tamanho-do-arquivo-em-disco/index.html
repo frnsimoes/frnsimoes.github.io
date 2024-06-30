@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Qual é o tamanho de um arquivo em disco?</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	========================<br>
+	== <a href="https://fernandosimoes.com/">fernandosimoes.com</a> ==<br>
+	========================
+
+	<div style="float: right;"></div><br>
+
+	<p>
+	<nav>
+		
+		
+		<a href="/"><b>home</b></a>.
+		
+		<a href="/about/"><b>about</b></a>.
+		
+
+		
+		
+		
+		
+	</nav>
+
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Qual é o tamanho de um arquivo em disco?</h1>
+			<b><time>2024-04-01 </time></b>
+		       
+
+			<div>
+				<p>Tenho brincado um pouco com o sistema operacional e arquivos.</p>
+<p>Encontrei o comando stat do POSIX. Na manpage:</p>
+<blockquote>
+<p>the stat utility displays information about the file pointed to by file.</p>
+</blockquote>
+<p>Estou mais interessado em duas das informações do <code>stat</code>: Block e Block IO:</p>
+<p>Experimente:</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 0               Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:43:42.909805004 +0000
+...
+</code></pre><p><code>tmp</code> é um arquivo vazio. <code>Blocks</code> é 8 e IO Block é <code>4096</code>.</p>
+<pre tabindex="0"><code>cat /dev/urandom | head -c 4096 &gt; tmp
+
+stat tmp
+
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4096            Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>O que aconteceria se um ou mais byte fosse adicionado no arquivo tmp?</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# echo -n &#39;.&#39; &gt;&gt; tmp
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4097            Blocks: 16         IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid&lt;LeftMouse&gt;: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>Agora temos <code>Blocks: 16</code>. O OS alocou 8 para um arquivo com 4097 bytes.</p>
+<p>Por que 8 blocks?</p>
+<p>8 blocks é uma unidade de medidaa. Blocks são contados em unidades de 512 bytes.</p>
+<p><strong>Qual é o tamanho do arquivo em disco?</strong></p>
+<p>Se o arquivo tem Size: 2, digamos, e o OS alocou 8 blocks (<code>8*512</code>) para ele, o tamanho do arquivo em disco é de 4096 bytes.</p>
+<p>Se o arquivo tem Size: 4097, e o OS alocou 16 blocks (<code>16*512</code>), o tamanho do arquivo em disco é de 8192 bytes.</p>
+<pre tabindex="0"><code>#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define ONE_MEG 1024 * 1024
+
+
+int main() {
+	int f = open(&#34;/tmp/foo&#34;, O_WRONLY | O_TRUNC);
+
+	blkcnt_t prior_blocks = -1;
+	struct stat st;
+
+	for (int i = 0; i &lt; ONE_MEG; i++) {
+		write(f, &#34;.&#34;, 1);
+		fstat(f, &amp;st);
+
+		if (st.st_blocks != prior_blocks) {
+			printf(&#34;Size: %lld, blocks: %lld, on disk: %lld\n&#34;, st.st_size, st.st_blocks, st.st_blocks * 512);
+			prior_blocks = st.st_blocks;
+		}
+	}
+
+	close(f);
+	return 0;
+}
+</code></pre>
+			</div>
+		</article>
+	</main>
+
+
+	<footer>
+	<p>&copy; 2024 <a href="https://fernandosimoes.com/"><b>fernandosimoes.com</b></a>.
+	<a href="https://github.com/frnsimoes"><b>github</b></a>.
+	<a href="https://linkedin.com/in/frnsimoes"><b>linkedin</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

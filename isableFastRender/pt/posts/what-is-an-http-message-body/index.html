@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>O que é um body na mensagem HTTP?</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	
+ 
+	<header>
+	========================<br>
+	== <a href="http://localhost:1313/">fernandosimoes.com</a> ==<br>
+	========================
+	<div style="float: right;"></div><br>
+	<p>
+	<nav>
+			
+			
+			<a href="/"><b>home</b></a>.
+			
+			<a href="/about/"><b>about</b></a>.
+			
+			<a href="/pt/"><b>portuguese</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			
+			
+		       
+									
+			<div>
+				<p>Quando falamos sobre um corpo HTTP, estamos nos referindo a um &ldquo;fluxo de dados&rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.</p>
+<p>Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Vamos simplificar com um exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).</p>
+<p>Suponha que o corpo da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</p>
+<p>Mas o que significa &ldquo;sequência de bytes transmitidos na mensagem&rdquo;? O que é &ldquo;a mensagem&rdquo;?</p>
+<p>No contexto das especificações HTTP, uma requisição tem três elementos fundamentais:</p>
+<ul>
+<li>Request line</li>
+<li>Header line</li>
+<li>Body</li>
+</ul>
+<p>A request line contém o método, o alvo da requisição e a versão do HTTP. Exemplo: GET / HTTP/1.1.</p>
+<p>Os campos de cabeçalho são pares de chave-valor separados por dois pontos e espaços opcionais.</p>
+<p>O corpo da mensagem é descrito pela RFC 9110 como &ldquo;um fluxo de octetos enviados após a seção de cabeçalho&rdquo;.</p>
+<p>Como sabemos que a request line terminou? Ou que os campos de cabeçalho terminaram? Eles são separados por algo tão simples quanto um CRLF (carriage return line feed: \r\n).</p>
+<p>Sabemos que a request line acabou porque há um \r\n, e sabemos que os campos de cabeçalho acabaram porque há um CRLF duplo: \r\n\r\n.</p>
+<p>Por exemplo: GET / HTTP/1.1\r\nContent-length:5\r\nFoo: bar\r\n\r\n</p>
+<p>Cada novo header line termina com um CRLF, mas o header em si também termina com um CRLF, então sabemos com certeza que quando vemos um \r\n\r\n na mensagem HTTP, a próxima coisa será o corpo.</p>
+<p>O corpo HTTP é especialmente interessante porque é consumido pelo socket receptor. Assim, se o servidor leu e consumiu o corpo uma vez, ele não pode ler e consumir novamente. Isso é a origem, por exemplo, do erro do Django &ldquo;Você não pode acessar o corpo após ler o fluxo de dados da requisição.&rdquo;</p>
+<p>Em Go, normalmente lemos o corpo com a chamada io.ReadAll. O método ReadAll lê o corpo (bytes) até o EOF (fim de arquivo) e retorna os dados lidos.</p>
+<p>Então, vamos dar uma olhada mais de perto no que significa ler um corpo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        client_sock, client_addr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>accept()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># buffer of 4096 bytes as an example</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> client_sock<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>)
+</span></span><span style="display:flex;"><span>        upstream_sock <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_STREAM)
+</span></span><span style="display:flex;"><span>        upstream_sock<span style="color:#f92672">.</span>connect(UPSTREAM_ADDR)
+</span></span><span style="display:flex;"><span>        upstream_sock<span style="color:#f92672">.</span>send(data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>            res <span style="color:#f92672">=</span> upstream_sock<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> res:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            client_sock<span style="color:#f92672">.</span>send(res)
+</span></span></code></pre></div><p>Neste exemplo, o socket upstream está recebendo um body do proxy socket, processando o body em loop até que ele termine, e então enviando de volta o body para o client socket. Veja <a href="https://github.com/frnsimoes/computer-science-studies/tree/main/network-programming/http/proxy-basic">aqui</a> uma implementação mais completa.</p>
+
+			</div>
+		</article>
+	</main>
+
+
+	
+</body>
+</html>

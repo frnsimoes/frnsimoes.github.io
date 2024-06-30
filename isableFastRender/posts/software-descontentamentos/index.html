@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Software e seus descontentamentos</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	
+ 
+	<header>
+	====================<br>
+	== <a href="http://localhost:1313/">fernandosimoes</a> ==<br>
+	====================
+	<div style="float: right;"></div><br>
+	<p>
+	<nav>
+			
+			
+			<a href="/"><b>home</b></a>.
+			
+			<a href="/about/"><b>about</b></a>.
+			
+			<a href="/pt/"><b>portuguese</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			
+			
+		       
+									
+			<div>
+				<p>(Tradução livre da segunda parte de uma série de 3 artigos de autoria de Kellan Elliot-McCrea. Todos os textos podem ser encontrados <a href="https://laughingmeme.org/">aqui</a>).</p>
+<p>Esta é a parte 2 da minha série &ldquo;Software e seus descontentamentos&rdquo;. Essa série surgiu quando eu resolvi perguntar a uma porção de pessoas sobre o estado atual da engenharia de software: a sensação de que a engenharia de software não anda bem, as pessoas estão desiludidas e descontentes. Na <a href="https://laughingmeme.org/2023/01/16/software-and-its-discontents-part-1.html">parte 1</a> desta série, falei um pouco sobre as tendências macro-econômicas, nomeadamente o fim da década do dinheiro fácil para os investimentos em tecnologia (que é a razão desta conversa e é o que deu forma às mudanças na indústria de software na última década.).</p>
+<p>Encontrei 4 tendências interdependentes que aumentaram substancialmente a dificuldade de construir software:</p>
+<ul>
+<li>Uma explosão na complexidade do desenvolvimento de software</li>
+<li>Desenvolvedores se tornando significativamente mais caros de se contratar</li>
+<li>Sucesso se tornando cada vez mais difícil de se alcançar, tendo as startups &ldquo;perdido aquela magia&rdquo;</li>
+<li>Conflitos a respeito das mudanças nos ambientes de trabalho.</li>
+</ul>
+<p>Conversei principalmente com líderes de engenharia, mas também com CEOs, VCs, ICs e outros profissionais. E à pergunta &ldquo;alguma coisa mudou substancialmente na engenharia de software?&rdquo; a resposta mais frequente foi a de que, contra-intuitivamente, desenvolver ficou mais difícil.</p>
+<p>Essa resposta é contra-intuitivo por inúmeras razões: as ferramentas são melhores hoje em dia; a quantidade de trabalho que pode ser terceirizado é quase miraculosa; computadores são rápidos e baratos; a quantidade de bons profissionais simplesmente explodiu, e os desenvolvedores de hoje parecem ser mais bem educados e inteligentes do que nunca. Embora tudo isso, desenvolver software ficou mais difícil em um sentido muito próprio e importante: a coisa ficou mais complexa.</p>
+<p>Em software, &ldquo;complexidade&rdquo; é um termo técnico: refere-se ao número de partes distintas de um sistema e às conexões entre elas. Sistemas complexos são caracterizados pela não-linearidade, aleatoriedade, emergência, e surpresa. Complexidade é o motivo de a comunicação e a coordenação de equipe se sobressaírem sobre todos os outros custos nos times de desenvolvimento. E a complexidade explodiu. (Obrigado, <a href="https://www.kitchensoap.com/">John Allspaw</a> pela introdução do termo &ldquo;complexidade&rdquo; em oposição àquilo que é meramente complicado).</p>
+<p>A complexidade não apenas explodiu, ela explodiu de várias maneiras distintas que têm causas-raiz diferentes que interagem entre si. Divido esse aumento de complexidade nas seguintes categorias:</p>
+<ul>
+<li>A complexidade causada pelo aumento dos padrões</li>
+<li>A complexidade de se ter múltiplas escolhas</li>
+<li>Complexidade e decisão técnica na era da abundância</li>
+<li>A complexidade de times inchados e code bases envelhecidos.</li>
+</ul>
+<p>Algumas dessas complexidades são diretamente atribuíveis à década do dinheiro fácil; outras são o resultado da maturação da nossa indústria de software. Algumas dessas complexidades podem ser resolvidas com melhores práticas, melhores lideranças, e um entendimento melhor das origens da complexidade. Outras, no entanto, me parecem que não podem ser combatidas, e precisaremos recalibrar nossas expectativas a respeito do quão difícil é desenvolver software.</p>
+<p><strong>A complexidade causada pelo aumento dos padrões</strong></p>
+<p>Temos mais expectativas do que nunca com relação aos softwares que construimos. Isso advém, em parte, das preferências de seus consumidores; em parte de regulação; em parte de estética profissional.</p>
+<p>Requisitos de regulação, como, por exemplo, privacidade de dados e controle financeiro, são significativamente mais complexos do que eram. GDPR, AADC, DMA, DSA, HADOPI, FOSTA-SESTA, BITV, etc. Mas também FedRAMP, HIPAA, SOX, sem mencionar SOC2, e HITRUST, se tornam críticos, hoje, muito mais cedo na vida útil de uma empresa. As variações geográficas e regionais podem ser particularmente desafiadoras e podem minar a produtividade de que as empresas de antigamente tiraram grande proveito. A Amazon, por exemplo, em seus primeiros dias, não se preocupou em cobrar impostos sobre vendas. Esse sem dúvidas foi um grande benefício para seus clientes, mas também uma enorme redução de complexidade em comparação com um negócio físico multigeográfico. Nos primeiros tempos da Web, estávamos jogando o jogo da regulação no &ldquo;easy mode&rdquo;, e já não é mais assim. Sobretudo as startups, procurando por novos espaços para alocar seu capital e tecnologia, acabaram sendo presas de domínios altamente regulados, como a saúde, as finanças e a engenharia civil.</p>
+<p>A Web, no seu começo, era o triunfo da simplicidade. A rápida ascensão da internet foi impulsionada em grande parte pela forma como ela reduziu a complexidade na entrega de softwares para usuários. A Web era uma única plataforma unificada. Era aberta e não-proprietária. Era simples por design, construída sob o fundamento de um protocolo &ldquo;stateless&rdquo; e um paradigma de interface simples e declarativo. Softwares estavam disponíveis na internet. Nada precisava ser embrulhado e despachado. Essas simplificações radicais permitiram uma competição assimétrica com &ldquo;players&rdquo; já bem estabelecidos em seus ramos que desenvolviam softwares para desktop e os distribuíam por mídias físicas. Nas décadas seguintes ao surgimento da internet, o que fizemos foi comprometer todas as características de simplicidade da web: hoje, mesmo que estejamos distribuindo software pela internet, precisamos nos preocupar com diferentes plataformas: desktop web, mobile web, e também Apple e Android, os dois ecossistemas dominantes (e quase incompatíveis) protegidos por &ldquo;walled gardens&rdquo; (jardins murados). Enquanto isso, o gerenciamento de estado (&ldquo;state management&rdquo;) ficou tão complexo que ele é o principal motivo de adotarmos frameworks pesados como React. Essa complexidade levou à necessidade de uma disciplina de engenharia de front-end especializada, alguém que possa manipular um sistema Typescript cheio de componentes modulares preenchidos por React Query conversando com Apollo GraphQL apoiado por um proxy gRPC Envoy para uma SOA stack. De maneira similar, machine learning, mobile, infra, backend, todos esses campos se especializaram nas suas próprias complexidades. Com essas múltiplas especializações, agora temos “recursos” mais distintos, cada um com suas próprias filas de trabalho em andamento, preconceitos, ciclos de contratação, integração, cultura, dias de doença e necessidades de coordenação. Explosões de complexidade.</p>
+<p>Esse aumento de exigência nos padrões tem benefícios assim como tem custos. Complexidade de regulação advém da preocupação do regulador pelos consumidores. O problema é que agora o sucesso exige mais. Os clientes que foram ignorados nos primeiros dias da tecnologia não podem mais ser ignorados por equipes que pretendem ter sucesso. Acessibilidade e internacionalização tornaram-se ambos críticos para o sucesso. Nos primeiros tempos da tecnologia, quando a banda larga e o mobile estavam sendo adotados cada vez com mais rapidez, havia a certeza de que a vasta maioria dos consumidores dos produtos digitais seriam da mesma demografia daqueles que adotaram o produto por primeiro: jovens e ricos, muitos deles vivendo em cidades dos Estados Unidos. Nos dias de hoje, contudo, um produto que nasça visando ter por clientes apenas esses jovens ricos e americanos não tem qualquer chance de sucesso. A dificuldade está em que tanto a acessibilidade quanto a internacionalização exigem projetos adaptativos e tradução, o que, por sua vez, exige maior coordenação no desenvolvimento de software. Isso tudo é uma exigência nova. E pelo menos parte desse trabalho é improvável que sua equipe de software seja capaz de avaliar, complicando seus critérios de aceitação. Processos complicados são uma fonte clássica de complexidade.</p>
+<p><strong>A complexidade de se ter múltiplas escolhas</strong></p>
+<p>Em muitos sentidos nós estamos, hoje, vivendo a era de ouro do desenvolvimento de software: temos ferramentas em abundância, e as ferramentas hoje em dia são baratas. Eu sou velho o suficiente para me lembrar de quando as IDEs custavam centenas, às vezes milhares de dólares, e havia um ecossistema inteiro de pessoas vendendo bibliotecas e widgets (anunciados na contra-capa da revista Dr. Dobbs). Hoje, temos mais: mais ferramentas, mais linguagens de programação, mais frameworks, mais bancos de dados, mais serviços. A maior parte dessas ferramentas representa um avanço real em termos de aumento de capacidade e de possibilidade de terceirizar as partes não fundamentais do seu negócio. Contudo, a multiplicidade aumenta a complexidade.</p>
+<p>Antigamente, tínhamos stacks própria configuradas por nós mesmos. Algo que poderíamos rodar em casa. E essa confusão (causada pela particularidade dessas configurações) era tão grande quanto a confusão que temos hoje com a combinação quase infinita de stacks e configurações que podemos ter. Qualquer desenvolvedor numa empresa nova estará diante de uma stack que é no mínimo tão particular quanto qualquer uma das stacks confusas que tínhamos antigamente. Porém tínhamos a facilidade das stacks prontas: Rails era Rails, LAMP era LAMP e Vercel é melhor do que qualquer coisa que construímos para nós mesmos naquela época: ele vem com um manual completo e suas próprias peculiaridades. Da mesma forma o Google PubSub versus alguma solução meio ruim que construímos em cima do MySQL; Launch Darkly pode fazer muito mais do que qualquer coisa que poderíamos ter escrito num arquivo de configuração mal feito em YAML. Aqueles sistemas feitos em casa não tinham features ou documentação, e nossas stacks atuais, nas suas combinações, são tão personalizadas que acabam sendo tão confusas quanto o que fazíamos antigamente, em casa. Tendo em vista a multiplicidade de escolhas que temos e a configurabilidade de cada uma delas, são muito pequenas as chances de você ver a mesma combinação de tecnologias, ferramentas e serviços configurados da mesma maneira. Nós estamos muito distantes da era em que todo mundo configurava seu app LAMP do mesmo modo, e distantes da comunidade que cresceu ao redor dessa prática.</p>
+<p>Isso significa que temos, hoje, menos experts em certas tecnologias. A stack (e seu arranjo) acaba sendo uma novidade para o desenvolvedor em um novo time. Na Etsy, quando precisamos escalar PHP nós contratamos o Rasmus, um expert no assunto. Pouquíssimos times hoje em dia podem achar esse tipo de expert, e poucos dos experts numa linguagem terão tido experiência em escalar aquela stack em específico.</p>
+<p><strong>Complexidade e decisão técnica na era da abundância</strong></p>
+<p>Nas conversas que tenho tido com líderes de engenharia, uma grande fonte de ansiedade tem sido o impacto que a explosão de escolhas técnicas teve na qualidade da tomada de decisões técnicas.</p>
+<p>Aumentar a qualidade da tomada de decisões técnicas é sem dúvidas o trabalho mais importante do líder de engenharia, depois de formar a sua própria equipe. Oito anos depois que saí da Etsy, ainda recebo novas mensagens de pessoas me dizendo que, não importa o quão frustradas estivessem comigo na época, em trabalhos subsequentes elas passaram a apreciar e a sentir falta desesperadamente de quão bem definido era o “Etsy Way ” de construir software.</p>
+<p>Hoje em dia, qualquer equipe que existe por mais de cinco minutos já escolheu a sua stack de tecnologias e já mudou de ideia várias vezes. Com tantas opções excelentes por aí, e muitas delas apoiadas por equipes de marketing bem financiadas (veja: dinheiro barato e marketing), nunca foi tão difícil manter uma stack simples e consistente. Muitas equipes desistiram totalmente e estão agora se voltando para a capacitação dos desenvolvedores e infraestrutura construída sob múltiplas linguagens de programação. Nós coletivamente assumimos a responsabilidade de ter que lidar com a complexidade de se ter uma stack variada, de ter que lidar com as particularidades de cada uma delas, com o treinamento necessário para que desenvolvedores possam dominá-las, e com o custo do aumento dos padrões. Ao mesmo tempo, estamos dividindo nossos recursos para gerenciar a complexidade causada pela necessidade de treinamento, particularidades de cada uma das linguagens, etc. A tudo isso se toma a interação que essas novas tecnologias terão com as nossas tecnologias mais antigas, já existentes em nossos sistemas. Na infra, a verdadeira história de terror em nossos dias é saber como a biblioteca GRPC do PHP interage com o Envoy, como a biblioteca de JSON da linguagem Scala interage com os problemas de cache do Varnish, como as implementações esquisitas que o MySQL fez do utf8mb4 é incompatível com o armazenamento de dados em qualquer outro lugar que não seja o MySQL utf8mb4. Há uma razão pela qual o débito técnico se tornou o pesadelo favorito das equipes em todos os lugares.</p>
+<p>Sem padronização em sua empresa, sem um pequeno número de ferramentas conhecidas nas quais você desenvolve expertise em equipe, a esperança de que você possa crescer sua equipe logaritmicamente, mas ver resultados exponenciais, é uma fantasia. Essa disciplina é mais difícil do que nunca de impor.</p>
+<p><strong>A complexidade de times inchados e codebases envelhecidos</strong></p>
+<p>Há muito a ser dito sobre o tópico de grandes equipes e codebases antigos, e muito desse assunto já foi discutido por outras pessoas. Quero me concentrar apenas nas mudanças importantes que vimos relacionadas às outras tendências que estamos discutindo neste post.</p>
+<p>Dinheiro barato e investimentos &ldquo;founder friendly&rdquo; ocasionaram, na última década, maior controle por parte dos fundadores e mais dinheiro para gastar. Tendo controle, o fundador insiste mais no seu negócio, e, por insistir mais no negócio, a empresa dura mais tempo. A era das startups de tecnologia já tem duas décadas. A era do dinheiro barato já tem uma década. Por causa disso, estamos vendo codebases significativamente antigos. Codebases antigos são compostos de uma explosão de escolhas técnicas, e, muitas vezes, de tomadas de decisões técnicas ruins. Quanto mais longa é a história de um codebase, mais lugar houve para que alguém tomasse decisões a seu respeito. São mais opções. Mais opções, e uma falta de clareza sobre quais delas são as mais importantes do sistema, ocasionam um aumento de complexidade no onboarding de novos desenvolvedores ao codebase.</p>
+<p>Times estão ficando inchados, como discutimos na parte 1. Conforme crescem, a complexidade aumenta por várias razões: 1. dividimos a responsabilidade do desenvolvimento de software, e portanto há poucas pessoas que conhecem todo o sistema e tem, sobre ele, uma visão abrangente e coerente. A coerência é uma das principais características que procuramos em arquiteturas simples, e a sua ausência gera complexidade. Além disso, grandes equipes gastam mais tempo lidando com a coordenação (entre pessoas do time) e são mais propensas a buscar arquitetura e abstrações que, esperam, reduzam os custos de coordenação, ou seja, &ldquo;se eu arquitetar isso bem o suficiente, não preciso falar com meus colegas.&rdquo;</p>
+<p>&ldquo;Micro-services&rdquo;, &ldquo;event buses&rdquo; e bancos de dados NoSQL são exemplos de tentativas de arquitetar nosso modo de coordenação. Uma década depois, aprendemos que esses padrões aumentam o custo de entendimento de um sistema, durante a integração, durante o design e durante incidentes e interrupções. Por fim, à medida que as equipes cresceram e o escopo de responsabilidade dos indivíduos se estreitou, o design voltado para o currículo e a promoção encontrou um terreno cada vez mais fértil. Como você se destaca como a 500ª pessoa mantendo um sistema que você não construiu? Construa algo novo! E toda a complexidade inerente a ela. O Google, assim como muitos dos melhores e mais problemáticos padrões desta era, é bem conhecido como o epicentro desse fenômeno.</p>
+<p><strong>A complexidade como aspiração</strong></p>
+<p>Nós sempre estivemos apaixonados por novas tecnologias e coisinhas brilhantes. Por anos isso foi essa a nossa definição (você entrou na área de desenvolvimento de software por outro motivo?) Curiosamente, no entanto, mesmo quando o nosso trabalho se tornou mais prosaico, o aumento da complexidade permaneceu e até aumentou.</p>
+<p>Primeiro, a complexidade está no cerne das mitologias da nossa indústria. Novas pessoas que ingressam no setor aprendem nossos mitos sobre Google, Facebook, Amazon e a sensação de que as abordagens dessas empresas são como o software “deveria” ser. E cada vez menos pessoas tem experiência abrangente o suficiente para aprender, na prática, algo que contrarie esses mitos.</p>
+<p>Em segundo lugar, durante a era da abundância, a cloud e o SaaS explodiram em popularidade. Esses serviços contam com significativos orçamentos de marketing cujo objetivo é convencê-lo de que você precisa da complexidade. Por que implantar um banco de dados quando você pode implantar um datacluster não relacional? Por que implantar um servidor, quando você pode implantar um cluster Kubernetes? Por que criar páginas da Web simples quando você pode usar o React? O HackerNews, em particular, tem um papel interessante nesse ciclo, sendo tanto uma comunidade impulsionada pela mitologia da indústria quanto o braço de marketing de uma importante fonte de financiamento para novas ofertas de SaaS voltadas para desenvolvedores. Veja só: agora a comunidade está reforçando a mensagem de que um bom software é um software complexo e que as escolhas técnicas do ano passado estão desatualizadas e provavelmente é por isso que sua produtividade está diminuindo.</p>
+<p>Além disso, era mais fácil levantar capital se o seu produto parecesse complicado e recheado de &ldquo;high tech&rdquo;. Sério, havia um monte de gente capaz de arrecadar dinheiro apenas por parecerem complicadas e inteligentes, e, em seguida, gastar esse dinheiro com pessoas que as faziam igualmente complicadas e inteligentes. Um ciclo de validação emocional.</p>
+<p>Desenvolvemos uma estética da complexidade: a sensação de que bons sistemas são sistemas complexos, a sensação de que você deve preferir um SPA a uma página web, um sistema distribuído a um sistema simples, um serviço a um arquivo de configuração. Compramos a ideia de que se não estamos usando a última tecnologia então estamos jogando o nosso tempo fora, e potencialmente prejudicando a nossa carreira.</p>
+
+			</div>
+		</article>
+	</main>
+
+
+	
+</body>
+</html>

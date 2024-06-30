@@ -1,0 +1,84 @@
+
+baseurl = "https://fernandosimoes.com"
+title = "fernandosimoes.com"
+theme = "smol-c"
+languagecode = "en"
+defaultcontentlanguage = "en"
+
+pygmentsCodeFences = true
+pygmentsUseClasses = false
+
+# language
+defaultContentLanguage = 'en'
+defaultContentLanguageInSubdir = false
+[languages]
+  [languages.pt]
+    contentDir = 'content/pt'
+    disabled = false
+    languageCode = 'pt-BR'
+    languageDirection = 'ltr'
+    languageName = 'Portuguese'
+    # title = 'Projekt Dokumentation'
+    weight = 1
+  [languages.en]
+    contentDir = 'content'
+    disabled = false
+    languageCode = 'en-US'
+    languageDirection = 'ltr'
+    languageName = 'English'
+    # title = 'Project Documentation'
+    weight = 2
+
+
+[menu]
+  [[menu.main]]
+        identifier = "about"
+        name = "about"
+        url = "about/"
+        weight = 2
+  [[menu.main]]
+        identifier = "home"
+        name = "home"
+        url = "/"
+        weight = 1
+  # [[menu.main]]
+  #       identifier = "working-on"
+  #       name = "working-on"
+  #       url = "working-on/"
+  #       weight = 1
+  # [[menu.main]]
+  #       identifier = "posts"
+  #       name = "posts"
+  #       url = "/posts/"
+  #       weight = 2
+  # [[menu.main]]
+  #       identifier = "pt-br"
+  #       name = "portuguese"
+  #       url = "/pt/"
+  #       weight = 3
+
+# Footer
+  [[menu.footer]]
+        name = "github"
+        url = "https://github.com/frnsimoes"
+        weight = 1 
+  [[menu.footer]]
+        name = "linkedin"
+        url = "https://linkedin.com/in/frnsimoes"
+        weight = 1 
+
+[markup]
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    hl_inline = false
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    noHl = false
+    style = 'monokai'
+    tabWidth = 4

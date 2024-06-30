@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Invariants</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	========================<br>
+	== <a href="https://fernandosimoes.com/">fernandosimoes.com</a> ==<br>
+	========================
+
+	<div style="float: right;"></div><br>
+
+	<p>
+	<nav>
+		
+		
+		<a href="/"><b>home</b></a>.
+		
+		<a href="/about/"><b>about</b></a>.
+		
+
+		
+		
+		
+		
+	</nav>
+
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Invariants</h1>
+			<b><time>2022-06-10 </time></b>
+		       
+
+			<div>
+				<p>A rule in Domain-Driven Design (DDD) states that &ldquo;each entity should self-validate.&rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</p>
+<p>However, outside the realm of object-oriented programming, it&rsquo;s easy to lose the sense of an object&rsquo;s &ldquo;unity.&rdquo;</p>
+<p>&ldquo;Paying a subscription&rdquo; is a set of business rules represented by small functions that call each other, and even for the programmer writing them, there seems to be no unity between them. At least not unity in the sense of an &ldquo;entity.&rdquo; The unity is in the domain, and often the domain is spread across various different places.</p>
+<p>Programmers always face a choice. Consider the example:</p>
+<pre tabindex="0"><code># Option 1
+
+## Module A
+def create_checkout_subscription(...) -&gt; None:
+    create_subscription(...)
+
+## Module B
+if payment.status == &#39;PAID&#39;:
+    create_checkout_subscription
+
+# Option 2
+
+# Module A
+def create_checkout_subscription(...) -&gt; None:
+    if payment.status == &#39;PAID&#39;:
+        create_subscription(...)
+ 
+# Module B
+do_something(...)
+create_checkout_subscription(...)
+do_one_more_thing(...)
+</code></pre><p>Faced with these two options, it&rsquo;s easy to intuitively conclude that the second one is better. With it, we don&rsquo;t need to validate the create_checkout_subscription function everywhere it&rsquo;s called. But intuition is not enough.</p>
+<p>What if the scenario were like this?:</p>
+<pre tabindex="0"><code># Module A
+def create_checkout_subscription(payment: Payment) -&gt; None:
+    if payment.status == &#39;PAID&#39;:
+        create_subscription(...)
+        
+# Module B
+if payment.status == &#39;PAID&#39;:
+    send_email.enqueue(...)
+    # create_checkout_subscription()
+</code></pre><p>In this case, external validation would be enforced by another function: send_email, whose internal constraints do not mandate that an email will only be sent if the status is &lsquo;PAID&rsquo; in all cases (the function is called in various other parts of the system without incurring this contextual restriction).</p>
+<p>If the programmer first encounters this scenario where the business restriction was established externally (in this case, in Module B), they may end up convincing themselves that when creating the create_checkout_subscription function, they don&rsquo;t need to create any internal restrictions.</p>
+<p>Researching this issue that was bothering me—after all, how terrible is it to program based on feeling 100% of the time without being able to name things?—I bothered friends and looked into the subject.</p>
+<p>I found some answers:</p>
+<p><a href="https://groups.google.com/g/clean-code-discussion/c/latn4x6Zo7w/m/bFwtDI1XSA8J?pli=1">This response from Uncle Bob</a>. The topic is clean architecture, and the context is entities, but the idea is already getting clearer:
+Should the age restriction be enforced by the employee entity, or by a sub-interactor called by the add-employee-interactor and the change-employee-interactor? This depends entirely on the volatility of the policy.
+(The notion of &ldquo;volatility&rdquo;: if things can change, and we know they can, an external restriction to the entity is a better option. Otherwise, the internally established restriction is better.)</p>
+<p><a href="https://stackoverflow.com/questions/30190302/what-is-the-difference-between-invariants-and-validation-rules">This answer on Stack Overflow</a>. The context is a question about invariant rules and validations:
+Absolutely, validation is the process of approving a given object state, while invariant enforcement happens before that state has even been reached.
+(Perfect! It becomes easy to understand that, within a specific context, an invariant is an external limitation of the entity.)</p>
+
+			</div>
+		</article>
+	</main>
+
+
+	<footer>
+	<p>&copy; 2024 <a href="https://fernandosimoes.com/"><b>fernandosimoes.com</b></a>.
+	<a href="https://github.com/frnsimoes"><b>github</b></a>.
+	<a href="https://linkedin.com/in/frnsimoes"><b>linkedin</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>
