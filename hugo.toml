@@ -35,27 +35,17 @@ defaultContentLanguageInSubdir = false
         identifier = "about"
         name = "about"
         url = "about/"
-        weight = 2
-  [[menu.main]]
-        identifier = "home"
-        name = "home"
-        url = "/"
         weight = 1
-  # [[menu.main]]
-  #       identifier = "working-on"
-  #       name = "working-on"
-  #       url = "working-on/"
-  #       weight = 1
-  # [[menu.main]]
-  #       identifier = "posts"
-  #       name = "posts"
-  #       url = "/posts/"
-  #       weight = 2
+  [[menu.main]]
+        identifier = "posts"
+        name = "text"
+        url = "/"
+        weight = 2
   # [[menu.main]]
   #       identifier = "pt-br"
   #       name = "portuguese"
   #       url = "/pt/"
-  #       weight = 3
+  #       weight = 4
 
 # Footer
   [[menu.footer]]

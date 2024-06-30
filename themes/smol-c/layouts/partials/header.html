@@ -1,8 +1,17 @@
 <header>
 	<nav>
-		{{ strings.Repeat ( .Site.Title | len | add 5 ) "=" }}<br>
-		== <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a> ==<br>
-		{{ strings.Repeat ( .Site.Title | len | add 5 ) "=" }}
-		<!-- <nav style="float: right;"><a href="/pt">Portuguese</a></nav> -->
+	{{ strings.Repeat ( .Site.Title | len | add 13 ) "=" }}<br>
+	== fernandosimoes.com ==<br>
+	{{ strings.Repeat ( .Site.Title | len | add 13 ) "=" }}
+	<div style="float: right;">{{ .Site.Params.subtitle }}</div><br>
+	<p>
+	<nav>
+			{{ with .Site.Menus.main }}
+			{{ range . }}
+			<a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>.
+			{{ end }}
+	</nav>
+	</p>
+	{{ end }}
 	</nav>
 </header>

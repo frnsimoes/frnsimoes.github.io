@@ -10,6 +10,13 @@
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
+      <link>https://fernandosimoes.com/about/</link>
+      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/about/</guid>
+      <description>Hello there! My name is Fernando.&#xA;I&amp;rsquo;m a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I&amp;rsquo;m really serious about deepening my foundational knowledge of CS topics. Before that, I was interested in philosophy and literature. If you&amp;rsquo;re curious, you can find more about this history in this brief overview of things I&amp;rsquo;ve studied in the past.&#xA;This website is primarily an index page for things I&amp;rsquo;m studying and find interesting enough to write about.</description>
+    </item>
+    <item>
+      <title></title>
       <link>https://fernandosimoes.com/background/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/background/</guid>
@@ -112,13 +119,6 @@
       <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/list-post/</guid>
       <description>The List Post: Resources How and what resources I used to get in love with software development Here is a list of things that I did to help myself learn how to program. I tried to create a chronological narrative, so, besides the list of resources, you can also follow the progress of interests and curiosities that I had.&#xA;From previous experiences, when I started I knew three things:&#xA;I knew that I had to get myself totally immersed in this new reality (this means: getting to know the people, the literature, the vocabulary, the mental map of everything).</description>
-    </item>
-    <item>
-      <title></title>
-      <link>https://fernandosimoes.com/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/about/</guid>
-      <description>Hello there! My name is Fernando.&#xA;I&amp;rsquo;m a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I&amp;rsquo;m really serious about deepening my foundational knowledge of CS topics. Before that, I was interested in philosophy and literature. If you&amp;rsquo;re curious, you can find more about this history in this brief overview of things I&amp;rsquo;ve studied in the past.&#xA;This website is primarily an index page for things I&amp;rsquo;m studying and find interesting enough to write about.</description>
     </item>
     <item>
       <title></title>
