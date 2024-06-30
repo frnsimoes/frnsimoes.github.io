@@ -37,7 +37,7 @@
       <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
     </item>
     <item>
-      <title>How I started studying CS</title>
+      <title>I finally started studying CS!</title>
       <link>https://fernandosimoes.com/posts/how-i-started-studying-cs/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/how-i-started-studying-cs/</guid>

@@ -15,7 +15,7 @@ min_version = "0.20"
   name = "morph"
   homepage = "morph.sh"
 
-[original]
+[based-original]
   author = "Vimux"
   homepage = "https://github.com/Vimux"
   repo = "https://github.com/Vimux/blank"

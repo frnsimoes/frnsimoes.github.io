@@ -1,5 +1,5 @@
 ---
-Title: How I started studying CS
+Title: I finally started studying CS!
 Date: 2024-05-15
 ---
 As soon as I started working as a software developer, I knew that I wanted to study computer science the "right" way. I'm the kind of person who is bothered when I don't know how something works behind the scenes.
