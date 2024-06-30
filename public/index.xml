@@ -10,17 +10,17 @@
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>https://fernandosimoes.com/working-on/</link>
-      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/working-on/</guid>
-      <description>What am I working on?&#xA;I&amp;rsquo;m reading three books:&#xA;Computer systems: A programmer&amp;rsquo;s perspective Operating Systems: Three Easy Pieces Computer Networking: A Top-Down Approach I&amp;rsquo;m mostly focused on Computer Networking and Operating Systems, and reading Computer Systems as a subsidiary source when I want to go deep in an interesting topic.&#xA;This is study is problem-oriented, so I&amp;rsquo;m always occupied with a fun and interesting topic. :)&#xA;You can check out my progress here.</description>
-    </item>
-    <item>
-      <title>Background</title>
       <link>https://fernandosimoes.com/background/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/background/</guid>
       <description>I think the best way to get to know me is to get a brief summary of what has caught my attention in the past years:&#xA;2009-2011 In 2009, I became interested in philosophy. What I wanted to understand the most was the nature of reality. It was a big enterprise for the little man that I was (only 20 years old). Still, I think I achieved some nice accomplishments back then and learned some Greek to read Plato and Aristotle.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/working-on/</link>
+      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/working-on/</guid>
+      <description>What am I working on?&#xA;I&amp;rsquo;m reading three books:&#xA;Computer systems: A programmer&amp;rsquo;s perspective Operating Systems: Three Easy Pieces Computer Networking: A Top-Down Approach I&amp;rsquo;m mostly focused on Computer Networking and Operating Systems, and reading Computer Systems as a subsidiary source when I want to go deep in an interesting topic.&#xA;This is study is problem-oriented, so I&amp;rsquo;m always occupied with a fun and interesting topic. :)&#xA;You can check out my progress here.</description>
     </item>
     <item>
       <title>O que é o body em uma mensagem HTTP?</title>

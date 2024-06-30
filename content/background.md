@@ -1,6 +1,6 @@
 +++
 date =  2024-06-26
-title = "Background"
+# title = "Background"
 +++
 
 I think the best way to get to know me is to get a brief summary of what has caught my attention in the past years:
