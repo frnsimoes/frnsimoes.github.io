@@ -2,7 +2,7 @@
 	<main>
 		<article>
 			<h1>{{ .Title }}</h1>
-			<b><time>{{ .Date.Format (default "2006-01-02 " .Site.Params.dateFmt) }}</time></b>
+			<b><time>{{ .Date.Format (default "2 January 2006" .Site.Params.dateFmt) }}</time></b>
 		       {{ range .Params.tags }}
 		           <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
         	       {{ end }}

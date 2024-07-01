@@ -36,7 +36,7 @@ Here is it:
 - I strayed a little bit, as my interest would lead me to other paths, and read [this book about Golang and tests](https://quii.gitbook.io/learn-go-with-tests/) and tried to read the beautiful piece of weird content called [Clojure for the Brave and True](https://www.amazon.com/Clojure-Brave-True-Ultimate-Programmer-ebook/dp/B015P7F92G/ref=sr_1_1?crid=1CYU5F92CN6AC&keywords=clojure+for+the+brave+and+true&qid=1658794254&sprefix=clojure+for+the+brave+and+tr%2Caps%2C261&sr=8-1) (great read, but I gave up too soon).
 - I was having trouble with testing (how to do it properly) and this [talk by Ian Cooper](https://www.youtube.com/watch?v=EZ05e7EMOLM) really helped me to understand what is software testing and what is the best way to do it. [Boundaries](https://www.youtube.com/watch?v=eOYal8elnZk) is also a great talk by Gary Bernhardt. 
 
-Things that I have been following lately:
+Blogs that I have been following lately:
 
 - [Dan Luu's blog](https://danluu.com) — a black hole of great references.
 - [Ben Kuhn's blog](https://www.benkuhn.net) — for fun and profit.

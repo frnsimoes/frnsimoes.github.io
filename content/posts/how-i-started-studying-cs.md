@@ -2,6 +2,8 @@
 Title: I finally started studying CS!
 Date: 2024-05-15
 ---
+(Checkout the [repo]).
+
 As soon as I started working as a software developer, I knew that I wanted to study computer science the "right" way. I'm the kind of person who is bothered when I don't know how something works behind the scenes.
 
 Over the past couple of years, I’ve tried a lot of different things:
@@ -13,21 +15,19 @@ Over the past couple of years, I’ve tried a lot of different things:
 
 None of these methods worked too well for me. I would start one, get excited (I loved [Systematic Program Design], for example), but then leave it behind for various reasons.
 
-The issue was that I wasn’t having much fun. I was always worried about the job market (studying market-valuable tools was never my thing, but I pushed myself a lot), and the problems in the lessons didn’t really interest me personally.
+The issue was that I wasn’t having much fun. I was always worried about the job market (studying market-valuable tools was never my thing, but I pushed myself a lot), and the problems in the lessons didn’t really interest me personally. It wasn't fun. I wasn't learning much.
 
-Some people can easily do things they don't personally enjoy, but I can't. That's my fault.
+But I had an unexpected idea.
 
-By the end of 2023, I found a solution, and it was by accident.
+In December 2023, I was on vacation and decided to spend [one week] trying to create a new server framework in Python. Nothing too fancy, but simple enough to answer some questions I had about HTTP, sockets, etc. What I noticed when I started the HTTP project was that I was creating a new study modus operandi: I had a problem (building a server framework), and I had questions (What’s a socket? How does a request and response work underneath?), and I could not only answer those questions (in text) but also prove something by coding a solution.
 
-In December 2023, I was on vacation and decided to spend a whole week trying to create a new server framework in Python. Nothing too fancy, but simple enough to answer some questions I had about HTTP, sockets, etc. What I noticed when I started the HTTP project was that I was creating a new study modus operandi: I had a problem (building a server framework), and I had questions (What’s a socket? How does a request and response work underneath?), and I could not only answer those questions (in text) but also prove something by coding a solution.
-
-This gave me the intuition that I could study almost anything with this little framework: Problem -> questions -> answers -> code solution.
+This gave me the intuition that I could study almost anything with this little framework: Problem -> questions -> answers -> code solution. 
 
 Whenever a question popped into my head, I would write it down in a small questions.md file. I would open the terminal, press the tmux key bindings to swiftly open questions.md, and start writing what was bothering me. Some of the questions I wrote down in January were: "What’s a shell?", "What’s a terminal?", "What’s multiplexing?", "What’s a buffer?", and so on.
 
-In March, I discovered that Oz Nova had opened [CS Primer] to the public. I was amazed. I’ve always wanted to study in his Bradfield Computer Science course, but I didn’t have the money for it. I was surprised to find that Oz’s method was almost an evolution of mine. He approached problems with questions, answers, and code solutions.
+In March, I discovered that Oz Nova had opened [CS Primer] to the public. I was amazed. I’ve always wanted to study in his Bradfield Computer Science course, but I didn’t have the money for it. I was surprised to find that Oz’s method was really similar to what I was doing. He approached problems with questions, answers, and code solutions.
 
-He proposes really interesting problems to solve: like writing a concurrent proxy, or writing a custom shell. I honestly feel excited like the first days of programming. 
+He proposes really interesting problems to solve: like writing a concurrent proxy, or writing a custom shell. I honestly feel excited like the first days of programming! I started studying in April 2024, and I intend to finish most of it by the end of 2025.
 
 
 [teachyourselfcs.com]: https://teachyourselfcs.com
@@ -38,4 +38,5 @@ He proposes really interesting problems to solve: like writing a concurrent prox
 [CS61C]: https://www.youtube.com/watch?v=VJ6tuX5bBf4&list=PL0j-r-omG7i0-mnsxN5T4UcVS1Di0isqf&index=1
 [Systematic Program Design]: https://www.edx.org/learn/coding/university-of-british-columbia-how-to-code-simple-data
 [CS Primer]: https://csprimer.com
-
+[repo]: https://github.com/frnsimoes/computer-science-studies
+[one week]: /week-rule

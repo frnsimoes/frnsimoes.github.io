@@ -13,7 +13,7 @@
       <link>https://fernandosimoes.com/about/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/about/</guid>
-      <description>Hello there! My name is Fernando.&#xA;I&amp;rsquo;m a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I&amp;rsquo;m really serious about deepening my foundational knowledge of CS topics. Before that, I was interested in philosophy and literature. If you&amp;rsquo;re curious, you can find more about this history in this brief overview of things I&amp;rsquo;ve studied in the past.&#xA;This website is primarily an index page for things I&amp;rsquo;m studying and find interesting enough to write about.</description>
+      <description>Hello there! My name is Fernando.&#xA;I&amp;rsquo;m a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I&amp;rsquo;m currently deepening my knowledge in computer science. In the past years, I concentrated my spare time in reading philosophy and classical literature; if you&amp;rsquo;re curious to know this history, I summarized it here.&#xA;This website is primarily an index page for things I&amp;rsquo;m studying and find interesting enough to write about.</description>
     </item>
     <item>
       <title></title>
@@ -37,11 +37,18 @@
       <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
     </item>
     <item>
+      <title>One week rule</title>
+      <link>https://fernandosimoes.com/week-rule/</link>
+      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/week-rule/</guid>
+      <description>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</description>
+    </item>
+    <item>
       <title>I finally started studying CS!</title>
       <link>https://fernandosimoes.com/posts/how-i-started-studying-cs/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/how-i-started-studying-cs/</guid>
-      <description>As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
+      <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
@@ -140,13 +147,6 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/pt/about/</guid>
       <description>Olá!&#xA;Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em temas fundamentais da computação. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um breve resumo dos meus estudos anteriores.&#xA;Este site é principalmente um índice de coisas que estou estudando e acho interessantes o suficiente para registrar de forma escrita, de maneira mais formal.</description>
-    </item>
-    <item>
-      <title></title>
-      <link>https://fernandosimoes.com/topics/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/topics/</guid>
-      <description></description>
     </item>
   </channel>
 </rss>

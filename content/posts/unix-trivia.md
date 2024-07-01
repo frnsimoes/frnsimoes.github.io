@@ -13,7 +13,8 @@ Students at the University of California, Berkeley, made tremendous efforts to r
 
 The legal battles lasted from 1979 to 1993. In the meantime:
 
-Several versions of BSD were released, and Berkeley students successfully removed AT&T code from BSD.
-Richard Stallman began working on GNU in 1983, creating various tools for the operating system.
-In 1991, Linus started developing Linux.
-It's very interesting to see how things unfolded during this time and how the movement against a giant company like AT&T was primarily led (with some exceptions) by university students.
+- Several versions of BSD were released, and Berkeley students successfully removed AT&T code from BSD.
+- Richard Stallman began working on GNU in 1983, creating various tools for the operating system.
+- In 1991, Linus started developing Linux.
+
+It's very interesting to see how things unfolded during this time and how the movement against a giant company like AT&T was primarily led (with some exceptions) by university students and associates.
