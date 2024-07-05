@@ -43,9 +43,9 @@
 			<div>
 				<p>A process is an instance of a running program. If we have two processes, each has its own address space in memory, and these addresses are mapped by the OS to their own physical addresses independently. They can both be scheduled on the CPU.</p>
 <p>If we have a process with two threads (grossly, a thread is something that can be run), we have two runnable parts that can share certain memory areas but can be scheduled independently by the OS scheduler.</p>
-<p>Something interesting that Oz points out is the Linux way of thinking about threads and processes. The Linux kernel simplifies processes and threads by creating a [task struct]. A task is something that has state, can be scheduled, and tasks can potentially share memory mappings.</p>
+<p>Something interesting that Oz points out is the Linux way of thinking about threads and processes. The Linux kernel simplifies processes and threads by creating a <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h#L748">task struct</a>. A task is something that has state, can be scheduled, and tasks can potentially share memory mappings.</p>
 <p><a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h">https://github.com/torvalds/linux/blob/master/include/linux/sched.h</a></p>
-<p>In this code, a task has a [pointer to mm], which is the memory mappings. One observation that might go beyond what I want to write:</p>
+<p>In this code, a task has a <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h#L888">pointer to <code>mm</code></a>, which is the memory mappings. One observation that might go beyond what I want to write:</p>
 <ul>
 <li>If I create a new thread with pthread_create, a new task is created that shares the same memory mappings as the parent task. This means the new thread operates within the same address space, allowing shared access to the same memory.</li>
 <li>If I create a child task with fork, though, I&rsquo;m creating a new task that does not share the same memory mappings. Instead, it gets a copy of the parent task&rsquo;s memory mappings.</li>
