@@ -3,6 +3,9 @@ date = 2024-07-04
 title = "Exploring concurrency concepts"
 +++ 
 
+
+Just a post rumbling about threads, processes and green threads. These are my initial[^1] impressions on the topic.
+
 A process is an instance of a running program. If we have two processes, each has its own address space in memory, and these addresses are mapped by the OS to their own physical addresses independently. They can both be scheduled on the CPU.
 
 If we have a process with two threads (grossly, a thread is something that can be run), we have two runnable parts that can share certain memory areas but can be scheduled independently by the OS scheduler.
@@ -20,6 +23,16 @@ Back to it: Node.js and Python async do not make use of OS/Posix threads. These 
 
 Golang has an internal scheduler and can use OS threads. The Go runtime uses a combination of goroutines and a small number of OS threads to execute the goroutines. I'm still confused about this, though.
 
+
+[^1]: For those who are curious, I'm studying operating systems with basically these three sources:
+    - Tanenbaum's [Modern Operating Systems]
+    - Remzi & Andrea's  [OSTEP]
+    - Berkeley's [CS162] 
+
+    Tanenbaum has a solid and profound academic approach. I like reading him first, then jumping to CS162, if necessary, and finally to the fun OSTEP provides. I like OSTEP because it's fun, deep and practical oriented at the same time, but I don't prefer it as my initial source.
+
 [pointer]: https://github.com/torvalds/linux/blob/master/include/linux/sched.h#L888
 [task struct]: https://github.com/torvalds/linux/blob/master/include/linux/sched.h#L748
-
+[Modern Operating Systems]: https://www.amazon.com/Modern-Operating-Systems-Andrew-Tanenbaum/dp/013359162X
+[OSTEP]: https://pages.cs.wisc.edu/~remzi/OSTEP/
+[CS162]: https://archive.org/details/ucberkeley_webcast_6ZDrb0KlYhI
