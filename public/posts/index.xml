@@ -6,8 +6,15 @@
     <description>Recent content in Posts on homepage</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 15 May 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 29 May 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What&#39;s the size of a file on disk?</title>
+      <link>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</link>
+      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</guid>
+      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+    </item>
     <item>
       <title>I finally started studying CS!</title>
       <link>https://fernandosimoes.com/posts/how-i-started-studying-cs/</link>
@@ -21,13 +28,6 @@
       <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/what-is-an-http-message-body/</guid>
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
-    </item>
-    <item>
-      <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</link>
-      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</guid>
-      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
     </item>
     <item>
       <title>I wrote an WSGI application!</title>

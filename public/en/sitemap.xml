@@ -49,11 +49,8 @@
     <loc>https://fernandosimoes.com/pt/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/posts/how-i-started-studying-cs/</loc>
-    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://fernandosimoes.com/posts/</loc>
-    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+    <lastmod>2024-05-29T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt-BR"
@@ -65,13 +62,16 @@
                 href="https://fernandosimoes.com/posts/"
                 />
   </url><url>
+    <loc>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</loc>
+    <lastmod>2024-05-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/how-i-started-studying-cs/</loc>
+    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/what-is-an-http-message-body/</loc>
     <lastmod>2024-05-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/pt/posts/qual-o-tamanho-do-arquivo-em-disco/</loc>
-    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</loc>
     <lastmod>2024-04-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/pt/posts/escrevi-um-app-wsgi/</loc>

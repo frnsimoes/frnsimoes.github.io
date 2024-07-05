@@ -51,6 +51,13 @@
       <description>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</description>
     </item>
     <item>
+      <title>What&#39;s the size of a file on disk?</title>
+      <link>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</link>
+      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</guid>
+      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+    </item>
+    <item>
       <title>I finally started studying CS!</title>
       <link>https://fernandosimoes.com/posts/how-i-started-studying-cs/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
@@ -70,13 +77,6 @@
       <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/pt/posts/qual-o-tamanho-do-arquivo-em-disco/</guid>
       <description>Tenho brincado um pouco com o sistema operacional e arquivos.&#xA;Encontrei o comando stat do POSIX. Na manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;Estou mais interessado em duas das informações do stat: Block e Block IO:&#xA;Experimente:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
-    </item>
-    <item>
-      <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</link>
-      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</guid>
-      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
     </item>
     <item>
       <title>Escrevi uma aplicação WSGI!</title>
