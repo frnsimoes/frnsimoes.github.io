@@ -1,6 +1,6 @@
 +++
 date = 2024-07-04
-title = "First thoughts on processes, threads and green threads."
+title = "Exploring concurrency concepts"
 +++ 
 
 A process is an instance of a running program. If we have two processes, each has its own address space in memory, and these addresses are mapped by the OS to their own physical addresses independently. They can both be scheduled on the CPU.
