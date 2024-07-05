@@ -10,10 +10,10 @@
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploring concurrency concepts</title>
-      <link>https://fernandosimoes.com/posts/concurrency-concepts/</link>
+      <link>https://fernandosimoes.com/backup/concurrency-concepts/</link>
       <pubDate>Thu, 04 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/concurrency-concepts/</guid>
-      <description>Just a post rumbling about threads, processes and green threads. These are my initial1 impressions on the topic.&#xA;A process is an instance of a running program. If we have two processes, each has its own address space in memory, and these addresses are mapped by the OS to their own physical addresses independently. They can both be scheduled on the CPU.&#xA;If we have a process with two threads (grossly, a thread is something that can be run), we have two runnable parts that can share certain memory areas but can be scheduled independently by the OS scheduler.</description>
+      <guid>https://fernandosimoes.com/backup/concurrency-concepts/</guid>
+      <description>Just a post rumbling about threads, processes and green threads. These are my initial1 impressions on the topic.&#xA;A process is an instance of a running program. If we have two processes, each has its own address space in memory, and these addresses are mapped by the OS to their own physical addresses independently. They can both be scheduled on the CPU.&#xA;The state of the thread is very similar to the state of the process, though.</description>
     </item>
     <item>
       <title></title>

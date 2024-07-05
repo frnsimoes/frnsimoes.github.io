@@ -2,7 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://fernandosimoes.com/posts/concurrency-concepts/</loc>
+    <loc>https://fernandosimoes.com/backup/</loc>
+    <lastmod>2024-07-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/backup/concurrency-concepts/</loc>
     <lastmod>2024-07-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/</loc>
@@ -16,19 +19,6 @@
                 rel="alternate"
                 hreflang="en-US"
                 href="https://fernandosimoes.com/"
-                />
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/</loc>
-    <lastmod>2024-07-04T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt-BR"
-                href="https://fernandosimoes.com/pt/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://fernandosimoes.com/posts/"
                 />
   </url><url>
     <loc>https://fernandosimoes.com/about/</loc>
@@ -61,6 +51,19 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/how-i-started-studying-cs/</loc>
     <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/</loc>
+    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt-BR"
+                href="https://fernandosimoes.com/pt/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-US"
+                href="https://fernandosimoes.com/posts/"
+                />
   </url><url>
     <loc>https://fernandosimoes.com/posts/what-is-an-http-message-body/</loc>
     <lastmod>2024-05-03T00:00:00+00:00</lastmod>
