@@ -1,6 +1,6 @@
 +++
 date = 2024-06-18
-title = "Forking around with fork()"
+title = "Playing around with fork()"
 +++ 
 
 The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall `create`, or something like that. 

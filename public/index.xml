@@ -51,7 +51,7 @@
       <description>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</description>
     </item>
     <item>
-      <title>Forking around with fork()</title>
+      <title>Playing around with fork()</title>
       <link>https://fernandosimoes.com/posts/process/</link>
       <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/process/</guid>
@@ -90,7 +90,7 @@
       <link>https://fernandosimoes.com/pt/posts/escrevi-um-app-wsgi/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/pt/posts/escrevi-um-app-wsgi/</guid>
-      <description>Neste Natal, decidi criar um framework de servidor bem simples em Python, implementando uma aplicação WSGI.&#xA;Eu estava mais interessado em aprender mais sobre como diferentes frameworks em Python lidam com escolhas de design na implementação, especialmente em relação às abstrações de requisições e respostas.&#xA;Tive a chance de explorar Flask (e Werkzeug), Bottle, Django, e investigar o protocolo HTTP mais a fundo. Ainda há muito mais para aprender!&#xA;Comecei tentando lidar com os detalhes complicados dos sockets, mas logo desisti para me concentrar na aplicação WSGI em si.</description>
+      <description>Neste Natal, decidi criar um framework de servidor bem simples em Python, implementando uma aplicação WSGI.&#xA;Eu estava interessado em aprender mais sobre como diferentes frameworks em Python lidam com escolhas de design na implementação, especialmente em relação às abstrações de requests e responses.&#xA;Tive a chance de explorar Flask (e Werkzeug), Bottle, Django, e investigar o protocolo HTTP mais a fundo.&#xA;Comecei tentando lidar com os detalhes mais complicados dos sockets, mas logo desisti para me concentrar na aplicação WSGI em si.</description>
     </item>
     <item>
       <title>I wrote an WSGI application!</title>
