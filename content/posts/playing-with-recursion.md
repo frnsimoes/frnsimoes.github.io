@@ -1,6 +1,6 @@
 +++
 date = 2021-12-05
-title = "Playing around with fork()"
+title = "Brincando com recursão"
 +++ 
 
 Assistindo ao [CS61A](https://www.youtube.com/@JohnDeNero/videos) (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:
