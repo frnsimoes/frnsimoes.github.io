@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Forking around with fork()</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	<nav>
+	=====================<br>
+	== fernandosimoes.com ==<br>
+	=====================
+	<div style="float: right;"></div><br>
+	<p>
+	<nav>
+			
+			
+			<a href="/"><b>home</b></a>.
+			
+			<a href="/about/"><b>about</b></a>.
+			
+	</nav>
+	</p>
+	
+	</nav>
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Forking around with fork()</h1>
+			<b><time>18 June 2024</time></b>
+		       
+
+			<div>
+				<p>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall <code>create</code>, or something like that.</p>
+<p>But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.</p>
+<p>The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</p>
+<p>The API involves three steps: fork(), execute(), and then wait(). A simple example:</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+
+int main() {
+    pid_t pid = fork();
+
+    if (pid &lt; 0) {
+        perror(&#34;Fork failed&#34;);
+        return 1;
+
+    } else if (pid == 0) {
+        printf(&#34;World\n&#34;);
+
+    } else {
+        wait(NULL);
+        printf(&#34;Hello\n&#34;);
+    }
+
+    return 0;
+}
+</code></pre><p>First, we call <code>fork()</code> to create a child process. If it&rsquo;s pid (the returned value) is <code>&lt; 0</code>, an error occurred. If it&rsquo;s <code>== 0</code>, we are in the child&rsquo;s realm, else, in the parent&rsquo;s realm. As far as I know, if we don&rsquo;t call <code>wait()</code> in the parent&rsquo;s realm, there is no way to know what is going to be executed first (<code>Hello\n</code> or <code>World\n</code>), because the order of executing depends on the implementations of the operating system scheduler. But, by waiting, the parent process waits for the child&rsquo;s PID return.</p>
+<p>With this simple process, you can actually build a simple shell: the shell itself is a process, so by creating and executing a new processes within a shell (say you type <code>yes</code> on your terminal and press <code>return</code>), you are actually creating and executing a process that is a child to the bash / zsh / etc process. Here is a really simples <a href="https://github.com/frnsimoes/computer-science-studies/blob/main/operating-systems/programs-and-processes/basic-shell/shell.c">implementation of a shell</a>.</p>
+<p>This model can be odd, some really love it, some really hate it. There is a famous (at least famous along us nerds) article accusing fork to be a bad thing in an operating system, if you are curious: <a href="https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf">a fork() in the road</a>.</p>
+<p>The OS also displays the relations of the current process in your operating system in a tree. Try calling <code>pstree</code> in your terminal.</p>
+<p>Although this API may be odd, I like what the authors of <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf">OSTEP</a> say:</p>
+<blockquote>
+<p>the separation of fork() and exec() is essential in building a UNIX shell, because it lets the shell run code after the call to fork() but before the call to exec(); this code can alter the environment of the about-to-be-run program, and thus enables a variety of interesting features to be readily built.</p>
+</blockquote>
+<p>One example would be the following:</p>
+<pre tabindex="0"><code>int main(int argc, char *argv[]) {
+	int rc = fork();
+	if (rc &lt; 0) {
+		// fork failed; exit
+		fprintf(stderr, &#34;fork failed\n&#34;);
+		exit(1);
+	} else if (rc == 0) {
+		// child: redirect standard output to a file
+		close(STDOUT_FILENO); 
+		open(&#34;./p4.output&#34;, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+                // exec is called
+</code></pre><p>In this simple example, we call close<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> on the standard out file descriptor and open a file. By doing this, we could manipulate the child process to output something into the open file.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>from man page: The close() call deletes a descriptor from the per-process object reference table.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<hr>
+	<div>
+	</div>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/posts/process/">Forking around with fork()</a></li>
+				
+				<li><a href="/posts/what-is-the-size-of-a-file-on-disk/">What&#39;s the size of a file on disk?</a></li>
+				
+				<li><a href="/posts/how-i-started-studying-cs/">I finally started studying CS!</a></li>
+				
+				<li><a href="/posts/what-is-an-http-message-body/">What is an HTTP message body?</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	
+</body>
+</html>

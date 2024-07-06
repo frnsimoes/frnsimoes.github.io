@@ -51,6 +51,13 @@
       <description>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</description>
     </item>
     <item>
+      <title>Forking around with fork()</title>
+      <link>https://fernandosimoes.com/posts/process/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/process/</guid>
+      <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
+    </item>
+    <item>
       <title>What&#39;s the size of a file on disk?</title>
       <link>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
