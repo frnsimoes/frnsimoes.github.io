@@ -149,6 +149,13 @@
       <description>The List Post: Resources How and what resources I used to get in love with software development Here is a list of things that I did to help myself learn how to program. I tried to create a chronological narrative, so, besides the list of resources, you can also follow the progress of interests and curiosities that I had.&#xA;From previous experiences, when I started I knew three things:&#xA;I knew that I had to get myself totally immersed in this new reality (this means: getting to know the people, the literature, the vocabulary, the mental map of everything).</description>
     </item>
     <item>
+      <title>Playing around with fork()</title>
+      <link>https://fernandosimoes.com/posts/playing-with-recursion/</link>
+      <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/playing-with-recursion/</guid>
+      <description>Assistindo ao CS61A (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:&#xA;O exemplo clássico do fatorial:&#xA;def fact(n): if n == 0: return 1 else: return n * fact(n-1) fact(3) # 3*2*1=6 O que acontece aqui?&#xA;Cada f é um frame isolado. A função é chamada recursivamente e o valor de n muda dinamicamente a cada chamada, conforme o argumento do fact() recursivo:</description>
+    </item>
+    <item>
       <title></title>
       <link>https://fernandosimoes.com/projects/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

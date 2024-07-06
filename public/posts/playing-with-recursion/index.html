@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Playing around with fork()</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	<nav>
+	=====================<br>
+	== fernandosimoes.com ==<br>
+	=====================
+	<div style="float: right;"></div><br>
+	<p>
+	<nav>
+			
+			
+			<a href="/"><b>home</b></a>.
+			
+			<a href="/about/"><b>about</b></a>.
+			
+	</nav>
+	</p>
+	
+	</nav>
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Playing around with fork()</h1>
+			<b><time>5 December 2021</time></b>
+		       
+
+			<div>
+				<p>Assistindo ao <a href="https://www.youtube.com/@JohnDeNero/videos">CS61A</a> (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:</p>
+<p>O exemplo clássico do fatorial:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fact</span>(n):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> n <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> n <span style="color:#f92672">*</span> fact(n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fact(<span style="color:#ae81ff">3</span>) <span style="color:#75715e"># 3*2*1=6</span>
+</span></span></code></pre></div><p>O que acontece aqui?</p>
+<p>Cada <code>f</code> é um frame isolado. A função é chamada recursivamente e o valor de <code>n</code> muda dinamicamente a cada chamada, conforme o argumento do <code>fact()</code> recursivo:</p>
+<pre tabindex="0"><code>|-------------------------------
+| f1: fact. n=3
+|-------------------------------
+|-------------------------------
+| f2: fact. n=2
+|-------------------------------
+|-------------------------------
+| f3: fact. n=1
+|-------------------------------
+|-------------------------------
+| f4: fact. n=0. return value: 1
+|-------------------------------
+</code></pre><h3 id="como-chegamos-ao-resultado-de-6">Como chegamos ao resultado de 6?</h3>
+<p>Primeiro, temos o processo de encolhimento do argumento <code>n</code> conforme a chamada da função recursiva (<code>n-1</code>):</p>
+<p>Depois, temos as <em>evaluations</em> de cada um dos <em>frames</em> (leia de baixo para cima):</p>
+<pre tabindex="0"><code>|-------------------------------
+| f1: fact. return value: 3
+| n=3. return: 3*2=6
+|-------------------------------
+|-------------------------------
+| f2: fact. return value: 2
+| n=2. return: 2*1=2
+|-------------------------------
+|-------------------------------
+| f3: fact. return value: 1
+| n=1. return: 1*1=1
+|-------------------------------
+|-------------------------------
+| f4: fact. n=0. return value: 1
+| n=0. return: 1
+|-------------------------------
+</code></pre><p> A cada iteração, há a subtração de <em>1</em> no valor de <code>n</code>. Por isso, por exemplo, no frame 2 (f2), o valor de <code>n</code> é <code>3</code>, mas o valor pelo qual ele é multiplicado é <code>2</code>.</p>
+<h3 id="o-que-aconteceu-quando-chamamos-a-função">O que aconteceu quando chamamos a função?</h3>
+<ul>
+<li>A mesma função é chamada várias vezes.</li>
+<li>Frames diferentes mantém o histórico dos diferentes argumentos em cada uma das chamadas.</li>
+<li>A avaliação de <code>n</code>, portanto, depende de qual é o <em>environment</em> atual.</li>
+</ul>
+<h3 id="um-exemplo-com-lista">Um exemplo com lista:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_list</span>(xs:list):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> xs:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> xs[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> sum_list(xs[<span style="color:#ae81ff">1</span>:])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>xs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sum_list(xs)  <span style="color:#75715e"># 1+2+3+4+5=15</span>
+</span></span></code></pre></div><p>Neste exemplo, cada chamada da função recursiva consome um elemento da lista.</p>
+<pre tabindex="0"><code>| f1: fact. xs=[1, 2, 3, 4, 5]
+| return: [1, 2, 3, 4, 5]
+|-------------------------------
+|-------------------------------
+| f2: fact. xs=[2, 3, 4, 5]
+| return: 15
+|-------------------------------
+|-------------------------------
+| f3: fact. xs=[3, 4, 5]
+| return: 14
+|-------------------------------
+|-------------------------------
+| f4: fact. xs=[4, 5]
+| return: 12
+|-------------------------------
+|-------------------------------
+| f5: fact. xs=[5]
+| return: 9
+|-------------------------------
+|-------------------------------
+| f6: fact. xs=[]
+| return: 5
+|-------------------------------
+</code></pre><h3 id="no-fim-das-contas">No fim das contas</h3>
+<p>No fim das contas, a recursão é uma forma de iteração. Ou, como diz [John DeNero], a iteração é uma forma específica de recursão.</p>
+<p>Um exemplo besta, mas que clarifica bem essa qualidade da recursão:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_a</span>(a: int, b: int):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> sum_a(a, b<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sum_a(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>) <span style="color:#75715e"># 4+4+4+4=16</span>
+</span></span></code></pre></div><p>Nesse caso específico, o argumento <code>b</code> serve apenas para fixar a quantidade de vezes que <code>a</code> será somado com o valor de <code>a</code>. Dessa forma, no exemplo acima o resultado é: 4+4+4+4.</p>
+<h3 id="anatomia-do-negócio">Anatomia do negócio</h3>
+<ul>
+<li>O def header é similar a outras funções</li>
+<li>A primeira condicional checa por casos de base (<code>a==0</code>)</li>
+<li>Casos de base são avaliados sem a chamada da recursão</li>
+<li>Casos recursivos são avaliados, em frames próprios, com chamadas recursivas.</li>
+</ul>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<hr>
+	<div>
+	</div>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/posts/process/">Forking around with fork()</a></li>
+				
+				<li><a href="/posts/what-is-the-size-of-a-file-on-disk/">What&#39;s the size of a file on disk?</a></li>
+				
+				<li><a href="/posts/how-i-started-studying-cs/">I finally started studying CS!</a></li>
+				
+				<li><a href="/posts/what-is-an-http-message-body/">What is an HTTP message body?</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	
+</body>
+</html>
