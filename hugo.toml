@@ -38,11 +38,11 @@ defaultContentLanguageInSubdir = false
         name = "about"
         url = "about/"
         weight = 2
-  [[menu.main]]
-        identifier = "tags"
-        name = "tags"
-        url = "tags/"
-        weight = 2
+  # [[menu.main]]
+  #       identifier = "tags"
+  #       name = "tags"
+  #       url = "tags/"
+  #       weight = 2
   [[menu.main]]
         identifier = "home"
         name = "home"

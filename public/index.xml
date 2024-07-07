@@ -6,8 +6,15 @@
     <description>Recent content on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 04 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What does it mean to bind to a port?</title>
+      <link>https://fernandosimoes.com/posts/socket/</link>
+      <pubDate>Sun, 07 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/socket/</guid>
+      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+    </item>
     <item>
       <title>Exploring concurrency concepts</title>
       <link>https://fernandosimoes.com/backup/concurrency-concepts/</link>

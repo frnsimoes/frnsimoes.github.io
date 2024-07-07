@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>What does it mean to bind to a port?</title>
+	
+	<style>
+
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    overflow-x: auto;
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
+	
+	
+</head>
+<body>
+	<header>
+	<nav>
+			<h1>Fernando Simões</h1>
+			
+			
+			<a href="/">home</a>
+			
+			<a href="/about/">about</a>
+			
+	</nav>
+	</p>
+	
+	</nav>
+</header>
+
+	
+	<main>
+		<article>
+			<h1>What does it mean to bind to a port?</h1>
+			<b><time>7 July 2024</time></b>
+		       
+		           <a href="/tags/computer-networking">Computer Networking</a>
+        	       
+
+			<div>
+				<p>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<p>When the client&rsquo;s socket sends something to the server&rsquo;s socket, what it is doing is actually this:</p>
+<ul>
+<li>The client operating system has a running process with a socket created;</li>
+<li>The server operating system creates a running process with a socket;</li>
+</ul>
+<p>This simple behavior must have been amazing to those who were creating this mechanism. If we think about it, we are saying that: there&rsquo;s a machine, a physical machine, that is running something. And there is another machine, maybe in other parts of the world, that is running another something. They both can communicate, having a common a protocol and exchange messages. How amazing is this? If even inside the same operating system there are so many dificulties of inter-process communication. The ability for two processes, potentially thousands of miles apart, to communicate is indeed a marvel.</p>
+<p>But how does the client socket knows where the server socket is? Unix systems use the <code>bind</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> system call. The signature of <code>bind</code> is something like this: <code>bind(file_descriptor, (address, port))</code> When a socket is binded, what it really does is associate a file descriptor (that is just an integer) to the address and port. The port is where the server process is really running at the server machine.</p>
+<p>The file descriptor part is maybe hard to understand. But what it means is not that complicated: a file descriptor is an integer that uniquely identifiesd an open file (or socket) within a process. When a process open a file or creates a socket, the OS assigns a file descrip[tor to represent that resource. The OS uses the file descriptor to handle the communication, including handling the data exchange (read and write). The OS also uses the file descriptor to keep track of active network connections and ensure data is directed to the correct process.</p>
+<p><strong>But what is a file descriptor?</strong></p>
+<p>Understanding how file descriptors work can be challenging, though. And I have taken sometime to understand it more. A file descriptor is something stored in the &ldquo;File descriptor table&rdquo;. This table is stored within the address space of each individual process. So, when a process open a file, or creates a socket, the kernel assigns a file descriptor to represent that resource. <code>Process 1 -&gt; Address Space -&gt; (Heap, Stack, text segment, data segment, ... file descriptor table, ...).</code></p>
+<p>Imagine that:</p>
+<ol>
+<li>User opens a file -&gt; A file descriptor (say, integer &ldquo;42&rdquo;), is associated with it.</li>
+<li>User writes to file -&gt; the OS knows what file it is because it can fetch from the file descriptor table what is the file associated with the file descriptor <code>42</code>.</li>
+</ol>
+<p>This process could be represented somehwat like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">fd</span> <span style="color:#000">=</span> <span style="color:#000">open</span>(<span style="color:#c41a16">&#34;file.txt&#34;</span>, <span style="color:#000">O_WRONLY</span> <span style="color:#000">|</span> <span style="color:#000">O_CREAT</span>, <span style="color:#1c01ce">0644</span>);
+</span></span><span style="display:flex;"><span><span style="color:#000">write</span>(<span style="color:#000">fd</span>, <span style="color:#000">buffer</span>, <span style="color:#a90d91">sizeof</span>(<span style="color:#000">buffer</span>));
+</span></span></code></pre></div><div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>See, for example, Go&rsquo;s http package implementation: <a href="https://github.com/golang/go/blob/master/src/net/internal/socktest/switch_posix.go">https://github.com/golang/go/blob/master/src/net/internal/socktest/switch_posix.go</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>James F Kurose_ Keith Ross - Computer Networking: A Top-Down Approach-Pearson&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><code>man 2 bind</code>: bind() assigns a name to an unnamed socket.  When a socket is created with socket(2) it exists in a name space (address family) but has no name
+assigned.  bind() requests that address be assigned to the socket.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<hr>
+	<div>
+	</div>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/posts/socket/">What does it mean to bind to a port?</a></li>
+				
+				<li><a href="/posts/process/">Playing around with fork()</a></li>
+				
+				<li><a href="/posts/unix-file-size/">What&#39;s the size of a file on disk?</a></li>
+				
+				<li><a href="/posts/studying-cs/">I finally started studying CS!</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	
+</body>
+</html>
