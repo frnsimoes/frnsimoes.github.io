@@ -1,6 +1,19 @@
 <article>
-	<div class="post-title">
-		{{ .Date.Format "2006-01" }} <a href="{{ .RelPermalink }}">{{.Title }}</a>
-		<!-- <a href="{{ .RelPermalink }}">{{.Title }}</a> -->
-	</div>
+{{ if eq .Type "taxonomyTerm" }}
+    <!-- This is a tag page, render tags -->
+    <ul>
+    {{ range .Data.Terms.Alphabetical }}
+        <li>
+            <a href="{{ "/tags/" | relLangURL }}{{ .Name | urlize }}">{{ .Name }}</a>
+        </li>
+    {{ end }}
+    </ul>
+{{ else }}
+    <!-- This is not a tag page, render posts -->
+    <article>
+        <div class="post-title">
+            {{ .Date.Format "2006-01" }} <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </div>
+    </article>
+{{ end }}
 </article>

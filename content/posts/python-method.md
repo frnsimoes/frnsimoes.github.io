@@ -1,6 +1,7 @@
 +++ 
 date = 2023-04-26
 title = "What happens when you call a method in Python"
+Tags = ["Programming"]
 +++
 
 A not-creative example (Bear with me).

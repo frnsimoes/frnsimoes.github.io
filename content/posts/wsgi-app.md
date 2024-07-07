@@ -1,8 +1,8 @@
 +++ 
 date = 2023-12-30
-title = "I wrote an WSGI application!"
+title = "I wrote a WSGI application!"
+tags = ["Projects"]
 +++
-
 This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.
 
 I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.

@@ -59,23 +59,23 @@
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</link>
+      <link>https://fernandosimoes.com/posts/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/what-is-the-size-of-a-file-on-disk/</guid>
+      <guid>https://fernandosimoes.com/posts/unix-file-size/</guid>
       <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
     </item>
     <item>
       <title>I finally started studying CS!</title>
-      <link>https://fernandosimoes.com/posts/how-i-started-studying-cs/</link>
+      <link>https://fernandosimoes.com/posts/studying-cs/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/how-i-started-studying-cs/</guid>
+      <guid>https://fernandosimoes.com/posts/studying-cs/</guid>
       <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
-      <link>https://fernandosimoes.com/posts/what-is-an-http-message-body/</link>
+      <link>https://fernandosimoes.com/posts/http-body/</link>
       <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/what-is-an-http-message-body/</guid>
+      <guid>https://fernandosimoes.com/posts/http-body/</guid>
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
     </item>
     <item>
@@ -93,10 +93,10 @@
       <description>Neste Natal, decidi criar um framework de servidor bem simples em Python, implementando uma aplicação WSGI.&#xA;Eu estava interessado em aprender mais sobre como diferentes frameworks em Python lidam com escolhas de design na implementação, especialmente em relação às abstrações de requests e responses.&#xA;Tive a chance de explorar Flask (e Werkzeug), Bottle, Django, e investigar o protocolo HTTP mais a fundo.&#xA;Comecei tentando lidar com os detalhes mais complicados dos sockets, mas logo desisti para me concentrar na aplicação WSGI em si.</description>
     </item>
     <item>
-      <title>I wrote an WSGI application!</title>
-      <link>https://fernandosimoes.com/posts/i-wrote-a-simple-wsgi-app/</link>
+      <title>I wrote a WSGI application!</title>
+      <link>https://fernandosimoes.com/posts/wsgi-app/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/i-wrote-a-simple-wsgi-app/</guid>
+      <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
       <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
     </item>
     <item>
@@ -122,9 +122,9 @@
     </item>
     <item>
       <title>What happens when you call a method in Python</title>
-      <link>https://fernandosimoes.com/posts/what-happens-when-you-call-instance-methodxy/</link>
+      <link>https://fernandosimoes.com/posts/python-method/</link>
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/what-happens-when-you-call-instance-methodxy/</guid>
+      <guid>https://fernandosimoes.com/posts/python-method/</guid>
       <description>A not-creative example (Bear with me).&#xA;class C: def sum_numbers(self, x, y): return x + y Who is sum_numbers? There is a difference in answers depending on who I ask.&#xA;If I ask class C if it knows sum_numbers, this is what it tells me:&#xA;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers &amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt; But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&#xA;&amp;gt;&amp;gt;&amp;gt; c = C() &amp;gt;&amp;gt;&amp;gt; c.</description>
     </item>
     <item>
@@ -150,9 +150,9 @@
     </item>
     <item>
       <title>Brincando com recursão</title>
-      <link>https://fernandosimoes.com/posts/playing-with-recursion/</link>
+      <link>https://fernandosimoes.com/posts/recursion/</link>
       <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/playing-with-recursion/</guid>
+      <guid>https://fernandosimoes.com/posts/recursion/</guid>
       <description>Assistindo ao CS61A (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:&#xA;O exemplo clássico do fatorial:&#xA;def fact(n): if n == 0: return 1 else: return n * fact(n-1) fact(3) # 3*2*1=6 O que acontece aqui?&#xA;Cada f é um frame isolado. A função é chamada recursivamente e o valor de n muda dinamicamente a cada chamada, conforme o argumento do fact() recursivo:</description>
     </item>
     <item>

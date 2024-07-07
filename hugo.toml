@@ -39,6 +39,11 @@ defaultContentLanguageInSubdir = false
         url = "about/"
         weight = 2
   [[menu.main]]
+        identifier = "tags"
+        name = "tags"
+        url = "tags/"
+        weight = 2
+  [[menu.main]]
         identifier = "home"
         name = "home"
         url = "/"
@@ -48,6 +53,8 @@ defaultContentLanguageInSubdir = false
   #       name = "portuguese"
   #       url = "/pt/"
   #       weight = 4
+[taxonomies]
+  tag = "tags"
 
 # Footer
   [[menu.footer]]

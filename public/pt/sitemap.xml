@@ -68,18 +68,6 @@
                 href="https://fernandosimoes.com/pt/about/"
                 />
   </url><url>
-    <loc>https://fernandosimoes.com/pt/categories/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://fernandosimoes.com/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt-BR"
-                href="https://fernandosimoes.com/pt/categories/"
-                />
-  </url><url>
     <loc>https://fernandosimoes.com/pt/tags/</loc>
     <xhtml:link
                 rel="alternate"

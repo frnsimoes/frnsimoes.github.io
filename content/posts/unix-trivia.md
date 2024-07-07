@@ -1,6 +1,7 @@
 +++ 
 date = 2023-06-25
 title = "Unix trivia"
+tags = ["Operating Systems"]
 +++
 
 The history of Unix has many curious aspects: a huge company like AT&T, which at the time owned Bell Labs (and therefore Unix), didn't care much about Unix until 1979, ten years after Thompson and Ritchie started the project.
