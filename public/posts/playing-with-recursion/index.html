@@ -8,47 +8,53 @@
 	<title>Brincando com recursão</title>
 	
 	<style>
+
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
   body {
-    font-family: Verdana, sans-serif;
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
     margin: auto;
     padding: 20px;
-    max-width: 720px;
+    max-width: var(--width);
     text-align: left;
-    background-color: #fff;
+    background-color: var(--background-color);
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
-    color: #444;
+    color: var(--text-color);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  strong,
-  b {
-    color: #222;
-  }
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
 
-  a {
-    color: #3273dc;
-     
-  }
-
-  .title {
+a {
+    color: var(--link-color);
+    cursor: pointer;
     text-decoration: none;
-    border: 0;
-  }
+}
 
-  .title span {
-    font-weight: 400;
-  }
+a:hover {
+    text-decoration: underline; 
+}
 
-  nav a {
-    margin-right: 10px;
-  }
+nav a {
+    margin-right: 8px;
+}
 
   textarea {
     width: 100%;
@@ -85,15 +91,25 @@
     overflow-x: auto;
   }
 
-  div.highlight pre {
-    background-color: initial;
-    color: initial;
-  }
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
-  div.highlight code {
-    background-color: unset;
-    color: unset;
-  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
   blockquote {
     border-left: 1px solid #999;
@@ -164,9 +180,12 @@
       color: #ddd;
     }
 
-    blockquote {
-      color: #ccc;
-    }
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
 
     textarea,
     input {
@@ -210,47 +229,47 @@
 			<div>
 				<p>Assistindo ao <a href="https://www.youtube.com/@JohnDeNero/videos">CS61A</a> (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:</p>
 <p>O exemplo clássico do fatorial:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fact</span>(n):
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> n <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> n <span style="color:#f92672">*</span> fact(n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">def</span> <span style="color:#000">fact</span>(<span style="color:#000">n</span>):
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">if</span> <span style="color:#000">n</span> <span style="color:#000">==</span> <span style="color:#1c01ce">0</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a90d91">return</span> <span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">else</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a90d91">return</span> <span style="color:#000">n</span> <span style="color:#000">*</span> <span style="color:#000">fact</span>(<span style="color:#000">n</span><span style="color:#000">-</span><span style="color:#1c01ce">1</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>fact(<span style="color:#ae81ff">3</span>) <span style="color:#75715e"># 3*2*1=6</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">fact</span>(<span style="color:#1c01ce">3</span>) <span style="color:#177500"># 3*2*1=6</span>
 </span></span></code></pre></div><p>O que acontece aqui?</p>
 <p>Cada <code>f</code> é um frame isolado. A função é chamada recursivamente e o valor de <code>n</code> muda dinamicamente a cada chamada, conforme o argumento do <code>fact()</code> recursivo:</p>
-<pre tabindex="0"><code>|-------------------------------
-| f1: fact. n=3
-|-------------------------------
-|-------------------------------
-| f2: fact. n=2
-|-------------------------------
-|-------------------------------
-| f3: fact. n=1
-|-------------------------------
-|-------------------------------
-| f4: fact. n=0. return value: 1
-|-------------------------------
-</code></pre><h3 id="como-chegamos-ao-resultado-de-6">Como chegamos ao resultado de 6?</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f1: fact. <span style="color:#000">n</span><span style="color:#000">=</span><span style="color:#1c01ce">3</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f2: fact. <span style="color:#000">n</span><span style="color:#000">=</span><span style="color:#1c01ce">2</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f3: fact. <span style="color:#000">n</span><span style="color:#000">=</span><span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f4: fact. <span style="color:#000">n</span><span style="color:#000">=</span>0. <span style="color:#a90d91">return</span> value: <span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span></code></pre></div><h3 id="como-chegamos-ao-resultado-de-6">Como chegamos ao resultado de 6?</h3>
 <p>Primeiro, temos o processo de encolhimento do argumento <code>n</code> conforme a chamada da função recursiva (<code>n-1</code>):</p>
 <p>Depois, temos as <em>evaluations</em> de cada um dos <em>frames</em> (leia de baixo para cima):</p>
-<pre tabindex="0"><code>|-------------------------------
-| f1: fact. return value: 3
-| n=3. return: 3*2=6
-|-------------------------------
-|-------------------------------
-| f2: fact. return value: 2
-| n=2. return: 2*1=2
-|-------------------------------
-|-------------------------------
-| f3: fact. return value: 1
-| n=1. return: 1*1=1
-|-------------------------------
-|-------------------------------
-| f4: fact. n=0. return value: 1
-| n=0. return: 1
-|-------------------------------
-</code></pre><p> A cada iteração, há a subtração de <em>1</em> no valor de <code>n</code>. Por isso, por exemplo, no frame 2 (f2), o valor de <code>n</code> é <code>3</code>, mas o valor pelo qual ele é multiplicado é <code>2</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f1: fact. <span style="color:#a90d91">return</span> value: <span style="color:#1c01ce">3</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#000">n</span><span style="color:#000">=</span>3. <span style="color:#a90d91">return</span>: 3*2<span style="color:#000">=</span><span style="color:#1c01ce">6</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f2: fact. <span style="color:#a90d91">return</span> value: <span style="color:#1c01ce">2</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#000">n</span><span style="color:#000">=</span>2. <span style="color:#a90d91">return</span>: 2*1<span style="color:#000">=</span><span style="color:#1c01ce">2</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f3: fact. <span style="color:#a90d91">return</span> value: <span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#000">n</span><span style="color:#000">=</span>1. <span style="color:#a90d91">return</span>: 1*1<span style="color:#000">=</span><span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f4: fact. <span style="color:#000">n</span><span style="color:#000">=</span>0. <span style="color:#a90d91">return</span> value: <span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#000">n</span><span style="color:#000">=</span>0. <span style="color:#a90d91">return</span>: <span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span></code></pre></div><p> A cada iteração, há a subtração de <em>1</em> no valor de <code>n</code>. Por isso, por exemplo, no frame 2 (f2), o valor de <code>n</code> é <code>3</code>, mas o valor pelo qual ele é multiplicado é <code>2</code>.</p>
 <h3 id="o-que-aconteceu-quando-chamamos-a-função">O que aconteceu quando chamamos a função?</h3>
 <ul>
 <li>A mesma função é chamada várias vezes.</li>
@@ -258,49 +277,49 @@
 <li>A avaliação de <code>n</code>, portanto, depende de qual é o <em>environment</em> atual.</li>
 </ul>
 <h3 id="um-exemplo-com-lista">Um exemplo com lista:</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_list</span>(xs:list):
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> xs:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> xs[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> sum_list(xs[<span style="color:#ae81ff">1</span>:])
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">def</span> <span style="color:#000">sum_list</span>(<span style="color:#000">xs</span>:<span style="color:#a90d91">list</span>):
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">if</span> <span style="color:#000">not</span> <span style="color:#000">xs</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a90d91">return</span> <span style="color:#1c01ce">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">else</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a90d91">return</span> <span style="color:#000">xs</span>[<span style="color:#1c01ce">0</span>] <span style="color:#000">+</span> <span style="color:#000">sum_list</span>(<span style="color:#000">xs</span>[<span style="color:#1c01ce">1</span>:])
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>xs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]
+</span></span><span style="display:flex;"><span><span style="color:#000">xs</span> <span style="color:#000">=</span> [<span style="color:#1c01ce">1</span>, <span style="color:#1c01ce">2</span>, <span style="color:#1c01ce">3</span>, <span style="color:#1c01ce">4</span>, <span style="color:#1c01ce">5</span>]
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sum_list(xs)  <span style="color:#75715e"># 1+2+3+4+5=15</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">sum_list</span>(<span style="color:#000">xs</span>)  <span style="color:#177500"># 1+2+3+4+5=15</span>
 </span></span></code></pre></div><p>Neste exemplo, cada chamada da função recursiva consome um elemento da lista.</p>
-<pre tabindex="0"><code>| f1: fact. xs=[1, 2, 3, 4, 5]
-| return: [1, 2, 3, 4, 5]
-|-------------------------------
-|-------------------------------
-| f2: fact. xs=[2, 3, 4, 5]
-| return: 15
-|-------------------------------
-|-------------------------------
-| f3: fact. xs=[3, 4, 5]
-| return: 14
-|-------------------------------
-|-------------------------------
-| f4: fact. xs=[4, 5]
-| return: 12
-|-------------------------------
-|-------------------------------
-| f5: fact. xs=[5]
-| return: 9
-|-------------------------------
-|-------------------------------
-| f6: fact. xs=[]
-| return: 5
-|-------------------------------
-</code></pre><h3 id="no-fim-das-contas">No fim das contas</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>| f1: fact. <span style="color:#000">xs</span><span style="color:#000">=[</span>1, 2, 3, 4, 5<span style="color:#000">]</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#a90d91">return</span>: <span style="color:#000">[</span>1, 2, 3, 4, 5<span style="color:#000">]</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f2: fact. <span style="color:#000">xs</span><span style="color:#000">=[</span>2, 3, 4, 5<span style="color:#000">]</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#a90d91">return</span>: <span style="color:#1c01ce">15</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f3: fact. <span style="color:#000">xs</span><span style="color:#000">=[</span>3, 4, 5<span style="color:#000">]</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#a90d91">return</span>: <span style="color:#1c01ce">14</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f4: fact. <span style="color:#000">xs</span><span style="color:#000">=[</span>4, 5<span style="color:#000">]</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#a90d91">return</span>: <span style="color:#1c01ce">12</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f5: fact. <span style="color:#000">xs</span><span style="color:#000">=[</span>5<span style="color:#000">]</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#a90d91">return</span>: <span style="color:#1c01ce">9</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span><span style="display:flex;"><span>| f6: fact. <span style="color:#000">xs</span><span style="color:#000">=[]</span>
+</span></span><span style="display:flex;"><span>| <span style="color:#a90d91">return</span>: <span style="color:#1c01ce">5</span>
+</span></span><span style="display:flex;"><span>|-------------------------------
+</span></span></code></pre></div><h3 id="no-fim-das-contas">No fim das contas</h3>
 <p>No fim das contas, a recursão é uma forma de iteração. Ou, como diz [John DeNero], a iteração é uma forma específica de recursão.</p>
 <p>Um exemplo besta, mas que clarifica bem essa qualidade da recursão:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sum_a</span>(a: int, b: int):
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> sum_a(a, b<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">def</span> <span style="color:#000">sum_a</span>(<span style="color:#000">a</span>: <span style="color:#a90d91">int</span>, <span style="color:#000">b</span>: <span style="color:#a90d91">int</span>):
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">if</span> <span style="color:#000">b</span> <span style="color:#000">==</span> <span style="color:#1c01ce">0</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a90d91">return</span> <span style="color:#1c01ce">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">else</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a90d91">return</span> <span style="color:#000">a</span> <span style="color:#000">+</span> <span style="color:#000">sum_a</span>(<span style="color:#000">a</span>, <span style="color:#000">b</span><span style="color:#000">-</span><span style="color:#1c01ce">1</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sum_a(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>) <span style="color:#75715e"># 4+4+4+4=16</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">sum_a</span>(<span style="color:#1c01ce">4</span>, <span style="color:#1c01ce">4</span>) <span style="color:#177500"># 4+4+4+4=16</span>
 </span></span></code></pre></div><p>Nesse caso específico, o argumento <code>b</code> serve apenas para fixar a quantidade de vezes que <code>a</code> será somado com o valor de <code>a</code>. Dessa forma, no exemplo acima o resultado é: 4+4+4+4.</p>
 <h3 id="anatomia-do-negócio">Anatomia do negócio</h3>
 <ul>

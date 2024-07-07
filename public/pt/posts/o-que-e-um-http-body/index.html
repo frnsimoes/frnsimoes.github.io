@@ -8,47 +8,53 @@
 	<title>O que é o body em uma mensagem HTTP?</title>
 	
 	<style>
+
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
   body {
-    font-family: Verdana, sans-serif;
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
     margin: auto;
     padding: 20px;
-    max-width: 720px;
+    max-width: var(--width);
     text-align: left;
-    background-color: #fff;
+    background-color: var(--background-color);
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
-    color: #444;
+    color: var(--text-color);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  strong,
-  b {
-    color: #222;
-  }
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
 
-  a {
-    color: #3273dc;
-     
-  }
-
-  .title {
+a {
+    color: var(--link-color);
+    cursor: pointer;
     text-decoration: none;
-    border: 0;
-  }
+}
 
-  .title span {
-    font-weight: 400;
-  }
+a:hover {
+    text-decoration: underline; 
+}
 
-  nav a {
-    margin-right: 10px;
-  }
+nav a {
+    margin-right: 8px;
+}
 
   textarea {
     width: 100%;
@@ -85,15 +91,25 @@
     overflow-x: auto;
   }
 
-  div.highlight pre {
-    background-color: initial;
-    color: initial;
-  }
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
-  div.highlight code {
-    background-color: unset;
-    color: unset;
-  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
   blockquote {
     border-left: 1px solid #999;
@@ -164,9 +180,12 @@
       color: #ddd;
     }
 
-    blockquote {
-      color: #ccc;
-    }
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
 
     textarea,
     input {
@@ -228,22 +247,22 @@
 <p>O body HTTP é especialmente interessante porque é consumido pelo socket receptor. Assim, se o servidor leu e consumiu o body uma vez, ele não pode ler e consumir novamente. Isso é a origem, por exemplo, do erro do Django &ldquo;Você não pode acessar o body após ler o fluxo de dados da requisição.&rdquo;</p>
 <p>Em Go, normalmente lemos o body com a chamada io.ReadAll. O método ReadAll lê o body (bytes) até o EOF (fim de arquivo) e retorna os dados lidos.</p>
 <p>Então, vamos dar uma olhada mais de perto no que significa ler um body.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>        client_sock, client_addr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>accept()
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># buffer of 4096 bytes as an example</span>
-</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> client_sock<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>)
-</span></span><span style="display:flex;"><span>        upstream_sock <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_STREAM)
-</span></span><span style="display:flex;"><span>        upstream_sock<span style="color:#f92672">.</span>connect(UPSTREAM_ADDR)
-</span></span><span style="display:flex;"><span>        upstream_sock<span style="color:#f92672">.</span>send(data)
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">while</span> <span style="color:#a90d91">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#000">client_sock</span>, <span style="color:#000">client_addr</span> <span style="color:#000">=</span> <span style="color:#000">s</span><span style="color:#000">.</span><span style="color:#000">accept</span>()
+</span></span><span style="display:flex;"><span>        <span style="color:#177500"># buffer of 4096 bytes as an example</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">data</span> <span style="color:#000">=</span> <span style="color:#000">client_sock</span><span style="color:#000">.</span><span style="color:#000">recv</span>(<span style="color:#1c01ce">4096</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#000">upstream_sock</span> <span style="color:#000">=</span> <span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">socket</span>(<span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">AF_INET</span>, <span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">SOCK_STREAM</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#000">upstream_sock</span><span style="color:#000">.</span><span style="color:#000">connect</span>(<span style="color:#000">UPSTREAM_ADDR</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#000">upstream_sock</span><span style="color:#000">.</span><span style="color:#000">send</span>(<span style="color:#000">data</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
-</span></span><span style="display:flex;"><span>            res <span style="color:#f92672">=</span> upstream_sock<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">while</span> <span style="color:#a90d91">True</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#000">res</span> <span style="color:#000">=</span> <span style="color:#000">upstream_sock</span><span style="color:#000">.</span><span style="color:#000">recv</span>(<span style="color:#1c01ce">4096</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> res:
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a90d91">if</span> <span style="color:#000">not</span> <span style="color:#000">res</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#a90d91">break</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            client_sock<span style="color:#f92672">.</span>send(res)
+</span></span><span style="display:flex;"><span>            <span style="color:#000">client_sock</span><span style="color:#000">.</span><span style="color:#000">send</span>(<span style="color:#000">res</span>)
 </span></span></code></pre></div><p>Neste exemplo, o socket upstream está recebendo um body do proxy socket, processando o body em loop até que ele termine, e então enviando de volta o body para o client socket. Veja <a href="https://github.com/frnsimoes/computer-science-studies/tree/main/network-programming/http/proxy-basic">aqui</a> uma implementação mais completa.</p>
 
 			</div>

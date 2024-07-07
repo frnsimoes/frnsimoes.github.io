@@ -8,47 +8,53 @@
 	<title>Invariants</title>
 	
 	<style>
+
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
   body {
-    font-family: Verdana, sans-serif;
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
     margin: auto;
     padding: 20px;
-    max-width: 720px;
+    max-width: var(--width);
     text-align: left;
-    background-color: #fff;
+    background-color: var(--background-color);
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
-    color: #444;
+    color: var(--text-color);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  strong,
-  b {
-    color: #222;
-  }
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
 
-  a {
-    color: #3273dc;
-     
-  }
-
-  .title {
+a {
+    color: var(--link-color);
+    cursor: pointer;
     text-decoration: none;
-    border: 0;
-  }
+}
 
-  .title span {
-    font-weight: 400;
-  }
+a:hover {
+    text-decoration: underline; 
+}
 
-  nav a {
-    margin-right: 10px;
-  }
+nav a {
+    margin-right: 8px;
+}
 
   textarea {
     width: 100%;
@@ -85,15 +91,25 @@
     overflow-x: auto;
   }
 
-  div.highlight pre {
-    background-color: initial;
-    color: initial;
-  }
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
-  div.highlight code {
-    background-color: unset;
-    color: unset;
-  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
   blockquote {
     border-left: 1px solid #999;
@@ -164,9 +180,12 @@
       color: #ddd;
     }
 
-    blockquote {
-      color: #ccc;
-    }
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
 
     textarea,
     input {

@@ -72,5 +72,5 @@ defaultContentLanguageInSubdir = false
     lineNumbersInTable = true
     noClasses = true
     noHl = false
-    style = 'monokai'
+    style = 'xcode'
     tabWidth = 4

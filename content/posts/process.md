@@ -11,7 +11,7 @@ The running program you are using to create a new process is a process itself, s
 
 The API involves three steps: fork(), execute(), and then wait(). A simple example:
 
-```
+```c
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -49,7 +49,7 @@ Although this API may be odd, I like what the authors of [OSTEP] say:
 
 One example would be the following:
 
-```
+```c
 int main(int argc, char *argv[]) {
 	int rc = fork();
 	if (rc < 0) {

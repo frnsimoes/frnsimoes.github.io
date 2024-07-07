@@ -21,7 +21,7 @@ O que acontece aqui?
 
 Cada `f` é um frame isolado. A função é chamada recursivamente e o valor de `n` muda dinamicamente a cada chamada, conforme o argumento do `fact()` recursivo:
 
-```
+```shell
 |-------------------------------
 | f1: fact. n=3
 |-------------------------------
@@ -42,7 +42,7 @@ Primeiro, temos o processo de encolhimento do argumento `n` conforme a chamada d
 
 Depois, temos as _evaluations_ de cada um dos _frames_ (leia de baixo para cima):
 
-```
+```shell
 |-------------------------------
 | f1: fact. return value: 3
 | n=3. return: 3*2=6
@@ -85,7 +85,7 @@ sum_list(xs)  # 1+2+3+4+5=15
 
 Neste exemplo, cada chamada da função recursiva consome um elemento da lista. 
 
-```
+```shell
 | f1: fact. xs=[1, 2, 3, 4, 5]
 | return: [1, 2, 3, 4, 5]
 |-------------------------------

@@ -5,7 +5,7 @@ title = "What happens when you call a method in Python"
 
 A not-creative example (Bear with me).
 
-```
+```python
 class C:
     def sum_numbers(self, x, y):
         return x + y
@@ -15,14 +15,14 @@ Who is `sum_numbers`? There is a difference in answers depending on who I ask.
 
 If I ask `class C` if it knows `sum_numbers`, this is what it tells me:
 
-```
+```shell
 >>> C.sum_numbers
 <function C.sum_numbers at 0x1031964d0>
 ```
 
 But if I ask the same question to C's instance, here is what I get in return:
 
-```
+```shell
 >>> c = C()
 >>> c.sum_numbers
 <bound method C.sum_numbers of <t.C object at 0x102fffc70>>
@@ -32,7 +32,7 @@ This means that the instance doesn't know `sum_numbers`. It only knows that `sum
 
 Let's give `c.sum_numbers` a referenceable local in the memory, and ask it who it thinks it is:
 
-```
+```shell
 m = c.sum_numbers
 m.__self__
 m.__func__
@@ -54,7 +54,7 @@ Under the hoods, `instance.method(x, y)` is the method doing its magic with what
 
 A full example of this dramatic and healing self-discovered journey:
 
-```
+```shell
 # Attributions
 m = C().sum_numbers
 >>> m.__self__
@@ -80,7 +80,7 @@ By calling `__func__` we need to reference `self` (`m.__self__`). But when we us
 
 At the end of this dramatic and beautiful self-discovering journey, a call of a Python class method is represented like this:
 
-```
+```shell
 >>> m.__func__(m.__self__, 40, 2)
 42
 ```
