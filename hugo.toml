@@ -1,12 +1,14 @@
 
 baseurl = "https://fernandosimoes.com"
-title = "homepage"
+title = "fernandosimoes.com"
 theme = "smol-c"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
 pygmentsCodeFences = true
 pygmentsUseClasses = false
+
+paginate = 50
 
 # language
 defaultContentLanguage = 'en'
