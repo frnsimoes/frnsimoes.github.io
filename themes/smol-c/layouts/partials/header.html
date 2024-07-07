@@ -1,11 +1,5 @@
 <header>
 	<nav>
-	{{ strings.Repeat ( .Site.Title | len | add 13 ) "=" }}<br>
-	== fernandosimoes.com ==<br>
-	{{ strings.Repeat ( .Site.Title | len | add 13 ) "=" }}
-	<div style="float: right;">{{ .Site.Params.subtitle }}</div><br>
-	<p>
-	<nav>
 			{{ with .Site.Menus.main }}
 			{{ range . }}
 			<a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>.
