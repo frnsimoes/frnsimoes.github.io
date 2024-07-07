@@ -8,13 +8,14 @@
 	<title>{{ .Title }}</title>
 	{{ with .Site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
 	{{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
-	<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
-	{{ range .Site.Params.customCSS -}}
-		<link rel="stylesheet" href="{{ . | relURL }}?rnd={{ now.Unix }}">
-	{{- end }}
-	{{ with .OutputFormats.Get "RSS" -}}
-		{{ printf `<link rel="%s" type="%s" href="%s" title="%s">` .Rel .MediaType.Type .RelPermalink $.Site.Title | safeHTML }}
-	{{- end }}
+	{{- partial "style.html" . -}}
+	<!-- <link rel="stylesheet" href="{{ "css/style.css" | relURL }}"> -->
+	<!-- {{ range .Site.Params.customCSS -}} -->
+	<!-- 	<link rel="stylesheet" href="{{ . | relURL }}?rnd={{ now.Unix }}"> -->
+	<!-- {{- end }} -->
+	<!-- {{ with .OutputFormats.Get "RSS" -}} -->
+	<!-- 	{{ printf `<link rel="%s" type="%s" href="%s" title="%s">` .Rel .MediaType.Type .RelPermalink $.Site.Title | safeHTML }} -->
+	<!-- {{- end }} -->
 </head>
 <body>
 	{{ partial "header" . }}
