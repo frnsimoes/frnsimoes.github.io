@@ -20,7 +20,7 @@ One way of handling multiple requests in the scope of a single-threaded process 
 - Nonblocking IO model
 - IO Multiplexing model
 
-**Blocking IO** means that the process will stop its execution until the IO operation completes. *Nonblocking IO**, on the other hand, does not wait for the IO execution to complete; instead, the process continues to run, and, if the IO execution was not completed, it returns an error. 
+**Blocking IO** means that the process will stop its execution until the IO operation completes. **Nonblocking IO**, on the other hand, does not wait for the IO execution to complete; instead, the process continues to run, and, if the IO execution was not completed, it returns an error. 
 
 The IO Multiplexing model is hors-concours, in its turn. It makes use of systems calls like `select`, `poll`, `epoll` (depending on the OS, on my machine with OSX I use `select`, but if you are a linux nerd you can prefer `poll` -- i wish i could) to keep track of file descriptors and handle their readiness of being IOed.
 

@@ -242,7 +242,7 @@ blockquote {
 <li>Nonblocking IO model</li>
 <li>IO Multiplexing model</li>
 </ul>
-<p><strong>Blocking IO</strong> means that the process will stop its execution until the IO operation completes. <em>Nonblocking IO</em>*, on the other hand, does not wait for the IO execution to complete; instead, the process continues to run, and, if the IO execution was not completed, it returns an error.</p>
+<p><strong>Blocking IO</strong> means that the process will stop its execution until the IO operation completes. <strong>Nonblocking IO</strong>, on the other hand, does not wait for the IO execution to complete; instead, the process continues to run, and, if the IO execution was not completed, it returns an error.</p>
 <p>The IO Multiplexing model is hors-concours, in its turn. It makes use of systems calls like <code>select</code>, <code>poll</code>, <code>epoll</code> (depending on the OS, on my machine with OSX I use <code>select</code>, but if you are a linux nerd you can prefer <code>poll</code> &ndash; i wish i could) to keep track of file descriptors and handle their readiness of being IOed.</p>
 <p>But what does it really mean? How does it really happen?</p>
 <p>Imagine you are a server. Someone sends you a request with <code>curl</code>, yet someone else sends you a request with the browser. At first, you don&rsquo;t know what to do. Well, you do, but things are looking good: your socket will process the <code>curl</code> request, and the browser request will be blocking potentially by as long as the curl request takes to be executed.</p>
