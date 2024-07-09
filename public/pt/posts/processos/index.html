@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="pt-BR">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<style type=text/css>body{font-family:monospace;}</style>
-	<title>Playing around with fork()</title>
+	<title>Brincando com fork()</title>
 	
 	<style>
 
@@ -222,17 +222,17 @@ blockquote {
 	
 	<main>
 		<article>
-			<h1>Playing around with fork()</h1>
+			<h1>Brincando com fork()</h1>
 			<b><time>18 June 2024</time></b>
 		       
-		           <a href="/tags/operating-systems">Operating Systems</a>
+		           <a href="/pt/tags/operating-systems">Operating Systems</a>
         	       
 
 			<div>
-				<p>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall <code>create</code>, or something like that.</p>
-<p>But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.</p>
-<p>The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</p>
-<p>The API involves three steps: fork(), execute(), and then wait(). A simple example:</p>
+				<p>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call <code>create</code>, ou algo assim.</p>
+<p>Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.</p>
+<p>O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</p>
+<p>A API envolve três passos: fork(), execute() e depois wait(). Um exemplo simples:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;stdio.h&gt;</span><span style="color:#633820">
 </span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;unistd.h&gt;</span><span style="color:#633820">
 </span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;sys/types.h&gt;</span><span style="color:#633820">
@@ -255,32 +255,32 @@ blockquote {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a90d91">return</span> <span style="color:#1c01ce">0</span>;
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>First, we call <code>fork()</code> to create a child process. If it&rsquo;s pid (the returned value) is <code>&lt; 0</code>, an error occurred. If it&rsquo;s <code>== 0</code>, we are in the child&rsquo;s realm, else, in the parent&rsquo;s realm. As far as I know, if we don&rsquo;t call <code>wait()</code> in the parent&rsquo;s realm, there is no way to know what is going to be executed first (<code>Hello\n</code> or <code>World\n</code>), because the order of executing depends on the implementations of the operating system scheduler. But, by waiting, the parent process waits for the child&rsquo;s PID return.</p>
-<p>With this simple process, you can actually build a simple shell: the shell itself is a process, so by creating and executing a new processes within a shell (say you type <code>yes</code> on your terminal and press <code>return</code>), you are actually creating and executing a process that is a child to the bash / zsh / etc process. Here is a really simples <a href="https://github.com/frnsimoes/computer-science-studies/blob/main/operating-systems/programs-and-processes/basic-shell/shell.c">implementation of a shell</a>.</p>
-<p>This model can be odd, some really love it, some really hate it. There is a famous (at least famous along us nerds) article accusing fork to be a bad thing in an operating system, if you are curious: <a href="https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf">a fork() in the road</a>.</p>
-<p>The OS also displays the relations of the current process in your operating system in a tree. Try calling <code>pstree</code> in your terminal.</p>
-<p>Although this API may be odd, I like what the authors of <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf">OSTEP</a> say:</p>
+</span></span></code></pre></div><p>Primeiro, chamamos fork() para criar um processo filho. Se o pid (o valor retornado) for &lt; 0, ocorreu um erro. Se for == 0, estamos no domínio do filho, caso contrário, no domínio do pai. Pelo que sei, se não chamarmos wait() no domínio do pai, não há como saber o que será executado primeiro (Hello\n ou World\n), porque a ordem de execução depende das implementações do escalonador do sistema operacional. Mas, ao chamar wait(), o processo pai espera pelo retorno do PID do filho.</p>
+<p>Com este simples processo, você pode realmente construir um shell simples: o próprio shell é um processo, então ao criar e executar novos processos dentro de um shell (digamos que você digite yes no seu terminal e pressione return), você está realmente criando e executando um processo que é filho do processo bash / zsh / etc. Aqui está uma <a href="https://github.com/frnsimoes/computer-science-studies/blob/main/operating-systems/programs-and-processes/basic-shell/shell.c">implementação simples de um shell</a>.</p>
+<p>Este modelo pode ser estranho, alguns realmente o adoram, outros realmente o odeiam. Há um famoso (pelo menos famoso entre nós nerds) artigo acusando o fork de ser algo ruim em um sistema operacional, se você estiver curioso: <a href="https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf">a fork() in the road</a>.</p>
+<p>O sistema operacional também exibe as relações do processo atual no seu sistema operacional em uma árvore. Tente chamar pstree no seu terminal.</p>
+<p>Embora esta API possa ser estranha, gosto do que os autores de OSTEP dizem:</p>
 <blockquote>
 <p>the separation of fork() and exec() is essential in building a UNIX shell, because it lets the shell run code after the call to fork() but before the call to exec(); this code can alter the environment of the about-to-be-run program, and thus enables a variety of interesting features to be readily built.</p>
 </blockquote>
-<p>One example would be the following:</p>
+<p>Um exemplo seria o seguinte:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">main</span>(<span style="color:#a90d91">int</span> <span style="color:#000">argc</span>, <span style="color:#a90d91">char</span> <span style="color:#000">*</span><span style="color:#000">argv</span>[]) {
-</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">int</span> <span style="color:#000">rc</span> <span style="color:#000">=</span> <span style="color:#000">fork</span>();
-</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">if</span> (<span style="color:#000">rc</span> <span style="color:#000">&lt;</span> <span style="color:#1c01ce">0</span>) {
-</span></span><span style="display:flex;"><span>		<span style="color:#177500">// fork failed; exit
-</span></span></span><span style="display:flex;"><span><span style="color:#177500"></span>		<span style="color:#000">fprintf</span>(<span style="color:#000">stderr</span>, <span style="color:#c41a16">&#34;fork failed</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#000">exit</span>(<span style="color:#1c01ce">1</span>);
-</span></span><span style="display:flex;"><span>	} <span style="color:#a90d91">else</span> <span style="color:#a90d91">if</span> (<span style="color:#000">rc</span> <span style="color:#000">==</span> <span style="color:#1c01ce">0</span>) {
-</span></span><span style="display:flex;"><span>		<span style="color:#177500">// child: redirect standard output to a file
-</span></span></span><span style="display:flex;"><span><span style="color:#177500"></span>		<span style="color:#000">close</span>(<span style="color:#000">STDOUT_FILENO</span>); 
-</span></span><span style="display:flex;"><span>		<span style="color:#000">open</span>(<span style="color:#c41a16">&#34;./p4.output&#34;</span>, <span style="color:#000">O_CREAT</span><span style="color:#000">|</span><span style="color:#000">O_WRONLY</span><span style="color:#000">|</span><span style="color:#000">O_TRUNC</span>, <span style="color:#000">S_IRWXU</span>);
-</span></span><span style="display:flex;"><span>                <span style="color:#177500">// exec is called
-</span></span></span></code></pre></div><p>In this simple example, we call close<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> on the standard out file descriptor and open a file. By doing this, we could manipulate the child process to output something into the open file.</p>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">rc</span> <span style="color:#000">=</span> <span style="color:#000">fork</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">if</span> (<span style="color:#000">rc</span> <span style="color:#000">&lt;</span> <span style="color:#1c01ce">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#177500">// fork falhou; sair
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"></span>        <span style="color:#000">fprintf</span>(<span style="color:#000">stderr</span>, <span style="color:#c41a16">&#34;fork failed</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#000">exit</span>(<span style="color:#1c01ce">1</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#a90d91">else</span> <span style="color:#a90d91">if</span> (<span style="color:#000">rc</span> <span style="color:#000">==</span> <span style="color:#1c01ce">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#177500">// filho: redirecionar saída padrão para um arquivo
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"></span>        <span style="color:#000">close</span>(<span style="color:#000">STDOUT_FILENO</span>); 
+</span></span><span style="display:flex;"><span>        <span style="color:#000">open</span>(<span style="color:#c41a16">&#34;./p4.output&#34;</span>, <span style="color:#000">O_CREAT</span><span style="color:#000">|</span><span style="color:#000">O_WRONLY</span><span style="color:#000">|</span><span style="color:#000">O_TRUNC</span>, <span style="color:#000">S_IRWXU</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#177500">// exec é chamado
+</span></span></span></code></pre></div><p>Neste exemplo simples, chamamos close<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> no file descriptor de saída padrão e abrimos um arquivo. Fazendo isso, podemos manipular o processo filho para gerar algo no arquivo aberto.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1">
-<p>from man page: The close() call deletes a descriptor from the per-process object reference table.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>do man page: A chamada close() exclui um descritor da tabela de referência de objetos por processo&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -299,13 +299,13 @@ blockquote {
 		<div>
 			<ul>
 				
-				<li><a href="/posts/io-multiplexing/">IO Multiplexing and Proxy concurrency</a></li>
+				<li><a href="/pt/posts/io-multiplexing-concorrencia/">IO Multiplexing e Concorrência em Proxies</a></li>
 				
-				<li><a href="/posts/socket/">What does it mean to bind to a port?</a></li>
+				<li><a href="/pt/posts/processos/">Brincando com fork()</a></li>
 				
-				<li><a href="/posts/process/">Playing around with fork()</a></li>
+				<li><a href="/pt/posts/o-que-e-um-http-body/">O que é o body em uma mensagem HTTP?</a></li>
 				
-				<li><a href="/posts/unix-file-size/">What&#39;s the size of a file on disk?</a></li>
+				<li><a href="/pt/posts/qual-o-tamanho-do-arquivo-em-disco/">Qual é o tamanho de um arquivo em disco?</a></li>
 				
 			</ul>
 		</div>

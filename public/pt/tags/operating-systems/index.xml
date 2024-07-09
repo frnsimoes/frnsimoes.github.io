@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Operating Systems on fernandosimoes.com</title>
+    <link>https://fernandosimoes.com/pt/tags/operating-systems/</link>
+    <description>Recent content in Operating Systems on fernandosimoes.com</description>
+    <generator>Hugo</generator>
+    <language>pt-BR</language>
+    <lastBuildDate>Tue, 18 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://fernandosimoes.com/pt/tags/operating-systems/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Brincando com fork()</title>
+      <link>https://fernandosimoes.com/pt/posts/processos/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/posts/processos/</guid>
+      <description>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.&#xA;Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.&#xA;O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</description>
+    </item>
+  </channel>
+</rss>

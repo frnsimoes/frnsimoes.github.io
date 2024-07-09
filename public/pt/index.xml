@@ -6,12 +6,26 @@
     <description>Recent content on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>pt-BR</language>
-    <lastBuildDate>Wed, 26 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/pt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IO Multiplexing e Concorrência em Proxies</title>
+      <link>https://fernandosimoes.com/pt/posts/io-multiplexing-concorrencia/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/posts/io-multiplexing-concorrencia/</guid>
+      <description>IO multiplexing é um tópico complexo à primeira vista. Mas é a base da &amp;ldquo;concorrência&amp;rdquo; sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.&#xA;O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por &amp;ldquo;coisas&amp;rdquo; quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.</description>
+    </item>
+    <item>
+      <title>Brincando com fork()</title>
+      <link>https://fernandosimoes.com/pt/posts/processos/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/posts/processos/</guid>
+      <description>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.&#xA;Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.&#xA;O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</description>
+    </item>
     <item>
       <title>O que é o body em uma mensagem HTTP?</title>
       <link>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</link>
-      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</guid>
       <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
     </item>
@@ -51,10 +65,10 @@
       <description>Uma regra no Domain-Driven Design (DDD) diz que &amp;ldquo;cada entidade deve se auto-validar.&amp;rdquo; Essa regra é clara, simples e funcional quando pensamos em uma entidade como Pessoa, onde o atributo nome não pode ser uma string vazia. Seria estranho e absurdo considerar que a validação do nome deve ocorrer fora da entidade Pessoa, seja durante a criação da instância ou ao chamar o método. Existem várias maneiras de realizar a validação interna, e este artigo oferece uma perspectiva interessante sobre elas.</description>
     </item>
     <item>
-      <title></title>
-      <link>https://fernandosimoes.com/pt/about/</link>
+      <title>Sobre mim</title>
+      <link>https://fernandosimoes.com/pt/posts/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/about/</guid>
+      <guid>https://fernandosimoes.com/pt/posts/about/</guid>
       <description>Olá!&#xA;Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em temas fundamentais da computação. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um breve resumo dos meus estudos anteriores.&#xA;Este site é principalmente um índice de coisas que estou estudando e acho interessantes o suficiente para registrar de forma escrita, de maneira mais formal.</description>
     </item>
   </channel>

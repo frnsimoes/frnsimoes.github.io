@@ -6,8 +6,22 @@
     <description>Recent content on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 07 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IO Multiplexing and Proxy concurrency</title>
+      <link>https://fernandosimoes.com/posts/io-multiplexing/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
+      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
+    </item>
+    <item>
+      <title>IO Multiplexing e Concorrência em Proxies</title>
+      <link>https://fernandosimoes.com/pt/posts/io-multiplexing-concorrencia/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/posts/io-multiplexing-concorrencia/</guid>
+      <description>IO multiplexing é um tópico complexo à primeira vista. Mas é a base da &amp;ldquo;concorrência&amp;rdquo; sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.&#xA;O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por &amp;ldquo;coisas&amp;rdquo; quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.</description>
+    </item>
     <item>
       <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/posts/socket/</link>
@@ -44,18 +58,18 @@
       <description>What am I working on?&#xA;I&amp;rsquo;m reading three books:&#xA;Computer systems: A programmer&amp;rsquo;s perspective Operating Systems: Three Easy Pieces Computer Networking: A Top-Down Approach I&amp;rsquo;m mostly focused on Computer Networking and Operating Systems, and reading Computer Systems as a subsidiary source when I want to go deep in an interesting topic.&#xA;This is study is problem-oriented, so I&amp;rsquo;m always occupied with a fun and interesting topic. :)&#xA;You can check out my progress here.</description>
     </item>
     <item>
-      <title>O que é o body em uma mensagem HTTP?</title>
-      <link>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</link>
-      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</guid>
-      <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
-    </item>
-    <item>
       <title>One week rule</title>
       <link>https://fernandosimoes.com/week-rule/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/week-rule/</guid>
       <description>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</description>
+    </item>
+    <item>
+      <title>Brincando com fork()</title>
+      <link>https://fernandosimoes.com/pt/posts/processos/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/posts/processos/</guid>
+      <description>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.&#xA;Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.&#xA;O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</description>
     </item>
     <item>
       <title>Playing around with fork()</title>
@@ -77,6 +91,13 @@
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/studying-cs/</guid>
       <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
+    </item>
+    <item>
+      <title>O que é o body em uma mensagem HTTP?</title>
+      <link>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</link>
+      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</guid>
+      <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
@@ -170,10 +191,10 @@
       <description>List of little fun things I&amp;rsquo;ve done in the past:&#xA;2024-06 Persistent Proxy 2024-03 Fzf-notes 2023-12 Simple HTTP </description>
     </item>
     <item>
-      <title></title>
-      <link>https://fernandosimoes.com/pt/about/</link>
+      <title>Sobre mim</title>
+      <link>https://fernandosimoes.com/pt/posts/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/about/</guid>
+      <guid>https://fernandosimoes.com/pt/posts/about/</guid>
       <description>Olá!&#xA;Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em temas fundamentais da computação. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um breve resumo dos meus estudos anteriores.&#xA;Este site é principalmente um índice de coisas que estou estudando e acho interessantes o suficiente para registrar de forma escrita, de maneira mais formal.</description>
     </item>
   </channel>

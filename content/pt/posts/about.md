@@ -1,3 +1,6 @@
++++
+title = "Sobre mim"
++++
 Olá!
 
 Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em [temas fundamentais da computação][CS Topics]. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um [breve resumo][brief overview] dos meus estudos anteriores.

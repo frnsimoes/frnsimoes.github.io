@@ -1,5 +1,5 @@
 +++
-date =  2024-06-26
+date =  2024-05-03
 title =  "O que é o body em uma mensagem HTTP?"
 +++
 

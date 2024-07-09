@@ -2,11 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://fernandosimoes.com/tags/computer-networking/</loc>
-    <lastmod>2024-07-07T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://fernandosimoes.com/</loc>
-    <lastmod>2024-07-07T00:00:00+00:00</lastmod>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt-BR"
@@ -18,8 +15,14 @@
                 href="https://fernandosimoes.com/"
                 />
   </url><url>
+    <loc>https://fernandosimoes.com/posts/io-multiplexing/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/posts/io-multiplexing-concorrencia/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/</loc>
-    <lastmod>2024-07-07T00:00:00+00:00</lastmod>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt-BR"
@@ -31,8 +34,24 @@
                 href="https://fernandosimoes.com/posts/"
                 />
   </url><url>
+    <loc>https://fernandosimoes.com/tags/programming/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt-BR"
+                href="https://fernandosimoes.com/pt/tags/programming/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-US"
+                href="https://fernandosimoes.com/tags/programming/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/tags/</loc>
-    <lastmod>2024-07-07T00:00:00+00:00</lastmod>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt-BR"
@@ -43,6 +62,9 @@
                 hreflang="en-US"
                 href="https://fernandosimoes.com/tags/"
                 />
+  </url><url>
+    <loc>https://fernandosimoes.com/tags/computer-networking/</loc>
+    <lastmod>2024-07-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/socket/</loc>
     <lastmod>2024-07-07T00:00:00+00:00</lastmod>
@@ -55,16 +77,6 @@
   </url><url>
     <loc>https://fernandosimoes.com/about/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt-BR"
-                href="https://fernandosimoes.com/pt/about/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://fernandosimoes.com/about/"
-                />
   </url><url>
     <loc>https://fernandosimoes.com/background/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
@@ -72,17 +84,24 @@
     <loc>https://fernandosimoes.com/working-on/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</loc>
-    <lastmod>2024-06-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://fernandosimoes.com/week-rule/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/pt/</loc>
-    <lastmod>2024-06-26T00:00:00+00:00</lastmod>
+    <loc>https://fernandosimoes.com/pt/posts/processos/</loc>
+    <lastmod>2024-06-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/tags/operating-systems/</loc>
     <lastmod>2024-06-18T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt-BR"
+                href="https://fernandosimoes.com/pt/tags/operating-systems/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-US"
+                href="https://fernandosimoes.com/tags/operating-systems/"
+                />
   </url><url>
     <loc>https://fernandosimoes.com/posts/process/</loc>
     <lastmod>2024-06-18T00:00:00+00:00</lastmod>
@@ -95,6 +114,9 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/studying-cs/</loc>
     <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/posts/o-que-e-um-http-body/</loc>
+    <lastmod>2024-05-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/http-body/</loc>
     <lastmod>2024-05-03T00:00:00+00:00</lastmod>
@@ -130,9 +152,6 @@
     <loc>https://fernandosimoes.com/pt/posts/software-descontentamentos/</loc>
     <lastmod>2023-05-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/tags/programming/</loc>
-    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://fernandosimoes.com/posts/python-method/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
   </url><url>
@@ -150,6 +169,6 @@
   </url><url>
     <loc>https://fernandosimoes.com/projects/</loc>
   </url><url>
-    <loc>https://fernandosimoes.com/pt/about/</loc>
+    <loc>https://fernandosimoes.com/pt/posts/about/</loc>
   </url>
 </urlset>
