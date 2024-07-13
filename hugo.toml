@@ -48,11 +48,11 @@ defaultContentLanguageInSubdir = false
         name = "home"
         url = "/"
         weight = 1
-  # [[menu.main]]
-  #       identifier = "pt-br"
-  #       name = "portuguese"
-  #       url = "/pt/"
-  #       weight = 4
+  [[menu.main]]
+        identifier = "pt-br"
+        name = "portuguese"
+        url = "/pt/"
+        weight = 4
 [taxonomies]
   tag = "tags"
 
