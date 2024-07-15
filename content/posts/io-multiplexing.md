@@ -1,6 +1,6 @@
 +++ 
 date = 2024-07-09
-title = "IO Multiplexing and Proxy concurrency"
+title = "IO multiplexing and concurrency"
 tags = ["Operating Systems", "Computer Networking"] 
 +++
 

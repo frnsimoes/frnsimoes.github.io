@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://fernandosimoes.com/tags/computer-networking/</loc>
-    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+    <loc>https://fernandosimoes.com/posts/about-learning/</loc>
+    <lastmod>2024-07-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/</loc>
-    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+    <lastmod>2024-07-14T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt-BR"
@@ -17,6 +17,22 @@
                 hreflang="en-US"
                 href="https://fernandosimoes.com/"
                 />
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/</loc>
+    <lastmod>2024-07-14T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt-BR"
+                href="https://fernandosimoes.com/pt/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-US"
+                href="https://fernandosimoes.com/posts/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/tags/computer-networking/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/io-multiplexing/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>
@@ -35,19 +51,6 @@
                 rel="alternate"
                 hreflang="en-US"
                 href="https://fernandosimoes.com/tags/operating-systems/"
-                />
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/</loc>
-    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt-BR"
-                href="https://fernandosimoes.com/pt/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://fernandosimoes.com/posts/"
                 />
   </url><url>
     <loc>https://fernandosimoes.com/tags/programming/</loc>

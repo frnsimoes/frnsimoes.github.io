@@ -9,7 +9,7 @@
     <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/operating-systems/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>IO Multiplexing and Proxy concurrency</title>
+      <title>IO multiplexing and concurrency</title>
       <link>https://fernandosimoes.com/posts/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
