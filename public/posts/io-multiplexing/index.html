@@ -1,237 +1,34 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<style type=text/css>body{font-family:monospace;}</style>
-	<title>IO multiplexing and concurrency</title>
-	
-	<style>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IO multiplexing and concurrency | fernandosimoes.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
 
-:root {
-    --width: 720px;
-    --font-main: Verdana, sans-serif;
-    --font-secondary: Verdana, sans-serif;
-    --font-scale: 1em;
-    --background-color: #fff;
-    --heading-color: #222;
-    --text-color: #444;
-    --link-color: #3273dc;
-    --visited-color:  #8b6fcb;
-    --code-background-color: #f2f2f2;
-    --code-color: #222;
-    --blockquote-color: #222;
-}
-  body {
-    font-family: var(--font-secondary);
-    font-size: var(--font-scale);
-    margin: auto;
-    padding: 20px;
-    max-width: var(--width);
-    text-align: left;
-    background-color: var(--background-color);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: var(--text-color);
-  }
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-main);
-    color: var(--heading-color);
-}
+<div class="article-meta">
+<h1><span class="title">IO multiplexing and concurrency</span></h1>
 
-a {
-    color: var(--link-color);
-    cursor: pointer;
-    text-decoration: none;
-}
+<h2 class="date">2024/07/09</h2>
+</div>
 
-a:hover {
-    text-decoration: underline; 
-}
-
-nav a {
-    margin-right: 8px;
-}
-
-  textarea {
-    width: 100%;
-    font-size: 16px;
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  content {
-    line-height: 1.6;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  img {
-    max-width: 100%;
-  }
-
-  code {
-    padding: 2px 5px;
-    background-color: #f2f2f2;
-  }
-
-  pre code {
-    color: #222;
-    display: block;
-    padding: 20px;
-    white-space: pre-wrap;
-    font-size: 14px;
-    overflow-x: auto;
-  }
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-  blockquote {
-    border-left: 1px solid #999;
-    color: #222;
-    padding-left: 20px;
-    font-style: italic;
-  }
-
-  footer {
-    padding: 25px;
-    text-align: center;
-  }
-
-  .helptext {
-    color: #777;
-    font-size: small;
-  }
-
-  .errorlist {
-    color: #eba613;
-    font-size: small;
-  }
-
-   
-  ul.blog-posts {
-    list-style-type: none;
-    padding: unset;
-  }
-
-  ul.blog-posts li {
-    display: flex;
-  }
-
-  ul.blog-posts li span {
-    flex: 0 0 130px;
-  }
-
-  ul.blog-posts li a:visited {
-    color: #8b6fcb;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-color: #333;
-      color: #ddd;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    strong,
-    b {
-      color: #eee;
-    }
-
-    a {
-      color: #8cc2dd;
-    }
-
-    code {
-      background-color: #777;
-    }
-
-    pre code {
-      color: #ddd;
-    }
-
-blockquote {
-    border-left: 1px solid #999;
-    color: var(--code-color);
-    padding-left: 20px;
-    font-style: italic;
-}
-
-    textarea,
-    input {
-      background-color: #252525;
-      color: #ddd;
-    }
-
-    .helptext {
-      color: #aaa;
-    }
-  }
-
-</style>
-
-	
-	
-</head>
-<body>
-	<header>
-	<nav>
-			<h1>Fernando Simões</h1>
-			
-			
-			<a href="/">home</a>
-			
-			<a href="/about/">about</a>
-			
-	</nav>
-	</p>
-	
-	</nav>
-</header>
-
-	
-	<main>
-		<article>
-			<h1>IO multiplexing and concurrency</h1>
-			<b><time>9 July 2024</time></b>
-		       
-		           <a href="/tags/operating-systems">Operating Systems</a>
-        	       
-		           <a href="/tags/computer-networking">Computer Networking</a>
-        	       
-
-			<div>
-				<p>IO multiplexing is a complex topic at first. But it&rsquo;s the basis of &ldquo;concurrency&rdquo; without multiple threads or processors. So it&rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.</p>
+<main>
+<p>IO multiplexing is a complex topic at first. But it&rsquo;s the basis of &ldquo;concurrency&rdquo; without multiple threads or processors. So it&rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.</p>
 <p>The secret of IO multiplexing is being able to handle multiple things at once. And by &ldquo;things&rdquo; I mean multiple behaviors that have an input or output in file descriptors.</p>
 <p>Multiplexing is a well-known resource to deal with the &ldquo;we need to gather some things, and then deliver them to their own proprietors&rdquo; scenario. It&rsquo;s a way of diligently proxying receipts to their appropriate recipients.</p>
 <p>Multiplexing and demultiplexing are largely used in network protocols at the transport layer. When you use your computer, you don&rsquo;t only connect to one network at a time. Usually, you are listening to music, sending emails, chatting, and downloading files. UDP and TCP know how to handle this and how to deliver the appropriate datagram/segment to the correct socket.</p>
@@ -300,34 +97,12 @@ blockquote {
 <p>When you process the message from the one client, you wanna answer it, that&rsquo;s what the <code>to_send()</code> is doing. <code>writable</code> is a way of saying: &ldquo;here is a thing that I want to write to this file descriptor&rdquo;.</p>
 <p>And there you go. While being only one socket, you just created a way of dealing with multiple requests concurrently.</p>
 
-			</div>
-		</article>
-	</main>
-<aside>
-	<hr>
-	<div>
-	</div>
-	<div>
-		<div>
-			<h3>LATEST POSTS</h3>
-		</div>
-		<div>
-			<ul>
-				
-				<li><a href="/posts/about-learning/">About learning</a></li>
-				
-				<li><a href="/posts/io-multiplexing/">IO multiplexing and concurrency</a></li>
-				
-				<li><a href="/posts/socket/">What does it mean to bind to a port?</a></li>
-				
-				<li><a href="/posts/process/">Playing around with fork()</a></li>
-				
-			</ul>
-		</div>
-	</div>
-</aside>
+</main>
 
-
-	
-</body>
+  <footer>
+  
+  
+  </footer>
+  </body>
 </html>
+

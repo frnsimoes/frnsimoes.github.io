@@ -1,7 +1,7 @@
 
 baseurl = "https://fernandosimoes.com"
 title = "fernandosimoes.com"
-theme = "smol-c"
+theme = "hugo-xmin"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
@@ -44,9 +44,9 @@ defaultContentLanguageInSubdir = false
   #       url = "tags/"
   #       weight = 2
   [[menu.main]]
-        identifier = "home"
-        name = "home"
-        url = "/"
+        identifier = "posts"
+        name = "posts"
+        url = "posts/"
         weight = 1
   # [[menu.main]]
   #       identifier = "pt-br"

@@ -1,235 +1,34 @@
 <!DOCTYPE html>
 <html lang="en-US">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<style type=text/css>body{font-family:monospace;}</style>
-	<title>What happens when you call a method in Python</title>
-	
-	<style>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What happens when you call a method in Python | fernandosimoes.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
 
-:root {
-    --width: 720px;
-    --font-main: Verdana, sans-serif;
-    --font-secondary: Verdana, sans-serif;
-    --font-scale: 1em;
-    --background-color: #fff;
-    --heading-color: #222;
-    --text-color: #444;
-    --link-color: #3273dc;
-    --visited-color:  #8b6fcb;
-    --code-background-color: #f2f2f2;
-    --code-color: #222;
-    --blockquote-color: #222;
-}
-  body {
-    font-family: var(--font-secondary);
-    font-size: var(--font-scale);
-    margin: auto;
-    padding: 20px;
-    max-width: var(--width);
-    text-align: left;
-    background-color: var(--background-color);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: var(--text-color);
-  }
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-main);
-    color: var(--heading-color);
-}
+<div class="article-meta">
+<h1><span class="title">What happens when you call a method in Python</span></h1>
 
-a {
-    color: var(--link-color);
-    cursor: pointer;
-    text-decoration: none;
-}
+<h2 class="date">2023/04/26</h2>
+</div>
 
-a:hover {
-    text-decoration: underline; 
-}
-
-nav a {
-    margin-right: 8px;
-}
-
-  textarea {
-    width: 100%;
-    font-size: 16px;
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  content {
-    line-height: 1.6;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  img {
-    max-width: 100%;
-  }
-
-  code {
-    padding: 2px 5px;
-    background-color: #f2f2f2;
-  }
-
-  pre code {
-    color: #222;
-    display: block;
-    padding: 20px;
-    white-space: pre-wrap;
-    font-size: 14px;
-    overflow-x: auto;
-  }
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-  blockquote {
-    border-left: 1px solid #999;
-    color: #222;
-    padding-left: 20px;
-    font-style: italic;
-  }
-
-  footer {
-    padding: 25px;
-    text-align: center;
-  }
-
-  .helptext {
-    color: #777;
-    font-size: small;
-  }
-
-  .errorlist {
-    color: #eba613;
-    font-size: small;
-  }
-
-   
-  ul.blog-posts {
-    list-style-type: none;
-    padding: unset;
-  }
-
-  ul.blog-posts li {
-    display: flex;
-  }
-
-  ul.blog-posts li span {
-    flex: 0 0 130px;
-  }
-
-  ul.blog-posts li a:visited {
-    color: #8b6fcb;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-color: #333;
-      color: #ddd;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    strong,
-    b {
-      color: #eee;
-    }
-
-    a {
-      color: #8cc2dd;
-    }
-
-    code {
-      background-color: #777;
-    }
-
-    pre code {
-      color: #ddd;
-    }
-
-blockquote {
-    border-left: 1px solid #999;
-    color: var(--code-color);
-    padding-left: 20px;
-    font-style: italic;
-}
-
-    textarea,
-    input {
-      background-color: #252525;
-      color: #ddd;
-    }
-
-    .helptext {
-      color: #aaa;
-    }
-  }
-
-</style>
-
-	
-	
-</head>
-<body>
-	<header>
-	<nav>
-			<h1>Fernando Simões</h1>
-			
-			
-			<a href="/">home</a>
-			
-			<a href="/about/">about</a>
-			
-	</nav>
-	</p>
-	
-	</nav>
-</header>
-
-	
-	<main>
-		<article>
-			<h1>What happens when you call a method in Python</h1>
-			<b><time>26 April 2023</time></b>
-		       
-		           <a href="/tags/programming">Programming</a>
-        	       
-
-			<div>
-				<p>A not-creative example (Bear with me).</p>
+<main>
+<p>A not-creative example (Bear with me).</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">class</span> <span style="color:#3f6e75">C</span>:
 </span></span><span style="display:flex;"><span>    <span style="color:#a90d91">def</span> <span style="color:#000">sum_numbers</span>(<span style="color:#5b269a">self</span>, <span style="color:#000">x</span>, <span style="color:#000">y</span>):
 </span></span><span style="display:flex;"><span>        <span style="color:#a90d91">return</span> <span style="color:#000">x</span> <span style="color:#000">+</span> <span style="color:#000">y</span>
@@ -285,34 +84,12 @@ blockquote {
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>&gt;&gt;&gt; m.__func__<span style="color:#000">(</span>m.__self__, 40, 2<span style="color:#000">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#1c01ce">42</span>
 </span></span></code></pre></div>
-			</div>
-		</article>
-	</main>
-<aside>
-	<hr>
-	<div>
-	</div>
-	<div>
-		<div>
-			<h3>LATEST POSTS</h3>
-		</div>
-		<div>
-			<ul>
-				
-				<li><a href="/posts/about-learning/">About learning</a></li>
-				
-				<li><a href="/posts/io-multiplexing/">IO multiplexing and concurrency</a></li>
-				
-				<li><a href="/posts/socket/">What does it mean to bind to a port?</a></li>
-				
-				<li><a href="/posts/process/">Playing around with fork()</a></li>
-				
-			</ul>
-		</div>
-	</div>
-</aside>
+</main>
 
-
-	
-</body>
+  <footer>
+  
+  
+  </footer>
+  </body>
 </html>
+
