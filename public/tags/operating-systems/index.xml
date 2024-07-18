@@ -16,13 +16,6 @@
       <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
     </item>
     <item>
-      <title>Brincando com fork()</title>
-      <link>https://fernandosimoes.com/pt/posts/processos/</link>
-      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/posts/processos/</guid>
-      <description>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.&#xA;Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.&#xA;O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</description>
-    </item>
-    <item>
       <title>Playing around with fork()</title>
       <link>https://fernandosimoes.com/posts/process/</link>
       <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
