@@ -13,7 +13,7 @@ This website is primarily an index page for things I'm studying and find interes
 
 Don't hesitate to send me an [email] if you want to chat. You can also find me on [LinkedIn] and [Twitter], I would love to talk about things we have in common or answer any questions you might have.
 
-[computer science]: posts/how-i-started-studying-cs/
+[computer science]: posts/stududying-cs
 [brief overview]: background
 [linkedin]: https://linkedin.com/in/frnsimoes
 [twitter]: https://x.com/frnsimoes
