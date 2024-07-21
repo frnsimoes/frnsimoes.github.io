@@ -2,27 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://fernandosimoes.com/pt/authors/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://fernandosimoes.com/authors/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://fernandosimoes.com/pt/authors/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://fernandosimoes.com/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://fernandosimoes.com/pt/categories/"
+                />
+  </url><url>
     <loc>https://fernandosimoes.com/pt/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en-US"
+                hreflang="en"
                 href="https://fernandosimoes.com/"
                 />
     <xhtml:link
                 rel="alternate"
-                hreflang="pt-BR"
+                hreflang="pt"
                 href="https://fernandosimoes.com/pt/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/series/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://fernandosimoes.com/series/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://fernandosimoes.com/pt/series/"
                 />
   </url><url>
     <loc>https://fernandosimoes.com/pt/tags/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en-US"
+                hreflang="en"
                 href="https://fernandosimoes.com/tags/"
                 />
     <xhtml:link
                 rel="alternate"
-                hreflang="pt-BR"
+                hreflang="pt"
                 href="https://fernandosimoes.com/pt/tags/"
                 />
   </url>

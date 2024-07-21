@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Qual é o tamanho de um arquivo em disco? · fernandosimoes
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Fernando Simões">
+<meta name="description" content="Tenho brincado um pouco com o sistema operacional e arquivos.
+Encontrei o comando stat do POSIX. Na manpage:
+the stat utility displays information about the file pointed to by file.
+Estou mais interessado em duas das informações do stat: Block e Block IO:
+Experimente:
+root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Qual é o tamanho de um arquivo em disco?">
+  <meta name="twitter:description" content="Tenho brincado um pouco com o sistema operacional e arquivos.
+Encontrei o comando stat do POSIX. Na manpage:
+the stat utility displays information about the file pointed to by file.
+Estou mais interessado em duas das informações do stat: Block e Block IO:
+Experimente:
+root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.">
+
+<meta property="og:url" content="https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/">
+  <meta property="og:site_name" content="fernandosimoes">
+  <meta property="og:title" content="Qual é o tamanho de um arquivo em disco?">
+  <meta property="og:description" content="Tenho brincado um pouco com o sistema operacional e arquivos.
+Encontrei o comando stat do POSIX. Na manpage:
+the stat utility displays information about the file pointed to by file.
+Estou mais interessado em duas das informações do stat: Block e Block IO:
+Experimente:
+root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="pt">
+    <meta property="article:published_time" content="2024-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-04-01T00:00:00+00:00">
+
+
+
+
+<link rel="canonical" href="https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://fernandosimoes.com/">
+      fernandosimoes
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">about</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">posts</a>
+            </li>
+          
+        
+        
+          
+          
+          
+            
+          
+            
+              
+                <li class="navigation-item menu-separator">
+                  <span>|</span>
+                </li>
+                
+              
+              <li class="navigation-item">
+                <a href="/pt/">🇧🇷</a>
+              </li>
+            
+          
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/">
+          Qual é o tamanho de um arquivo em disco?
+        </a>
+      </h1>
+    </header>
+
+    <p>Tenho brincado um pouco com o sistema operacional e arquivos.</p>
+<p>Encontrei o comando stat do POSIX. Na manpage:</p>
+<blockquote>
+<p>the stat utility displays information about the file pointed to by file.</p>
+</blockquote>
+<p>Estou mais interessado em duas das informações do <code>stat</code>: Block e Block IO:</p>
+<p>Experimente:</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 0               Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:43:42.909805004 +0000
+...
+</code></pre><p><code>tmp</code> é um arquivo vazio. <code>Blocks</code> é 8 e IO Block é <code>4096</code>.</p>
+<pre tabindex="0"><code>cat /dev/urandom | head -c 4096 &gt; tmp
+
+stat tmp
+
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4096            Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>O que aconteceria se um ou mais byte fosse adicionado no arquivo tmp?</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# echo -n &#39;.&#39; &gt;&gt; tmp
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4097            Blocks: 16         IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid&lt;LeftMouse&gt;: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>Agora temos <code>Blocks: 16</code>. O OS alocou 8 para um arquivo com 4097 bytes.</p>
+<p>Por que 8 blocks?</p>
+<p>8 blocks é uma unidade de medidaa. Blocks são contados em unidades de 512 bytes.</p>
+<p><strong>Qual é o tamanho do arquivo em disco?</strong></p>
+<p>Se o arquivo tem Size: 2, digamos, e o OS alocou 8 blocks (<code>8*512</code>) para ele, o tamanho do arquivo em disco é de 4096 bytes.</p>
+<p>Se o arquivo tem Size: 4097, e o OS alocou 16 blocks (<code>16*512</code>), o tamanho do arquivo em disco é de 8192 bytes.</p>
+<pre tabindex="0"><code>#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define ONE_MEG 1024 * 1024
+
+
+int main() {
+	int f = open(&#34;/tmp/foo&#34;, O_WRONLY | O_TRUNC);
+
+	blkcnt_t prior_blocks = -1;
+	struct stat st;
+
+	for (int i = 0; i &lt; ONE_MEG; i++) {
+		write(f, &#34;.&#34;, 1);
+		fstat(f, &amp;st);
+
+		if (st.st_blocks != prior_blocks) {
+			printf(&#34;Size: %lld, blocks: %lld, on disk: %lld\n&#34;, st.st_size, st.st_blocks, st.st_blocks * 512);
+			prior_blocks = st.st_blocks;
+		}
+	}
+
+	close(f);
+	return 0;
+}
+</code></pre>
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2021 -
+    
+    2024
+     Fernando Simões 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

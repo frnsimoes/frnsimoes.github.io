@@ -9,12 +9,12 @@
     <lastmod>2024-07-14T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="pt-BR"
+                hreflang="pt"
                 href="https://fernandosimoes.com/pt/"
                 />
     <xhtml:link
                 rel="alternate"
-                hreflang="en-US"
+                hreflang="en"
                 href="https://fernandosimoes.com/"
                 />
   </url><url>
@@ -27,19 +27,28 @@
     <loc>https://fernandosimoes.com/posts/io-multiplexing/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/pt/io-multiplexing-concorrencia/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/tags/operating-systems/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/tags/programming/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/tags/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="pt-BR"
+                hreflang="pt"
                 href="https://fernandosimoes.com/pt/tags/"
                 />
     <xhtml:link
                 rel="alternate"
-                hreflang="en-US"
+                hreflang="en"
                 href="https://fernandosimoes.com/tags/"
                 />
   </url><url>
@@ -58,6 +67,9 @@
     <loc>https://fernandosimoes.com/week-rule/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/pt/processos/</loc>
+    <lastmod>2024-06-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/process/</loc>
     <lastmod>2024-06-18T00:00:00+00:00</lastmod>
   </url><url>
@@ -70,8 +82,17 @@
     <loc>https://fernandosimoes.com/posts/studying-cs/</loc>
     <lastmod>2024-05-15T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/pt/o-que-e-um-http-body/</loc>
+    <lastmod>2024-05-03T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/http-body/</loc>
     <lastmod>2024-05-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/escrevi-um-app-wsgi/</loc>
+    <lastmod>2023-12-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/wsgi-app/</loc>
     <lastmod>2023-12-30T00:00:00+00:00</lastmod>
@@ -82,11 +103,17 @@
     <loc>https://fernandosimoes.com/posts/unix-trivia/</loc>
     <lastmod>2023-06-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/tags/programming/</loc>
-    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
+    <loc>https://fernandosimoes.com/pt/unix-trivia/</loc>
+    <lastmod>2023-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/software-descontentamentos_pt-br/</loc>
+    <lastmod>2023-05-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/python-method/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/invariantes/</loc>
+    <lastmod>2022-06-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/invariants/</loc>
     <lastmod>2022-06-10T00:00:00+00:00</lastmod>
@@ -98,5 +125,43 @@
     <lastmod>2021-12-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/projects/</loc>
+  </url><url>
+    <loc>https://fernandosimoes.com/authors/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://fernandosimoes.com/pt/authors/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://fernandosimoes.com/authors/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://fernandosimoes.com/pt/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://fernandosimoes.com/categories/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/series/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://fernandosimoes.com/pt/series/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://fernandosimoes.com/series/"
+                />
+  </url><url>
+    <loc>https://fernandosimoes.com/pt/about/</loc>
   </url>
 </urlset>

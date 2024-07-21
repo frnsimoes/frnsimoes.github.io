@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  IO Multiplexing e Concorrência em Proxies · fernandosimoes
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Fernando Simões">
+<meta name="description" content="IO multiplexing é um tópico complexo à primeira vista. Mas é a base da &ldquo;concorrência&rdquo; sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.
+O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por &ldquo;coisas&rdquo; quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="IO Multiplexing e Concorrência em Proxies">
+  <meta name="twitter:description" content="IO multiplexing é um tópico complexo à primeira vista. Mas é a base da “concorrência” sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.
+O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por “coisas” quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.">
+
+<meta property="og:url" content="https://fernandosimoes.com/pt/io-multiplexing-concorrencia/">
+  <meta property="og:site_name" content="fernandosimoes">
+  <meta property="og:title" content="IO Multiplexing e Concorrência em Proxies">
+  <meta property="og:description" content="IO multiplexing é um tópico complexo à primeira vista. Mas é a base da “concorrência” sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.
+O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por “coisas” quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="pt">
+    <meta property="article:published_time" content="2024-07-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-07-09T00:00:00+00:00">
+    <meta property="article:tag" content="Programming">
+
+
+
+
+<link rel="canonical" href="https://fernandosimoes.com/pt/io-multiplexing-concorrencia/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://fernandosimoes.com/">
+      fernandosimoes
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">about</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">posts</a>
+            </li>
+          
+        
+        
+          
+          
+          
+            
+          
+            
+              
+                <li class="navigation-item menu-separator">
+                  <span>|</span>
+                </li>
+                
+              
+              <li class="navigation-item">
+                <a href="/pt/">🇧🇷</a>
+              </li>
+            
+          
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://fernandosimoes.com/pt/io-multiplexing-concorrencia/">
+          IO Multiplexing e Concorrência em Proxies
+        </a>
+      </h1>
+    </header>
+
+    <p>IO multiplexing é um tópico complexo à primeira vista. Mas é a base da &ldquo;concorrência&rdquo; sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.</p>
+<p>O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por &ldquo;coisas&rdquo; quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.</p>
+<p>Multiplexing é um recurso bem conhecido para lidar com o cenário de &ldquo;precisamos reunir algumas coisas e depois entregá-las aos seus próprios proprietários&rdquo;. É uma maneira de proxyar recibos diligentemente para os destinatários apropriados.</p>
+<p>Multiplexing e demultiplexing são amplamente usados em protocolos de rede na camada de transporte. Quando você usa seu computador, você não se conecta a uma única rede por vez. Normalmente, você está ouvindo música, enviando e-mails, conversando e baixando arquivos. UDP e TCP sabem como lidar com isso e como entregar o datagrama/segmento apropriado ao socket correto.</p>
+<p>Mas e se você tiver apenas um processo e quiser criar essa mesma funcionalidade? Suponha que você seja um servidor e queira responder a múltiplas requisições de diferentes origens. O que você poderia fazer? Bem, você poderia rodar em múltiplas threads ou talvez múltiplos processadores. Mas, em muitos casos, isso não é uma boa opção ou uma possibilidade.</p>
+<p>Uma maneira de lidar com múltiplas requisições no escopo de um processo single-threaded é usar IO Multiplexing. Em sistemas Unix, temos os seguintes modelos de IO:</p>
+<p>Blocking IO model
+Nonblocking IO model
+IO Multiplexing model
+Blocking IO significa que o processo irá parar sua execução até que a operação de IO seja completada. Nonblocking IO, por outro lado, não espera que a execução de IO seja completada; em vez disso, o processo continua a rodar e, se a execução de IO não foi completada, retorna um erro.</p>
+<p>O modelo de IO Multiplexing é hors-concours, por sua vez. Ele faz uso de chamadas de sistema como select, poll, epoll (dependendo do sistema operacional, no meu Mac uso select, mas se você é um nerd de Linux, pode preferir poll &ndash; eu gostaria de poder) para rastrear file descriptors e lidar com sua prontidão para serem IOed.</p>
+<p>Mas o que isso realmente significa? Como isso realmente acontece?</p>
+<p>Imagine que você é um servidor. Alguém envia uma requisição com curl, e outra pessoa envia uma requisição com o navegador. A princípio, você não sabe o que fazer. Bem, você sabe, mas as coisas estão indo bem: seu socket vai processar a requisição curl, e a requisição do navegador ficará bloqueada potencialmente pelo tempo que a requisição curl levar para ser executada.</p>
+<p>Você não quer isso. Você não é esse tipo de servidor. É? Você prefere ser capaz de ouvir a requisição curl e então, enquanto estiver bloqueado por ela (digamos que precise de alguma consulta ao banco de dados), você quer atender a requisição do navegador web.</p>
+<p>Isso é o que o IO Multiplexing permite que você faça.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">select</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">socket</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">listener</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">listener</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">listener</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">listener</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">listener</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">to_send</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">readable</span><span class="p">,</span> <span class="n">writable</span><span class="p">,</span> <span class="n">exceptional</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;readables&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">readable</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;writables&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">writable</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">readable</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">listener</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">client_sock</span><span class="p">,</span> <span class="n">client_addr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">client_sock</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client_sock</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">to_send</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">inputs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">writable</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">to_send</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">to_send</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">outputs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;HTTP/1.0 200 ok </span><span class="se">\r\n\r\n</span><span class="s1">body text&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span></code></pre></div><p>Aqui está o que está acontecendo nesse código feio:</p>
+<p>Esta é uma conexão TCP (identificada por socket.SOCK_STREAM). Em vez de fazer o handshake imediatamente assim que a requisição do cliente chega, você chama select. O que select vai fazer é monitorar as entradas para você. Quando a requisição curl chega, você recebe sua mensagem; o mesmo acontece para a requisição do navegador. Elas se tornam &ldquo;readable&rdquo; porque o socket (o file descriptor) pode querer ler o que foi enviado por elas.</p>
+<p>Note que tanto curl quanto a requisição do navegador são dois sockets diferentes, então são identificados por dois file descriptors diferentes.</p>
+<p>Quando você processa a mensagem de um cliente, você quer respondê-la, é isso que o to_send() está fazendo. writable é uma maneira de dizer: &ldquo;aqui está uma coisa que eu quero escrever para este file descriptor&rdquo;.</p>
+<p>E aí está. Enquanto sendo apenas um socket, você acabou de criar uma maneira de lidar com múltiplas requisições simultaneamente.</p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2021 -
+    
+    2024
+     Fernando Simões 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

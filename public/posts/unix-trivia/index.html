@@ -1,34 +1,196 @@
 <!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Unix trivia | fernandosimoes.com</title>
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/fonts.css" />
+<html lang="en">
+
+<head>
+  <title>
+  Unix trivia · fernandosimoes
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Fernando Simões">
+<meta name="description" content="The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn&rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.
+Until 1989, AT&amp;T couldn&rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;T&rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Unix trivia">
+  <meta name="twitter:description" content="The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn’t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.
+Until 1989, AT&amp;T couldn’t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;T’s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.">
+
+<meta property="og:url" content="https://fernandosimoes.com/posts/unix-trivia/">
+  <meta property="og:site_name" content="fernandosimoes">
+  <meta property="og:title" content="Unix trivia">
+  <meta property="og:description" content="The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn’t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.
+Until 1989, AT&amp;T couldn’t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;T’s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-06-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-06-25T00:00:00+00:00">
+    <meta property="article:tag" content="Operating Systems">
+
+
+
+
+<link rel="canonical" href="https://fernandosimoes.com/posts/unix-trivia/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
     
-  </head>
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
 
-  <body>
-    <nav>
-    <ul class="menu">
-      
-      <li><a href="/">posts</a></li>
-      
-      <li><a href="/about/">about</a></li>
-      
-    </ul>
-    <hr/>
-    </nav>
 
-<div class="article-meta">
-<h1><span class="title">Unix trivia</span></h1>
 
-<h2 class="date">2023/06/25</h2>
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
 </div>
 
-<main>
-<p>The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn&rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.</p>
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://fernandosimoes.com/">
+      fernandosimoes
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">about</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">posts</a>
+            </li>
+          
+        
+        
+          
+          
+          
+            
+          
+            
+              
+                <li class="navigation-item menu-separator">
+                  <span>|</span>
+                </li>
+                
+              
+              <li class="navigation-item">
+                <a href="/pt/">🇧🇷</a>
+              </li>
+            
+          
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://fernandosimoes.com/posts/unix-trivia/">
+              Unix trivia
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2023-06-25T00:00:00Z">
+                June 25, 2023
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/operating-systems/">Operating Systems</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn&rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.</p>
 <p>Until 1989, AT&amp;T couldn&rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;T&rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began. Bill Joy, from Berkeley, was 25 at the time, and 2BSD had already been released.</p>
 <p>In 1989, US regulatory rules changed, allowing AT&amp;T to sell Unix licenses, which intensified legal battles against Berkeley and BSD. At the time, AT&amp;T sold Unix licenses for $250,000 (!!!).</p>
 <p>Students at the University of California, Berkeley, made tremendous efforts to replace any AT&amp;T-owned code in the BSD source code. During this time, Net/1 and Net/2 emerged under Keith Bostic&rsquo;s guidance, and McKusick and Mike Karels worked on removing AT&amp;T code from the BSD kernel. Net/2 was marketed as a standalone TCP/IP component for about $1,000 (compare this with AT&amp;T&rsquo;s $250,000).</p>
@@ -40,12 +202,92 @@
 </ul>
 <p>It&rsquo;s very interesting to see how things unfolded during this time and how the movement against a giant company like AT&amp;T was primarily led (with some exceptions) by university students and associates.</p>
 
-</main>
+      </div>
 
-  <footer>
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2021 -
+    
+    2024
+     Fernando Simões 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
   
   
-  </footer>
-  </body>
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
 </html>
-

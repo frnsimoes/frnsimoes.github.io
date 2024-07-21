@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+  Brincando com fork() · fernandosimoes
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Fernando Simões">
+<meta name="description" content="A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.
+Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.
+O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Brincando com fork()">
+  <meta name="twitter:description" content="A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.
+Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.
+O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.">
+
+<meta property="og:url" content="https://fernandosimoes.com/pt/processos/">
+  <meta property="og:site_name" content="fernandosimoes">
+  <meta property="og:title" content="Brincando com fork()">
+  <meta property="og:description" content="A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.
+Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.
+O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="pt">
+    <meta property="article:published_time" content="2024-06-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-06-18T00:00:00+00:00">
+    <meta property="article:tag" content="Operating Systems">
+
+
+
+
+<link rel="canonical" href="https://fernandosimoes.com/pt/processos/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.38c4552ac40f9ae3408bad40358f654ebd8804412fe74ed56f2d6c8a7af82dd3.css" integrity="sha256-OMRVKsQPmuNAi61ANY9lTr2IBEEv507Vby1sinr4LdM=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.a00e6364bacbc8266ad1cc81230774a1397198f8cfb7bcba29b7d6fcb54ce57f.css" integrity="sha256-oA5jZLrLyCZq0cyBIwd0oTlxmPjPt7y6KbfW/LVM5X8=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="https://fernandosimoes.com/">
+      fernandosimoes
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">about</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">posts</a>
+            </li>
+          
+        
+        
+          
+          
+          
+            
+          
+            
+              
+                <li class="navigation-item menu-separator">
+                  <span>|</span>
+                </li>
+                
+              
+              <li class="navigation-item">
+                <a href="/pt/">🇧🇷</a>
+              </li>
+            
+          
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://fernandosimoes.com/pt/processos/">
+          Brincando com fork()
+        </a>
+      </h1>
+    </header>
+
+    <p>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call <code>create</code>, ou algo assim.</p>
+<p>Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.</p>
+<p>O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</p>
+<p>A API envolve três passos: <code>fork()</code>, execute() e depois wait() (opcional). Um exemplo simples:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sys/types.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="err">`</span><span class="nf">fork</span><span class="p">()</span><span class="err">`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">perror</span><span class="p">(</span><span class="s">&#34;Fork failed&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;World</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">wait</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Hello</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Primeiro, chamamos <code>fork()</code> para criar um processo filho. Se o pid (o valor retornado) for &lt; 0, ocorreu um erro. Se for == 0, estamos no domínio do filho, caso contrário, no domínio do pai. Pelo que sei, se não chamarmos wait() no domínio do pai, não há como saber o que será executado primeiro (Hello\n ou World\n), porque a ordem de execução depende das implementações do scheduler do sistema operacional. Mas, ao chamar wait(), o processo pai espera pelo retorno do PID do filho.</p>
+<p>Você até consegue construir um shell simplificado, com esse processo: o próprio shell é um processo, então ao criar e executar novos processos dentro de um shell (digamos que você digite yes no seu terminal e pressione return), você está verdadeiramente criando e executando um processo que é filho do processo bash / zsh / etc. Aqui está uma <a href="https://github.com/frnsimoes/computer-science-studies/blob/main/operating-systems/programs-and-processes/basic-shell/shell.c"  class="external-link" target="_blank" rel="noopener">implementação simples de um shell</a>.</p>
+<p>Este modelo pode ser estranho, alguns o adoram, outros o odeiam. Há um famoso (pelo menos famoso entre nós nerds) artigo acusando o fork de ser algo ruim em um sistema operacional, se você estiver curioso: <a href="https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf"  class="external-link" target="_blank" rel="noopener">a <code>fork()</code> in the road</a>.</p>
+<p>O sistema operacional também exibe as relações do processo atual no seu sistema operacional em uma árvore. Tente chamar pstree no seu terminal.</p>
+<p>Embora esta API possa ser estranha, gosto do que os autores de <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-api.pdf"  class="external-link" target="_blank" rel="noopener">OSTEP</a> dizem:</p>
+<blockquote>
+<p>the separation of <code>fork()</code> and <code>exec()</code> is essential in building a UNIX shell, because it lets the shell run code after the call to fork() but before the call to exec(); this code can alter the environment of the about-to-be-run program, and thus enables a variety of interesting features to be readily built.</p>
+</blockquote>
+<p>Um exemplo seria o seguinte:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="nf">fork</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// fork falhou; sair
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nf">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&#34;fork failed</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// filho: redirecionar saída padrão para um arquivo
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nf">close</span><span class="p">(</span><span class="n">STDOUT_FILENO</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">        <span class="nf">open</span><span class="p">(</span><span class="s">&#34;./p4.output&#34;</span><span class="p">,</span> <span class="n">O_CREAT</span><span class="o">|</span><span class="n">O_WRONLY</span><span class="o">|</span><span class="n">O_TRUNC</span><span class="p">,</span> <span class="n">S_IRWXU</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// exec é chamado
+</span></span></span></code></pre></div><p>Neste exemplo simples, chamamos close<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> no file descriptor de saída padrão e abrimos um arquivo. Fazendo isso, podemos manipular o processo filho para gerar algo no arquivo aberto.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>do man page: A chamada close() exclui um descritor da tabela de referência de objetos por processo&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2021 -
+    
+    2024
+     Fernando Simões 
+    ·
+    
+    Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
