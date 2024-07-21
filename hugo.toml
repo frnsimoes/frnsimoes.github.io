@@ -191,24 +191,24 @@ url = "posts/"
 # weight = 5
 # url = "contact/"
 
-[languages.pt]
-languageName = ":brazil:"
-title = "Fernando Simões"
-
-[languages.pt.params]
-author = "Fernando Simões"
-description = "Site pessoal de Fernando Simões"
-keywords = "blog,desenvolvedor,pessoal"
-
-[[languages.pt.menu.main]]
-name = "sobre"
-weight = 1
-url = "about/"
-
-[[languages.pt.menu.main]]
-name = "posts"
-weight = 2
-url = "posts/"
+# [languages.pt]
+# languageName = ":brazil:"
+# title = "Fernando Simões"
+#
+# [languages.pt.params]
+# author = "Fernando Simões"
+# description = "Site pessoal de Fernando Simões"
+# keywords = "blog,desenvolvedor,pessoal"
+#
+# [[languages.pt.menu.main]]
+# name = "sobre"
+# weight = 1
+# url = "about/"
+#
+# [[languages.pt.menu.main]]
+# name = "posts"
+# weight = 2
+# url = "posts/"
 
 # [[languages.pt-br.menu.main]]
 # name = "Projetos"

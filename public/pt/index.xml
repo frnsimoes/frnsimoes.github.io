@@ -1,11 +1,75 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Fernando Simões</title>
+    <title>Pts on fernandosimoes</title>
     <link>https://fernandosimoes.com/pt/</link>
-    <description>Recent content on Fernando Simões</description>
+    <description>Recent content in Pts on fernandosimoes</description>
     <generator>Hugo</generator>
-    <language>pt</language>
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/pt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IO Multiplexing e Concorrência em Proxies</title>
+      <link>https://fernandosimoes.com/pt/io-multiplexing-concorrencia/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/io-multiplexing-concorrencia/</guid>
+      <description>IO multiplexing é um tópico complexo à primeira vista. Mas é a base da &amp;ldquo;concorrência&amp;rdquo; sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.&#xA;O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por &amp;ldquo;coisas&amp;rdquo; quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.</description>
+    </item>
+    <item>
+      <title>Brincando com fork()</title>
+      <link>https://fernandosimoes.com/pt/processos/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/processos/</guid>
+      <description>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.&#xA;Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.&#xA;O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</description>
+    </item>
+    <item>
+      <title>O que é o body em uma mensagem HTTP?</title>
+      <link>https://fernandosimoes.com/pt/o-que-e-um-http-body/</link>
+      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/o-que-e-um-http-body/</guid>
+      <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
+    </item>
+    <item>
+      <title>Qual é o tamanho de um arquivo em disco?</title>
+      <link>https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/</link>
+      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/</guid>
+      <description>Tenho brincado um pouco com o sistema operacional e arquivos.&#xA;Encontrei o comando stat do POSIX. Na manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;Estou mais interessado em duas das informações do stat: Block e Block IO:&#xA;Experimente:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+    </item>
+    <item>
+      <title>Escrevi uma aplicação WSGI!</title>
+      <link>https://fernandosimoes.com/pt/escrevi-um-app-wsgi/</link>
+      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/escrevi-um-app-wsgi/</guid>
+      <description>Neste Natal, decidi criar um framework de servidor bem simples em Python, implementando uma aplicação WSGI.&#xA;Eu estava interessado em aprender mais sobre como diferentes frameworks em Python lidam com escolhas de design na implementação, especialmente em relação às abstrações de requests e responses.&#xA;Tive a chance de explorar Flask (e Werkzeug), Bottle, Django, e investigar o protocolo HTTP mais a fundo.&#xA;Comecei tentando lidar com os detalhes mais complicados dos sockets, mas logo desisti para me concentrar na aplicação WSGI em si.</description>
+    </item>
+    <item>
+      <title>Unix trivia</title>
+      <link>https://fernandosimoes.com/pt/unix-trivia/</link>
+      <pubDate>Sun, 25 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/unix-trivia/</guid>
+      <description>A história do Unix tem muita coisa curiosa: uma empresa gigantesca como a AT&amp;amp;T, à época proprietária da Bell Labs (e, portanto, do UNIX), não se importou com o Unix até 1979, dez anos depois do início do projeto por Thompson e Ritchie.&#xA;Até 1989, AT&amp;amp;T não podia comercializar o Unix em função de um contrato de monopólio de telecomunicações que havia firmado com o governo dos Estados Unidos. A falta de interesse no Unix pela AT&amp;amp;T fez com que o sistema crescesse livremente, com várias contribuições independentes, ao menos até 1979, quando começaram os processos judiciais contra Berkeley e o BSD.</description>
+    </item>
+    <item>
+      <title>Software e seus descontentamentos</title>
+      <link>https://fernandosimoes.com/pt/software-descontentamentos_pt-br/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/software-descontentamentos_pt-br/</guid>
+      <description>(Tradução livre da segunda parte de uma série de 3 artigos de autoria de Kellan Elliot-McCrea. Todos os textos podem ser encontrados aqui).&#xA;Esta é a parte 2 da minha série &amp;ldquo;Software e seus descontentamentos&amp;rdquo;. Essa série surgiu quando eu resolvi perguntar a uma porção de pessoas sobre o estado atual da engenharia de software: a sensação de que a engenharia de software não anda bem, as pessoas estão desiludidas e descontentes.</description>
+    </item>
+    <item>
+      <title>Invariantes</title>
+      <link>https://fernandosimoes.com/pt/invariantes/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/invariantes/</guid>
+      <description>Uma regra no Domain-Driven Design (DDD) diz que &amp;ldquo;cada entidade deve se auto-validar.&amp;rdquo; Essa regra é clara, simples e funcional quando pensamos em uma entidade como Pessoa, onde o atributo nome não pode ser uma string vazia. Seria estranho e absurdo considerar que a validação do nome deve ocorrer fora da entidade Pessoa, seja durante a criação da instância ou ao chamar o método. Existem várias maneiras de realizar a validação interna, e este artigo oferece uma perspectiva interessante sobre elas.</description>
+    </item>
+    <item>
+      <title>Sobre mim</title>
+      <link>https://fernandosimoes.com/pt/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/pt/about/</guid>
+      <description>Olá!&#xA;Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em temas fundamentais da computação. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um breve resumo dos meus estudos anteriores.&#xA;Este site é principalmente um índice de coisas que estou estudando e acho interessantes o suficiente para registrar de forma escrita, de maneira mais formal.</description>
+    </item>
   </channel>
 </rss>
