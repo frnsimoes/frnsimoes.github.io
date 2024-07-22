@@ -1,6 +1,6 @@
 baseURL = "https://fernandosimoes.com"
 title = "fernandosimoes"
-theme = "hugo-coder"
+theme = "xmin"
 languageCode = "en"
 defaultContentLanguage = "en"
 paginate = 20
