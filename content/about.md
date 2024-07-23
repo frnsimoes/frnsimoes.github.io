@@ -13,10 +13,8 @@ This website is primarily an index page for things I'm studying and find interes
 
 Don't hesitate to send me an [email] if you want to chat. You can also find me on [LinkedIn] and [Twitter], I would love to talk about things we have in common or answer any questions you might have.
 
-[local]: https://fernandosimoes.com
-
-[computer science]: https://fernandosimoes.com/posts/studying-cs
-[brief overview]: https://fernandosimoes.com/posts/background
+[computer science]: /posts/studying-cs
+[brief overview]: /background
 [linkedin]: https://linkedin.com/in/frnsimoes
 [twitter]: https://x.com/frnsimoes
 [email]: mailto:fernandosimoes.dev@gmail.com
