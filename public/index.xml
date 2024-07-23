@@ -23,13 +23,6 @@
       <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
     </item>
     <item>
-      <title>IO Multiplexing e Concorrência em Proxies</title>
-      <link>https://fernandosimoes.com/pt/io-multiplexing-concorrencia/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/io-multiplexing-concorrencia/</guid>
-      <description>IO multiplexing é um tópico complexo à primeira vista. Mas é a base da &amp;ldquo;concorrência&amp;rdquo; sem múltiplas threads ou processadores. Então, é bem útil. Um exemplo de um bom uso de IO multiplexing é o Redis; outro é o Nginx.&#xA;O segredo do IO multiplexing é ser capaz de lidar com várias coisas ao mesmo tempo. E por &amp;ldquo;coisas&amp;rdquo; quero dizer múltiplos comportamentos que têm entrada ou saída em file descriptors.</description>
-    </item>
-    <item>
       <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/posts/socket/</link>
       <pubDate>Sun, 07 Jul 2024 00:00:00 +0000</pubDate>
@@ -65,13 +58,6 @@
       <description>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</description>
     </item>
     <item>
-      <title>Brincando com fork()</title>
-      <link>https://fernandosimoes.com/pt/processos/</link>
-      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/processos/</guid>
-      <description>A maneira como sistemas Unix criam um processo não é nada intuitiva. A princípio, eu imaginaria que criar um processo no sistema operacional seria tão simples quanto chamar uma system call create, ou algo assim.&#xA;Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.&#xA;O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</description>
-    </item>
-    <item>
       <title>Playing around with fork()</title>
       <link>https://fernandosimoes.com/posts/process/</link>
       <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
@@ -93,32 +79,11 @@
       <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
     </item>
     <item>
-      <title>O que é o body em uma mensagem HTTP?</title>
-      <link>https://fernandosimoes.com/pt/o-que-e-um-http-body/</link>
-      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/o-que-e-um-http-body/</guid>
-      <description>Quando falamos sobre um HTTP body, estamos nos referindo a um &amp;ldquo;fluxo de dados&amp;rdquo;, uma sequência de bytes transmitidos na mensagem HTTP.&#xA;Imagine o seguinte: uma mensagem HTTP é enviada pelo cliente ao servidor através de um socket. O servidor recebe essa mensagem de um buffer temporário, com capacidade limitada. Por exemplo: client_socket = server_socket.accept(); client_socket.recv(4096).&#xA;Suponha que o body da mensagem tenha 32768 bytes. O socket receptor não sabe quantos bytes serão recebidos, então ele processa os dados em chunks de 4096 bytes, já que esse é o tamanho máximo do buffer do socket.</description>
-    </item>
-    <item>
       <title>What is an HTTP message body?</title>
       <link>https://fernandosimoes.com/posts/http-body/</link>
       <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/http-body/</guid>
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
-    </item>
-    <item>
-      <title>Qual é o tamanho de um arquivo em disco?</title>
-      <link>https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/</link>
-      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/qual-o-tamanho-do-arquivo-em-disco/</guid>
-      <description>Tenho brincado um pouco com o sistema operacional e arquivos.&#xA;Encontrei o comando stat do POSIX. Na manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;Estou mais interessado em duas das informações do stat: Block e Block IO:&#xA;Experimente:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
-    </item>
-    <item>
-      <title>Escrevi uma aplicação WSGI!</title>
-      <link>https://fernandosimoes.com/pt/escrevi-um-app-wsgi/</link>
-      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/escrevi-um-app-wsgi/</guid>
-      <description>Neste Natal, decidi criar um framework de servidor bem simples em Python, implementando uma aplicação WSGI.&#xA;Eu estava interessado em aprender mais sobre como diferentes frameworks em Python lidam com escolhas de design na implementação, especialmente em relação às abstrações de requests e responses.&#xA;Tive a chance de explorar Flask (e Werkzeug), Bottle, Django, e investigar o protocolo HTTP mais a fundo.&#xA;Comecei tentando lidar com os detalhes mais complicados dos sockets, mas logo desisti para me concentrar na aplicação WSGI em si.</description>
     </item>
     <item>
       <title>I wrote a WSGI application!</title>
@@ -135,32 +100,11 @@
       <description>The history of Unix has many curious aspects: a huge company like AT&amp;amp;T, which at the time owned Bell Labs (and therefore Unix), didn&amp;rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.&#xA;Until 1989, AT&amp;amp;T couldn&amp;rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;amp;T&amp;rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.</description>
     </item>
     <item>
-      <title>Unix trivia</title>
-      <link>https://fernandosimoes.com/pt/unix-trivia/</link>
-      <pubDate>Sun, 25 Jun 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/unix-trivia/</guid>
-      <description>A história do Unix tem muita coisa curiosa: uma empresa gigantesca como a AT&amp;amp;T, à época proprietária da Bell Labs (e, portanto, do UNIX), não se importou com o Unix até 1979, dez anos depois do início do projeto por Thompson e Ritchie.&#xA;Até 1989, AT&amp;amp;T não podia comercializar o Unix em função de um contrato de monopólio de telecomunicações que havia firmado com o governo dos Estados Unidos. A falta de interesse no Unix pela AT&amp;amp;T fez com que o sistema crescesse livremente, com várias contribuições independentes, ao menos até 1979, quando começaram os processos judiciais contra Berkeley e o BSD.</description>
-    </item>
-    <item>
-      <title>Software e seus descontentamentos</title>
-      <link>https://fernandosimoes.com/pt/software-descontentamentos_pt-br/</link>
-      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/software-descontentamentos_pt-br/</guid>
-      <description>(Tradução livre da segunda parte de uma série de 3 artigos de autoria de Kellan Elliot-McCrea. Todos os textos podem ser encontrados aqui).&#xA;Esta é a parte 2 da minha série &amp;ldquo;Software e seus descontentamentos&amp;rdquo;. Essa série surgiu quando eu resolvi perguntar a uma porção de pessoas sobre o estado atual da engenharia de software: a sensação de que a engenharia de software não anda bem, as pessoas estão desiludidas e descontentes.</description>
-    </item>
-    <item>
       <title>What happens when you call a method in Python</title>
       <link>https://fernandosimoes.com/posts/python-method/</link>
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/python-method/</guid>
       <description>A not-creative example (Bear with me).&#xA;class C: def sum_numbers(self, x, y): return x + y Who is sum_numbers? There is a difference in answers depending on who I ask.&#xA;If I ask class C if it knows sum_numbers, this is what it tells me:&#xA;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers &amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt; But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&#xA;&amp;gt;&amp;gt;&amp;gt; c = C() &amp;gt;&amp;gt;&amp;gt; c.</description>
-    </item>
-    <item>
-      <title>Invariantes</title>
-      <link>https://fernandosimoes.com/pt/invariantes/</link>
-      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/invariantes/</guid>
-      <description>Uma regra no Domain-Driven Design (DDD) diz que &amp;ldquo;cada entidade deve se auto-validar.&amp;rdquo; Essa regra é clara, simples e funcional quando pensamos em uma entidade como Pessoa, onde o atributo nome não pode ser uma string vazia. Seria estranho e absurdo considerar que a validação do nome deve ocorrer fora da entidade Pessoa, seja durante a criação da instância ou ao chamar o método. Existem várias maneiras de realizar a validação interna, e este artigo oferece uma perspectiva interessante sobre elas.</description>
     </item>
     <item>
       <title>Invariants</title>
@@ -189,13 +133,6 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/projects/</guid>
       <description>List of little fun things I&amp;rsquo;ve done in the past:&#xA;2024-06 Persistent Proxy 2024-03 Fzf-notes 2023-12 Simple HTTP </description>
-    </item>
-    <item>
-      <title>Sobre mim</title>
-      <link>https://fernandosimoes.com/pt/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/pt/about/</guid>
-      <description>Olá!&#xA;Tenho uma variedade grande de interesses na área da computação e, nos últimos tempos, tenho focado meus esforços em aprofundr meus conhecimentos em temas fundamentais da computação. Antes de eu começar a trabalhar como desenvolvedor, passei alguns anos estudando filosofia e literatura nas minhas horas vagas. Se estiver curioso sobre essa história, eu escrevi um breve resumo dos meus estudos anteriores.&#xA;Este site é principalmente um índice de coisas que estou estudando e acho interessantes o suficiente para registrar de forma escrita, de maneira mais formal.</description>
     </item>
   </channel>
 </rss>
