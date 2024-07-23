@@ -1,9 +1,0 @@
-[submodule "themes/xmin"]
-	path = themes/xmin
-	url = https://github.com/yihui/hugo-xmin
-[submodule "themes/hugo-coder"]
-	path = themes/hugo-coder
-	url = https://github.com/luizdepra/hugo-coder.git
-[submodule "themes/hugo-smol"]
-	path = themes/hugo-smol
-	url = https://github.com/colorchestra/smol.git
