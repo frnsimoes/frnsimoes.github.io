@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>What does it mean to bind to a port? | fernandosimoes</title>
+    <title>What does it mean to bind to a port? | fernandosimoes.com</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     
@@ -13,9 +13,9 @@
     <nav>
     <ul class="menu">
       
-      <li><a href="/about/">about</a></li>
-      
       <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
       
     </ul>
     <hr/>
@@ -46,8 +46,8 @@
 <li>User writes to file -&gt; the OS knows what file it is because it can fetch from the file descriptor table what is the file associated with the file descriptor <code>42</code>.</li>
 </ol>
 <p>This process could be represented somehwat like this:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">,</span> <span class="n">O_WRONLY</span> <span class="o">|</span> <span class="n">O_CREAT</span><span class="p">,</span> <span class="mo">0644</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="nf">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">));</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">fd</span> <span style="color:#000">=</span> <span style="color:#000">open</span>(<span style="color:#c41a16">&#34;file.txt&#34;</span>, <span style="color:#000">O_WRONLY</span> <span style="color:#000">|</span> <span style="color:#000">O_CREAT</span>, <span style="color:#1c01ce">0644</span>);
+</span></span><span style="display:flex;"><span><span style="color:#000">write</span>(<span style="color:#000">fd</span>, <span style="color:#000">buffer</span>, <span style="color:#a90d91">sizeof</span>(<span style="color:#000">buffer</span>));
 </span></span></code></pre></div><div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>

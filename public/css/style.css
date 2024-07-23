@@ -10,7 +10,7 @@ body {
 .menu li { display: inline-block; }
 .article-meta, .menu a {
   text-decoration: none;
-  background: #eee;
+  /* background: #eee; */
   padding: 5px;
   border-radius: 5px;
 }
@@ -25,9 +25,9 @@ hr {
 /* code */
 pre {
   border: 1px solid #ddd;
-  box-shadow: 5px 5px 5px #eee;
+  /* box-shadow: 5px 5px 5px #eee; */
   padding: 1em;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 code { background: #f9f9f9; }
 pre code { background: none; }

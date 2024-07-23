@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IO Multiplexing e Concorrência em Proxies | fernandosimoes</title>
+    <title>IO Multiplexing e Concorrência em Proxies | fernandosimoes.com</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     
@@ -13,9 +13,9 @@
     <nav>
     <ul class="menu">
       
-      <li><a href="/about/">about</a></li>
-      
       <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
       
     </ul>
     <hr/>
@@ -43,50 +43,50 @@ Blocking IO significa que o processo irá parar sua execução até que a opera�
 <p>Imagine que você é um servidor. Alguém envia uma requisição com curl, e outra pessoa envia uma requisição com o navegador. A princípio, você não sabe o que fazer. Bem, você sabe, mas as coisas estão indo bem: seu socket vai processar a requisição curl, e a requisição do navegador ficará bloqueada potencialmente pelo tempo que a requisição curl levar para ser executada.</p>
 <p>Você não quer isso. Você não é esse tipo de servidor. É? Você prefere ser capaz de ouvir a requisição curl e então, enquanto estiver bloqueado por ela (digamos que precise de alguma consulta ao banco de dados), você quer atender a requisição do navegador web.</p>
 <p>Isso é o que o IO Multiplexing permite que você faça.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">select</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">socket</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">listener</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">listener</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">listener</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl"><span class="n">listener</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">listener</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl"><span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">to_send</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">readable</span><span class="p">,</span> <span class="n">writable</span><span class="p">,</span> <span class="n">exceptional</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;readables&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">readable</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;writables&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">writable</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">readable</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">listener</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">client_sock</span><span class="p">,</span> <span class="n">client_addr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">            <span class="n">client_sock</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client_sock</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="n">to_send</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">            <span class="n">inputs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">writable</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">to_send</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">to_send</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">outputs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;HTTP/1.0 200 ok </span><span class="se">\r\n\r\n</span><span class="s1">body text&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">import</span> <span style="color:#000">select</span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">import</span> <span style="color:#000">socket</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">listener</span> <span style="color:#000">=</span> <span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">socket</span>(<span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">AF_INET</span>, <span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">SOCK_STREAM</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">listener</span><span style="color:#000">.</span><span style="color:#000">setblocking</span>(<span style="color:#a90d91">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">listener</span><span style="color:#000">.</span><span style="color:#000">bind</span>((<span style="color:#c41a16">&#39;0.0.0.0&#39;</span>, <span style="color:#1c01ce">10000</span>))
+</span></span><span style="display:flex;"><span><span style="color:#000">listener</span><span style="color:#000">.</span><span style="color:#000">listen</span>(<span style="color:#1c01ce">10</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">inputs</span> <span style="color:#000">=</span> [<span style="color:#000">listener</span>]
+</span></span><span style="display:flex;"><span><span style="color:#000">outputs</span> <span style="color:#000">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">to_send</span> <span style="color:#000">=</span> <span style="color:#a90d91">set</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">while</span> <span style="color:#a90d91">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#000">readable</span>, <span style="color:#000">writable</span>, <span style="color:#000">exceptional</span> <span style="color:#000">=</span> <span style="color:#000">select</span><span style="color:#000">.</span><span style="color:#000">select</span>(<span style="color:#000">inputs</span>, <span style="color:#000">outputs</span>, <span style="color:#000">inputs</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">print</span>(<span style="color:#c41a16">&#39;readables&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">print</span>(<span style="color:#000">readable</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">print</span>(<span style="color:#c41a16">&#39;writables&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">print</span>(<span style="color:#000">writable</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">for</span> <span style="color:#000">s</span> <span style="color:#000">in</span> <span style="color:#000">readable</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">if</span> <span style="color:#000">s</span> <span style="color:#000">is</span> <span style="color:#000">listener</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#000">client_sock</span>, <span style="color:#000">client_addr</span> <span style="color:#000">=</span> <span style="color:#000">s</span><span style="color:#000">.</span><span style="color:#000">accept</span>()
+</span></span><span style="display:flex;"><span>            <span style="color:#000">client_sock</span><span style="color:#000">.</span><span style="color:#000">setblocking</span>(<span style="color:#a90d91">False</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#000">inputs</span><span style="color:#000">.</span><span style="color:#000">append</span>(<span style="color:#000">client_sock</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#000">data</span> <span style="color:#000">=</span> <span style="color:#000">s</span><span style="color:#000">.</span><span style="color:#000">recv</span>(<span style="color:#1c01ce">4096</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#a90d91">if</span> <span style="color:#000">data</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#a90d91">print</span>(<span style="color:#000">data</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#000">outputs</span><span style="color:#000">.</span><span style="color:#000">append</span>(<span style="color:#000">s</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#000">to_send</span><span style="color:#000">.</span><span style="color:#000">add</span>(<span style="color:#000">s</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#a90d91">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#000">s</span><span style="color:#000">.</span><span style="color:#000">close</span>()
+</span></span><span style="display:flex;"><span>            <span style="color:#000">inputs</span><span style="color:#000">.</span><span style="color:#000">remove</span>(<span style="color:#000">s</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">for</span> <span style="color:#000">s</span> <span style="color:#000">in</span> <span style="color:#000">writable</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">if</span> <span style="color:#000">s</span> <span style="color:#000">in</span> <span style="color:#000">to_send</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#000">to_send</span><span style="color:#000">.</span><span style="color:#000">remove</span>(<span style="color:#000">s</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#000">outputs</span><span style="color:#000">.</span><span style="color:#000">remove</span>(<span style="color:#000">s</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#000">s</span><span style="color:#000">.</span><span style="color:#000">send</span>(<span style="color:#c41a16">b</span><span style="color:#c41a16">&#39;HTTP/1.0 200 ok </span><span style="color:#c41a16">\r\n\r\n</span><span style="color:#c41a16">body text&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#000">s</span><span style="color:#000">.</span><span style="color:#000">close</span>()
 </span></span></code></pre></div><p>Aqui está o que está acontecendo nesse código feio:</p>
 <p>Esta é uma conexão TCP (identificada por socket.SOCK_STREAM). Em vez de fazer o handshake imediatamente assim que a requisição do cliente chega, você chama select. O que select vai fazer é monitorar as entradas para você. Quando a requisição curl chega, você recebe sua mensagem; o mesmo acontece para a requisição do navegador. Elas se tornam &ldquo;readable&rdquo; porque o socket (o file descriptor) pode querer ler o que foi enviado por elas.</p>
 <p>Note que tanto curl quanto a requisição do navegador são dois sockets diferentes, então são identificados por dois file descriptors diferentes.</p>

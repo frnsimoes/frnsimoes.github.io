@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Brincando com fork() | fernandosimoes</title>
+    <title>Brincando com fork() | fernandosimoes.com</title>
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     
@@ -13,9 +13,9 @@
     <nav>
     <ul class="menu">
       
-      <li><a href="/about/">about</a></li>
-      
       <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
       
     </ul>
     <hr/>
@@ -32,28 +32,28 @@
 <p>Mas, na realidade, a gênese da criação de um processo no Unix envolve a criação de uma árvore hierárquica de processos.</p>
 <p>O programa em execução que você está usando para criar um novo processo é um processo em si, então a maneira de criar um novo processo é criando um filho do processo atual.</p>
 <p>A API envolve três passos: <code>fork()</code>, execute() e depois wait() (opcional). Um exemplo simples:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sys/types.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp">
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="err">`</span><span class="nf">fork</span><span class="p">()</span><span class="err">`</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">perror</span><span class="p">(</span><span class="s">&#34;Fork failed&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;World</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">wait</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Hello</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;stdio.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;unistd.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;sys/types.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;sys/wait.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">pid_t</span> <span style="color:#000">pid</span> <span style="color:#000">=</span> <span style="color:#000">`</span><span style="color:#000">fork</span>()<span style="color:#000">`</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">if</span> (<span style="color:#000">pid</span> <span style="color:#000">&lt;</span> <span style="color:#1c01ce">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#000">perror</span>(<span style="color:#c41a16">&#34;Fork failed&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">return</span> <span style="color:#1c01ce">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#a90d91">else</span> <span style="color:#a90d91">if</span> (<span style="color:#000">pid</span> <span style="color:#000">==</span> <span style="color:#1c01ce">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#000">printf</span>(<span style="color:#c41a16">&#34;World</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    } <span style="color:#a90d91">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#000">wait</span>(<span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#000">printf</span>(<span style="color:#c41a16">&#34;Hello</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">return</span> <span style="color:#1c01ce">0</span>;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Primeiro, chamamos <code>fork()</code> para criar um processo filho. Se o pid (o valor retornado) for &lt; 0, ocorreu um erro. Se for == 0, estamos no domínio do filho, caso contrário, no domínio do pai. Pelo que sei, se não chamarmos wait() no domínio do pai, não há como saber o que será executado primeiro (Hello\n ou World\n), porque a ordem de execução depende das implementações do scheduler do sistema operacional. Mas, ao chamar wait(), o processo pai espera pelo retorno do PID do filho.</p>
 <p>Você até consegue construir um shell simplificado, com esse processo: o próprio shell é um processo, então ao criar e executar novos processos dentro de um shell (digamos que você digite yes no seu terminal e pressione return), você está verdadeiramente criando e executando um processo que é filho do processo bash / zsh / etc. Aqui está uma <a href="https://github.com/frnsimoes/computer-science-studies/blob/main/operating-systems/programs-and-processes/basic-shell/shell.c">implementação simples de um shell</a>.</p>
 <p>Este modelo pode ser estranho, alguns o adoram, outros o odeiam. Há um famoso (pelo menos famoso entre nós nerds) artigo acusando o fork de ser algo ruim em um sistema operacional, se você estiver curioso: <a href="https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf">a <code>fork()</code> in the road</a>.</p>
@@ -63,17 +63,17 @@
 <p>the separation of <code>fork()</code> and <code>exec()</code> is essential in building a UNIX shell, because it lets the shell run code after the call to fork() but before the call to exec(); this code can alter the environment of the about-to-be-run program, and thus enables a variety of interesting features to be readily built.</p>
 </blockquote>
 <p>Um exemplo seria o seguinte:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="nf">fork</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// fork falhou; sair
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nf">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&#34;fork failed</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// filho: redirecionar saída padrão para um arquivo
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nf">close</span><span class="p">(</span><span class="n">STDOUT_FILENO</span><span class="p">);</span> 
-</span></span><span class="line"><span class="cl">        <span class="nf">open</span><span class="p">(</span><span class="s">&#34;./p4.output&#34;</span><span class="p">,</span> <span class="n">O_CREAT</span><span class="o">|</span><span class="n">O_WRONLY</span><span class="o">|</span><span class="n">O_TRUNC</span><span class="p">,</span> <span class="n">S_IRWXU</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">// exec é chamado
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">main</span>(<span style="color:#a90d91">int</span> <span style="color:#000">argc</span>, <span style="color:#a90d91">char</span> <span style="color:#000">*</span><span style="color:#000">argv</span>[]) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">rc</span> <span style="color:#000">=</span> <span style="color:#000">fork</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">if</span> (<span style="color:#000">rc</span> <span style="color:#000">&lt;</span> <span style="color:#1c01ce">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#177500">// fork falhou; sair
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"></span>        <span style="color:#000">fprintf</span>(<span style="color:#000">stderr</span>, <span style="color:#c41a16">&#34;fork failed</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#000">exit</span>(<span style="color:#1c01ce">1</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#a90d91">else</span> <span style="color:#a90d91">if</span> (<span style="color:#000">rc</span> <span style="color:#000">==</span> <span style="color:#1c01ce">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#177500">// filho: redirecionar saída padrão para um arquivo
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"></span>        <span style="color:#000">close</span>(<span style="color:#000">STDOUT_FILENO</span>); 
+</span></span><span style="display:flex;"><span>        <span style="color:#000">open</span>(<span style="color:#c41a16">&#34;./p4.output&#34;</span>, <span style="color:#000">O_CREAT</span><span style="color:#000">|</span><span style="color:#000">O_WRONLY</span><span style="color:#000">|</span><span style="color:#000">O_TRUNC</span>, <span style="color:#000">S_IRWXU</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#177500">// exec é chamado
 </span></span></span></code></pre></div><p>Neste exemplo simples, chamamos close<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> no file descriptor de saída padrão e abrimos um arquivo. Fazendo isso, podemos manipular o processo filho para gerar algo no arquivo aberto.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
