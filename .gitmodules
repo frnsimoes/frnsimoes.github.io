@@ -1,0 +1,3 @@
+[submodule "themes/xmin-d"]
+	path = themes/xmin-d
+	url = https://github.com/frnsimoes/xmin-c.git
