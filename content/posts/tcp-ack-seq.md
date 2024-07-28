@@ -1,6 +1,6 @@
 +++ 
 date = 2024-07-28
-title = "TCP reliable delivery: ACKs e Seqs"
+title = "Estudando TCP 'Reliable Delivery'"
 tags = ["Computer Networking"]
 +++
 
@@ -89,4 +89,5 @@ Portanto, voltando aos problemas mencionados lá no início: Seq e ACKs são o s
 
 
 [RFC793]: https://www.ietf.org/rfc/rfc793.txt
-[1]: O sequence number do header é o primeiro octeto no segmento, exceto quando o SYN está presente no header.
+
+[^1]: O sequence number do header é o primeiro octeto no segmento, exceto quando o SYN está presente no header.

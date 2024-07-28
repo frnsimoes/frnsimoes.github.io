@@ -5,6 +5,9 @@
     <loc>https://fernandosimoes.com/tags/computer-networking/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/posts/tcp-ack-seq/</loc>
+    <lastmod>2024-07-28T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -33,9 +36,6 @@
                 hreflang="en-US"
                 href="https://fernandosimoes.com/tags/"
                 />
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/tcp-ack-seq/</loc>
-    <lastmod>2024-07-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/io-multiplexing/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>
