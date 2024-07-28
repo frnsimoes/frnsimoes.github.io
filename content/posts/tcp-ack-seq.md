@@ -4,11 +4,18 @@ title = "TCP reliable delivery: ACKs e Seqs"
 tags = ["Computer Networking"]
 +++
 
-Suponha que temos um servidor e um cliente. O socket do cliente envia três segmentos para o socket do servidor. Por baixo dos panos, o kernel faz o empacotamento desses segmentos, entre outras funções.
+Estava estudando sobre TCP e entrei no assunto de "reliable delivery", ou "entrega confiável". No centro desse assunto, temos dois conceitos: ACKs e Seqs. O sentido de "reliable" foi definido na [RFC793]:
 
-Agora, imagine que numa requisição foram enviados três segmentos: A, B e C. Esses segmentos chegaram a um roteador que estava com o buffer cheio, e um dos pacotes precisou ser descartado. O pacote perdido foi o B.
+> The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system.  This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP.  If the ACK is not received within a timeout interval, the data is retransmitted.  At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates.  Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.
 
-O processo do socket no servidor não pode processar A e C imediatamente, porque B é parte essencial da mensagem completa. O resultado desejado é que o kernel do servidor faça o buffer do segmento C até que o segmento B chegue.
+> As long as the TCPs continue to function properly and the internet system does not become completely partitioned, no transmission errors will affect the correct delivery of data.  TCP recovers from internet communication system errors.
+
+
+ACKs e Seq são recursos utilizados para tornar a entrega de segmentos confiável. Esse tema é bastante amplo, e os problemas que podem surgir durante a comunicação e o envio de pacotes (ou segmentos) é bastante variado e complexo. a RFC cita alguns quando dize que o TCP precisa poder se recuperar nos casos de: 1. dados corrompidos; 2. dados perdidos; 3. dados duplicados; 4. dados entregues fora de ordem.
+
+Vamos supor um cenário prático: temos um servidor e um cliente. O socket do cliente envia três segmentos para o socket do servidor: A, B e C. Esses segmentos chegaram a um roteador que estava com o buffer cheio. O socket do servidor recebeu o segmento A, perdeu o segmento B (devido ao buffer cheio), e depois "recebeu" o segmento C.
+
+O problema é que o processo do socket no servidor não pode processar o segmento C imediatamente, porque B é parte essencial da mensagem completa. O resultado desejado é que o kernel do servidor faça o buffer do segmento C até que o segmento B chegue. (Pense que "o dado" é apenas um, e os segmentos são particionamentos desse dado).
 
 Também precisamos de um mecanismo de retransmissão para o segmento B. Certo? Porque ele precisa ser reenviado. A comunicação não pode terminar apenas porque o buffer do roteador estava cheio e o segmento B não foi entregue com sucesso.
 
@@ -19,20 +26,18 @@ Portanto, precisamos:
 - Garantir a ordem do recebimento. Pode ser que os segmentos B e C não tenham tomado o mesmo caminho entre os links.
 - Evitar o recebimento de segmentos duplicados.
 
-O TCP, por padrão, usa métodos de timeout e acknowledgments.
+Não quero escrever sobre todos esses pontos neste texto, mas refletir um pouco sobre o ACK e o Seq, dois campos do TCP Header.
 
-TCP implementa a noção de número sequencial (seq #), ligado ao tamanho dos bytes recebidos anteriormente. Quando uma conexão TCP é estabelecida, cliente e servidor fazem um acordo com relação ao número sequencial para os pacotes iniciais, conhecido como ISN (Initial Sequence Number). Portanto, se o último segmento continha seq: 10.000, o próximo número de sequência será baseado no tamanho dos dados do segmento anterior.
+TCP implementa a noção de número sequencial (seq #), ligado ao tamanho dos bytes recebidos anteriormente. Quando uma conexão TCP é estabelecida, cliente e servidor fazem um acordo com relação ao número sequencial para os pacotes iniciais, conhecido como ISN (Initial Sequence Number)[^1]. Portanto, se o último segmento continha seq: 10.000, o próximo número de sequência será baseado no tamanho dos dados do segmento anterior.
 
-Vamos exemplificar:
-
-Quando um segmento é enviado com um tamanho de 1000 bytes, temos o seguinte:
+Um exemplo simples é quando um segmento é enviado com um tamanho de 1000 bytes. Nesse cenário, temos o seguinte, de maneira simplificada:
 
 ```
 Envio: segmento 1: seq = 1001, data = 1000 (bytes)
 Recebimento: ack = 2002
 ```
 
-Isso significa que o servidor recebeu o segmento 1, verificou que os dados têm 1000 bytes, e agora aguarda pelo segmento com seq = 2002.
+Isso significa que o servidor recebeu o segmento 1, verificou que os dados têm 1000 bytes, e agora aguarda pelo segmento com seq = 2001.
 
 A [RFC793] fala de "data offsets", um campo no cabeçalho TCP que indica onde os dados começam. O kernel do receptor usa esse campo para verificar o próximo comprimento esperado com base no tamanho do segmento já recebido.
 
@@ -79,4 +84,9 @@ Outro assunto interessante é a seguinte questão: por quanto tempo o socket que
 
 Um modo de medir esse tempo é usar o primeiro handshake como pedida do tempo esperado no "roundtrip". O roundtrip time inclui tanto o tempo de ida quanto o tempo de volta. O problema é que o RTT é influenciado por diversos fatores (distância entre links, por exemplo, ou quantidade de clients). Por isso, outra medida interessante é medir a variação dos diversos RTTs.
 
+Portanto, voltando aos problemas mencionados lá no início: Seq e ACKs são o suficiente para: reordenar corretamente os segmentos recebidos fora de ordem, pois cada segmento tem um número único sequencial. O ACK ausente indica ao cliente que determinado segmento não foi recebido, o que faz com que ele retransmita os dadoss; e os dados duplicados são descartados com base nos números de sequência e o checksum.
+
+
+
 [RFC793]: https://www.ietf.org/rfc/rfc793.txt
+[1]: O sequence number do header é o primeiro octeto no segmento, exceto quando o SYN está presente no header.

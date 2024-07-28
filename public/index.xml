@@ -13,7 +13,7 @@
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
-      <description>Suponha que temos um servidor e um cliente. O socket do cliente envia três segmentos para o socket do servidor. Por baixo dos panos, o kernel faz o empacotamento desses segmentos, entre outras funções.&#xA;Agora, imagine que numa requisição foram enviados três segmentos: A, B e C. Esses segmentos chegaram a um roteador que estava com o buffer cheio, e um dos pacotes precisou ser descartado. O pacote perdido foi o B.</description>
+      <description>Estava estudando sobre TCP e entrei no assunto de &amp;ldquo;reliable delivery&amp;rdquo;, ou &amp;ldquo;entrega confiável&amp;rdquo;. No centro desse assunto, temos dois conceitos: ACKs e Seqs. O sentido de &amp;ldquo;reliable&amp;rdquo; foi definido na RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP.</description>
     </item>
     <item>
       <title>IO multiplexing and concurrency</title>
