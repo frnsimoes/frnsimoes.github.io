@@ -4,7 +4,7 @@ title = "TCP reliable delivery: ACKs e Seqs"
 tags = ["Computer Networking"]
 +++
 
-Estava estudando sobre TCP e entrei no assunto de "reliable delivery", ou "entrega confiável". No centro desse assunto, temos dois conceitos: ACKs e Seqs. O sentido de "reliable" foi definido na [RFC793]:
+"Reliable delivery" é um dos temas centrais e mais interessantes do transport layer. O sentido de "reliable" foi definido na [RFC793]:
 
 > The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system.  This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP.  If the ACK is not received within a timeout interval, the data is retransmitted.  At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates.  Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.
 
