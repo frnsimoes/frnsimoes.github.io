@@ -6,8 +6,15 @@
     <description>Recent content in Computer Networking on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/computer-networking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TCP reliable delivery: ACKs e Seqs</title>
+      <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
+      <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
+      <description>Suponha que temos um servidor e um cliente. O socket do cliente envia três segmentos para o socket do servidor. Por baixo dos panos, o kernel faz o empacotamento desses segmentos, entre outras funções.&#xA;Agora, imagine que numa requisição foram enviados três segmentos: A, B e C. Esses segmentos chegaram a um roteador que estava com o buffer cheio, e um dos pacotes precisou ser descartado. O pacote perdido foi o B.</description>
+    </item>
     <item>
       <title>IO multiplexing and concurrency</title>
       <link>https://fernandosimoes.com/posts/io-multiplexing/</link>

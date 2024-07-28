@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TCP reliable delivery: ACKs e Seqs | fernandosimoes.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">TCP reliable delivery: ACKs e Seqs</span></h1>
+
+
+</div>
+
+<main>
+<p>Suponha que temos um servidor e um cliente. O socket do cliente envia três segmentos para o socket do servidor. Por baixo dos panos, o kernel faz o empacotamento desses segmentos, entre outras funções.</p>
+<p>Agora, imagine que numa requisição foram enviados três segmentos: A, B e C. Esses segmentos chegaram a um roteador que estava com o buffer cheio, e um dos pacotes precisou ser descartado. O pacote perdido foi o B.</p>
+<p>O processo do socket no servidor não pode processar A e C imediatamente, porque B é parte essencial da mensagem completa. O resultado desejado é que o kernel do servidor faça o buffer do segmento C até que o segmento B chegue.</p>
+<p>Também precisamos de um mecanismo de retransmissão para o segmento B. Certo? Porque ele precisa ser reenviado. A comunicação não pode terminar apenas porque o buffer do roteador estava cheio e o segmento B não foi entregue com sucesso.</p>
+<p>Portanto, precisamos:</p>
+<ul>
+<li>Que o cliente possa informar ao servidor que o segmento B não foi recebido.</li>
+<li>De um mecanismo que permita ao servidor inferir que, se não houve um ACK do cliente para um segmento, aquele segmento provavelmente se perdeu.</li>
+<li>Garantir a ordem do recebimento. Pode ser que os segmentos B e C não tenham tomado o mesmo caminho entre os links.</li>
+<li>Evitar o recebimento de segmentos duplicados.</li>
+</ul>
+<p>O TCP, por padrão, usa métodos de timeout e acknowledgments.</p>
+<p>TCP implementa a noção de número sequencial (seq #), ligado ao tamanho dos bytes recebidos anteriormente. Quando uma conexão TCP é estabelecida, cliente e servidor fazem um acordo com relação ao número sequencial para os pacotes iniciais, conhecido como ISN (Initial Sequence Number). Portanto, se o último segmento continha seq: 10.000, o próximo número de sequência será baseado no tamanho dos dados do segmento anterior.</p>
+<p>Vamos exemplificar:</p>
+<p>Quando um segmento é enviado com um tamanho de 1000 bytes, temos o seguinte:</p>
+<pre tabindex="0"><code>Envio: segmento 1: seq = 1001, data = 1000 (bytes)
+Recebimento: ack = 2002
+</code></pre><p>Isso significa que o servidor recebeu o segmento 1, verificou que os dados têm 1000 bytes, e agora aguarda pelo segmento com seq = 2002.</p>
+<p>A <a href="https://www.ietf.org/rfc/rfc793.txt">RFC793</a> fala de &ldquo;data offsets&rdquo;, um campo no cabeçalho TCP que indica onde os dados começam. O kernel do receptor usa esse campo para verificar o próximo comprimento esperado com base no tamanho do segmento já recebido.</p>
+<blockquote>
+<p>The number of 32 bit words in the TCP Header.  This indicates where the data begins.  The TCP header (even one including options) is an integral number of 32 bits long.</p>
+</blockquote>
+<p>Uma implementação simples de sequence numbers poderia ser algo deste tipo:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a90d91">class</span> <span style="color:#3f6e75">ReliableDelivery</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">def</span> <span style="color:#000">__init__</span>(<span style="color:#5b269a">self</span>, <span style="color:#000">target_addr</span><span style="color:#000">=</span><span style="color:#a90d91">None</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">target_addr</span> <span style="color:#000">=</span> <span style="color:#000">target_addr</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">_sock</span> <span style="color:#000">=</span> <span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">socket</span>(<span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">AF_INET</span>, <span style="color:#000">socket</span><span style="color:#000">.</span><span style="color:#000">SOCK_DGRAM</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">seq</span> <span style="color:#000">=</span> <span style="color:#1c01ce">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#177500"># self.ack = 0</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">def</span> <span style="color:#000">bind</span>(<span style="color:#5b269a">self</span>, <span style="color:#000">own_addr</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">_sock</span><span style="color:#000">.</span><span style="color:#000">bind</span>(<span style="color:#000">own_addr</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">def</span> <span style="color:#000">send</span>(<span style="color:#5b269a">self</span>, <span style="color:#000">data</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#000">i</span> <span style="color:#000">=</span> <span style="color:#1c01ce">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">while</span> <span style="color:#000">i</span> <span style="color:#000">&lt;</span> <span style="color:#a90d91">len</span>(<span style="color:#000">data</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#000">payload</span> <span style="color:#000">=</span> <span style="color:#000">data</span>[<span style="color:#000">i</span>:<span style="color:#000">i</span><span style="color:#000">+</span><span style="color:#000">MAX_PAYLOAD_SIZE</span>]
+</span></span><span style="display:flex;"><span>            <span style="color:#000">segment</span> <span style="color:#000">=</span> <span style="color:#000">pack_segment</span>(<span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">seq</span>, <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">ack</span>, <span style="color:#000">payload</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">_sock</span><span style="color:#000">.</span><span style="color:#000">sendto</span>(<span style="color:#000">segment</span>, <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">target_addr</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#5b269a">self</span><span style="color:#000">.</span><span style="color:#000">seq</span> <span style="color:#000">+=</span> <span style="color:#1c01ce">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">i</span> <span style="color:#000">+=</span> <span style="color:#a90d91">len</span>(<span style="color:#000">payload</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">def</span> <span style="color:#000">recv</span>(<span style="color:#5b269a">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">pass</span>
+</span></span></code></pre></div><p>Agora, o que é o ACK? O ACK é o número que representa, por parte do receptor, tudo o que já foi recebido por ele. Suponha, portanto, que o servidor recebeu, de um cliente, até o byte 12.000. Neste caso, a última requisição conterá um ACK de 12.001. Da mesma RFC:</p>
+<blockquote>
+<p>If the ACK control bit is set this field contains the value of the next sequence number the sender of the segment is expecting to receive.  Once a connection is established this is always sent.</p>
+</blockquote>
+<p>Voltando ao exemplo inicial em que o segmento B é perdido:</p>
+<ul>
+<li>Segmento A tem dados de 1500 bytes.</li>
+<li>O receptor assume que o segmento B irá de 1501 a 3000</li>
+<li>O receptor recebe C, com offset em 3001</li>
+<li>O ACK da resposta, no TCP header, será de 1501 (compreendendo apenas o reconhecimento dos primeiros 1500 bytes do segmento A e indicando que o próximo esperado é o 1501)</li>
+</ul>
+<p>Outro assunto interessante é a seguinte questão: por quanto tempo o socket que enviou o segmento espera pelo ACK até que ele decida reenviá-lo, assumindo que foi perdido?</p>
+<p>Um modo de medir esse tempo é usar o primeiro handshake como pedida do tempo esperado no &ldquo;roundtrip&rdquo;. O roundtrip time inclui tanto o tempo de ida quanto o tempo de volta. O problema é que o RTT é influenciado por diversos fatores (distância entre links, por exemplo, ou quantidade de clients). Por isso, outra medida interessante é medir a variação dos diversos RTTs.</p>
+
+</main>
+
+
+  <footer>
+  
+  
+  </footer>
+  </body>
+</html>
+
