@@ -37,22 +37,3 @@ Timeout is a simplier mechanism. The TCP can be configured with a timeout value.
 	TCP will effectively time out at the first RTO which exceeds the
 	hypothetical timeout.
 
-```mermaid
-sequenceDiagram
-    participant A as Socket A (Process A)
-    participant B as Socket B (Process B)
-    Note right of B: Process B running
-    A->>B: SYN
-    B-->>A: SYN-ACK
-    A->>B: ACK
-    A->>B: Data
-    B-->>A: ACK (for Data)
-    Note right of B: Process B crashes (e.g., power loss)
-    A->>B: Data
-    Note left of A: No ACK received
-    A->>B: Data (retransmission)
-    Note left of A: No ACK received
-    Note left of A: Timeout or Keepalive<br>detects failure
-    A->>A: Connection closed
-    Note left of A: Socket A detects<br>the connection is not<br>valid anymore
-``` 
