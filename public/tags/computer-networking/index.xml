@@ -6,8 +6,15 @@
     <description>Recent content in Computer Networking on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 28 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 31 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/computer-networking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens when a TCP process is interrupted?</title>
+      <link>https://fernandosimoes.com/posts/tcp-process-interrupted/</link>
+      <pubDate>Wed, 31 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/tcp-process-interrupted/</guid>
+      <description>I was talking to a colleague from work and he presented me the following scenario he faced during a past project: Can it happen that the the recipient of a TCP connection stops responding to requests?&#xA;Let&amp;rsquo;s suppose there is a socket A sending data to a socket B over a TCP connection. Suddenly, socket B stops responding. This could happen for different reasons: something terminated the process, or the network channel is not up.</description>
+    </item>
     <item>
       <title>Estudando TCP &#39;Reliable Delivery&#39;</title>
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>

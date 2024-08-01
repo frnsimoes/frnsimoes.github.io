@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What happens when a TCP process is interrupted? | fernandosimoes.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">What happens when a TCP process is interrupted?</span></h1>
+
+
+</div>
+
+<main>
+<p>I was talking to a colleague from work and he presented me the following scenario he faced during a past project: Can it happen that the the recipient of a TCP connection stops responding to requests?</p>
+<p>Let&rsquo;s suppose there is a socket A sending data to a socket B over a TCP connection. Suddenly, socket B stops responding. This could happen for different reasons: something terminated the process, or the network channel is not up. What happens, then, in this scenario? Will socket A keep sending data to socket B even though there is no acknowledgements returned?</p>
+<p><strong>Keepalive</strong></p>
+<p>It&rsquo;s possible to associate a set of times with TCP eonnctions. Keepalive is one of then. Socket A can send socket B a keepalive probe packet with no data and the ACK flag on. If there is no response to the keepalive probes, TCP can conclude that the connection is not valid anymore.</p>
+<p>One example of configuration a TCP keep alive probe: <code>sysctl -w net.ipv4.tcp_keepalive_probes=9</code>. In this case, socket A will conclude that socket B has no valid connection if 9 probes are sent and not replied.</p>
+<p><strong>Timeout</strong></p>
+<p>Timeout is a simplier mechanism. The TCP can be configured with a timeout value. When data is sent, socket A starts a timer and waits for an ACK from socket B, if ACK not not received before the timer expires, TCP assumes it was lost and retransmit the data. Retransmission timeout is specified in <a href="https://datatracker.ietf.org/doc/html/rfc1122#page-90">RFC1122</a>. It&rsquo;s possible to specify the initial retransmission timout (RTO) and and maximum number of retries before giving up by using <code>tcp_retries1</code> and <code>tcp_retries2</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, as specified in the Linux kernel.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
+    participant A as Socket A (Process A)
+    participant B as Socket B (Process B)
+    Note right of B: Process B running
+    A-&gt;&gt;B: SYN
+    B--&gt;&gt;A: SYN-ACK
+    A-&gt;&gt;B: ACK
+    A-&gt;&gt;B: Data
+    B--&gt;&gt;A: ACK (for Data)
+    Note right of B: Process B crashes (e.g., power loss)
+    A-&gt;&gt;B: Data
+    Note left of A: No ACK received
+    A-&gt;&gt;B: Data (retransmission)
+    Note left of A: No ACK received
+    Note left of A: Timeout or Keepalive&lt;br&gt;detects failure
+    A-&gt;&gt;A: Connection closed
+    Note left of A: Socket A detects&lt;br&gt;the connection is not&lt;br&gt;valid anymore
+</code></pre><div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><code>tcp_retries1</code> - INTEGER
+This value influences the time, after which TCP decides, that
+something is wrong due to unacknowledged RTO retransmissions,
+and reports this suspicion to the network layer.
+See tcp_retries2 for more details.</p>
+<p><code>tcp_retries2</code> - INTEGER
+This value influences the timeout of an alive TCP connection,
+when RTO retransmissions remain unacknowledged.
+Given a value of N, a hypothetical TCP connection following
+exponential backoff with an initial RTO of TCP_RTO_MIN would
+retransmit N times before killing the connection at the (N+1)th RTO.
+The default value of 15 yields a hypothetical timeout of 924.6
+seconds and is a lower bound for the effective timeout.
+TCP will effectively time out at the first RTO which exceeds the
+hypothetical timeout.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</main>
+
+
+  <footer>
+  
+  
+  </footer>
+  </body>
+</html>
+
