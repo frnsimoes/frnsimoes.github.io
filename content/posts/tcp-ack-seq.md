@@ -1,6 +1,6 @@
 +++ 
 date = 2024-07-28
-title = "Estudando TCP 'Reliable Delivery'"
+title = "TCP Reliable delivery"
 tags = ["Computer Networking"]
 +++
 

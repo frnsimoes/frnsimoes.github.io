@@ -16,7 +16,7 @@
       <description>I was talking to a colleague from work and he presented me the following scenario he faced during a past project: Can it happen that the the recipient of a TCP connection stops responding to requests?&#xA;Let&amp;rsquo;s suppose there is a socket A sending data to a socket B over a TCP connection. Suddenly, socket B stops responding. This could happen for different reasons: something terminated the process, or the network channel is not up.</description>
     </item>
     <item>
-      <title>Estudando TCP &#39;Reliable Delivery&#39;</title>
+      <title>TCP Reliable delivery</title>
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
