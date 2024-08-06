@@ -5,16 +5,10 @@ date =  2024-06-26
 <!---->
 <!---->
 
-Hello there! My name is Fernando.
+Hello, friend. This webpage is a collection of my notes and experiments. I'm mostly interested in Operating Systems, Computer Networking, Computer Systems, and Distributed Systems. I really enjoy nerding out and talking about these topics, so feel free to send me an [email] or a message on [LinkedIn] if you want to chat (I can read and write in english, portuguese or italian).
 
-I'm a software developer working remotely from Brazil. I have a wide variety of interests in the computer science field, and I'm currently deepening my knowledge in [computer science]. In the past years, I concentrated my spare time in reading philosophy and classical literature; if you're curious to know this history, I summarized it [here][brief overview]. 
+If you are curious about me, I wrote a little [background note] about the things I've studied in the past.
 
-This website is primarily an index page for things I'm studying and find interesting enough to write about.
-
-Don't hesitate to send me an [email] if you want to chat. You can also find me on [LinkedIn] and [Twitter], I would love to talk about things we have in common or answer any questions you might have.
-
-[computer science]: /posts/studying-cs
-[brief overview]: /background
+[background note]: /background
 [linkedin]: https://linkedin.com/in/frnsimoes
-[twitter]: https://x.com/frnsimoes
 [email]: mailto:fernandosimoes.dev@gmail.com
