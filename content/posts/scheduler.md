@@ -36,14 +36,18 @@ Let's suppose a scenario where we have a job A with a long runtime and smaller j
 
 > -> A begins at Q0. -> Runs a little bit -> Goes to Q1 -> runs a little bit -> Goes to Q2 -> C1 appears -> A stops -> C1 runs at Q0. C1 finishes. ->  A runs at Q2 -> C2 appers -> A stops...
 
-This has a big problem. If an infinite number of short jobs that will only run at the highest priority queue (in this case, Q0), A will never be resumed. Starvation for A. So, how to to ensure long-running jobs make progress? How to avoid starvation? A simple solution would be: if a job uses up slice time, it moves down. Another one: if a process waits too long, it moves up in the priority queue.
+This has a big problem. If an infinite number of short jobs that will only run at the highest priority queue (in this case, Q0), A will never be resumed. Starvation for A. So, how to to ensure long-running jobs make progress? How to avoid starvation? A simple solution would be: if a job uses up slice time, it moves down. Another one: if a process waits too long, it moves up in the priority queue.[^1]
 
 ### **Linux**
 
-But what about *Linux*, how does it implement scheduling? The Linux Programming Interface answers this question succintly: the default model for scheduling processes if *round-robin time-sharing*. Each processes is permitted to use the CPU for a bried period of time (time slices). And "processes can't exercise direct control over when and for how long they will be able to use the CPU". But Linux has the `nice` value, that allows the user to influence in the kernel's scheduling priorities. The `nice` attribute acts like a "weightening factor that causes the kernel scheduler to favor processes with higher priorities". And the beauty of it is that the user can set `nice` values.
+But what about *Linux*, how does it implement scheduling? The Linux Programming Interface[^2] answers this question succintly: the default model for scheduling processes if *round-robin time-sharing*. Each processes is permitted to use the CPU for a bried period of time (time slices). And "processes can't exercise direct control over when and for how long they will be able to use the CPU". But Linux has the `nice` value, that allows the user to influence in the kernel's scheduling priorities. The `nice` attribute acts like a "weightening factor that causes the kernel scheduler to favor processes with higher priorities". And the beauty of it is that the user can set `nice` values.
 
 The manpage for `sched`, though, gives a slightly different answer (check for yourself: `man 7 sched` on a Linux machine) because it takes into consideration another version of the Kernel (if you are interest, a brief history of Linux schedulers here: https://developer.ibm.com/tutorials/l-completely-fair-scheduler/): The default scheduler is the **Completely Fair Scheduler** (another great name. Completely fair.). 
 
 Linux also has *Realtime Process Scheduling* policies, which I'm not going to write about in this text. The reason for this policy, though, is to enable maximum response time (imagine, for example, a program like goolge maps). 
 
 In summary, Linux implements several scheduling policies, including FIFO, Round Robin , and the Completely Fair Scheduler (CFS), to manage process execution and CPU time allocation efficiently.
+
+[^1]: You can find much more about this on the OSTEP book, if you are interested: https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf
+[^2]: https://www.amazon.com/Linux-Programming-Interface-System-Handbook/dp/1593272200
+

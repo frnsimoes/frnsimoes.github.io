@@ -49,12 +49,23 @@
 <blockquote>
 <p>-&gt; A begins at Q0. -&gt; Runs a little bit -&gt; Goes to Q1 -&gt; runs a little bit -&gt; Goes to Q2 -&gt; C1 appears -&gt; A stops -&gt; C1 runs at Q0. C1 finishes. -&gt;  A runs at Q2 -&gt; C2 appers -&gt; A stops&hellip;</p>
 </blockquote>
-<p>This has a big problem. If an infinite number of short jobs that will only run at the highest priority queue (in this case, Q0), A will never be resumed. Starvation for A. So, how to to ensure long-running jobs make progress? How to avoid starvation? A simple solution would be: if a job uses up slice time, it moves down. Another one: if a process waits too long, it moves up in the priority queue.</p>
+<p>This has a big problem. If an infinite number of short jobs that will only run at the highest priority queue (in this case, Q0), A will never be resumed. Starvation for A. So, how to to ensure long-running jobs make progress? How to avoid starvation? A simple solution would be: if a job uses up slice time, it moves down. Another one: if a process waits too long, it moves up in the priority queue.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <h3 id="linux"><strong>Linux</strong></h3>
-<p>But what about <em>Linux</em>, how does it implement scheduling? The Linux Programming Interface answers this question succintly: the default model for scheduling processes if <em>round-robin time-sharing</em>. Each processes is permitted to use the CPU for a bried period of time (time slices). And &ldquo;processes can&rsquo;t exercise direct control over when and for how long they will be able to use the CPU&rdquo;. But Linux has the <code>nice</code> value, that allows the user to influence in the kernel&rsquo;s scheduling priorities. The <code>nice</code> attribute acts like a &ldquo;weightening factor that causes the kernel scheduler to favor processes with higher priorities&rdquo;. And the beauty of it is that the user can set <code>nice</code> values.</p>
+<p>But what about <em>Linux</em>, how does it implement scheduling? The Linux Programming Interface<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> answers this question succintly: the default model for scheduling processes if <em>round-robin time-sharing</em>. Each processes is permitted to use the CPU for a bried period of time (time slices). And &ldquo;processes can&rsquo;t exercise direct control over when and for how long they will be able to use the CPU&rdquo;. But Linux has the <code>nice</code> value, that allows the user to influence in the kernel&rsquo;s scheduling priorities. The <code>nice</code> attribute acts like a &ldquo;weightening factor that causes the kernel scheduler to favor processes with higher priorities&rdquo;. And the beauty of it is that the user can set <code>nice</code> values.</p>
 <p>The manpage for <code>sched</code>, though, gives a slightly different answer (check for yourself: <code>man 7 sched</code> on a Linux machine) because it takes into consideration another version of the Kernel (if you are interest, a brief history of Linux schedulers here: <a href="https://developer.ibm.com/tutorials/l-completely-fair-scheduler/)">https://developer.ibm.com/tutorials/l-completely-fair-scheduler/)</a>: The default scheduler is the <strong>Completely Fair Scheduler</strong> (another great name. Completely fair.).</p>
 <p>Linux also has <em>Realtime Process Scheduling</em> policies, which I&rsquo;m not going to write about in this text. The reason for this policy, though, is to enable maximum response time (imagine, for example, a program like goolge maps).</p>
 <p>In summary, Linux implements several scheduling policies, including FIFO, Round Robin , and the Completely Fair Scheduler (CFS), to manage process execution and CPU time allocation efficiently.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>You can find much more about this on the OSTEP book, if you are interested: <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf">https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.amazon.com/Linux-Programming-Interface-System-Handbook/dp/1593272200">https://www.amazon.com/Linux-Programming-Interface-System-Handbook/dp/1593272200</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 
 </main>
 
