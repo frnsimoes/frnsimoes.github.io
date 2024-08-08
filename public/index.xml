@@ -6,8 +6,15 @@
     <description>Recent content on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 28 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Unix Scheduler: overview</title>
+      <link>https://fernandosimoes.com/posts/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/scheduler/</guid>
+      <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
+    </item>
     <item>
       <title>TCP Reliable delivery</title>
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
