@@ -6,8 +6,15 @@
     <description>Recent content in Posts on fernandosimoes.com</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Concurrency: data race</title>
+      <link>https://fernandosimoes.com/posts/data-race/</link>
+      <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/data-race/</guid>
+      <description>A simple example of a multi-threading program. We have two threads (p1 and p2) that increment a shared variable (counter) 1000 times each.&#xA;#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;pthread.h&amp;gt; #define EACH_COUNT 1000 volatile int counter = 0; void* thread_entry(void *arg) { for (int i = 1; i &amp;lt; EACH_COUNT; i++) counter++; return NULL; } int main() { pthread_t p1, p2; pthread_create(&amp;amp;p1, NULL, thread_entry, NULL); pthread_create(&amp;amp;p2, NULL, thread_entry, NULL); pthread_join(p1, NULL); pthread_join(p2, NULL); printf(&amp;#34;Final count %d (expected %d)\n&amp;#34;, counter, 2 * EACH_COUNT); } When we try to run this program, the result is always variable and less than the expected 2000.</description>
+    </item>
     <item>
       <title>Unix Scheduler: overview</title>
       <link>https://fernandosimoes.com/posts/scheduler/</link>
@@ -28,13 +35,6 @@
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
       <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
-    </item>
-    <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/posts/socket/</link>
-      <pubDate>Sun, 07 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
     </item>
     <item>
       <title>Playing around with fork()</title>

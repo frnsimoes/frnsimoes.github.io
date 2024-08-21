@@ -23,13 +23,6 @@
       <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
     </item>
     <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/posts/socket/</link>
-      <pubDate>Sun, 07 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
-    </item>
-    <item>
       <title>What is an HTTP message body?</title>
       <link>https://fernandosimoes.com/posts/http-body/</link>
       <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
