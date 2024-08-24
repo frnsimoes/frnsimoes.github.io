@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Concurrency: data race and locks | fernandosimoes.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/posts/">posts</a></li>
+      
+      <li><a href="/about/">about</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Concurrency: data race and locks</span></h1>
+
+
+</div>
+
+<main>
+<p>A simple example of a multi-threading program. We have two threads (p1 and p2) that increment a shared variable (counter) 1000 times each.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;stdio.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;pthread.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820"></span>
+</span></span><span style="display:flex;"><span><span style="color:#633820">#define EACH_COUNT 1000
+</span></span></span><span style="display:flex;"><span><span style="color:#633820"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">volatile</span> <span style="color:#a90d91">int</span> <span style="color:#000">counter</span> <span style="color:#000">=</span> <span style="color:#1c01ce">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span><span style="color:#000">*</span> <span style="color:#000">thread_entry</span>(<span style="color:#a90d91">void</span> <span style="color:#000">*</span><span style="color:#000">arg</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">for</span> (<span style="color:#a90d91">int</span> <span style="color:#000">i</span> <span style="color:#000">=</span> <span style="color:#1c01ce">1</span>; <span style="color:#000">i</span> <span style="color:#000">&lt;</span> <span style="color:#000">EACH_COUNT</span>; <span style="color:#000">i</span><span style="color:#000">++</span>) <span style="color:#000">counter</span><span style="color:#000">++</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">return</span> <span style="color:#a90d91">NULL</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">pthread_t</span> <span style="color:#000">p1</span>, <span style="color:#000">p2</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_create</span>(<span style="color:#000">&amp;</span><span style="color:#000">p1</span>, <span style="color:#a90d91">NULL</span>, <span style="color:#000">thread_entry</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_create</span>(<span style="color:#000">&amp;</span><span style="color:#000">p2</span>, <span style="color:#a90d91">NULL</span>, <span style="color:#000">thread_entry</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_join</span>(<span style="color:#000">p1</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_join</span>(<span style="color:#000">p2</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">printf</span>(<span style="color:#c41a16">&#34;Final count %d (expected %d)</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>, <span style="color:#000">counter</span>, <span style="color:#1c01ce">2</span> <span style="color:#000">*</span> <span style="color:#000">EACH_COUNT</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>When we try to run this program, the result is always variable and less than the expected 2000.</p>
+<p>The two threads share the same address space in memory. Each one of them has its own stack and heap, but they are in the same &ldquo;space&rdquo;. In other words, p1 can access the stack and heap of p2. They are not protected from one another.</p>
+<p>Each thread has its own program counter (PC), stack pointer (SP) and other general registers, though.</p>
+<p>So, why is the result of this code almost always less than 2000?</p>
+<p>The OS has a set of rules do schedule <code>tasks</code> (jobs can be processes or threads). One of them is the timer. The OS checks for how long a job is running, and, from time to time, stops the execution of one and starts the execution of another. This is called a context switch.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Running        Ready       OS
+</span></span><span style="display:flex;"><span>t1             t2
+</span></span><span style="display:flex;"><span>                           interrupt <span style="color:#000">(</span>timer<span style="color:#000">)</span>
+</span></span><span style="display:flex;"><span>t2             t1
+</span></span></code></pre></div><p>So, in our program, what really happens?</p>
+<p>Here is the assembly code for x86 that shows what&rsquo;s is happening behind the scenes (if you are curious to know how to see the assembly code, just <code>objdump</code> the binary):</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">movl: counter, %eax
+addl: $1, eax
+movl: %eax, counter
+</code></pre><ul>
+<li>The first <code>movl</code> (move long) is an instruction that copies the currenct value of the variable <code>counter</code> into the <code>eax</code> register. So, suppose it&rsquo;s thread 1 running, the first iteration, it&rsquo;s copying the value <code>1</code> to the register.</li>
+</ul>
+<pre tabindex="0"><code>counter       eax    
+0             0   
+</code></pre><ul>
+<li><code>addl</code> adds the immediate value (in our case, <code>1</code>) to the value in the <code>eax</code>, resulting in <code>2</code>.</li>
+</ul>
+<pre tabindex="0"><code>counter       eax    
+0             1
+</code></pre><ul>
+<li>the second <code>movl</code> is the write operating, and moves the value from <code>eax</code> to the variable <code>counter</code>.</li>
+</ul>
+<pre tabindex="0"><code>counter       eax    
+1             1
+</code></pre><p>So, what happens if there is a timer interrupt (or maybe another surprise interrupt?) after the <code>addl</code> but before the writing <code>movl</code>? Well, thread 2 is going to run, the <code>counter</code> is still <code>0</code>, and the <code>eax</code> is <code>1</code>.</p>
+<pre tabindex="0"><code>counter       eax    
+0             1 
+</code></pre><p>Here is what is going to happen when thread 2 runs before the last <code>movl</code> from thread 1:</p>
+<p>Initial state:</p>
+<pre tabindex="0"><code>counter       eax    
+0             1
+</code></pre><ul>
+<li>moves the vlaue of counter (<code>0</code>) into the eax:</li>
+</ul>
+<p>Initial state:</p>
+<pre tabindex="0"><code>counter       eax    
+0             0
+</code></pre><ul>
+<li>adds 1 to the value of eax:</li>
+</ul>
+<pre tabindex="0"><code>counter       eax    
+0             1
+</code></pre><ul>
+<li>writes back to <code>counter</code></li>
+</ul>
+<pre tabindex="0"><code>counter       eax    
+1             1
+</code></pre><p>One thing that at first is hard to understand is why do we have the <code>eax</code> register in the between? The value of <code>counter</code> is in memory. Accessing the memory is slower (latency) than accessing the register. The use of <code>eax</code> as an intermediary is a CPU architecture choice, but it also allows some benefits. One thing that I found really interesting but didn´t have the time to investigate (yet) is the notion of <code>atomic operations</code>: some operations need to be done in only one CPU cycle to achieve precision.</p>
+<p>Exploring locks.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;stdio.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;pthread.h&gt;</span><span style="color:#633820">
+</span></span></span><span style="display:flex;"><span><span style="color:#633820"></span>
+</span></span><span style="display:flex;"><span><span style="color:#633820">#define EACH_COUNT 1000
+</span></span></span><span style="display:flex;"><span><span style="color:#633820"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">pthread_mutex_t</span> <span style="color:#000">lock</span> <span style="color:#000">=</span> <span style="color:#000">PTHREAD_MUTEX_INITIALIZER</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">volatile</span> <span style="color:#a90d91">int</span> <span style="color:#000">counter</span> <span style="color:#000">=</span> <span style="color:#1c01ce">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span><span style="color:#000">*</span> <span style="color:#000">thread_entry</span>(<span style="color:#a90d91">void</span> <span style="color:#000">*</span><span style="color:#000">arg</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">for</span> (<span style="color:#a90d91">int</span> <span style="color:#000">i</span> <span style="color:#000">=</span> <span style="color:#1c01ce">1</span>; <span style="color:#000">i</span> <span style="color:#000">&lt;</span> <span style="color:#000">EACH_COUNT</span>; <span style="color:#000">i</span><span style="color:#000">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#000">pthread_mutex_lock</span>(<span style="color:#000">&amp;</span><span style="color:#000">lock</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#000">counter</span><span style="color:#000">++</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#000">pthread_mutex_unlock</span>(<span style="color:#000">&amp;</span><span style="color:#000">lock</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">return</span> <span style="color:#a90d91">NULL</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a90d91">pthread_t</span> <span style="color:#000">p1</span>, <span style="color:#000">p2</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_create</span>(<span style="color:#000">&amp;</span><span style="color:#000">p1</span>, <span style="color:#a90d91">NULL</span>, <span style="color:#000">thread_entry</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_create</span>(<span style="color:#000">&amp;</span><span style="color:#000">p2</span>, <span style="color:#a90d91">NULL</span>, <span style="color:#000">thread_entry</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_join</span>(<span style="color:#000">p1</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#000">pthread_join</span>(<span style="color:#000">p2</span>, <span style="color:#a90d91">NULL</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">printf</span>(<span style="color:#c41a16">&#34;Final count %d (expected %d)</span><span style="color:#c41a16">\n</span><span style="color:#c41a16">&#34;</span>, <span style="color:#000">counter</span>, <span style="color:#1c01ce">2</span> <span style="color:#000">*</span> <span style="color:#000">EACH_COUNT</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Scenario: Two threads: T1 and T2. T1 -&gt; Lock -&gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when <code>unlock()</code> is called.</p>
+<p>How to build a lock, say, a &ldquo;Spin Lock&rdquo;?</p>
+<ul>
+<li>First we need a state: lock held (acquired) or free (not acquired).</li>
+<li>We could create a <code>lock</code> variable with values <code>0</code> (true) and <code>1</code> (false): <code>int lock;</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">struct</span> <span style="color:#000">mutex</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">lock</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">mutex_init</span> (<span style="color:#000">mutex</span> <span style="color:#000">*</span><span style="color:#000">m</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#000">m</span><span style="color:#000">-&gt;</span><span style="color:#000">lock</span> <span style="color:#000">=</span> <span style="color:#1c01ce">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">mutex_lock</span> (<span style="color:#000">mutx</span> <span style="color:#000">*</span><span style="color:#000">m</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">while</span> (<span style="color:#000">m</span><span style="color:#000">-&gt;</span><span style="color:#000">lock</span> <span style="color:#000">==</span> <span style="color:#1c01ce">1</span>) {
+</span></span><span style="display:flex;"><span>        ;
+</span></span><span style="display:flex;"><span>        <span style="color:#000">m</span><span style="color:#000">-&gt;</span><span style="color:#000">lock</span> <span style="color:#000">=</span> <span style="color:#1c01ce">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">mutex_unlock</span> (<span style="color:#000">mutex</span> <span style="color:#000">*</span><span style="color:#000">m</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#000">m</span><span style="color:#000">-&gt;</span><span style="color:#000">lock</span><span style="color:#000">=</span><span style="color:#1c01ce">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Goals:
+When local is not held (free)
+pthread_mutex_lock() -&gt; should return immediately and lock should become held
+When lock is held
+pthread_mutex_lock() -&gt; thread should get stuck here (until lock can be acquired)</p>
+<p>The problem with this implementation is that two threads with <code>0</code> can enter the loop inside <code>mutex_lock</code>, resulting in two threads acquiring the lock simultaneously. For this reason, we need a more powerful instruction from the hardware. &ldquo;Test and set instruction&rdquo; or &ldquo;atomic exchange&rdquo;.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">TestAndSet</span>(<span style="color:#a90d91">int</span> <span style="color:#000">*</span><span style="color:#000">old_ptr</span>, <span style="color:#a90d91">int</span> <span style="color:#000">new</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">old</span> <span style="color:#000">=</span> <span style="color:#000">*</span><span style="color:#000">old_ptr</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#000">*</span><span style="color:#000">old_ptr</span> <span style="color:#000">=</span> <span style="color:#000">new</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">return</span> <span style="color:#000">old</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">mutex_lock</span> (<span style="color:#000">mutx</span> <span style="color:#000">*</span><span style="color:#000">m</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">while</span> (<span style="color:#000">TestAndSet</span>(<span style="color:#000">&amp;</span><span style="color:#000">mutex</span><span style="color:#000">-&gt;</span><span style="color:#000">lock</span>, <span style="color:#1c01ce">1</span>) {
+</span></span><span style="display:flex;"><span>        ;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ol>
+<li>
+<p><strong>Thread T1 Acquires the Lock</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>lock(0,1)     old      new     unlock
+</span></span><span style="display:flex;"><span>0 T<span style="color:#000">&amp;</span>S(0, 1)   0        1       ---
+</span></span></code></pre></div><ul>
+<li>T1 calls <code>TestAndSet(&amp;m-&gt;lock, 1)</code>.</li>
+<li><code>TestAndSet</code> returns <code>0</code> (old value), and sets <code>m-&gt;lock</code> to <code>1</code>.</li>
+<li>T1 acquires the lock.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T2 Tries to Acquire the Lock</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>lock(0,1)     old      new     unlock
+</span></span><span style="display:flex;"><span>0 T<span style="color:#000">&amp;</span>S(1, 1)   1        0       ---
+</span></span></code></pre></div><ul>
+<li>T2 calls <code>TestAndSet(&amp;m-&gt;lock, 1)</code> while T1 is holding the lock.</li>
+<li><code>TestAndSet</code> returns <code>1</code> (old value), and <code>m-&gt;lock</code> remains <code>1</code>.</li>
+<li>Since <code>TestAndSet</code> returned <code>1</code>, T2 will spin-wait (not acquire the lock).</li>
+</ul>
+</li>
+</ol>
+<p>The major problem with spinning lock is that when T2 is trying to access the critical section that is held by T1, it will spin, and spin, and spin, it will try to access the critical section every time an interrupt occurs, only to find out that the value didn´t change, and it can&rsquo;t take hold of the lock.</p>
+<p>Even more: what happens when a context switch occurs in a critical section, and threads start to spin endlessly, waiting for the interrupted (lock-holding) thread to be run again? (Remzi)</p>
+<p>One possible solution is the ticket lock. It is a fair lock, where threads are served in the order they arrive.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a90d91">int</span> <span style="color:#000">fetch_and_add</span>(<span style="color:#a90d91">int</span> <span style="color:#000">*</span><span style="color:#000">addr</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">old</span> <span style="color:#000">=</span> <span style="color:#000">*</span><span style="color:#000">addr</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#000">*</span><span style="color:#000">addr</span> <span style="color:#000">=</span> <span style="color:#000">addr</span> <span style="color:#000">+</span> <span style="color:#1c01ce">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">return</span> <span style="color:#000">old</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">typedef</span> <span style="color:#a90d91">struct</span> <span style="color:#000">__lock_t</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">ticket</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">turn</span>;
+</span></span><span style="display:flex;"><span>} <span style="color:#a90d91">lock_t</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">lock_init</span>(<span style="color:#a90d91">lock_t</span> <span style="color:#000">*</span><span style="color:#000">lock</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#000">lock</span><span style="color:#000">-&gt;</span><span style="color:#000">ticket</span> <span style="color:#000">=</span> <span style="color:#000">lock</span><span style="color:#000">-&gt;</span><span style="color:#000">turn</span> <span style="color:#000">=</span> <span style="color:#1c01ce">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">acquire</span>(<span style="color:#a90d91">lock_t</span> <span style="color:#000">*</span><span style="color:#000">lock</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">int</span> <span style="color:#000">myturn</span> <span style="color:#000">=</span> <span style="color:#000">fetch_and_add</span>(<span style="color:#000">&amp;</span><span style="color:#000">lock</span><span style="color:#000">-&gt;</span><span style="color:#000">ticket</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">while</span> (<span style="color:#000">lock</span><span style="color:#000">-&gt;</span><span style="color:#000">turn</span> <span style="color:#000">!=</span> <span style="color:#000">myturn</span>) {
+</span></span><span style="display:flex;"><span>        ;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">void</span> <span style="color:#000">release</span>(<span style="color:#a90d91">lock_t</span> <span style="color:#000">*</span><span style="color:#000">lock</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#000">lock</span><span style="color:#000">-&gt;</span><span style="color:#000">turn</span> <span style="color:#000">=</span> <span style="color:#000">lock</span><span style="color:#000">-&gt;</span><span style="color:#000">turn</span> <span style="color:#000">+</span> <span style="color:#1c01ce">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Ticket Lock is trying to solve the fairness/starvation problem.</p>
+<ol>
+<li>
+<p><strong>Thread T1 calls <code>acquire(lock_t *lock)</code></strong>:</p>
+<ul>
+<li><code>fetch_and_add(&amp;lock-&gt;ticket)</code> is called, which increments <code>lock-&gt;ticket</code> and returns the old value (which is <code>0</code> for T1).</li>
+<li>T1 sets <code>myturn</code> to <code>0</code>.</li>
+<li>T1 enters a <code>while</code> loop that spins until <code>lock-&gt;turn</code> equals <code>myturn</code> (which is <code>0</code>). Since <code>lock-&gt;turn</code> is initially <code>0</code>, T1 immediately exits the loop and acquires the lock.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T1 performs its critical section</strong>:</p>
+<ul>
+<li>T1 does whatever work it needs to do while holding the lock.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T1 calls <code>release(lock_t *lock)</code></strong>:</p>
+<ul>
+<li>T1 increments <code>lock-&gt;turn</code> by <code>1</code>, setting it to <code>1</code>.</li>
+<li>This action effectively releases the lock, allowing the next thread in line (T2) to acquire it.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T2 calls <code>acquire(lock_t *lock)</code></strong>:</p>
+<ul>
+<li><code>fetch_and_add(&amp;lock-&gt;ticket)</code> is called, which increments <code>lock-&gt;ticket</code> and returns the old value (which is <code>1</code> for T2).</li>
+<li>T2 sets <code>myturn</code> to <code>1</code>.</li>
+<li>T2 enters a <code>while</code> loop that spins until <code>lock-&gt;turn</code> equals <code>myturn</code> (which is <code>1</code>). Since T1 has already incremented <code>lock-&gt;turn</code> to <code>1</code>, T2 immediately exits the loop and acquires the lock.</li>
+</ul>
+</li>
+</ol>
+<p>The advantage of the ticket lock is that it is fair. Threads are served in the order they arrive.</p>
+<p>So there are two hardware primitives that address the concurrency problem: exchange (xchg) and fetch_and_add.</p>
+<p><strong>The role of OS in this</strong></p>
+<p>The OS is interested in the concurrency problem. It might wanna know, for example, if a process is spinning mindlessly. Ex: <code>yield()</code> syscall.</p>
+
+</main>
+
+
+  <footer>
+  
+  
+  </footer>
+  </body>
+</html>
+

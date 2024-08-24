@@ -9,10 +9,10 @@
     <lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Concurrency: data race</title>
-      <link>https://fernandosimoes.com/posts/data-race/</link>
+      <title>Concurrency: data race and locks</title>
+      <link>https://fernandosimoes.com/posts/concurrency-1/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/data-race/</guid>
+      <guid>https://fernandosimoes.com/posts/concurrency-1/</guid>
       <description>A simple example of a multi-threading program. We have two threads (p1 and p2) that increment a shared variable (counter) 1000 times each.&#xA;#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;pthread.h&amp;gt; #define EACH_COUNT 1000 volatile int counter = 0; void* thread_entry(void *arg) { for (int i = 1; i &amp;lt; EACH_COUNT; i++) counter++; return NULL; } int main() { pthread_t p1, p2; pthread_create(&amp;amp;p1, NULL, thread_entry, NULL); pthread_create(&amp;amp;p2, NULL, thread_entry, NULL); pthread_join(p1, NULL); pthread_join(p2, NULL); printf(&amp;#34;Final count %d (expected %d)\n&amp;#34;, counter, 2 * EACH_COUNT); } When we try to run this program, the result is always variable and less than the expected 2000.</description>
     </item>
     <item>

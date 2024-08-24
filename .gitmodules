@@ -1,3 +1,12 @@
 [submodule "themes/xmin-d"]
 	path = themes/xmin-d
 	url = https://github.com/frnsimoes/xmin-c.git
+[submodule "themes/hugo-book"]
+	path = themes/hugo-book
+	url = https://github.com/alex-shpak/hugo-book
+[submodule "themes/no-style"]
+	path = themes/no-style
+	url = https://github.com/hanwenguo/hugo-theme-nostyleplease
+[submodule "themes/hugo-simple"]
+	path = themes/hugo-simple
+	url = https://github.com/maolonglong/hugo-simple.git
