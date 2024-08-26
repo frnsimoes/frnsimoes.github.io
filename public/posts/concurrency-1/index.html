@@ -104,7 +104,7 @@ movl: %eax, counter
 <pre tabindex="0"><code>counter       eax    
 1             1
 </code></pre><p>One thing that at first is hard to understand is why do we have the <code>eax</code> register in the between? The value of <code>counter</code> is in memory. Accessing the memory is slower (latency) than accessing the register. The use of <code>eax</code> as an intermediary is a CPU architecture choice, but it also allows some benefits. One thing that I found really interesting but didn´t have the time to investigate (yet) is the notion of <code>atomic operations</code>: some operations need to be done in only one CPU cycle to achieve precision.</p>
-<p>Exploring locks.</p>
+<h3 id="exploring-locks">Exploring locks.</h3>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;stdio.h&gt;</span><span style="color:#633820">
 </span></span></span><span style="display:flex;"><span><span style="color:#633820">#include</span> <span style="color:#633820">&lt;pthread.h&gt;</span><span style="color:#633820">
 </span></span></span><span style="display:flex;"><span><span style="color:#633820"></span>
@@ -258,8 +258,6 @@ pthread_mutex_lock() -&gt; thread should get stuck here (until lock can be acqui
 </ol>
 <p>The advantage of the ticket lock is that it is fair. Threads are served in the order they arrive.</p>
 <p>So there are two hardware primitives that address the concurrency problem: exchange (xchg) and fetch_and_add.</p>
-<p><strong>The role of OS in this</strong></p>
-<p>The OS is interested in the concurrency problem. It might wanna know, for example, if a process is spinning mindlessly. Ex: <code>yield()</code> syscall.</p>
 
 </main>
 

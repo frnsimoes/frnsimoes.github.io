@@ -119,7 +119,7 @@ counter       eax
 One thing that at first is hard to understand is why do we have the `eax` register in the between? The value of `counter` is in memory. Accessing the memory is slower (latency) than accessing the register. The use of `eax` as an intermediary is a CPU architecture choice, but it also allows some benefits. One thing that I found really interesting but didn´t have the time to investigate (yet) is the notion of `atomic operations`: some operations need to be done in only one CPU cycle to achieve precision.
 
 
-Exploring locks.
+### Exploring locks.
 
 ```c
 #include <stdio.h>
@@ -278,8 +278,4 @@ Ticket Lock is trying to solve the fairness/starvation problem.
 The advantage of the ticket lock is that it is fair. Threads are served in the order they arrive.
 
 So there are two hardware primitives that address the concurrency problem: exchange (xchg) and fetch_and_add.
-
-**The role of OS in this**
-
-The OS is interested in the concurrency problem. It might wanna know, for example, if a process is spinning mindlessly. Ex: `yield()` syscall.
 
