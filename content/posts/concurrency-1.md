@@ -1,6 +1,6 @@
 +++ 
 date = 2024-08-20
-title = "Concurrency: data race and locks"
+title = "Concurrency: data race and locks (notes)"
 +++
 
 A simple example of a multi-threading program. We have two threads (p1 and p2) that increment a shared variable (counter) 1000 times each.

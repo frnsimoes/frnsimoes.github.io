@@ -9,7 +9,7 @@
     <lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Concurrency: data race and locks</title>
+      <title>Concurrency: data race and locks (notes)</title>
       <link>https://fernandosimoes.com/posts/concurrency-1/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/concurrency-1/</guid>
