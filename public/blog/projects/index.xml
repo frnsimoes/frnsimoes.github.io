@@ -10,9 +10,9 @@
     <atom:link href="https://fernandosimoes.com/blog/projects/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>I wrote a WSGI application!</title>
-      <link>https://fernandosimoes.com/i-wrote-a-wsgi-application/</link>
+      <link>https://fernandosimoes.com/posts/wsgi-app/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/i-wrote-a-wsgi-application/</guid>
+      <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
       <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
     </item>
   </channel>

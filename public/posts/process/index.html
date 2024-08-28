@@ -13,7 +13,7 @@ The running program you are using to create a new process is a process itself, s
 <meta name="keywords" content="Operating Systems," />
 
 
-<meta property="og:url" content="https://fernandosimoes.com/playing-around-with-fork/">
+<meta property="og:url" content="https://fernandosimoes.com/posts/process/">
   <meta property="og:site_name" content="Fernando Simões">
   <meta property="og:title" content="Playing around with fork()">
   <meta property="og:description" content="The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.
@@ -21,7 +21,7 @@ But, in reality, the genesis of a process creation in Unix involves creating a h
 The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
-    <meta property="article:section" content="blog">
+    <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-06-18T00:00:00+00:00">
     <meta property="article:modified_time" content="2024-06-18T00:00:00+00:00">
     <meta property="article:tag" content="Operating Systems">
@@ -222,30 +222,22 @@ The running program you are using to create a new process is a process itself, s
 
 </style>
 
-
 </head>
 
 <body>
   <header><a href="/" class="title">
   <h2>Fernando Simões</h2>
 </a>
-<nav><a href="/">Home</a>
+<nav>
 
+<a href="/posts/">Blog</a>
 
-<a href="/blog">Blog</a>
+<a href="/about/">About</a>
+
 
 </nav>
 </header>
   <main>
-
-<h1>Playing around with fork()</h1>
-<p>
-  <i>
-    <time datetime='2024-06-18' pubdate>
-      18 Jun, 2024
-    </time>
-  </i>
-</p>
 
 <content>
   <p>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall <code>create</code>, or something like that.</p>
@@ -305,11 +297,11 @@ The running program you are using to create a new process is a process itself, s
 </div>
 
 </content>
-<p>
-  
-  <a href="https://fernandosimoes.com/blog/operating-systems/">#Operating Systems</a>
-  
-</p>
+
+
+
+
+
 
   </main>
   <footer></footer>

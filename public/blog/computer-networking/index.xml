@@ -10,23 +10,23 @@
     <atom:link href="https://fernandosimoes.com/blog/computer-networking/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>TCP Reliable delivery</title>
-      <link>https://fernandosimoes.com/tcp-reliable-delivery/</link>
+      <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/tcp-reliable-delivery/</guid>
+      <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
       <description>&amp;ldquo;Reliable delivery&amp;rdquo; é um dos temas centrais e mais interessantes do transport layer. O sentido de &amp;ldquo;reliable&amp;rdquo; foi definido na RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
     </item>
     <item>
       <title>IO multiplexing and concurrency</title>
-      <link>https://fernandosimoes.com/io-multiplexing-and-concurrency/</link>
+      <link>https://fernandosimoes.com/posts/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/io-multiplexing-and-concurrency/</guid>
+      <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
       <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
-      <link>https://fernandosimoes.com/what-is-an-http-message-body/</link>
+      <link>https://fernandosimoes.com/posts/http-body/</link>
       <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/what-is-an-http-message-body/</guid>
+      <guid>https://fernandosimoes.com/posts/http-body/</guid>
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
     </item>
   </channel>

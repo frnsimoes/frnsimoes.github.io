@@ -1,6 +1,6 @@
 baseurl = "https://fernandosimoes.com"
 title = "Fernando Simões"
-theme = "hugo-bearblog"
+theme = "bg"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
@@ -10,16 +10,16 @@ paginate = 50
 defaultContentLanguage = 'en'
 
 [menu]
-  [[main]]
+  [[menu.main]]
         identifier = "about"
-        name = "about"
+        name = "About"
         url = "about/"
         weight = 2
-#   [[menu.main]]
-#         identifier = "posts"
-#         name = "posts"
-#         url = "posts/"
-#         weight = 1
+  [[menu.main]]
+        identifier = "posts"
+        name = "Blog"
+        url = "posts/"
+        weight = 1
 
 [taxonomies]
   tag = "tags"
