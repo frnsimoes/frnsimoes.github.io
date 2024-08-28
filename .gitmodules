@@ -1,0 +1,3 @@
+[submodule "themes/t-bg"]
+	path = themes/t-bg
+	url = https://github.com/frnsimoes/hugo-bg
