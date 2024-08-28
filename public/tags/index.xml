@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on fernandosimoes.com</title>
+    <title>Tags on Fernando Simões</title>
     <link>https://fernandosimoes.com/tags/</link>
-    <description>Recent content in Tags on fernandosimoes.com</description>
+    <description>Recent content in Tags on Fernando Simões</description>
     <generator>Hugo</generator>
-    <language>en-US</language>
+    <language>en</language>
     <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Operating Systems</title>
-      <link>https://fernandosimoes.com/tags/operating-systems/</link>
+      <link>https://fernandosimoes.com/blog/operating-systems/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/tags/operating-systems/</guid>
+      <guid>https://fernandosimoes.com/blog/operating-systems/</guid>
       <description></description>
     </item>
     <item>
       <title>Computer Networking</title>
-      <link>https://fernandosimoes.com/tags/computer-networking/</link>
+      <link>https://fernandosimoes.com/blog/computer-networking/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/tags/computer-networking/</guid>
+      <guid>https://fernandosimoes.com/blog/computer-networking/</guid>
       <description></description>
     </item>
     <item>
       <title>Career</title>
-      <link>https://fernandosimoes.com/tags/career/</link>
+      <link>https://fernandosimoes.com/blog/career/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/tags/career/</guid>
+      <guid>https://fernandosimoes.com/blog/career/</guid>
       <description></description>
     </item>
     <item>
       <title>Projects</title>
-      <link>https://fernandosimoes.com/tags/projects/</link>
+      <link>https://fernandosimoes.com/blog/projects/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/tags/projects/</guid>
+      <guid>https://fernandosimoes.com/blog/projects/</guid>
       <description></description>
     </item>
     <item>
       <title>Programming</title>
-      <link>https://fernandosimoes.com/tags/programming/</link>
+      <link>https://fernandosimoes.com/blog/programming/</link>
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/tags/programming/</guid>
+      <guid>https://fernandosimoes.com/blog/programming/</guid>
       <description></description>
     </item>
   </channel>

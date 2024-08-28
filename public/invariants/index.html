@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Invariants | Fernando Simões</title>
+<meta name="title" content="Invariants" />
+<meta name="description" content="A rule in Domain-Driven Design (DDD) states that &ldquo;each entity should self-validate.&rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them." />
+<meta name="keywords" content="Programming," />
+
+
+<meta property="og:url" content="https://fernandosimoes.com/invariants/">
+  <meta property="og:site_name" content="Fernando Simões">
+  <meta property="og:title" content="Invariants">
+  <meta property="og:description" content="A rule in Domain-Driven Design (DDD) states that “each entity should self-validate.” This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2022-06-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-06-10T00:00:00+00:00">
+    <meta property="article:tag" content="Programming">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Invariants">
+  <meta name="twitter:description" content="A rule in Domain-Driven Design (DDD) states that “each entity should self-validate.” This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.">
+
+
+
+
+  <meta itemprop="name" content="Invariants">
+  <meta itemprop="description" content="A rule in Domain-Driven Design (DDD) states that “each entity should self-validate.” This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.">
+  <meta itemprop="datePublished" content="2022-06-10T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2022-06-10T00:00:00+00:00">
+  <meta itemprop="wordCount" content="534">
+  <meta itemprop="keywords" content="Programming">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    overflow-x: auto;
+  }
+
+  div.highlight pre {
+    background-color: initial;
+    color: initial;
+  }
+
+  div.highlight code {
+    background-color: unset;
+    color: unset;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Fernando Simões</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Invariants</h1>
+<p>
+  <i>
+    <time datetime='2022-06-10' pubdate>
+      10 Jun, 2022
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>A rule in Domain-Driven Design (DDD) states that &ldquo;each entity should self-validate.&rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</p>
+<p>However, outside the realm of object-oriented programming, it&rsquo;s easy to lose the sense of an object&rsquo;s &ldquo;unity.&rdquo;</p>
+<p>&ldquo;Paying a subscription&rdquo; is a set of business rules represented by small functions that call each other, and even for the programmer writing them, there seems to be no unity between them. At least not unity in the sense of an &ldquo;entity.&rdquo; The unity is in the domain, and often the domain is spread across various different places.</p>
+<p>Programmers always face a choice. Consider the example:</p>
+<pre tabindex="0"><code># Option 1
+
+## Module A
+def create_checkout_subscription(...) -&gt; None:
+    create_subscription(...)
+
+## Module B
+if payment.status == &#39;PAID&#39;:
+    create_checkout_subscription
+
+# Option 2
+
+# Module A
+def create_checkout_subscription(...) -&gt; None:
+    if payment.status == &#39;PAID&#39;:
+        create_subscription(...)
+ 
+# Module B
+do_something(...)
+create_checkout_subscription(...)
+do_one_more_thing(...)
+</code></pre><p>Faced with these two options, it&rsquo;s easy to intuitively conclude that the second one is better. With it, we don&rsquo;t need to validate the create_checkout_subscription function everywhere it&rsquo;s called. But intuition is not enough.</p>
+<p>What if the scenario were like this?:</p>
+<pre tabindex="0"><code># Module A
+def create_checkout_subscription(payment: Payment) -&gt; None:
+    if payment.status == &#39;PAID&#39;:
+        create_subscription(...)
+        
+# Module B
+if payment.status == &#39;PAID&#39;:
+    send_email.enqueue(...)
+    # create_checkout_subscription()
+</code></pre><p>In this case, external validation would be enforced by another function: send_email, whose internal constraints do not mandate that an email will only be sent if the status is &lsquo;PAID&rsquo; in all cases (the function is called in various other parts of the system without incurring this contextual restriction).</p>
+<p>If the programmer first encounters this scenario where the business restriction was established externally (in this case, in Module B), they may end up convincing themselves that when creating the create_checkout_subscription function, they don&rsquo;t need to create any internal restrictions.</p>
+<p>Researching this issue that was bothering me—after all, how terrible is it to program based on feeling 100% of the time without being able to name things?—I bothered friends and looked into the subject.</p>
+<p>I found some answers:</p>
+<p><a href="https://groups.google.com/g/clean-code-discussion/c/latn4x6Zo7w/m/bFwtDI1XSA8J?pli=1">This response from Uncle Bob</a>. The topic is clean architecture, and the context is entities, but the idea is already getting clearer:
+Should the age restriction be enforced by the employee entity, or by a sub-interactor called by the add-employee-interactor and the change-employee-interactor? This depends entirely on the volatility of the policy.
+(The notion of &ldquo;volatility&rdquo;: if things can change, and we know they can, an external restriction to the entity is a better option. Otherwise, the internally established restriction is better.)</p>
+<p><a href="https://stackoverflow.com/questions/30190302/what-is-the-difference-between-invariants-and-validation-rules">This answer on Stack Overflow</a>. The context is a question about invariant rules and validations:
+Absolutely, validation is the process of approving a given object state, while invariant enforcement happens before that state has even been reached.
+(Perfect! It becomes easy to understand that, within a specific context, an invariant is an external limitation of the entity.)</p>
+
+</content>
+<p>
+  
+  <a href="https://fernandosimoes.com/blog/programming/">#Programming</a>
+  
+</p>
+
+  </main>
+  <footer></footer>
+
+    
+</body>
+
+</html>

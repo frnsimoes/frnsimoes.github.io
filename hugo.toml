@@ -1,57 +1,26 @@
 baseurl = "https://fernandosimoes.com"
-title = "fernandosimoes.com"
-theme = "xmin-d"
+title = "Fernando Simões"
+theme = "hugo-bearblog"
 languagecode = "en"
 defaultcontentlanguage = "en"
-
-pygmentsCodeFences = true
-pygmentsUseClasses = false
 
 paginate = 50
 
 # language
 defaultContentLanguage = 'en'
-defaultContentLanguageInSubdir = false
-[languages]
-  [languages.pt]
-    contentDir = 'content/pt'
-    disabled = false
-    languageCode = 'pt-BR'
-    languageDirection = 'ltr'
-    languageName = 'Portuguese'
-    # title = 'Projekt Dokumentation'
-    weight = 1
-  [languages.en]
-    contentDir = 'content'
-    disabled = false
-    languageCode = 'en-US'
-    languageDirection = 'ltr'
-    languageName = 'English'
-    # title = 'Project Documentation'
-    weight = 2
-
 
 [menu]
-  [[menu.main]]
+  [[main]]
         identifier = "about"
         name = "about"
         url = "about/"
         weight = 2
-  # [[menu.main]]
-  #       identifier = "tags"
-  #       name = "tags"
-  #       url = "tags/"
-  #       weight = 2
-  [[menu.main]]
-        identifier = "posts"
-        name = "posts"
-        url = "posts/"
-        weight = 1
-  # [[menu.main]]
-  #       identifier = "pt-br"
-  #       name = "portuguese"
-  #       url = "/pt/"
-  #       weight = 4
+#   [[menu.main]]
+#         identifier = "posts"
+#         name = "posts"
+#         url = "posts/"
+#         weight = 1
+
 [taxonomies]
   tag = "tags"
 
@@ -65,18 +34,6 @@ defaultContentLanguageInSubdir = false
         url = "https://linkedin.com/in/frnsimoes"
         weight = 1 
 
-[markup]
-  [markup.highlight]
-    anchorLineNos = false
-    codeFences = true
-    guessSyntax = false
-    hl_Lines = ''
-    hl_inline = false
-    lineAnchors = ''
-    lineNoStart = 1
-    lineNos = false
-    lineNumbersInTable = true
-    noClasses = true
-    noHl = false
-    style = 'xcode'
-    tabWidth = 4
+[permalinks]
+  blog = "/:slug/"
+  tags = "/blog/:slug"
