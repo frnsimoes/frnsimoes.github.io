@@ -1,5 +1,5 @@
 ---
-Title: I finally started studying CS!
+Title: "I started studying CS"
 Date: 2024-05-15
 tags: ["Career"]
 ---
@@ -24,7 +24,7 @@ In December 2023, I was on vacation and decided to spend [one week] trying to cr
 
 This gave me the intuition that I could study almost anything with this little framework: Problem -> questions -> answers -> code solution. 
 
-Whenever a question popped into my head, I would write it down in a small questions.md file. I would open the terminal, press the tmux key bindings to swiftly open questions.md, and start writing what was bothering me. Some of the questions I wrote down in January were: "What’s a shell?", "What’s a terminal?", "What’s multiplexing?", "What’s a buffer?", and so on.
+Whenever a question popped into my head, I would write it down in a small questions.md file. Some of the questions I wrote down in January were: "What’s a shell?", "What’s a terminal?", "What’s multiplexing?", "What’s a buffer?", and so on.
 
 In March, I discovered that Oz Nova had opened [CS Primer] to the public. I was amazed. I’ve always wanted to study in his Bradfield Computer Science course, but I didn’t have the money for it. I was surprised to find that Oz’s method was really similar to what I was doing. He approached problems with questions, answers, and code solutions.
 
