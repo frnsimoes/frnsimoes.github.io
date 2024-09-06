@@ -1,5 +1,5 @@
 baseurl = "https://fernandosimoes.com"
-title = "Fernando Simões"
+# title = "Fernando Simões"
 theme = "t-bg"
 languagecode = "en"
 defaultcontentlanguage = "en"
