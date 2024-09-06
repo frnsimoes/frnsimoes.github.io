@@ -10,11 +10,11 @@ paginate = 50
 defaultContentLanguage = 'en'
 
 [menu]
-  [[menu.main]]
-        identifier = "about"
-        name = "About"
-        url = "about/"
-        weight = 2
+  # [[menu.main]]
+  #       identifier = "about"
+  #       name = "About"
+  #       url = "about/"
+  #       weight = 2
   [[menu.main]]
         identifier = "posts"
         name = "Blog"
