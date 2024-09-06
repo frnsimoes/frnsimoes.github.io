@@ -1,3 +1,6 @@
 [submodule "themes/t-bg"]
 	path = themes/t-bg
 	url = https://github.com/frnsimoes/hugo-bg
+[submodule "themes/tophat"]
+	path = themes/tophat
+	url = https://github.com/sergiobarriel/tophat-theme.git
