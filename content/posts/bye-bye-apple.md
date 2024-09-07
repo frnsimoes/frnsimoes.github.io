@@ -5,7 +5,7 @@ title = "Big bye bye to Apple"
 
 Oh dang, Apple ruined it all. I remember when I bought my first MacBook Air back in 2015. I had a Dell laptop before that, and the difference was... hmm. Since then, I've been using macOS. The productivity boost was insane, and I still had the Unix shell on hand. I used to write legal petitions with Markdown in the terminal. But as the years went by, the hope, the enthusiasm, the waiting, all ended. Every year I got less and less excited about the new version of the OS. Then, recently, Apple announced OpenAI integration with the operating system. That's a big no-no. No OpenAI integration on my machine.
 
-So I bought a cheap ThinkPad (less than half the price of a new MacBook Air M3) to build a Linux machine. In one week, I guess I achieved something useful—something nice, smooth, and beautiful (I didn’t even like macOS UI). Debian. I'm old. Debian is good for old people—or so they say. I want stability and security. First I tried Gnome[^1], then KDE, then Fluxbox, then i3. But XFCE4 was the sweet spot for me: light, beautiful, customizable. So there it was: Debian and XFCE.
+So I bought a cheap ThinkPad (less than half the price of a new MacBook Air M3) to build a Linux machine. In one week, I guess I achieved something useful—something nice, smooth, and beautiful (I didn’t even like macOS UI). Debian. I'm old. Debian is good for old people—or so they say. I want stability and security. First I tried Gnome, then KDE, then Fluxbox, then i3. But XFCE4 was the sweet spot for me: light, beautiful, customizable. So there it was: Debian and XFCE.
 
 I wrote some shell scripts to handle workflows, things I used to do with Alfred or the UI on macOS: managing audio, muting Spotify, changing monitor resolution, copying my social security number, phone number, and little utilities like that. Shell scripts can do anything, and it feels good to be getting better at it. One thing I miss is opening Alfred’s UI and searching for anything on my machine by name—whether it's a directory, a file, anything. Now I use find.
 
@@ -25,5 +25,3 @@ Things I want to do:
 - I don´t know if I like the Markdown setup I built. Little pieces all over the place. Maybe something more... elegant, simple?
 - More control over the machine? How?
 - Becoming a shell script magician. 
-
-[^1]: Everytime I hear "Gnome" I remember the scene from Mr Robot: "So I see you are running Gnome... I'm more of a KDE guy myself... I know what you are thinking: an executive running Linux? You know what they say: old habits die hard."
