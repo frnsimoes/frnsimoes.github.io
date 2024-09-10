@@ -1,5 +1,5 @@
 baseurl = "https://fernandosimoes.com"
-# title = "Fernando Simões"
+title = "Fernando Simões"
 theme = "t-bg"
 languagecode = "en"
 defaultcontentlanguage = "en"
@@ -16,9 +16,9 @@ defaultContentLanguage = 'en'
         url = "about/"
         weight = 2
   [[menu.main]]
-        identifier = "posts"
-        name = "Blog"
-        url = "posts/"
+        identifier = "w"
+        name = "Text"
+        url = "w/"
         weight = 1
 
 [taxonomies]
