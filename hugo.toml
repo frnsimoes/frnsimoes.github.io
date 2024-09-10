@@ -16,9 +16,9 @@ defaultContentLanguage = 'en'
         url = "about/"
         weight = 2
   [[menu.main]]
-        identifier = "w"
-        name = "Text"
-        url = "w/"
+        identifier = "posts"
+        name = "Blog"
+        url = "posts/"
         weight = 1
 
 [taxonomies]
