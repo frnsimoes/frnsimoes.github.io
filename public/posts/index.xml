@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 13 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TCP is tricky</title>
+      <link>https://fernandosimoes.com/posts/tcp/</link>
+      <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/tcp/</guid>
+      <description>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &amp;ldquo;receive window&amp;rdquo; (rwnd). The receive window indicates the maximum bytes that the TCP socket&amp;rsquo;s buffer can process. Until recent years, the de facto rwnd was 64KB. Nowadays, it can be up to 1 gigabyte1, depending on server configuration.</description>
+    </item>
     <item>
       <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/posts/socket/</link>
