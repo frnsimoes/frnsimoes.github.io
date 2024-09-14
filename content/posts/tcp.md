@@ -1,6 +1,6 @@
 +++ 
 date = 2024-09-13
-title = "TCP is tricky"
+title = "TCP may be tricky"
 tags = ["Computer Networking"]
 +++
 
