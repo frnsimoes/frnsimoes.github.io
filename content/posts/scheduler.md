@@ -1,7 +1,6 @@
 +++
 date = 2024-08-08
 title = "Unix Scheduler: overview"
-tags = ["Operating Systems"]
 +++ 
 
 One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?

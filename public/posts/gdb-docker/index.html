@@ -8,7 +8,7 @@
 <title>Debugging a network problem | Fernando Simões</title>
 <meta name="title" content="Debugging a network problem" />
 <meta name="description" content="Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV)." />
-<meta name="keywords" content="Computer Networking," />
+<meta name="keywords" content="" />
 
 
 <meta property="og:url" content="https://fernandosimoes.com/posts/gdb-docker/">
@@ -20,7 +20,6 @@
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2024-09-19T00:00:00+00:00">
     <meta property="article:modified_time" content="2024-09-19T00:00:00+00:00">
-    <meta property="article:tag" content="Computer Networking">
 
 
 
@@ -36,8 +35,7 @@
   <meta itemprop="description" content="Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV).">
   <meta itemprop="datePublished" content="2024-09-19T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-09-19T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1180">
-  <meta itemprop="keywords" content="Computer Networking">
+  <meta itemprop="wordCount" content="1306">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -232,8 +230,7 @@
 <content>
   <p>Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&rsquo;s make this straight and brief, so we can get to the more on point question: Docker.</p>
 <p>We are in the application layer, using the internet through a protocol, probably HTTP. HTTP is almost like an external layer that deals with formatting and encoding; its role is to create a contract between client and server. An HTTP request can look like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>POST /user HTTP/1.1
-</span></span><span style="display:flex;"><span>Host: example.com
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Host: example.com
 </span></span><span style="display:flex;"><span>Content-Type: application/json
 </span></span><span style="display:flex;"><span>Content-Length: <span style="color:#ae81ff">27</span>
 </span></span><span style="display:flex;"><span>
@@ -282,7 +279,7 @@
 <p>And there it was. The VPN added a new IP to the table: its own. And when I decided to check if anything had changed in <code>resolv.conf</code>, I found out that the VPN changed the namespace to the same subnet of <code>route - n</code> VPN&rsquo;s destination subnet.</p>
 <p>Let&rsquo;s check it out:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo route -n
-</span></span><span style="display:flex;"><span>10.64.0.1       0.0.0.0         255.255.255.255 UH    <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>        <span style="color:#ae81ff">0</span> wg0-mullvad
+</span></span><span style="display:flex;"><span>10.64.0.1       0.0.0.0         255.255.255.255 UH    <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>        <span style="color:#ae81ff">0</span> wg0-vpn
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>cat /etc/resolv.conf
@@ -291,8 +288,9 @@
 <blockquote>
 <p>If we have a client somewhere on the network that wants to talk to the nginx server running on TCP port 80 inside Container 1, the request will come into the eth0 interface on the Docker server. Because Docker knows this is a public port, it has spun up an instance of docker-proxy to listen on port 10520. So uor request is passed to the docker-proxy process, which then makes the request to the correct container address and port on the private network. Return traffic from the request flows through the same route. (&hellip;) <code>docker0</code> is where all the traffic from the Docker containers is picked up to be routed outside the virtual network.</p>
 </blockquote>
-<p>Docker sets up its own bridge network (<code>docker0</code>), and the kernel can route traffic to docker containers directly because it <em>uses the local network interface</em>. When VPN changed the DNS server in <code>resolv.conf</code> to the VPN network interface, it redirected the traffic through the VPN tunnel. Because of this, the Kernel couldn&rsquo;t route the traffic to the Docker subnet, and the connection failed.</p>
-<pre tabindex="0"><code></code></pre><div class="footnotes" role="doc-endnotes">
+<p>Docker sets up its own bridge network (<code>docker0</code>), and the kernel can route traffic to docker containers directly because it <em>uses the local network interface</em>. When VPN changed the DNS server in <code>resolv.conf</code> to the VPN network interface, it redirected the traffic through the VPN tunnel. Because of this, the Kernel couldn&rsquo;t route the traffic to the Docker subnet, and the connection failed. The VPN network interface is a virtual network interface, just like the Docker network interface. The difference is that the VPN network interface is a point of interconnection between the computer and the VPN server, while the Docker network interface is a point of interconnection between the computer and the Docker containers.</p>
+<p>One final question to ask: if the kernel has access to multiple network interfaces, how does it decide which one to use? There are matching rules, and, one of them is the longest prefix match. The kernel will choose the route with the longest prefix that matches the destination IP address. So if <code>docker0</code>&rsquo;s ip is <code>172.17.0.0</code> and the destination address I&rsquo;m trying to access is <code>172.17.0.2</code>, the kernel will route the traffic to <code>docker0</code> network interface.</p>
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1">
@@ -303,8 +301,6 @@
 
 </content>
 <p>
-  
-  
   
 </p>
 

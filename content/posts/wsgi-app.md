@@ -1,7 +1,6 @@
 +++ 
 date = 2023-12-30
 title = "I wrote a WSGI application!"
-tags = ["Projects"]
 +++
 This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.
 

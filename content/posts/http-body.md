@@ -1,8 +1,6 @@
 +++ 
 date = 2024-05-03
 title = "What is an HTTP message body?"
-tags = ["Computer Networking"]
-aliases = ["posts/what-is-an-http-message-body"]
 +++
 
 An HTTP body is a "stream of data", a sequence of bytes transmitted in the HTTP message[^1]. 

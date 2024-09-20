@@ -1,7 +1,6 @@
 +++ 
 date = 2024-07-28
 title = "TCP Reliable delivery"
-tags = ["Computer Networking"]
 +++
 
 "Reliable delivery" é um dos temas centrais e mais interessantes do transport layer. O sentido de "reliable" foi definido na [RFC793]:

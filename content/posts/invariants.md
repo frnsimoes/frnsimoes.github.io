@@ -1,7 +1,6 @@
 +++ 
 date = 2022-06-10
 title = "Invariants"
-tags = ["Programming"]
 +++
 
 

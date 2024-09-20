@@ -1,7 +1,6 @@
 ---
 Title: "I started studying CS"
 Date: 2024-05-15
-tags: ["Career"]
 ---
 (Checkout the [repo]).
 

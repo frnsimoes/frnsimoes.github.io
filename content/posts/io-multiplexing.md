@@ -1,7 +1,6 @@
 +++ 
 date = 2024-07-09
 title = "IO multiplexing and concurrency"
-tags = ["Operating Systems", "Computer Networking"] 
 +++
 
 IO multiplexing is a complex topic at first. But it's the basis of "concurrency" without multiple threads or processors. So it's pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.

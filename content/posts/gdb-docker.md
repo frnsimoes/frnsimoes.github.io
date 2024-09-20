@@ -1,15 +1,13 @@
 +++ 
 date = 2024-09-19
 title = "Debugging a network problem"
-tags = ["Computer Networking"]
 +++
 
 Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let's make this straight and brief, so we can get to the more on point question: Docker.
 
 We are in the application layer, using the internet through a protocol, probably HTTP. HTTP is almost like an external layer that deals with formatting and encoding; its role is to create a contract between client and server. An HTTP request can look like this:
 
-```shell
-POST /user HTTP/1.1
+```shell POST /user HTTP/1.1
 Host: example.com
 Content-Type: application/json
 Content-Length: 27
@@ -81,7 +79,7 @@ Let's check it out:
 
 ```shell
 sudo route -n
-10.64.0.1       0.0.0.0         255.255.255.255 UH    0      0        0 wg0-mullvad
+10.64.0.1       0.0.0.0         255.255.255.255 UH    0      0        0 wg0-vpn
 
 
 cat /etc/resolv.conf
@@ -92,7 +90,8 @@ So, what happened? This is how Karl Matthias[^1] explain an inbound request to D
 
 > If we have a client somewhere on the network that wants to talk to the nginx server running on TCP port 80 inside Container 1, the request will come into the eth0 interface on the Docker server. Because Docker knows this is a public port, it has spun up an instance of docker-proxy to listen on port 10520. So uor request is passed to the docker-proxy process, which then makes the request to the correct container address and port on the private network. Return traffic from the request flows through the same route. (...) `docker0` is where all the traffic from the Docker containers is picked up to be routed outside the virtual network. 
 
-Docker sets up its own bridge network (`docker0`), and the kernel can route traffic to docker containers directly because it *uses the local network interface*. When VPN changed the DNS server in `resolv.conf` to the VPN network interface, it redirected the traffic through the VPN tunnel. Because of this, the Kernel couldn't route the traffic to the Docker subnet, and the connection failed. 
+Docker sets up its own bridge network (`docker0`), and the kernel can route traffic to docker containers directly because it *uses the local network interface*. When VPN changed the DNS server in `resolv.conf` to the VPN network interface, it redirected the traffic through the VPN tunnel. Because of this, the Kernel couldn't route the traffic to the Docker subnet, and the connection failed. The VPN network interface is a virtual network interface, just like the Docker network interface. The difference is that the VPN network interface is a point of interconnection between the computer and the VPN server, while the Docker network interface is a point of interconnection between the computer and the Docker containers.
+
+One final question to ask: if the kernel has access to multiple network interfaces, how does it decide which one to use? There are matching rules, and, one of them is the longest prefix match. The kernel will choose the route with the longest prefix that matches the destination IP address. So if `docker0`'s ip is `172.17.0.0` and the destination address I'm trying to access is `172.17.0.2`, the kernel will route the traffic to `docker0` network interface.
 
 [^1]: Matthias, Karl. Docker: Up & Running: Shipping Reliable Containers in Production. O'Reilly Media, 2015.
-```
