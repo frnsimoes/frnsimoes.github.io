@@ -1,6 +1,6 @@
 +++ 
 date = 2024-09-19
-title = "Debugging a network problem"
+title = "Debugging a network issue"
 +++
 
 Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let's make this straight and brief, so we can get to the more on point question: Docker.
@@ -21,13 +21,9 @@ HTTP’s task is to encode this request message and pass it to the transport lay
 
 In the network layer, the message is treated as an IP packet, which also has a header and its own mechanisms for routing data. The IP layer is responsible for addressing and routing the packet across networks, ensuring it reaches the correct destination.
 
-Once the IP packet is prepared, it moves down to the data link layer, where it gets encapsulated in a frame that’s ready to be sent over the physical network. This layer manages local delivery within the same network and converts IP addresses to physical addresses (e.g., MAC addresses) when necessary.
+Once the IP packet is prepared, it moves down to the data link layer, where it gets encapsulated in a frame that’s ready to be sent over the physical network, where the actual transmission of bits occurs, using electrical signals or radio waves, depending on the medium (e.g., Ethernet or Wi-Fi).
 
-Finally, the packet is transmitted over the physical layer, where the actual transmission of bits occurs, using electrical signals or radio waves, depending on the medium (e.g., Ethernet or Wi-Fi).
-
-On the server side, the process happens in reverse. The physical interface receives the packet, and the data is processed back up through the layers. The data link layer verifies the frame, the network layer processes the IP packet, and the transport layer (TCP) ensures the data is reassembled correctly. Once it reaches the application layer, the server processes the HTTP request and sends back an ASCII response.
-
-Now, what happens when you try to send a request to the machine's loopback (localhost)? The whole process changes significantly. Instead, the HTTP encodes the message, passes its binary representation to the operating system, and the Kernel redirects the message internally, looping back the response of the request. The message never leaves the machine. Why? Let's run `ip addr` to check the network interfaces on my machine. The loopback interface is there, and also Docker's bridge network interface:
+Now, what happens when you try to send a request to a server that is running on your own machine? The whole process changes significantly. Instead, the HTTP encodes the message, passes its binary representation to the operating system, and the Kernel redirects the message internally, looping back the response of the request (hence the "loopback interface" name). The message never leaves the machine. Why? Let's run `ip addr` to check the network interfaces on my machine. The loopback interface is there, and also Docker's bridge network interface:
 
 ```shell
 ➜  ~ ip addr
@@ -63,7 +59,7 @@ send: Operation not permitted
 
 Why? Let's try to explore this problem. The book "Docker: Up and running" has a great diagram representing Docker's network:
 
-![alt](/static/docker-network.png)
+![alt](/static/docker-net.png)
 
 In this case, the `eth0` (probably an ethernet interface) network interface receives a request. The kernel understands that the request is directed to the Docker subnet, redirects it to the Docker network interface (`docker0`), which, in its turn, is a subnet that interfaces the container's private IP, proxying the request to the appropriate destination IP and Port.
 

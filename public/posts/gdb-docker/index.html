@@ -5,15 +5,15 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Debugging a network problem | Fernando Simões</title>
-<meta name="title" content="Debugging a network problem" />
+<title>Debugging a network issue | Fernando Simões</title>
+<meta name="title" content="Debugging a network issue" />
 <meta name="description" content="Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV)." />
 <meta name="keywords" content="" />
 
 
 <meta property="og:url" content="https://fernandosimoes.com/posts/gdb-docker/">
   <meta property="og:site_name" content="Fernando Simões">
-  <meta property="og:title" content="Debugging a network problem">
+  <meta property="og:title" content="Debugging a network issue">
   <meta property="og:description" content="Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV).">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -25,17 +25,17 @@
 
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Debugging a network problem">
+  <meta name="twitter:title" content="Debugging a network issue">
   <meta name="twitter:description" content="Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV).">
 
 
 
 
-  <meta itemprop="name" content="Debugging a network problem">
+  <meta itemprop="name" content="Debugging a network issue">
   <meta itemprop="description" content="Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV).">
   <meta itemprop="datePublished" content="2024-09-19T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-09-19T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1306">
+  <meta itemprop="wordCount" content="1218">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -239,10 +239,8 @@
 </span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></div><p>HTTP’s task is to encode this request message and pass it to the transport layer, which is handled by the operating system kernel. In this case, the transport layer is probably represented by the TCP protocol. TCP receives the encoded message, adds a header to it (with information such as source and destination ports, sequence numbers, checksums, window size, etc.). At this stage, TCP has completed its role in ensuring reliable delivery and passes the message to the next layer: the network layer.</p>
 <p>In the network layer, the message is treated as an IP packet, which also has a header and its own mechanisms for routing data. The IP layer is responsible for addressing and routing the packet across networks, ensuring it reaches the correct destination.</p>
-<p>Once the IP packet is prepared, it moves down to the data link layer, where it gets encapsulated in a frame that’s ready to be sent over the physical network. This layer manages local delivery within the same network and converts IP addresses to physical addresses (e.g., MAC addresses) when necessary.</p>
-<p>Finally, the packet is transmitted over the physical layer, where the actual transmission of bits occurs, using electrical signals or radio waves, depending on the medium (e.g., Ethernet or Wi-Fi).</p>
-<p>On the server side, the process happens in reverse. The physical interface receives the packet, and the data is processed back up through the layers. The data link layer verifies the frame, the network layer processes the IP packet, and the transport layer (TCP) ensures the data is reassembled correctly. Once it reaches the application layer, the server processes the HTTP request and sends back an ASCII response.</p>
-<p>Now, what happens when you try to send a request to the machine&rsquo;s loopback (localhost)? The whole process changes significantly. Instead, the HTTP encodes the message, passes its binary representation to the operating system, and the Kernel redirects the message internally, looping back the response of the request. The message never leaves the machine. Why? Let&rsquo;s run <code>ip addr</code> to check the network interfaces on my machine. The loopback interface is there, and also Docker&rsquo;s bridge network interface:</p>
+<p>Once the IP packet is prepared, it moves down to the data link layer, where it gets encapsulated in a frame that’s ready to be sent over the physical network, where the actual transmission of bits occurs, using electrical signals or radio waves, depending on the medium (e.g., Ethernet or Wi-Fi).</p>
+<p>Now, what happens when you try to send a request to a server that is running on your own machine? The whole process changes significantly. Instead, the HTTP encodes the message, passes its binary representation to the operating system, and the Kernel redirects the message internally, looping back the response of the request (hence the &ldquo;loopback interface&rdquo; name). The message never leaves the machine. Why? Let&rsquo;s run <code>ip addr</code> to check the network interfaces on my machine. The loopback interface is there, and also Docker&rsquo;s bridge network interface:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜  ~ ip addr
 </span></span><span style="display:flex;"><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
 </span></span><span style="display:flex;"><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -268,7 +266,7 @@
 </span></span><span style="display:flex;"><span>traceroute to 172.18.0.2 <span style="color:#f92672">(</span>172.18.0.2<span style="color:#f92672">)</span>, <span style="color:#ae81ff">30</span> hops max, <span style="color:#ae81ff">60</span> byte packets
 </span></span><span style="display:flex;"><span>send: Operation not permitted
 </span></span></code></pre></div><p>Why? Let&rsquo;s try to explore this problem. The book &ldquo;Docker: Up and running&rdquo; has a great diagram representing Docker&rsquo;s network:</p>
-<p><img src="/static/docker-network.png" alt="alt"></p>
+<p><img src="/static/docker-net.png" alt="alt"></p>
 <p>In this case, the <code>eth0</code> (probably an ethernet interface) network interface receives a request. The kernel understands that the request is directed to the Docker subnet, redirects it to the Docker network interface (<code>docker0</code>), which, in its turn, is a subnet that interfaces the container&rsquo;s private IP, proxying the request to the appropriate destination IP and Port.</p>
 <p>So I tried to isolate the problem: the problem must be something related to how the Kernel is accessing the data and redirecting it to the docker virtual network interface, right?</p>
 <ul>

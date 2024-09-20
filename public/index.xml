@@ -9,7 +9,7 @@
     <lastBuildDate>Thu, 19 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Debugging a network problem</title>
+      <title>Debugging a network issue</title>
       <link>https://fernandosimoes.com/posts/gdb-docker/</link>
       <pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/gdb-docker/</guid>
