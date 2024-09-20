@@ -65,7 +65,7 @@ send: Operation not permitted
 
 Why? Let's try to explore this problem. The book "Docker: Up and running" has a great diagram representing Docker's network:
 
-![alt](docker-network.png)
+![alt](/static/docker-network.png)
 
 In this case, the `eth0` (probably an ethernet interface) network interface receives a request. The kernel understands that the request is directed to the Docker subnet, redirects it to the Docker network interface (`docker0`), which, in its turn, is a subnet that interfaces the container's private IP, proxying the request to the appropriate destination IP and Port.
 

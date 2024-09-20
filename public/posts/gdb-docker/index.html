@@ -271,7 +271,7 @@
 </span></span><span style="display:flex;"><span>traceroute to 172.18.0.2 <span style="color:#f92672">(</span>172.18.0.2<span style="color:#f92672">)</span>, <span style="color:#ae81ff">30</span> hops max, <span style="color:#ae81ff">60</span> byte packets
 </span></span><span style="display:flex;"><span>send: Operation not permitted
 </span></span></code></pre></div><p>Why? Let&rsquo;s try to explore this problem. The book &ldquo;Docker: Up and running&rdquo; has a great diagram representing Docker&rsquo;s network:</p>
-<p><img src="docker-network.png" alt="alt"></p>
+<p><img src="/static/docker-network.png" alt="alt"></p>
 <p>In this case, the <code>eth0</code> (probably an ethernet interface) network interface receives a request. The kernel understands that the request is directed to the Docker subnet, redirects it to the Docker network interface (<code>docker0</code>), which, in its turn, is a subnet that interfaces the container&rsquo;s private IP, proxying the request to the appropriate destination IP and Port.</p>
 <p>So I tried to isolate the problem: the problem must be something related to how the Kernel is accessing the data and redirecting it to the docker virtual network interface, right?</p>
 <ul>
