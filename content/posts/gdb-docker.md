@@ -1,6 +1,6 @@
 +++ 
 date = 2024-09-19
-title = "Debugging a Network problem like I'm unemployed"
+title = "Debugging a network problem"
 tags = ["Computer Networking"]
 +++
 
