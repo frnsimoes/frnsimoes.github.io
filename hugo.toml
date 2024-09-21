@@ -9,17 +9,6 @@ paginate = 50
 # language
 defaultContentLanguage = 'en'
 
-[menu]
-  [[menu.main]]
-        identifier = "about"
-        name = "About"
-        url = "about/"
-        weight = 2
-  [[menu.main]]
-        identifier = "posts"
-        name = "Blog"
-        url = "posts/"
-        weight = 1
 
 [taxonomies]
   tag = "tags"

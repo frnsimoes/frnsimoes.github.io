@@ -8,7 +8,7 @@
   {{- partial "favicon.html" . -}}
   <title>{{- block "title" . }}{{ with .Title }}{{ . }} | {{ end }}{{ .Site.Title }}{{- end }}</title>
 
-  {{- partial "seo_tags.html" . -}}
+  <!-- {{- partial "seo_tags.html" . -}} -->
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
   {{ with .OutputFormats.Get "rss" -}}

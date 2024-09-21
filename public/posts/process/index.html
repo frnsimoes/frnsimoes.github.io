@@ -6,45 +6,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Playing around with fork() | Fernando Simões</title>
-<meta name="title" content="Playing around with fork()" />
-<meta name="description" content="The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.
-But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.
-The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process." />
-<meta name="keywords" content="" />
 
-
-<meta property="og:url" content="https://fernandosimoes.com/posts/process/">
-  <meta property="og:site_name" content="Fernando Simões">
-  <meta property="og:title" content="Playing around with fork()">
-  <meta property="og:description" content="The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.
-But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.
-The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2024-06-18T00:00:00+00:00">
-    <meta property="article:modified_time" content="2024-06-18T00:00:00+00:00">
-
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Playing around with fork()">
-  <meta name="twitter:description" content="The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.
-But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.
-The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.">
-
-
-
-
-  <meta itemprop="name" content="Playing around with fork()">
-  <meta itemprop="description" content="The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.
-But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.
-The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.">
-  <meta itemprop="datePublished" content="2024-06-18T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2024-06-18T00:00:00+00:00">
-  <meta itemprop="wordCount" content="534">
-<meta name="referrer" content="no-referrer-when-downgrade" />
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
   body {
@@ -227,10 +191,6 @@ The running program you are using to create a new process is a process itself, s
   <h2>Fernando Simões</h2>
 </a>
 <nav>
-<a href="/posts/">Blog</a>
-
-<a href="/about/">About</a>
-
 </nav>
 </header>
   <main>

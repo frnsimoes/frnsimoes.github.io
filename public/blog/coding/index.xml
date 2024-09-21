@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coding on Fernando Simões</title>
+    <link>https://fernandosimoes.com/blog/coding/</link>
+    <description>Recent content in Coding on Fernando Simões</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 10 Jun 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://fernandosimoes.com/blog/coding/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Invariants</title>
+      <link>https://fernandosimoes.com/posts/invariants/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/invariants/</guid>
+      <description>A rule in Domain-Driven Design (DDD) states that &amp;ldquo;each entity should self-validate.&amp;rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</description>
+    </item>
+  </channel>
+</rss>

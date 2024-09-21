@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Networking on Fernando Simões</title>
+    <link>https://fernandosimoes.com/blog/computer-networking/</link>
+    <description>Recent content in Computer Networking on Fernando Simões</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 03 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://fernandosimoes.com/blog/computer-networking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What is an HTTP message body?</title>
+      <link>https://fernandosimoes.com/posts/http-body/</link>
+      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/http-body/</guid>
+      <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
+    </item>
+  </channel>
+</rss>

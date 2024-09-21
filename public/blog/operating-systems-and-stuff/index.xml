@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Operating Systems and Stuff on Fernando Simões</title>
+    <link>https://fernandosimoes.com/blog/operating-systems-and-stuff/</link>
+    <description>Recent content in Operating Systems and Stuff on Fernando Simões</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://fernandosimoes.com/blog/operating-systems-and-stuff/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IO multiplexing and concurrency</title>
+      <link>https://fernandosimoes.com/posts/io-multiplexing/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
+      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
+    </item>
+  </channel>
+</rss>

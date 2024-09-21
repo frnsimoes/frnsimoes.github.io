@@ -1,6 +1,7 @@
 +++ 
 date = 2024-09-19
 title = "Lost in the loopback"
+tags = ["Fun stuff"]
 +++
 
 Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let's make this straight and brief, so we can get to the more on point question: Docker.
