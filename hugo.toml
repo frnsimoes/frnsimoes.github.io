@@ -1,6 +1,6 @@
 baseurl = "https://fernandosimoes.com"
 title = "Fernando Simões"
-theme = "hugo-bg"
+theme = "hugo-bg-master"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
