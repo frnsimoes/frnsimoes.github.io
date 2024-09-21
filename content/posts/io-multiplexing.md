@@ -33,7 +33,7 @@ You don't want that. You are not that kind of server. Are you? You would rather 
 That's what IO Multiplexing allows you to do.
 
 
-```python
+```
 import select
 import socket
 

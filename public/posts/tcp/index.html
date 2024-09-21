@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &ldquo;receive window&rdquo; (<code>rwnd</code>). The receive window indicates the maximum bytes that the TCP socket&rsquo;s buffer can process. Until recent years, the de facto <code>rwnd</code> was 64KB. Nowadays, it can be up to 1 gigabyte<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, depending on server configuration. TCP also has another variable, a private one, called <code>cwnd</code>. The purpose of this variable is to avoid congestion. A TCP socket will control how much data it sends over the wire based on this variable. When the client and server start to exchange data, the sending socket checks the <code>cwnd</code> variable. If it&rsquo;s the first time it sends data after the three-way handshake, the <code>cwnd</code> is set to 10<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, indicating that the socket can send 10 segments (of ~14KB each). The TCP socket will increase the amount of data sent by doubling it after each ACK. This is called <code>Slow Start</code>. Besides Slow Start, TCP also has <code>Slow Restart</code>: when the connection is idle for a while, TCP can&rsquo;t presume the state of the network at that moment, significantly reducing the <code>cwnd</code> value.</p>
+  <h4 style="text-align: center;">TCP may be tricky</h4>
+  <p>
+    <i>
+      <time datetime='2024-09-13' pubdate>
+        13 Sep, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &ldquo;receive window&rdquo; (<code>rwnd</code>). The receive window indicates the maximum bytes that the TCP socket&rsquo;s buffer can process. Until recent years, the de facto <code>rwnd</code> was 64KB. Nowadays, it can be up to 1 gigabyte<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, depending on server configuration. TCP also has another variable, a private one, called <code>cwnd</code>. The purpose of this variable is to avoid congestion. A TCP socket will control how much data it sends over the wire based on this variable. When the client and server start to exchange data, the sending socket checks the <code>cwnd</code> variable. If it&rsquo;s the first time it sends data after the three-way handshake, the <code>cwnd</code> is set to 10<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, indicating that the socket can send 10 segments (of ~14KB each). The TCP socket will increase the amount of data sent by doubling it after each ACK. This is called <code>Slow Start</code>. Besides Slow Start, TCP also has <code>Slow Restart</code>: when the connection is idle for a while, TCP can&rsquo;t presume the state of the network at that moment, significantly reducing the <code>cwnd</code> value.</p>
 <p>I was reading Ilya&rsquo;s book<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> yesterday, and in the TCP section, he presents an excellent case study about the time to process a GET request for a 64KB file. The client is in New York, and the server is in London. With the handshake, the total roundtrip time is 264ms. When comparing this value with a request that has an already established handshake, the time drops to a staggering 96ms!</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
@@ -213,13 +220,10 @@
 </ol>
 </div>
 
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>(Checkout the <a href="https://github.com/frnsimoes/computer-science-studies">repo</a>).</p>
+  <h4 style="text-align: center;">I started studying CS</h4>
+  <p>
+    <i>
+      <time datetime='2024-05-15' pubdate>
+        15 May, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>(Checkout the <a href="https://github.com/frnsimoes/computer-science-studies">repo</a>).</p>
 <p>As soon as I started working as a software developer, I knew that I wanted to study computer science the &ldquo;right&rdquo; way. I&rsquo;m the kind of person who is bothered when I don&rsquo;t know how something works behind the scenes.</p>
 <p>Over the past couple of years, I’ve tried a lot of different things:</p>
 <ul>
@@ -214,13 +221,10 @@
 <p>In March, I discovered that Oz Nova had opened <a href="https://csprimer.com">CS Primer</a> to the public. I was amazed. I’ve always wanted to study in his Bradfield Computer Science course, but I didn’t have the money for it. I was surprised to find that Oz’s method was really similar to what I was doing. He approached problems with questions, answers, and code solutions.</p>
 <p>He proposes really interesting problems to solve: like writing a concurrent proxy, or writing a custom shell. I honestly feel excited like the first days of programming! I started studying in April 2024, and I intend to finish most of it by the end of 2025.</p>
 
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

@@ -27,7 +27,7 @@ Imagine that:
 
 This process could be represented somehwat like this:
 
-```c
+```
 int fd = open("file.txt", O_WRONLY | O_CREAT, 0644);
 write(fd, buffer, sizeof(buffer));
 ```

@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,44 +194,51 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>I&rsquo;ve been playing a little bit with the OS and files.</p>
+  <h4 style="text-align: center;">What&#39;s the size of a file on disk?</h4>
+  <p>
+    <i>
+      <time datetime='2024-05-29' pubdate>
+        29 May, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>I&rsquo;ve been playing a little bit with the OS and files.</p>
 <p>I found the <code>stat</code> posix command. From manpage:</p>
 <blockquote>
 <p>the stat utility displays information about the file pointed to by file.</p>
 </blockquote>
 <p>I&rsquo;m mostly interested in two of the metadata information: Block and Block IO:</p>
 <p>Experiment:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@d6e5e8ac056e:/code# stat tmp
-</span></span><span style="display:flex;"><span>File: tmp
-</span></span><span style="display:flex;"><span>Size: <span style="color:#ae81ff">0</span>               Blocks: <span style="color:#ae81ff">8</span>          IO Block: <span style="color:#ae81ff">4096</span>   regular file
-</span></span><span style="display:flex;"><span>Device: 0,67    Inode: <span style="color:#ae81ff">397692</span>      Links: <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>Access: <span style="color:#f92672">(</span>0644/-rw-r--r--<span style="color:#f92672">)</span>  Uid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>   Gid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>Access: 2024-06-22 16:43:42.909805004 +0000
-</span></span><span style="display:flex;"><span>...
-</span></span></code></pre></div><p><code>tmp</code> is an empty file, the <code>Blocks</code> is 8 and IO Block is <code>4096</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cat /dev/urandom | head -c <span style="color:#ae81ff">4096</span> &gt; tmp
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>stat tmp
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>root@d6e5e8ac056e:/code# stat tmp
-</span></span><span style="display:flex;"><span>File: tmp
-</span></span><span style="display:flex;"><span>Size: <span style="color:#ae81ff">4096</span>            Blocks: <span style="color:#ae81ff">8</span>          IO Block: <span style="color:#ae81ff">4096</span>   regular file
-</span></span><span style="display:flex;"><span>Device: 0,67    Inode: <span style="color:#ae81ff">397692</span>      Links: <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>Access: <span style="color:#f92672">(</span>0644/-rw-r--r--<span style="color:#f92672">)</span>  Uid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>   Gid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>Access: 2024-06-22 16:52:42.909805004 +0000
-</span></span><span style="display:flex;"><span>...
-</span></span></code></pre></div><p>What would happen if one more byte was added to the tmp file?</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@d6e5e8ac056e:/code# echo -n <span style="color:#e6db74">&#39;.&#39;</span> &gt;&gt; tmp
-</span></span><span style="display:flex;"><span>root@d6e5e8ac056e:/code# stat tmp
-</span></span><span style="display:flex;"><span>File: tmp
-</span></span><span style="display:flex;"><span>Size: <span style="color:#ae81ff">4097</span>            Blocks: <span style="color:#ae81ff">16</span>         IO Block: <span style="color:#ae81ff">4096</span>   regular file
-</span></span><span style="display:flex;"><span>Device: 0,67    Inode: <span style="color:#ae81ff">397692</span>      Links: <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>Access: <span style="color:#f92672">(</span>0644/-rw-r--r--<span style="color:#f92672">)</span>  Uid: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>   Gid&lt;LeftMouse&gt;: <span style="color:#f92672">(</span>    0/    root<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>Access: 2024-06-22 16:52:42.909805004 +0000
-</span></span><span style="display:flex;"><span>...
-</span></span></code></pre></div><p>Now we have <code>Blocks: 16</code>. The OS &ldquo;allocated&rdquo; (virtualized?) 8 new blocks for a file with 4097 bytes.</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 0               Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:43:42.909805004 +0000
+...
+</code></pre><p><code>tmp</code> is an empty file, the <code>Blocks</code> is 8 and IO Block is <code>4096</code>.</p>
+<pre tabindex="0"><code>cat /dev/urandom | head -c 4096 &gt; tmp
+
+stat tmp
+
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4096            Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>What would happen if one more byte was added to the tmp file?</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# echo -n &#39;.&#39; &gt;&gt; tmp
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4097            Blocks: 16         IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid&lt;LeftMouse&gt;: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>Now we have <code>Blocks: 16</code>. The OS &ldquo;allocated&rdquo; (virtualized?) 8 new blocks for a file with 4097 bytes.</p>
 <p>Why 8 blocks?</p>
 <p>8 blocks is a measurement unit. Blocks are counted in 512 bytes unities.</p>
 <p><strong>What is the size of the file on disk?</strong></p>
@@ -267,13 +274,10 @@
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div>
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

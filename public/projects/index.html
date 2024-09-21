@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,22 +194,26 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>List of little fun things I&rsquo;ve done in the past:</p>
+  <h4 style="text-align: center;"></h4>
+  <p>
+    <i>
+      <time datetime='0001-01-01' pubdate>
+        01 Jan, 0001
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>List of little fun things I&rsquo;ve done in the past:</p>
 <ul>
 <li>2024-06 <a href="https://github.com/frnsimoes/computer-science-studies/tree/main/network-programming/http/proxy-persistence">Persistent Proxy</a></li>
 <li>2024-03 <a href="https://github.com/frnsimoes/fzfnote-go/">Fzf-notes</a></li>
 <li>2023-12 <a href="https://github.com/frnsimoes/simple-http">Simple HTTP</a></li>
 </ul>
 
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

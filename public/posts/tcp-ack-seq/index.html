@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>&ldquo;Reliable delivery&rdquo; é um dos temas centrais e mais interessantes do transport layer. O sentido de &ldquo;reliable&rdquo; foi definido na <a href="https://www.ietf.org/rfc/rfc793.txt">RFC793</a>:</p>
+  <h4 style="text-align: center;">TCP Reliable delivery</h4>
+  <p>
+    <i>
+      <time datetime='2024-07-28' pubdate>
+        28 Jul, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>&ldquo;Reliable delivery&rdquo; é um dos temas centrais e mais interessantes do transport layer. O sentido de &ldquo;reliable&rdquo; foi definido na <a href="https://www.ietf.org/rfc/rfc793.txt">RFC793</a>:</p>
 <blockquote>
 <p>The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system.  This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP.  If the ACK is not received within a timeout interval, the data is retransmitted.  At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates.  Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.</p>
 </blockquote>
@@ -225,28 +232,28 @@ Recebimento: ack = 2002
 <p>The number of 32 bit words in the TCP Header.  This indicates where the data begins.  The TCP header (even one including options) is an integral number of 32 bits long.</p>
 </blockquote>
 <p>Uma implementação simples de sequence numbers poderia ser algo deste tipo:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ReliableDelivery</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, target_addr<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>target_addr <span style="color:#f92672">=</span> target_addr
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_sock <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_DGRAM)
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>seq <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># self.ack = 0</span>
-</span></span><span style="display:flex;"><span>        
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bind</span>(self, own_addr):
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_sock<span style="color:#f92672">.</span>bind(own_addr)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send</span>(self, data):
-</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> len(data):
-</span></span><span style="display:flex;"><span>            payload <span style="color:#f92672">=</span> data[i:i<span style="color:#f92672">+</span>MAX_PAYLOAD_SIZE]
-</span></span><span style="display:flex;"><span>            segment <span style="color:#f92672">=</span> pack_segment(self<span style="color:#f92672">.</span>seq, self<span style="color:#f92672">.</span>ack, payload)
-</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_sock<span style="color:#f92672">.</span>sendto(segment, self<span style="color:#f92672">.</span>target_addr)
-</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>seq <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> len(payload)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">recv</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
-</span></span></code></pre></div><p>Agora, o que é o ACK? O ACK é o número que representa, por parte do receptor, tudo o que já foi recebido por ele. Suponha, portanto, que o servidor recebeu, de um cliente, até o byte 12.000. Neste caso, a última requisição conterá um ACK de 12.001. Da mesma RFC:</p>
+<pre tabindex="0"><code>class ReliableDelivery:
+    def __init__(self, target_addr=None):
+        self.target_addr = target_addr
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.seq = 0
+        # self.ack = 0
+        
+    def bind(self, own_addr):
+        self._sock.bind(own_addr)
+
+    def send(self, data):
+        i = 0
+        while i &lt; len(data):
+            payload = data[i:i+MAX_PAYLOAD_SIZE]
+            segment = pack_segment(self.seq, self.ack, payload)
+            self._sock.sendto(segment, self.target_addr)
+            self.seq += 1
+            i += len(payload)
+
+    def recv(self):
+        pass
+</code></pre><p>Agora, o que é o ACK? O ACK é o número que representa, por parte do receptor, tudo o que já foi recebido por ele. Suponha, portanto, que o servidor recebeu, de um cliente, até o byte 12.000. Neste caso, a última requisição conterá um ACK de 12.001. Da mesma RFC:</p>
 <blockquote>
 <p>If the ACK control bit is set this field contains the value of the next sequence number the sender of the segment is expecting to receive.  Once a connection is established this is always sent.</p>
 </blockquote>
@@ -269,13 +276,10 @@ Recebimento: ack = 2002
 </ol>
 </div>
 
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

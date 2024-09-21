@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>An HTTP body is a &ldquo;stream of data&rdquo;, a sequence of bytes transmitted in the HTTP message<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+  <h4 style="text-align: center;">What is an HTTP message body?</h4>
+  <p>
+    <i>
+      <time datetime='2024-05-03' pubdate>
+        03 May, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>An HTTP body is a &ldquo;stream of data&rdquo;, a sequence of bytes transmitted in the HTTP message<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <p>When an HTTP message is sent by the client socket to the server socket, the server socket &ldquo;receives&rdquo; the HTTP message from a buffer, which means the receiving socket&rsquo;s recv method (refer to <code>man recv</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>) retrieves data from a temporary storage known as a buffer, which has a finite capacity.</p>
 <p>This is as simple as saying something like this: <code>client_socket = server_socket.accept(); client_socket.recv(4096)</code>.</p>
 <p>Imagine that the body has, say, 32768 bytes. The receiver socket doesn&rsquo;t know how many bytes the data has, so it has to process that data iteratively until it completes. It will process the data in chunks of 4096 bytes, since, in our case, the socket&rsquo;s buffer has the maximum size of 4096 bytes.</p>
@@ -237,15 +244,10 @@ Foo:Bar
 </ol>
 </div>
 
-</content>
-<p>
-  
-  
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

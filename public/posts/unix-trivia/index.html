@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn&rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.</p>
+  <h4 style="text-align: center;">Unix trivia</h4>
+  <p>
+    <i>
+      <time datetime='2023-06-25' pubdate>
+        25 Jun, 2023
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>The history of Unix has many curious aspects: a huge company like AT&amp;T, which at the time owned Bell Labs (and therefore Unix), didn&rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.</p>
 <p>Until 1989, AT&amp;T couldn&rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;T&rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began. Bill Joy, from Berkeley, was 25 at the time, and 2BSD had already been released.</p>
 <p>In 1989, US regulatory rules changed, allowing AT&amp;T to sell Unix licenses, which intensified legal battles against Berkeley and BSD. At the time, AT&amp;T sold Unix licenses for $250,000 (!!!).</p>
 <p>Students at the University of California, Berkeley, made tremendous efforts to replace any AT&amp;T-owned code in the BSD source code. During this time, Net/1 and Net/2 emerged under Keith Bostic&rsquo;s guidance, and McKusick and Mike Karels worked on removing AT&amp;T code from the BSD kernel. Net/2 was marketed as a standalone TCP/IP component for about $1,000 (compare this with AT&amp;T&rsquo;s $250,000).</p>
@@ -208,13 +215,10 @@
 </ul>
 <p>It&rsquo;s very interesting to see how things unfolded during this time and how the movement against a giant company like AT&amp;T was primarily led (with some exceptions) by university students and associates.</p>
 
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

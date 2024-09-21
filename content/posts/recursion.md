@@ -7,7 +7,7 @@ Assistindo ao [CS61A](https://www.youtube.com/@JohnDeNero/videos) (miss you, Joh
 
 O exemplo clássico do fatorial:
 
-```python
+```
 def fact(n):
 	if n == 0:
 		return 1
@@ -21,7 +21,7 @@ O que acontece aqui?
 
 Cada `f` é um frame isolado. A função é chamada recursivamente e o valor de `n` muda dinamicamente a cada chamada, conforme o argumento do `fact()` recursivo:
 
-```shell
+```
 |-------------------------------
 | f1: fact. n=3
 |-------------------------------
@@ -42,7 +42,7 @@ Primeiro, temos o processo de encolhimento do argumento `n` conforme a chamada d
 
 Depois, temos as _evaluations_ de cada um dos _frames_ (leia de baixo para cima):
 
-```shell
+```
 |-------------------------------
 | f1: fact. return value: 3
 | n=3. return: 3*2=6
@@ -71,7 +71,7 @@ Depois, temos as _evaluations_ de cada um dos _frames_ (leia de baixo para cima)
 
 ### Um exemplo com lista:
 
-```python
+```
 def sum_list(xs:list):
 	if not xs:
 		return 0
@@ -85,7 +85,7 @@ sum_list(xs)  # 1+2+3+4+5=15
 
 Neste exemplo, cada chamada da função recursiva consome um elemento da lista. 
 
-```shell
+```
 | f1: fact. xs=[1, 2, 3, 4, 5]
 | return: [1, 2, 3, 4, 5]
 |-------------------------------
@@ -116,7 +116,7 @@ No fim das contas, a recursão é uma forma de iteração. Ou, como diz [John De
 
 Um exemplo besta, mas que clarifica bem essa qualidade da recursão:
 
-```python
+```
 def sum_a(a: int, b: int):
 	if b == 0:
 		return 0

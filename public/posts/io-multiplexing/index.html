@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>IO multiplexing is a complex topic at first. But it&rsquo;s the basis of &ldquo;concurrency&rdquo; without multiple threads or processors. So it&rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.</p>
+  <h4 style="text-align: center;">IO multiplexing and concurrency</h4>
+  <p>
+    <i>
+      <time datetime='2024-07-09' pubdate>
+        09 Jul, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>IO multiplexing is a complex topic at first. But it&rsquo;s the basis of &ldquo;concurrency&rdquo; without multiple threads or processors. So it&rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.</p>
 <p>The secret of IO multiplexing is being able to handle multiple things at once. And by &ldquo;things&rdquo; I mean multiple behaviors that have an input or output in file descriptors.</p>
 <p>Multiplexing is a well-known resource to deal with the &ldquo;we need to gather some things, and then deliver them to their own proprietors&rdquo; scenario. It&rsquo;s a way of diligently proxying receipts to their appropriate recipients.</p>
 <p>Multiplexing and demultiplexing are largely used in network protocols at the transport layer. When you use your computer, you don&rsquo;t only connect to one network at a time. Usually, you are listening to music, sending emails, chatting, and downloading files. UDP and TCP know how to handle this and how to deliver the appropriate datagram/segment to the correct socket.</p>
@@ -213,67 +220,62 @@
 <p>Imagine you are a server. Someone sends you a request with <code>curl</code>, yet someone else sends you a request with the browser. At first, you don&rsquo;t know what to do. Well, you do, but things are looking good: your socket will process the <code>curl</code> request, and the browser request will be blocking potentially by as long as the curl request takes to be executed.</p>
 <p>You don&rsquo;t want that. You are not that kind of server. Are you? You would rather be able to <em>listen</em> to the <code>curl</code> request, and then, while blocked by it (say it needs some database querying), you want to address the web browser request.</p>
 <p>That&rsquo;s what IO Multiplexing allows you to do.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> select
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> socket
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>listener <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET, socket<span style="color:#f92672">.</span>SOCK_STREAM)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>listener<span style="color:#f92672">.</span>setblocking(<span style="color:#66d9ef">False</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>listener<span style="color:#f92672">.</span>bind((<span style="color:#e6db74">&#39;0.0.0.0&#39;</span>, <span style="color:#ae81ff">10000</span>))
-</span></span><span style="display:flex;"><span>listener<span style="color:#f92672">.</span>listen(<span style="color:#ae81ff">10</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>inputs <span style="color:#f92672">=</span> [listener]
-</span></span><span style="display:flex;"><span>outputs <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>to_send <span style="color:#f92672">=</span> set()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
-</span></span><span style="display:flex;"><span>    readable, writable, excepcional <span style="color:#f92672">=</span> select<span style="color:#f92672">.</span>select(inputs, outputs, inputs)
-</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;readables&#39;</span>)
-</span></span><span style="display:flex;"><span>    print(readable)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;writables&#39;</span>)
-</span></span><span style="display:flex;"><span>    print(writable)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> s <span style="color:#f92672">in</span> readable:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> s <span style="color:#f92672">is</span> listener:
-</span></span><span style="display:flex;"><span>            client_sock, client_addr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>accept()
-</span></span><span style="display:flex;"><span>            client_sock<span style="color:#f92672">.</span>setblocking(<span style="color:#66d9ef">False</span>)
-</span></span><span style="display:flex;"><span>            inputs<span style="color:#f92672">.</span>append(client_sock)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>            data <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> data:
-</span></span><span style="display:flex;"><span>                print(data)
-</span></span><span style="display:flex;"><span>                outputs<span style="color:#f92672">.</span>append(s)
-</span></span><span style="display:flex;"><span>                to_send<span style="color:#f92672">.</span>add(s)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>                s<span style="color:#f92672">.</span>close()
-</span></span><span style="display:flex;"><span>            inputs<span style="color:#f92672">.</span>remove(s)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> s <span style="color:#f92672">in</span> writable:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> s <span style="color:#f92672">in</span> to_send:
-</span></span><span style="display:flex;"><span>            to_send<span style="color:#f92672">.</span>remove(s)
-</span></span><span style="display:flex;"><span>            outputs<span style="color:#f92672">.</span>remove(s)
-</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;HTTP/1.0 200 ok </span><span style="color:#ae81ff">\r\n\r\n</span><span style="color:#e6db74">body text&#39;</span>)
-</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span>close()
-</span></span></code></pre></div><p>Here is what&rsquo;s happening in this ugly code:</p>
+<pre tabindex="0"><code>import select
+import socket
+
+
+listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+listener.setblocking(False)
+
+listener.bind((&#39;0.0.0.0&#39;, 10000))
+listener.listen(10)
+
+inputs = [listener]
+outputs = []
+
+to_send = set()
+
+while True:
+    readable, writable, excepcional = select.select(inputs, outputs, inputs)
+    print(&#39;readables&#39;)
+    print(readable)
+
+    print(&#39;writables&#39;)
+    print(writable)
+
+    for s in readable:
+        if s is listener:
+            client_sock, client_addr = s.accept()
+            client_sock.setblocking(False)
+            inputs.append(client_sock)
+
+        else:
+            data = s.recv(4096)
+            if data:
+                print(data)
+                outputs.append(s)
+                to_send.add(s)
+            else:
+                s.close()
+            inputs.remove(s)
+
+    for s in writable:
+        if s in to_send:
+            to_send.remove(s)
+            outputs.remove(s)
+            s.send(b&#39;HTTP/1.0 200 ok \r\n\r\nbody text&#39;)
+            s.close()
+</code></pre><p>Here is what&rsquo;s happening in this ugly code:</p>
 <p>This is a TCP connection (identified by socket.SOCK_STREAM). Instead of immediately making the handshake as soon as a client server&rsquo;s request arrive, you call select. What select is going to do is monitor the inputs for you. When the <code>curl</code> request arrives, you will receive its message; the same thing goes for the web browser request. They become &ldquo;readable&rdquo; because socket (the file descriptor) may wanna read what&rsquo;s been sent by them.</p>
 <p>Note that both <code>curl</code> and the web browser request are two different sockets, so they are identified by two different file descriptors.</p>
 <p>When you process the message from the one client, you wanna answer it, that&rsquo;s what the <code>to_send()</code> is doing. <code>writable</code> is a way of saying: &ldquo;here is a thing that I want to write to this file descriptor&rdquo;.</p>
 <p>And there you go. While being only one socket, you just created a way of dealing with multiple requests concurrently.</p>
 
-</content>
-<p>
-  
-  
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

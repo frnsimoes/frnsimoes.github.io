@@ -44,7 +44,7 @@ A [RFC793] fala de "data offsets", um campo no cabeçalho TCP que indica onde os
 
 Uma implementação simples de sequence numbers poderia ser algo deste tipo:
 
-```python
+```
 class ReliableDelivery:
     def __init__(self, target_addr=None):
         self.target_addr = target_addr

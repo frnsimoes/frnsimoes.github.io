@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>A rule in Domain-Driven Design (DDD) states that &ldquo;each entity should self-validate.&rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</p>
+  <h4 style="text-align: center;">Invariants</h4>
+  <p>
+    <i>
+      <time datetime='2022-06-10' pubdate>
+        10 Jun, 2022
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>A rule in Domain-Driven Design (DDD) states that &ldquo;each entity should self-validate.&rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</p>
 <p>However, outside the realm of object-oriented programming, it&rsquo;s easy to lose the sense of an object&rsquo;s &ldquo;unity.&rdquo;</p>
 <p>&ldquo;Paying a subscription&rdquo; is a set of business rules represented by small functions that call each other, and even for the programmer writing them, there seems to be no unity between them. At least not unity in the sense of an &ldquo;entity.&rdquo; The unity is in the domain, and often the domain is spread across various different places.</p>
 <p>Programmers always face a choice. Consider the example:</p>
@@ -243,15 +250,10 @@ Should the age restriction be enforced by the employee entity, or by a sub-inter
 Absolutely, validation is the process of approving a given object state, while invariant enforcement happens before that state has even been reached.
 (Perfect! It becomes easy to understand that, within a specific context, an invariant is an external limitation of the entity.)</p>
 
-</content>
-<p>
-  
-  
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

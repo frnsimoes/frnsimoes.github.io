@@ -8,7 +8,8 @@ Noob me. I spent more than 30 minutes debugging a connection error while trying 
 
 We are in the application layer, using the internet through a protocol, probably HTTP. HTTP is almost like an external layer that deals with formatting and encoding; its role is to create a contract between client and server. An HTTP request can look like this:
 
-```shell POST /user HTTP/1.1
+```
+POST /user HTTP/1.1
 Host: example.com
 Content-Type: application/json
 Content-Length: 27
@@ -26,7 +27,7 @@ Once the IP packet is prepared, it moves down to the data link layer, where it g
 
 Now, what happens when you try to send a request to a server that is running on your own machine? The whole process changes significantly. Instead, the HTTP encodes the message, passes its binary representation to the operating system, and the Kernel redirects the message internally, looping back the response of the request (hence the "loopback interface" name). The message never leaves the machine. Why? Let's run `ip addr` to check the network interfaces on my machine. The loopback interface is there, and also Docker's bridge network interface:
 
-```shell
+```
 ➜  ~ ip addr
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -46,7 +47,7 @@ What else is there? The network interface of the network card on my machine is t
 
 Thinking about this problem, I decided to access Docker's subnet with traceroute:
 
-```shell
+```
 # VPN disabled
 ➜  ~ traceroute 172.18.0.2
 traceroute to 172.18.0.2 (172.18.0.2), 30 hops max, 60 byte packets
@@ -74,7 +75,7 @@ And there it was. The VPN added a new IP to the table: its own. And when I decid
 Let's check it out:
 
 
-```shell
+```
 sudo route -n
 10.64.0.1       0.0.0.0         255.255.255.255 UH    0      0        0 wg0-vpn
 

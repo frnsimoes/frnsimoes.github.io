@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,46 +194,54 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&rsquo;s make this straight and brief, so we can get to the more on point question: Docker.</p>
+  <h4 style="text-align: center;">Lost in the loopback</h4>
+  <p>
+    <i>
+      <time datetime='2024-09-19' pubdate>
+        19 Sep, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&rsquo;s make this straight and brief, so we can get to the more on point question: Docker.</p>
 <p>We are in the application layer, using the internet through a protocol, probably HTTP. HTTP is almost like an external layer that deals with formatting and encoding; its role is to create a contract between client and server. An HTTP request can look like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Host: example.com
-</span></span><span style="display:flex;"><span>Content-Type: application/json
-</span></span><span style="display:flex;"><span>Content-Length: <span style="color:#ae81ff">27</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span></code></pre></div><p>HTTP’s task is to encode this request message and pass it to the transport layer, which is handled by the operating system kernel. In this case, the transport layer is probably represented by the TCP protocol. TCP receives the encoded message, adds a header to it (with information such as source and destination ports, sequence numbers, checksums, window size, etc.). At this stage, TCP has completed its role in ensuring reliable delivery and passes the message to the next layer: the network layer.</p>
+<pre tabindex="0"><code>POST /user HTTP/1.1
+Host: example.com
+Content-Type: application/json
+Content-Length: 27
+
+{
+  &#34;name&#34;: &#34;example&#34;,
+}
+</code></pre><p>HTTP’s task is to encode this request message and pass it to the transport layer, which is handled by the operating system kernel. In this case, the transport layer is probably represented by the TCP protocol. TCP receives the encoded message, adds a header to it (with information such as source and destination ports, sequence numbers, checksums, window size, etc.). At this stage, TCP has completed its role in ensuring reliable delivery and passes the message to the next layer: the network layer.</p>
 <p>In the network layer, the message is treated as an IP packet, which also has a header and its own mechanisms for routing data. The IP layer is responsible for addressing and routing the packet across networks, ensuring it reaches the correct destination.</p>
 <p>Once the IP packet is prepared, it moves down to the data link layer, where it gets encapsulated in a frame that’s ready to be sent over the physical network, where the actual transmission of bits occurs, using electrical signals or radio waves, depending on the medium (e.g., Ethernet or Wi-Fi).</p>
 <p>Now, what happens when you try to send a request to a server that is running on your own machine? The whole process changes significantly. Instead, the HTTP encodes the message, passes its binary representation to the operating system, and the Kernel redirects the message internally, looping back the response of the request (hence the &ldquo;loopback interface&rdquo; name). The message never leaves the machine. Why? Let&rsquo;s run <code>ip addr</code> to check the network interfaces on my machine. The loopback interface is there, and also Docker&rsquo;s bridge network interface:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜  ~ ip addr
-</span></span><span style="display:flex;"><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
-</span></span><span style="display:flex;"><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-</span></span><span style="display:flex;"><span>    inet 127.0.0.1/8 scope host lo
-</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
-</span></span><span style="display:flex;"><span>    inet6 ::1/128 scope host noprefixroute 
-</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>5: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state DOWN group default 
-</span></span><span style="display:flex;"><span>    link/ether 02:42:90:57:7c:55 brd ff:ff:ff:ff:ff:ff
-</span></span><span style="display:flex;"><span>    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
-</span></span><span style="display:flex;"><span>       valid_lft forever preferred_lft forever
-</span></span></code></pre></div><p>What else is there? The network interface of the network card on my machine is there. Also the network interface of the VPN. But what is a network interface? It is a point of interconnection between a computer and a network (be it private or public). There are two main types of network interfaces: the ones that represent physical things, like WiFi and Ethernet; and the ones that represent virtual things, like the loopback and the docker interface.</p>
+<pre tabindex="0"><code>➜  ~ ip addr
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+...
+
+5: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:90:57:7c:55 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+</code></pre><p>What else is there? The network interface of the network card on my machine is there. Also the network interface of the VPN. But what is a network interface? It is a point of interconnection between a computer and a network (be it private or public). There are two main types of network interfaces: the ones that represent physical things, like WiFi and Ethernet; and the ones that represent virtual things, like the loopback and the docker interface.</p>
 <p>Thinking about this problem, I decided to access Docker&rsquo;s subnet with traceroute:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># VPN disabled</span>
-</span></span><span style="display:flex;"><span>➜  ~ traceroute 172.18.0.2
-</span></span><span style="display:flex;"><span>traceroute to 172.18.0.2 <span style="color:#f92672">(</span>172.18.0.2<span style="color:#f92672">)</span>, <span style="color:#ae81ff">30</span> hops max, <span style="color:#ae81ff">60</span> byte packets
-</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span>  172.18.0.2 <span style="color:#f92672">(</span>172.18.0.2<span style="color:#f92672">)</span>  0.123 ms * *
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># VPN enabled</span>
-</span></span><span style="display:flex;"><span>➜  ~ traceroute 172.18.0.2
-</span></span><span style="display:flex;"><span>traceroute to 172.18.0.2 <span style="color:#f92672">(</span>172.18.0.2<span style="color:#f92672">)</span>, <span style="color:#ae81ff">30</span> hops max, <span style="color:#ae81ff">60</span> byte packets
-</span></span><span style="display:flex;"><span>send: Operation not permitted
-</span></span></code></pre></div><p>Why? Let&rsquo;s try to explore this problem. The book &ldquo;Docker: Up and running&rdquo; has a great diagram representing Docker&rsquo;s network:</p>
+<pre tabindex="0"><code># VPN disabled
+➜  ~ traceroute 172.18.0.2
+traceroute to 172.18.0.2 (172.18.0.2), 30 hops max, 60 byte packets
+ 1  172.18.0.2 (172.18.0.2)  0.123 ms * *
+
+# VPN enabled
+➜  ~ traceroute 172.18.0.2
+traceroute to 172.18.0.2 (172.18.0.2), 30 hops max, 60 byte packets
+send: Operation not permitted
+</code></pre><p>Why? Let&rsquo;s try to explore this problem. The book &ldquo;Docker: Up and running&rdquo; has a great diagram representing Docker&rsquo;s network:</p>
 <p><img src="/static/docker-net.png" alt="alt"></p>
 <p>In this case, the <code>eth0</code> (probably an ethernet interface) network interface receives a request. The kernel understands that the request is directed to the Docker subnet, redirects it to the Docker network interface (<code>docker0</code>), which, in its turn, is a subnet that interfaces the container&rsquo;s private IP, proxying the request to the appropriate destination IP and Port.</p>
 <p>So I tried to isolate the problem: the problem must be something related to how the Kernel is accessing the data and redirecting it to the docker virtual network interface, right?</p>
@@ -244,13 +252,13 @@
 </ul>
 <p>And there it was. The VPN added a new IP to the table: its own. And when I decided to check if anything had changed in <code>resolv.conf</code>, I found out that the VPN changed the namespace to the same subnet of <code>route - n</code> VPN&rsquo;s destination subnet.</p>
 <p>Let&rsquo;s check it out:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo route -n
-</span></span><span style="display:flex;"><span>10.64.0.1       0.0.0.0         255.255.255.255 UH    <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>        <span style="color:#ae81ff">0</span> wg0-vpn
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cat /etc/resolv.conf
-</span></span><span style="display:flex;"><span>nameserver 10.64.0.1
-</span></span></code></pre></div><p>So, what happened? This is how Karl Matthias<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> explain an inbound request to Docker&rsquo;s subnet:</p>
+<pre tabindex="0"><code>sudo route -n
+10.64.0.1       0.0.0.0         255.255.255.255 UH    0      0        0 wg0-vpn
+
+
+cat /etc/resolv.conf
+nameserver 10.64.0.1
+</code></pre><p>So, what happened? This is how Karl Matthias<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> explain an inbound request to Docker&rsquo;s subnet:</p>
 <blockquote>
 <p>If we have a client somewhere on the network that wants to talk to the nginx server running on TCP port 80 inside Container 1, the request will come into the eth0 interface on the Docker server. Because Docker knows this is a public port, it has spun up an instance of docker-proxy to listen on port 10520. So uor request is passed to the docker-proxy process, which then makes the request to the correct container address and port on the private network. Return traffic from the request flows through the same route. (&hellip;) <code>docker0</code> is where all the traffic from the Docker containers is picked up to be routed outside the virtual network.</p>
 </blockquote>
@@ -265,15 +273,10 @@
 </ol>
 </div>
 
-</content>
-<p>
-  
-  
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>

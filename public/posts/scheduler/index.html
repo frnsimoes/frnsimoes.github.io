@@ -82,20 +82,21 @@
   pre code {
     color: #222;
     display: block;
-    padding: 20px;
+    padding: 15px;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 12px;
     overflow-x: auto;
+    background-color: #f2f2f2;  
   }
 
   div.highlight pre {
-    background-color: initial;
-    color: initial;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   div.highlight code {
-    background-color: unset;
-    color: unset;
+    background-color: #f2f2f2;  
+    color: #222;  
   }
 
   blockquote {
@@ -138,50 +139,49 @@
     color: #8b6fcb;
   }
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #fff;
+      color: #444;
+    }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #222;
+    }
+
+    a {
+      color: #3273dc;
+    }
+
+    code {
+      background-color: #f2f2f2;
+    }
+
+    pre code {
+      color: #222;
+    }
+
+    blockquote {
+      color: #222;
+    }
+
+    textarea,
+    input {
+      background-color: #fff;
+      color: #444;
+    }
+
+    .helptext {
+      color: #777;
+    }
+  }
 </style>
 
 </head>
@@ -194,9 +194,16 @@
 </nav>
 </header>
   <main>
-
-<content>
-  <p>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?</p>
+  <h4 style="text-align: center;">Unix Scheduler: overview</h4>
+  <p>
+    <i>
+      <time datetime='2024-08-08' pubdate>
+        08 Aug, 2024
+      </time>
+    </i>
+  </p>
+  <content>
+    <p>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?</p>
 <p>The OS must, somehow, track processes that are running. And handle their states. The OS have <strong>mechanisms</strong> for this, for example: when the OS boots, it loads <code>traps</code>, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &ndash; privileged space &ndash; it needs to make a system call. The system call interacts with the Kernel and runs the procedure there. So there an inter-communication that happens all the time between privileged space and unprivileged space. The OS also handles processes states: a process may be running, or may be ready to run, or maybe be a zombie (funny name, who had the idea?).</p>
 <p>In any case, one of the things the OS should worry about is how to track &ldquo;slow processes&rdquo; (with IO). The OS must have a process list to track then all, and to come up with decisions about what to do in certain cases. For examplea: prog &ldquo;A&rdquo; -&gt; trap (sys call to open) -&gt; OS issues IO to disk -&gt; a slow thing happens&hellip; &ndash; In this case, the OS should knwo that this is a slow operation, and, for example, have mechanisms to now run prog &ldquo;B&rdquo; while IO happens for prog &ldquo;A&rdquo;.</p>
 <h3 id="policies"><strong>Policies</strong></h3>
@@ -235,13 +242,10 @@
 </ol>
 </div>
 
-</content>
-<p>
-  
-</p>
-<p>
-  <a href="/">Back to Home Page</a>
-</p>
+  </content>
+  <p>
+    <a href="/">Back to Home Page</a>
+  </p>
 
   </main>
   <footer>
