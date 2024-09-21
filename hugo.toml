@@ -13,6 +13,18 @@ defaultContentLanguage = 'en'
 [taxonomies]
   tag = "tags"
 
+[menu]
+  [[menu.main]]
+        identifier = "home"
+        name = "Home"
+        url = "/"
+        weight = 1 
+  [[menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about"
+        weight = 2
+
 # Footer
   [[menu.footer]]
         name = "github"
