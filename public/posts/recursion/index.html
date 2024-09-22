@@ -187,15 +187,38 @@
 </head>
 
 <body>
-  <header><a href="/" class="title">
-  <h2>fernandosimoes</h2>
-</a>
+  <header><div class="header-container">
+  <a href="/" class="title">
+    <h2>fernandosimoes</h2>
+  </a>
+  <div class="spacer"></div>
+  <div class="right-links">
+    <a href="/about" class="about-me">about</a>
+    <a href="/" class="home">home</a>
+  </div>
+</div>
 <nav>
-<a href="/">Home</a>
-
-<a href="/about">About</a>
-
 </nav>
+
+<style>
+.header-container {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+}
+
+.spacer {
+  flex-grow: 1;  
+}
+
+.right-links {
+  display: flex;
+  gap: 10px;  
+}
+</style>
 </header>
   <main>
   <h4 style="text-align: center;">Brincando com recursão</h4>
@@ -312,8 +335,7 @@ sum_a(4, 4) # 4+4+4+4=16
   </content>
 
   </main>
-  <footer>
-</footer>
+  <footer></footer>
 
     
 </body>
