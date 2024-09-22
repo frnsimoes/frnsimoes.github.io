@@ -1,6 +1,7 @@
 +++
 date = 2024-09-01
 title = "What does it mean to bind to a port?"
+tags = ["OS theory and fun"]
 +++
 
 The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one[^1].

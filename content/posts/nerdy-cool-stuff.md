@@ -1,6 +1,7 @@
 +++ 
 date = 2024-08-20
 title = "The nerdy cool stuff"
+tags = ["career and development"]
 +++
 
 Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it's even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.

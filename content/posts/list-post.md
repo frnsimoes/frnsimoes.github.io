@@ -1,7 +1,7 @@
 +++
 date = 2021-12-20
 title = "Resources list"
-tags = ["Carreer"]
+tags = ["career and development"]
 +++ 
 
 ## The List Post: Resources

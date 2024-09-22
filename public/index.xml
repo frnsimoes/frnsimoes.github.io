@@ -162,5 +162,12 @@
       <guid>https://fernandosimoes.com/projects/</guid>
       <description>List of little fun things I&amp;rsquo;ve done in the past:&#xA;2024-06 Persistent Proxy 2024-03 Fzf-notes 2023-12 Simple HTTP </description>
     </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/tag-system/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/tag-system/</guid>
+      <description>computer networking experiments debugging OS theory and fun career and development programming languages</description>
+    </item>
   </channel>
 </rss>

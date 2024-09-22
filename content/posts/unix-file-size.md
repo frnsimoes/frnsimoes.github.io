@@ -1,6 +1,7 @@
 +++ 
 date = 2024-05-29
 title = "What's the size of a file on disk?"
+tags = ["OS theory and fun"]
 +++
 
 I've been playing a little bit with the OS and files.

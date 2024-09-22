@@ -1,48 +1,50 @@
 {{ define "main" }}
 <content>
-  <!-- <p>Hello, friend! This is where I sometimes publish experiments and thoughts. If you, like me, like nerding out and talking about computers, <a href="https://www.linkedin.com/in/frnsimoes/" target="_blank">send me a message.</a></p> -->
-  
-  <!-- Render posts section -->
-  <h4>Latest Posts</h4>
-  <ul class="blog-posts">
-    {{ $posts := where .Site.RegularPages "Section" "posts" }}
-    {{ range $posts }}
-    <li>
-      <span>
-        <i>
-          <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
-            {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
-          </time>
-        </i>
-      </span>
-      <a href="{{ .Permalink }}">{{ .Title }}</a>
-    </li>
-    {{ else }}
-    <li>
-      No posts yet
-    </li>
-    {{ end }}
-  </ul>
+	<!-- Render latest 5 posts section -->
+	<!-- <h4>Latest Posts</h4> -->
+	<ul class="blog-posts">
+		{{ $posts := where .Site.RegularPages "Section" "posts" }}
+		{{ range $posts }}
+		<li>
+			<span>
+				<i>
+					<time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+						{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+					</time>
+				</i>
+			</span>
+			<a href="{{ .Permalink }}">{{ .Title }}</a>
+		</li>
+		{{ else }}
+		<li>
+			No posts yet
+		</li>
+		{{ end }}
+	</ul>
 
-<!--   <h2>Test</h2> -->
-<!--   <ul class="blog-posts"> -->
-<!--     {{ $tests := where .Site.RegularPages "Params.tags" "intersect" (slice "test") }} -->
-<!--     {{ range $tests }} -->
-<!--     <li> -->
-<!--       <span> -->
-<!--         <i> -->
-<!--           <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate> -->
-<!--             {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }} -->
-<!--           </time> -->
-<!--         </i> -->
-<!--       </span> -->
-<!--       <a href="{{ .Permalink }}">{{ .Title }}</a> -->
-<!--     </li> -->
-<!--     {{ else }} -->
-<!--     <li> -->
-<!--       No test posts yet -->
-<!--     </li> -->
-<!--     {{ end }} -->
-<!--   </ul> -->
-<!-- </content> -->
+	<!-- Render posts grouped by tags -->
+	<!-- <h4>Posts by Tags</h4> -->
+	<!-- {{ $allTags := .Site.Taxonomies.tags }} -->
+	<!-- {{ range $tag, $pages := $allTags }} -->
+	<!-- <h4>{{ $tag }}</h4> -->
+	<!-- <ul class="blog-posts"> -->
+	<!--   {{ range $pages }} -->
+	<!--   <li> -->
+	<!--     <span> -->
+	<!--       <i> -->
+	<!--         <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate> -->
+	<!--           {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }} -->
+	<!--         </time> -->
+	<!--       </i> -->
+	<!--     </span> -->
+	<!--     <a href="{{ .Permalink }}">{{ .Title }}</a> -->
+	<!--   </li> -->
+	<!--   {{ else }} -->
+	<!--   <li> -->
+	<!--     No posts yet -->
+	<!--   </li> -->
+	<!--   {{ end }} -->
+	<!-- </ul> -->
+	<!-- {{ end }} -->
+</content>
 {{ end }}

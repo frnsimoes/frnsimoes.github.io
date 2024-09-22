@@ -9,38 +9,45 @@
     <lastBuildDate>Thu, 19 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Fun Stuff</title>
-      <link>https://fernandosimoes.com/blog/fun-stuff/</link>
+      <title>Debugging</title>
+      <link>https://fernandosimoes.com/blog/debugging/</link>
       <pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/blog/fun-stuff/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Operating Systems and Stuff</title>
-      <link>https://fernandosimoes.com/blog/operating-systems-and-stuff/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/blog/operating-systems-and-stuff/</guid>
+      <guid>https://fernandosimoes.com/blog/debugging/</guid>
       <description></description>
     </item>
     <item>
       <title>Computer Networking</title>
       <link>https://fernandosimoes.com/blog/computer-networking/</link>
-      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/blog/computer-networking/</guid>
       <description></description>
     </item>
     <item>
-      <title>Coding</title>
-      <link>https://fernandosimoes.com/blog/coding/</link>
-      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/blog/coding/</guid>
+      <title>OS Theory and Fun</title>
+      <link>https://fernandosimoes.com/blog/os-theory-and-fun/</link>
+      <pubDate>Sun, 01 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/blog/os-theory-and-fun/</guid>
       <description></description>
     </item>
     <item>
-      <title>Carreer</title>
-      <link>https://fernandosimoes.com/blog/carreer/</link>
-      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/blog/carreer/</guid>
+      <title>Career and Development</title>
+      <link>https://fernandosimoes.com/blog/career-and-development/</link>
+      <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/blog/career-and-development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Experiments</title>
+      <link>https://fernandosimoes.com/blog/experiments/</link>
+      <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/blog/experiments/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Programming Languages</title>
+      <link>https://fernandosimoes.com/blog/programming-languages/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/blog/programming-languages/</guid>
       <description></description>
     </item>
   </channel>
