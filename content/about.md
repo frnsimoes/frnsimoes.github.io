@@ -11,7 +11,7 @@ This blog is a collection of my notes and casual experiments. It also serves as 
 
 ### About me
 
-I'm a software developer. Currently, I live in Brazil with my wife and two kids, and work fulltime with Go.
+I'm a software developer. I currently live in Brazil with my wife and kids.
 
 I grew up in the '90s, so I have a natural love for computers and the internet as a "promise of a better future." My interest in computers is nothing more than a reflection of this sentiment. 
 
