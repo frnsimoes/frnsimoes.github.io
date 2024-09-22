@@ -5,7 +5,7 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>One week rule | fernandosimoes</title>
+<title>IPv4 TTL is not about time? | fernandosimoes</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -198,7 +198,7 @@
 </nav>
 </header>
   <main>
-  <h4 style="text-align: center;">One week rule</h4>
+  <h4 style="text-align: center;">IPv4 TTL is not about time?</h4>
   <p>
     
     
@@ -207,7 +207,11 @@
     
   </p>
   <content>
-    <p>Studying is hard. Starting new things is hard. A rule of thumb: do it for one week, at least one hour a day. If you want to give up, give up. But one week, one hour a day.</p>
+    <p>Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.</p>
+<p>In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &ldquo;hop,&rdquo; the packet&rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.</p>
+<p>Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.25 minutes. (Just imagine the discussions this must have sparked&hellip;)</p>
+<p>RFC791, just a year later, introduced a different perspective. Although the decrement still happens in seconds, the idea of TTL shifted to being an &ldquo;upper bound&rdquo; on a datagram&rsquo;s lifespan.</p>
+<p>In practice, due to the difficulty of measuring time, each hop simply decrements the IPv4 TTL by 1. This concept also carried over to IPv6, which cleverly renamed the header from &ldquo;Time to Live&rdquo; to &ldquo;Hop Limit.&rdquo;</p>
 
   </content>
 

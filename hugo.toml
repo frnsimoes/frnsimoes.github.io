@@ -1,10 +1,10 @@
 baseurl = "https://fernandosimoes.com"
-title = "Fernando Simões"
+title = "fernandosimoes"
 theme = "hugo-bg-master"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
-paginate = 50
+paginate = 500
 
 # language
 defaultContentLanguage = 'en'

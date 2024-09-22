@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Fernando Simões</title>
+    <title>fernandosimoes</title>
     <link>https://fernandosimoes.com/</link>
-    <description>Recent content on Fernando Simões</description>
+    <description>Recent content on fernandosimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Thu, 19 Sep 2024 00:00:00 +0000</lastBuildDate>
@@ -21,6 +21,13 @@
       <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp/</guid>
       <description>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &amp;ldquo;receive window&amp;rdquo; (rwnd). The receive window indicates the maximum bytes that the TCP socket&amp;rsquo;s buffer can process. Until recent years, the de facto rwnd was 64KB. Nowadays, it can be up to 1 gigabyte1, depending on server configuration.</description>
+    </item>
+    <item>
+      <title>IPv4 TTL is not about time?</title>
+      <link>https://fernandosimoes.com/posts/ipv4-ttl/</link>
+      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/ipv4-ttl/</guid>
+      <description>Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.&#xA;In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &amp;ldquo;hop,&amp;rdquo; the packet&amp;rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.&#xA;Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.</description>
     </item>
     <item>
       <title>What does it mean to bind to a port?</title>

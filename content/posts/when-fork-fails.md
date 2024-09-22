@@ -1,6 +1,6 @@
 +++
-date = 2024-10-01
-title = "Parenting 101: fork failures"
+date = 2024-10-10
+title = "Forcing fork() to fail"
 tags = ["OS theory and fun"]
 +++
 
