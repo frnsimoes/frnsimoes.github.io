@@ -7,7 +7,7 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>IPv4 TTL is not about time? | frnsimoes</title>
+<title>Forcing fork() to fail | frnsimoes</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -223,7 +223,7 @@
 </style>
 </header>
   <main>
-  <h4 style="text-align: center;">IPv4 TTL is not about time?</h4>
+  <h4 style="text-align: center;">Forcing fork() to fail</h4>
   <p>
     
     
@@ -232,11 +232,48 @@
     
   </p>
   <content>
-    <p>Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.</p>
-<p>In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &ldquo;hop,&rdquo; the packet&rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.</p>
-<p>Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.25 minutes. (Just imagine the discussions this must have sparked&hellip;)</p>
-<p>RFC791, just a year later, introduced a different perspective. Although the decrement still happens in seconds, the idea of TTL shifted to being an &ldquo;upper bound&rdquo; on a datagram&rsquo;s lifespan.</p>
-<p>In practice, due to the difficulty of measuring time, each hop simply decrements the IPv4 TTL by 1. This concept also carried over to IPv6, which cleverly renamed the header from &ldquo;Time to Live&rdquo; to &ldquo;Hop Limit.&rdquo;</p>
+    <p>What if <code>fork()</code> fails? Well, this is really a problematic issue since you have to handle the return value manually. <code>fork()</code> has three possible return values: If it&rsquo;s <code>0</code>, we know we are in the child&rsquo;s realm. If it&rsquo;s a positive integer, this represents the child&rsquo;s <code>pid</code>, and if it&rsquo;s <code>-1</code>, <code>fork()</code> has failed.</p>
+<p>But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child&rsquo;s PID in the parent&rsquo;s process? I was reading <a href="https://rachelbythebay.com/w/2014/08/19/fork/">rachelbythebay</a> post on this problem and thought: how could I make <code>fork()</code> fail? Maybe by allocating lots of memory to the process. Perhaps by using <code>ulimit(3)</code> to limit the allowed processes? But these felt kind of troublesome (and <code>ulimit</code> is deprecated), so I found <code>getrlimit</code>, a system call that limits a resource<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> for the user.</p>
+<p>Combined with <code>RLIMIT_NPROC</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, <code>getrlimit</code> can set the maximum number of processes allowed for my user to <code>0</code> (I know, dumb and dangerous), forcing <code>fork()</code> to fail.</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+#include &lt;sys/resource.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;wait.h&gt;
+
+int main() {
+    struct rlimit rl;
+    
+    getrlimit(RLIMIT_NPROC, &amp;rl);
+    
+    rl.rlim_cur = 0;
+    setrlimit(RLIMIT_NPROC, &amp;rl);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        printf(&#34;Child\n&#34;);
+    } else {
+        // If you wait, no need to send a sigkill
+        kill(pid, SIGKILL);
+        printf(&#34;Parent\n&#34;);
+
+    return 0;
+}
+</code></pre><p>Thankfully, this would only affect processes created by the same user running the program. Let&rsquo;s us all hope that good programmers know how to handle <code>fork()</code> failures.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>From the man page: The getrlimit() and setrlimit() system calls get and set resource limits.  Each resource has an associated soft and hard limit, as defined by the rlimit structure&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>RLIMIT_NPROC
+This is a limit on the number of extant process (or, more precisely on Linux, threads) for the real user ID of the calling process.  So long as the current number of processes belonging to this process&rsquo;s real user ID is greater than or  equal  to  this
+limit, fork(2) fails with the error EAGAIN.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 
   </content>
 
