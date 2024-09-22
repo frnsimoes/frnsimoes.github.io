@@ -1,12 +1,12 @@
 +++
-date = 2024-09-22
-title = "When fork() fails"
+date = 2024-10-01
+title = "Parenting 101: fork failures"
 tags = ["OS theory and fun"]
 +++
 
 What if `fork()` fails? Well, this is really a problematic issue, since you have to handle the return value manually. `fork()` has three possible return values: If it's `0`, we know we are in the child's realm. If it's a positive integer, this represents the child's `pid`, and if it's `-1`, `fork()` has failed.
 
-But what happens when: 1. You forget to test `pid == -1`, and you want to send a `kill` signal to the child's PID in the parent's process? I was reading [rachelbythebay] post on this problem this problem and thought: how could I make `fork` fail? Maybe by allocating lots of memory to the process. Perhaps by using `ulimit(3)` to limit the allowed processes? But these felt kind of troublesome (and `ulimit` is deprecated), so I found `getrlimit`, a system call that limits a resource[^1] for the user.
+But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child's PID in the parent's process? I was reading [rachelbythebay] post on this problem this problem and thought: how could I make `fork()` fail? Maybe by allocating lots of memory to the process. Perhaps by using `ulimit(3)` to limit the allowed processes? But these felt kind of troublesome (and `ulimit` is deprecated), so I found `getrlimit`, a system call that limits a resource[^1] for the user.
 
 Combined with `RLIMIT_NPROC`[^2], `getrlimit` can set the maximum number of processes allowed for my user to `0` (I know, dumb and dangerous), forcing `fork()` to fail.
 
@@ -30,7 +30,7 @@ int main() {
     if (pid == 0) {
         printf("Child\n");
     } else {
-        wait(NULL);
+        // If you wait, no need to send a sigkill
         kill(pid, SIGKILL);
         printf("Parent\n");
 
@@ -38,7 +38,7 @@ int main() {
 }
 ```
 
-Dangerous. Thankfully, this would only affect processes created by the same user running the program. 
+Thankfully, this would only affect processes created by the same user running the program. Let's us all hope that good programmers know how to handle `fork()` failures.
 
 [^1]: From the man page: The getrlimit() and setrlimit() system calls get and set resource limits.  Each resource has an associated soft and hard limit, as defined by the rlimit structure
 

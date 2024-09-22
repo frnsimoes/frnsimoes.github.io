@@ -6,15 +6,8 @@
     <description>Recent content in OS Theory and Fun on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/blog/os-theory-and-fun/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>When fork() fails</title>
-      <link>https://fernandosimoes.com/posts/when-fork-fails/</link>
-      <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/when-fork-fails/</guid>
-      <description>What if fork() fails? Well, this is really a problematic issue, since you have to handle the return value manually. fork() has three possible return values: If it&amp;rsquo;s 0, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s pid, and if it&amp;rsquo;s -1, fork() has failed.&#xA;But what happens when: 1. You forget to test pid == -1, and you want to send a kill signal to the child&amp;rsquo;s PID in the parent&amp;rsquo;s process?</description>
-    </item>
     <item>
       <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/posts/socket/</link>

@@ -6,15 +6,8 @@
     <description>Recent content in Tags on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 19 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>OS Theory and Fun</title>
-      <link>https://fernandosimoes.com/blog/os-theory-and-fun/</link>
-      <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/blog/os-theory-and-fun/</guid>
-      <description></description>
-    </item>
     <item>
       <title>Debugging</title>
       <link>https://fernandosimoes.com/blog/debugging/</link>
@@ -27,6 +20,13 @@
       <link>https://fernandosimoes.com/blog/computer-networking/</link>
       <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/blog/computer-networking/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OS Theory and Fun</title>
+      <link>https://fernandosimoes.com/blog/os-theory-and-fun/</link>
+      <pubDate>Sun, 01 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/blog/os-theory-and-fun/</guid>
       <description></description>
     </item>
     <item>
