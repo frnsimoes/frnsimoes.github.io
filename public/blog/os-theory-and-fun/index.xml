@@ -9,7 +9,7 @@
     <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/blog/os-theory-and-fun/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Resource limiting a process to force fork() to fail</title>
+      <title>Forcing fork() to fail</title>
       <link>https://fernandosimoes.com/posts/when-fork-fails/</link>
       <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/when-fork-fails/</guid>

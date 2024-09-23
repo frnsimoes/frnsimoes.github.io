@@ -1,6 +1,6 @@
 +++
 date = 2024-09-22
-title = "Resource limiting a process to force fork() to fail"
+title = "Forcing fork() to fail"
 tags = ["OS theory and fun"]
 +++
 
