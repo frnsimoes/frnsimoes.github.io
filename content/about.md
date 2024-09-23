@@ -7,7 +7,7 @@ date =  2024-06-26
 
 ### About the blog
 
-This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love. 
+This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a [structured way].
 
 ### About me
 
@@ -22,4 +22,4 @@ If you want to nerd out and talk about computer stuff, feel free to send me an [
 [linkedin]: https://linkedin.com/in/frnsimoes
 [email]: mailto:fernandosimoes.dev@gmail.com
 [summary]: /background
-
+[structured way]: https://structuredprocrastination.com/
