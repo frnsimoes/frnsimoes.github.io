@@ -1,6 +1,6 @@
 +++ 
 date = 2024-09-19
-title = "Lost in the loopback"
+title = "Debugging the loopback"
 tags = ["debugging"]
 +++
 
