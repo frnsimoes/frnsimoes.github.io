@@ -64,6 +64,6 @@ In a non-buggy execution, the parent would create a child with `fork()`, the chi
 
 
 [rachelbythebay]: https://rachelbythebay.com/w/2014/08/19/fork/
-[die]: https://www.youtube.com/clip/Ugkxw9G-zaIgySCv8hyjmekJd3saMM4Rsnte
+[die]: https://youtube.com/clip/UgkxuEH56Jf9LhkN-6BP6K-b1hm4xoOxmHuT
 [KDE]: https://www.mail-archive.com/kde-bugs-dist@kde.org/msg811832.html
 

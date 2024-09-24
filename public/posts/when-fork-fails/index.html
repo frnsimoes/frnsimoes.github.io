@@ -254,7 +254,7 @@
 
     return 0;
 }
-</code></pre><p>In a non-buggy execution, the parent would create a child with <code>fork()</code>, the child would do it&rsquo;s job while the parent&rsquo;s gently wait for it to finish, then the parent would do something, and the execution would be finished (or <a href="https://www.youtube.com/clip/Ugkxw9G-zaIgySCv8hyjmekJd3saMM4Rsnte">die</a>, depending on your mood). However, in this case, what&rsquo;s happening is: we forgot to check if <code>fork()</code> failed, and we are sending a <code>SIGKILL</code> (<code>9</code>) to the child&rsquo;s <code>pid</code>, which is <code>-1</code>, resulting a the termination of all processes in the process group. Think about the potential damage this could cause in a real-world scenario.</p>
+</code></pre><p>In a non-buggy execution, the parent would create a child with <code>fork()</code>, the child would do it&rsquo;s job while the parent&rsquo;s gently wait for it to finish, then the parent would do something, and the execution would be finished (or <a href="https://youtube.com/clip/UgkxuEH56Jf9LhkN-6BP6K-b1hm4xoOxmHuT">die</a>, depending on your mood). However, in this case, what&rsquo;s happening is: we forgot to check if <code>fork()</code> failed, and we are sending a <code>SIGKILL</code> (<code>9</code>) to the child&rsquo;s <code>pid</code>, which is <code>-1</code>, resulting a the termination of all processes in the process group. Think about the potential damage this could cause in a real-world scenario.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
