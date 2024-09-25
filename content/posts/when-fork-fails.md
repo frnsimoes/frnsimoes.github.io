@@ -8,7 +8,7 @@ What if `fork()` fails?[^1] Well, this is really a problematic issue since you h
 
 But what happens when: you forget to test `pid` equals `-1` and you want to send a sigkill to the child's `pid` in the parent's process? I was reading [rachelbythebay] post on this problem and thought: how could I make `fork()` fail? Maybe by allocating lots of memory to the process. Perhaps by using `ulimit(3)` to limit the allowed processes? But these felt kind of troublesome, so I found `getrlimit`, a system call that limits a resource[^2] for the user.
 
-Combined with `RLIMIT_NPROC`[^3], `getrlimit` can set the maximum number of processes allowed for my user to `0` (I know, dumb and dangerous), forcing `fork()` to fail.
+Combined with `RLIMIT_NPROC`[^3], `getrlimit` can set the maximum number of processes allowed for my user to `1` (I know, dumb and dangerous), forcing `fork()` to fail.
 
 ```
 int main() {
@@ -16,7 +16,7 @@ int main() {
     
     getrlimit(RLIMIT_NPROC, &rl);
     
-    rl.rlim_cur = 0;
+    rl.rlim_cur = 1;
     setrlimit(RLIMIT_NPROC, &rl);
 
     pid_t pid = fork();

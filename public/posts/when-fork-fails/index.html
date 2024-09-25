@@ -234,13 +234,13 @@
   <content>
     <p>What if <code>fork()</code> fails?<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Well, this is really a problematic issue since you have to handle the return value manually. <code>fork()</code> has three possible return values: If it&rsquo;s <code>0</code>, we know we are in the child&rsquo;s realm. If it&rsquo;s a positive integer, this represents the child&rsquo;s <code>pid</code>, and if it&rsquo;s <code>-1</code>, <code>fork()</code> has failed.</p>
 <p>But what happens when: you forget to test <code>pid</code> equals <code>-1</code> and you want to send a sigkill to the child&rsquo;s <code>pid</code> in the parent&rsquo;s process? I was reading <a href="https://rachelbythebay.com/w/2014/08/19/fork/">rachelbythebay</a> post on this problem and thought: how could I make <code>fork()</code> fail? Maybe by allocating lots of memory to the process. Perhaps by using <code>ulimit(3)</code> to limit the allowed processes? But these felt kind of troublesome, so I found <code>getrlimit</code>, a system call that limits a resource<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> for the user.</p>
-<p>Combined with <code>RLIMIT_NPROC</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, <code>getrlimit</code> can set the maximum number of processes allowed for my user to <code>0</code> (I know, dumb and dangerous), forcing <code>fork()</code> to fail.</p>
+<p>Combined with <code>RLIMIT_NPROC</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, <code>getrlimit</code> can set the maximum number of processes allowed for my user to <code>1</code> (I know, dumb and dangerous), forcing <code>fork()</code> to fail.</p>
 <pre tabindex="0"><code>int main() {
     struct rlimit rl;
     
     getrlimit(RLIMIT_NPROC, &amp;rl);
     
-    rl.rlim_cur = 0;
+    rl.rlim_cur = 1;
     setrlimit(RLIMIT_NPROC, &amp;rl);
 
     pid_t pid = fork();
