@@ -3,22 +3,25 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://fernandosimoes.com/</loc>
-    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+    <lastmod>2024-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/blog/debugging/</loc>
+    <lastmod>2024-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/</loc>
+    <lastmod>2024-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/tags/</loc>
+    <lastmod>2024-09-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/go-scheduler/</loc>
+    <lastmod>2024-09-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/when-fork-fails/</loc>
     <lastmod>2024-09-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/blog/os-theory-and-fun/</loc>
     <lastmod>2024-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/</loc>
-    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/tags/</loc>
-    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/blog/debugging/</loc>
-    <lastmod>2024-09-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/debugging-network/</loc>
     <lastmod>2024-09-19T00:00:00+00:00</lastmod>
@@ -94,6 +97,8 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/recursion/</loc>
     <lastmod>2021-12-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/locks/</loc>
   </url><url>
     <loc>https://fernandosimoes.com/projects/</loc>
   </url><url>
