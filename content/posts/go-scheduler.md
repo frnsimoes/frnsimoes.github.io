@@ -31,7 +31,7 @@ Roughly speaking, parkking/unparking a goroutine simple means puting it to sleep
 
 Whenever a goroutine makes a network call, the scheduler detach `G` from `P` and `M`, and puts `G` in the network poller[^2]. The network poller makes use of the IO multiplexing mechanisms of the OS: it uses `epoll`, for example, in linux systems, to create file descriptors that deals with events. I [wrote a little bit about this], if you are interested. This is ah igly interesting topic that deserves it's own investigation.
 
-**What happens when there's a IO call?**
+**What happens when there's an IO call?**
 
 Whenever a Goroutine enters an intense IO call, the `G` and the `M` are detached from the `P`, and runs separately in the OS realm. So `P` can call another `M` to run other goroutines.After the IO is completed, the `G` is unpark and the goroutine can resume its execution.
 
