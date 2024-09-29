@@ -4,52 +4,49 @@ title = "Taking a look at Go's runtime/proc.go"
 tags = ["debugging"]
 +++
 
-I find it really interesting that Go has its own scheduler implemented in user space. After reading parts of `runtime/proc.go`, I got the big picture of how it works: a `G` (Goroutine) is just one part of a larger scheme. When a Go program starts, the runtime knows how many threads the machine has. That’s the `P`, which represents logical processors. A `P` is tied to an `M`, a worker thread, which represents the OS thread itself.
+Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details[^1]. Go's scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole. So I thought about writing the few things I understood about it to at least paint a big picture of what's happening behind the scenes. 
 
-With this model, Go can implement its own scheduling mechanisms, like context switching and managing processes (represented by `G`). Imagine that every time the OS wants to switch between processes or threads, the kernel needs to save the execution state of the running process (and its context) and load the context of the new one. This takes time. Moreover, the OS has its own ideas about process states, and different operating systems (and kernels) have their own methods for handling time-sharing between processes. Context switching [has a cost]. In addition, an OS process/thread has its own view of what the address space should look like, whereas Go has another.
+What's the model of Go scheduler? `runtime/proc.go` presents three entities that, together, form the "process" model:
 
-So, if we can implement our own control over the size of the process and context switching, why not? A context switch has a price, which can be significant depending on the scheduler implemented. The operating system's scheduler has its own ideas about when to context switch, which Go cannot control. Since the primary operation in a Go program is the abstraction of an OS process called a Goroutine, which has its own rules to operate, it makes sense to take control.
-
-**How does it work?**
-
-I found Dmitry Vyukov's [design docs] for the Go 1.14 scheduler, which discusses the addition of `P` in Go's concurrency model. It’s a highly technical document.
-
-Let's define and investigate each entity of the scheduler:
 - `M` is the OS thread. `M` is managed by the OS and is called `M` (machine) in Go's runtime.
 - `G` is the Goroutine. A Goroutine has its own stack, instruction pointer, etc.
 - `P` is the context, the local processor, the resource.
 
-When a Goroutine (`G`) is created, it’s placed in a data structure called the `local run queue`, which is attached to `P`. If this local queue is full, `P` can push `G` into another data structure called the `global run queue`, so `M` can pick it up later.
+In OS terms, `G` is the process/thread/task. `M` is the OS thread per se. And `P` is the logical processor, an entity the runtime create that matches every thread on the machine. In the runtime, `M` and `G` need to coexist dependently. 
 
-In this way, `P` can implement its own method of sharing resources among processes (`G`). Go uses the `gopark` and `gounpark` functions[^1] to achieve this. Park/Unpark is a concurrency technique. According to Remzi:
+This is the big picture: We have a `G` that is the thing that is going to run, the Go code. We also have the `P`, which is the context, the logical processor, which is attached to a `M`, the machine itself (the thread). A nice resource to understand more about this is [Morsing] blog post about the Go scheduler.
+
+Now, how does the scheduler operate?
+
+The scheduler makes use of two data structures: the local run queue, and the global run queue. The local run queue is attached to `P`. So, when runtime sees a `go` keyword to execute some routine, it places the `G` in the local run queue. If this data structure is full, `P` can push `G` to the global queue, so it can pick it up later. 
+
+So far, so good. There is a data structure that stores processes and they are executed in order. 
+
+What complicates things is the design introduced in Go 1.14. Check out Vyukov's [design docs] to get a glimpse of what it means. In Go 1.14, the scheduler started using the process stealing mechanism. Go had many options for implementing threaded execution: 1. run multiple user-space threads on one OS thread; 2. have one user-space thread run on one OS thread; or 3. run multiple user-space threads on multiple OS threads. This M:N model is faster but much more complex than the others. The stealing process model exists to satisfy this complexity. When a `P` finishes executing a `G`, it tries to pop another `G` from its local run queue. If there is no `G` for it to run, it randomly steals a `G` from another `P`. [Rakyll] has an excellent article on this model that is worth reading. Also, if you are interested in concurrency theory, take a look at the [notes] I took while reading OSTEP chapters on this subject.
+
+So far we know the big picture model of the Go scheduler, and we also know a little bit about the basic data structures it uses to achieve time sharing between processes. 
+
+But what happens when a `G` makes a network call, or enters an IO intensive task? Go uses the park/unpark concurrency model. The park/unpark[^2] is a lock model among others. And Remzi (the author of OSTEP) has a nice explanation on this model:
 
 > The real problem with some previous approaches (other than the ticket lock) is that they leave too much to chance. The scheduler determines which thread runs next; if the scheduler makes a bad choice, a thread that runs must either spin waiting for the lock (our first approach) or yield the CPU immediately (our second approach). Either way, there is potential for waste and no prevention of starvation. (...) These two routines (park and unpark) can be used in tandem to build a lock that puts a caller to sleep if it tries to acquire a held lock and wakes it when the lock is free.
 
-Roughly speaking, parking/unparking a Goroutine simply means putting it to sleep. In technical terms, the Goroutine enters the `waiting` state, while `P` puts another `G` in the `running` state. This all happens in the local run queue, where `P` schedules which Goroutine will run based on its own rules (not the OS rules).
+So when a `G` needs to do something that is not CPU intensive, the Go scheduler parks the `G`. This is also a tricky detail of implementation. Why? Go deals with parking in different ways, depending on what `G` is doing. If it's making a network call, the scheduler removes the `G` from `P` and parks it in the network poller[^3]. The network poller works more or less like Python or Javascript event loop on async calls: its implementation happens within the IO multiplexing universe. File descriptors are managed to read from events and write based on events. If you are curious about IO multiplexing, which is a really nice thing to understand, [I wrote a little bit about this].
 
-**What happens when there's a network call?**
+**why does Go need its own scheduler?**
 
-Whenever a `G` makes a network call, the scheduler detaches `G` from `P` and `M`, placing `G` in the network poller[^2]. The network poller makes use of the I/O multiplexing mechanisms of the OS: it uses `epoll`, for example, in Linux systems, to create file descriptors that deal with events. I [wrote a little bit about this] if you are interested. This is a highly interesting topic that deserves its own investigation.
+Now, if you are a systems nerd like me, you are probably asking yourself: why does Go need its own scheduler? The OS already has its own scheduler, made alive from the battle of many brilliant people. I searched, but I didn’t find a definitive or official answer by the maintainers. From the scheduler model, though, it's clear that Go is trying to hide the OS context switch cost. Go is also interested in creating its own abstraction of what a *process* is. A `G` starts with much less memory allocated than the POSIX thread. Also, the moment a context switch happens can have a significant impact on the efficiency of a process. Since we cannot control, in the user space, how the Kernel is going to context switch (different operating systems have different scheduler models; different kernels differ deeply, too), why not create an abstraction and get almost full control over the goroutine, to try to achieve rocket speed execution?
 
-**What happens when there's an I/O call?**
+The scheduler model isn't perfect, though. There is a nice [GitHub issue] that talks about implementing Linux's most recent scheduler model into Go routines (the Completely Fair Scheduler). 
 
-When a Goroutine enters an intense I/O call, both `G` and `M` are detached from `P` and run separately in the OS realm. This allows `P` to call another `M` to run other Goroutines. After the I/O operation is completed, `G` is unparked, and the Goroutine can resume its execution.
+[^1]: I wrote a small text about the [OS scheduler](/posts/scheduler); and here are a few [notes](/locks) I took while reading OSTEP chapters on locks and threads, if you are interested.
 
-**Stealing processes**
+[^2]: https://github.com/golang/go/blob/eb6f2c24cd17c0ca1df7e343f8d9187eef7d6e13/src/runtime/proc.go#L418
 
-Vyukov's docs also discuss implementing a process stealing[^3] scheduler. What does it mean? Go had many options for implementing threaded execution: 1. run multiple user-space threads on one OS thread; 2. have one user-space thread run on one OS thread; or 3. run multiple user-space threads on multiple OS threads. This M:N model is faster but much more complex than the others. The stealing process model exists to satisfy this complexity. When a `P` finishes executing a `G`, it tries to pop another `G` from its local run queue. If there is no `G` for it to run, it randomly steals a `G` from another `P`. [Rakyll] has an excellent article on this model that is worth reading. Also, if you are interested in concurrency theory, take a look at the [notes] I took while reading OSTEP chapters on this subject.
-
-There are still fascinating discussions about the Go scheduler, and Go maintainers are not fully satisfied with the current concurrency model. This [GitHub issue] has really interesting commentary on introducing the Linux Completely Fair Scheduler into Go's scheduler.
-
-[^1]: https://github.com/golang/go/blob/eb6f2c24cd17c0ca1df7e343f8d9187eef7d6e13/src/runtime/proc.go#L418
-
-[^2]: https://github.com/golang/go/blob/eb6f2c24cd17c0ca1df7e343f8d9187eef7d6e13/src/runtime/proc.go#L3839
-
-[^3]: https://github.com/golang/go/blob/eb6f2c24cd17c0ca1df7e343f8d9187eef7d6e13/src/runtime/traceruntime.go#L533
+[^3]: https://github.com/golang/go/blob/eb6f2c24cd17c0ca1df7e343f8d9187eef7d6e13/src/runtime/proc.go#L3839
 
 [design docs]: https://docs.google.com/document/d/1TTj4T2JO42uD5ID9e89oa0sLKhJYD0Y_kqxDv3I3XMw/edit
 
-[has a cost]: https://web.eecs.umich.edu/~chshibo/files/microkiller_report.pdf
+[context switch cost]: https://web.eecs.umich.edu/~chshibo/files/microkiller_report.pdf
 
 [wrote a little bit about this]: /posts/io-multiplexing
 
@@ -58,3 +55,5 @@ There are still fascinating discussions about the Go scheduler, and Go maintaine
 [Rakyll]: https://rakyll.org/scheduler/
 
 [notes]: /locks
+
+[Morsing]: https://morsmachine.dk/go-scheduler

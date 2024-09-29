@@ -13,7 +13,7 @@
       <link>https://fernandosimoes.com/posts/go-scheduler/</link>
       <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/go-scheduler/</guid>
-      <description>I find it really interesting that Go has its own scheduler implemented in user space. After reading parts of runtime/proc.go, I got the big picture of how it works: a G (Goroutine) is just one part of a larger scheme. When a Go program starts, the runtime knows how many threads the machine has. That’s the P, which represents logical processors. A P is tied to an M, a worker thread, which represents the OS thread itself.</description>
+      <description>Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details1. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole.</description>
     </item>
     <item>
       <title>Debugging the loopback</title>
