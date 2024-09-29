@@ -13,7 +13,7 @@
       <link>https://fernandosimoes.com/posts/go-scheduler/</link>
       <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/go-scheduler/</guid>
-      <description>I find that it&amp;rsquo;s really interesting that Go has its own scheduler implemented in the user space. Reading runtime/proc.go, I got the big picture idea of how it works: A G (Goroutine) is just a part of the bigger scheme. When a Go program starts to run, it knows how many threads the machine has. That&amp;rsquo;s the P, which represent logical processors. A P is tied with a M, a worker thread, which represents the OS thread itself.</description>
+      <description>I find it really interesting that Go has its own scheduler implemented in user space. After reading parts of runtime/proc.go, I got the big picture of how it works: a G (Goroutine) is just one part of a larger scheme. When a Go program starts, the runtime knows how many threads the machine has. That’s the P, which represents logical processors. A P is tied to an M, a worker thread, which represents the OS thread itself.</description>
     </item>
     <item>
       <title>Debugging the loopback</title>
