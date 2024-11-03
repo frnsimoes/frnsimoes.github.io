@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Relational Database on frnsimoes</title>
+    <link>https://fernandosimoes.com/blog/relational-database/</link>
+    <description>Recent content in Relational Database on frnsimoes</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 03 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://fernandosimoes.com/blog/relational-database/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Postgres tables on disk</title>
+      <link>https://fernandosimoes.com/posts/postgres-table/</link>
+      <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/postgres-table/</guid>
+      <description>Found a really interesting thing while watching Oz&amp;rsquo;s explanation on postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;We can find the location of postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.&#xA;By hexdumping it, we can actually see the tables data.&#xA;root@frn:/var/lib/postgresql/14/main/base/5# hexdump -C 16388 00000000 00 00 00 00 60 7e 55 01 00 00 00 00 1c 00 d8 1f |.</description>
+    </item>
+  </channel>
+</rss>

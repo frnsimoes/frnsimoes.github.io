@@ -6,21 +6,21 @@
     <description>Recent content in OS Theory and Fun on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Oct 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/blog/os-theory-and-fun/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What does it mean to bind to a port?</title>
+      <link>https://fernandosimoes.com/posts/socket/</link>
+      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/socket/</guid>
+      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+    </item>
     <item>
       <title>Forcing fork() to fail</title>
       <link>https://fernandosimoes.com/posts/when-fork-fails/</link>
       <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/when-fork-fails/</guid>
       <description>What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it&amp;rsquo;s 0, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s pid, and if it&amp;rsquo;s -1, fork() has failed.&#xA;But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child&amp;rsquo;s pid in the parent&amp;rsquo;s process?</description>
-    </item>
-    <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/posts/socket/</link>
-      <pubDate>Sun, 01 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
     </item>
     <item>
       <title>Unix Scheduler: overview</title>

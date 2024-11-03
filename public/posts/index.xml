@@ -6,8 +6,22 @@
     <description>Recent content in Posts on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 28 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 03 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Postgres tables on disk</title>
+      <link>https://fernandosimoes.com/posts/postgres-table/</link>
+      <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/postgres-table/</guid>
+      <description>Found a really interesting thing while watching Oz&amp;rsquo;s explanation on postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;We can find the location of postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.&#xA;By hexdumping it, we can actually see the tables data.&#xA;root@frn:/var/lib/postgresql/14/main/base/5# hexdump -C 16388 00000000 00 00 00 00 60 7e 55 01 00 00 00 00 1c 00 d8 1f |.</description>
+    </item>
+    <item>
+      <title>What does it mean to bind to a port?</title>
+      <link>https://fernandosimoes.com/posts/socket/</link>
+      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/socket/</guid>
+      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+    </item>
     <item>
       <title>Taking a look at Go&#39;s runtime/proc.go</title>
       <link>https://fernandosimoes.com/posts/go-scheduler/</link>
@@ -42,13 +56,6 @@
       <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/ipv4-ttl/</guid>
       <description>Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.&#xA;In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &amp;ldquo;hop,&amp;rdquo; the packet&amp;rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.&#xA;Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.</description>
-    </item>
-    <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/posts/socket/</link>
-      <pubDate>Sun, 01 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
     </item>
     <item>
       <title>The nerdy cool stuff</title>

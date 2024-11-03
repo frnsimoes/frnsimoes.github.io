@@ -7,12 +7,11 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tags | frnsimoes</title>
+<title>Postgres tables on disk | frnsimoes</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
-  <link rel="alternate" type="application/rss+xml" href="https://fernandosimoes.com/tags/index.xml" title="frnsimoes" />
   <style>
   body {
     font-family: Verdana, sans-serif;
@@ -224,96 +223,36 @@
 </style>
 </header>
   <main>
-<content>
-  
-  <h3 style="margin-bottom:0">Filtering for "Tags"</h3>
-  <small>
-    <a href="/blog">Remove filter</a>
-  </small>
-  
-  <ul class="blog-posts">
+  <h4 style="text-align: center;">Postgres tables on disk</h4>
+  <p>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-11-03' pubdate>
-            03 Nov, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/relational-database/">Relational Database</a>
-    </li>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-10-15' pubdate>
-            15 Oct, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/os-theory-and-fun/">OS Theory and Fun</a>
-    </li>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-09-28' pubdate>
-            28 Sep, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/debugging/">Debugging</a>
-    </li>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-09-13' pubdate>
-            13 Sep, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/computer-networking/">Computer Networking</a>
-    </li>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-08-20' pubdate>
-            20 Aug, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/career-and-development/">Career and Development</a>
-    </li>
-    
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-07-28' pubdate>
-            28 Jul, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/experiments/">Experiments</a>
-    </li>
-    
-    <li>
-      <span>
-        <i>
-          <time datetime='2023-04-26' pubdate>
-            26 Apr, 2023
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/blog/programming-languages/">Programming Languages</a>
-    </li>
-    
-  </ul>
-  
-  
-</content>
+  </p>
+  <content>
+    <p>Found a really interesting thing while watching Oz&rsquo;s explanation on postgres tables: we can actually see what&rsquo;s going on inside a table.</p>
+<p>We can find the location of postgres data files by running <code>SHOW data_directory;</code> in the psql shell. And the file related to that specific table with the command <code>SELECT pg_relation_filepath('table_name');</code>.</p>
+<p>By hexdumping it, we can actually see the tables data.</p>
+<pre tabindex="0"><code>root@frn:/var/lib/postgresql/14/main/base/5# hexdump -C 16388 
+00000000  00 00 00 00 60 7e 55 01  00 00 00 00 1c 00 d8 1f  |....`~U.........|
+00000010  00 20 04 20 00 00 00 00  d8 9f 4a 00 00 00 00 00  |. . ......J.....|
+00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001fd0  00 00 00 00 00 00 00 00  e0 02 00 00 00 00 00 00  |................|
+00001fe0  00 00 00 00 00 00 00 00  01 00 03 00 02 08 18 00  |................|
+00001ff0  01 00 00 00 13 00 0f 4d  69 63 6b 65 79 00 00 00  |.......Mickey...|
+00002000
+</code></pre><p>I also used the Ghex to check more details about the file.</p>
+<p>One thing that I found specially interesting is that for the data to be persisted in a file, I needed to run <code>checkpoint;</code> in the psql shell. Before that, the file was empty, and the data was only in memory. When <code>CHECKPOINT</code> is executed, all data is flushed to the disk.</p>
+<p>Another thing I found really interested: I inserted only one row in the table, but when I run <code>stat</code> on the file, it shows that the file has 8192 bytes. Why? Is it the size of the postgres page on disk? Interdb comes to help:</p>
+<blockquote>
+<p>Inside a data file (heap table, index, free space map, and visibility map), it is divided into pages (or blocks) of fixed length, which is 8192 bytes (8 KB) by default. The pages within each file are numbered sequentially from 0, and these numbers are called block numbers. If the file is full, PostgreSQL adds a new empty page to the end of the file to increase the file size.</p>
+</blockquote>
+<p>Fun exercise to materialize some concepts.</p>
+
+  </content>
 
   </main>
   <footer></footer>
