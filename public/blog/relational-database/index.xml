@@ -13,7 +13,7 @@
       <link>https://fernandosimoes.com/posts/postgres-table/</link>
       <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/postgres-table/</guid>
-      <description>Found a really interesting thing while watching Oz&amp;rsquo;s explanation on postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;We can find the location of postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.&#xA;By hexdumping it, we can actually see the tables data.&#xA;root@frn:/var/lib/postgresql/14/main/base/5# hexdump -C 16388 00000000 00 00 00 00 60 7e 55 01 00 00 00 00 1c 00 d8 1f |.</description>
+      <description>Found a really interesting thing while watching Oz&amp;rsquo;s explanation on postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, than inserted two records in it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
     </item>
   </channel>
 </rss>
