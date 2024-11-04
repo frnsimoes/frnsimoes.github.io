@@ -47,7 +47,7 @@ Finally, I was thinking about what happens when postgres needs to read some data
 
 To answer both questions temporarily (I will certainly come back to this problem), I found an excellent explanation: "the scanning is done through the buffer cachee. The system uses a small buffer ring to prevent larger tables from pushing potentially useful data from the cache. When another process needs to scan the same table, it joins the buffer ring, saving disk read times"[^2].
 
-There are certainly big questions that needs to be answered, but the point of this text is clearly done: we can actually access the file in which postgres stores data (I found it really cool), and the layout of the page is also an interesting thing: postgres employs a technique to store pointers to tuples, knows the offset of the data, and stores the data at the bottom of the file -- which is also a cool detail, since if the data was at the bottom of in the beginning, so many bytes would need to be shifted when new data arrived. 
+There are certainly big questions that needs to be answered, but the point of this text is clearly done: we can actually access the file in which postgres stores data (I found it really cool), and the layout of the page is also an interesting thing: postgres employs a technique to store pointers to tuples, knows the offset of the data, and stores the data at the bottom of the file -- which is also a cool detail: if data were stored in the beginning or the middle of the file, bytes would need to be shifted more often and more heavily.
 
 [^1]: https://www.interdb.jp/pg/pgsql01/03.html
 [^2]: https://postgrespro.com/blog/pgsql/5969403
