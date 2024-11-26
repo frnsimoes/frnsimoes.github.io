@@ -1,5 +1,5 @@
 +++
-date = 2024-01-08
+date = 2024-08-01
 title = "What does it mean to bind to a port?"
 tags = ["OS theory and fun"]
 +++

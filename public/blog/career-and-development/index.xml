@@ -23,7 +23,7 @@
       <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
     </item>
     <item>
-      <title>I wrote a WSGI application!</title>
+      <title>I wrote a WSGI application</title>
       <link>https://fernandosimoes.com/posts/wsgi-app/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
