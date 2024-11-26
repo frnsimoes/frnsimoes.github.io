@@ -1,6 +1,6 @@
 +++ 
 date = 2024-09-19
-title = "Debugging the loopback"
+title = "Debugging sessions? Iptables, Docker, etc."
 tags = ["debugging"]
 +++
 

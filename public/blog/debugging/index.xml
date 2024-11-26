@@ -16,7 +16,7 @@
       <description>Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details1. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole.</description>
     </item>
     <item>
-      <title>Debugging the loopback</title>
+      <title>Debugging sessions? Iptables, Docker, etc.</title>
       <link>https://fernandosimoes.com/posts/debugging-network/</link>
       <pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/debugging-network/</guid>

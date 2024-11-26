@@ -6,21 +6,21 @@
     <description>Recent content in Posts on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 03 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 06 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What&#39;s the &#39;Porgres server&#39;?</title>
+      <link>https://fernandosimoes.com/posts/postgres-process/</link>
+      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/postgres-process/</guid>
+      <description>I Thought I was studying Postgres, but here we go again with operating systems and networking. Jokes aside, Postgres&amp;rsquo; process architecture is really interesting. A great overview on the topic is Suzuki&amp;rsquo;s explanation of various types of processes, which you can find here.&#xA;Postgres server process: the &amp;ldquo;parent&amp;rdquo; process that manages the database system. It&amp;rsquo;s the thing that has an IP and a port.&#xA;Backend process: It&amp;rsquo;s the entity that reads and writes queries.</description>
+    </item>
     <item>
       <title>Postgres tables on disk</title>
       <link>https://fernandosimoes.com/posts/postgres-table/</link>
       <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/postgres-table/</guid>
-      <description>Found a really interesting thing while watching Oz&amp;rsquo;s explanation on postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, than inserted two records in it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
-    </item>
-    <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/posts/socket/</link>
-      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+      <description>I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, then inserted two records into it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of Postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
     </item>
     <item>
       <title>Taking a look at Go&#39;s runtime/proc.go</title>
@@ -37,7 +37,7 @@
       <description>What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it&amp;rsquo;s 0, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s pid, and if it&amp;rsquo;s -1, fork() has failed.&#xA;But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child&amp;rsquo;s pid in the parent&amp;rsquo;s process?</description>
     </item>
     <item>
-      <title>Debugging the loopback</title>
+      <title>Debugging sessions? Iptables, Docker, etc.</title>
       <link>https://fernandosimoes.com/posts/debugging-network/</link>
       <pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/debugging-network/</guid>
@@ -72,14 +72,14 @@
       <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
     </item>
     <item>
-      <title>TCP Reliable delivery</title>
+      <title>TCP reliable delivery</title>
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
-      <description>&amp;ldquo;Reliable delivery&amp;rdquo; é um dos temas centrais e mais interessantes do transport layer. O sentido de &amp;ldquo;reliable&amp;rdquo; foi definido na RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
+      <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in [RFC793]:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
     </item>
     <item>
-      <title>IO multiplexing and concurrency</title>
+      <title>Sockets, select and IO Multiplexing</title>
       <link>https://fernandosimoes.com/posts/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
@@ -114,11 +114,25 @@
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
     </item>
     <item>
+      <title>What does it mean to bind to a port?</title>
+      <link>https://fernandosimoes.com/posts/socket/</link>
+      <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/socket/</guid>
+      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+    </item>
+    <item>
       <title>I wrote a WSGI application!</title>
       <link>https://fernandosimoes.com/posts/wsgi-app/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
       <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
+    </item>
+    <item>
+      <title>Unix trivia</title>
+      <link>https://fernandosimoes.com/posts/update-tuple/</link>
+      <pubDate>Mon, 20 Nov 2023 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
+      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
     </item>
     <item>
       <title>Unix trivia</title>

@@ -232,12 +232,12 @@
     
   </p>
   <content>
-    <p>Found a really interesting thing while watching Oz&rsquo;s explanation on postgres tables: we can actually see what&rsquo;s going on inside a table.</p>
-<p>I created a simple table, <code>foo</code>, than inserted two records in it.</p>
+    <p>I found a really interesting thing while watching Oz&rsquo;s explanation on Postgres tables: we can actually see what&rsquo;s going on inside a table.</p>
+<p>I created a simple table, <code>foo</code>, then inserted two records into it.</p>
 <pre tabindex="0"><code>postgres=# create table foo (id int, age smallint, name varchar(100));
 CREATE TABLE
-</code></pre><p>We can find the location of postgres data files by running <code>SHOW data_directory;</code> in the psql shell. And the file related to that specific table with the command <code>SELECT pg_relation_filepath('table_name');</code>.</p>
-<p>By hexdumping it, we can actually see the tables data.</p>
+</code></pre><p>We can find the location of Postgres data files by running <code>SHOW data_directory;</code> in the psql shell. And the file related to that specific table with the command <code>SELECT pg_relation_filepath('table_name');</code>.</p>
+<p>By hexdumping it, we can actually see the table&rsquo;s data.</p>
 <pre tabindex="0"><code>root@frn:/var/lib/postgresql/14/main/base/5# hexdump -C 16388 
 00000000  00 00 00 00 60 7e 55 01  00 00 00 00 1c 00 d8 1f  |....`~U.........|
 00000010  00 20 04 20 00 00 00 00  d8 9f 4a 00 00 00 00 00  |. . ......J.....|
@@ -247,18 +247,18 @@ CREATE TABLE
 00001fe0  00 00 00 00 00 00 00 00  01 00 03 00 02 08 18 00  |................|
 00001ff0  01 00 00 00 13 00 0f 4d  69 63 6b 65 79 00 00 00  |.......Mickey...|
 00002000
-</code></pre><p>I also used the Ghex to check more details about the file.</p>
-<p>One thing that I found specially interesting is that for the data to be persisted in a file, I needed to run <code>checkpoint;</code> in the psql shell. Before that, the file was empty, and the data was only in memory. When <code>CHECKPOINT</code> is executed, all data is flushed to the disk.</p>
-<p>Another thing I found really interested: I inserted only one row in the table, but when I run <code>stat</code> on the file, it shows that the file has 8192 bytes. Why? Is it the size of the postgres page on disk? Interdb comes to help:</p>
+</code></pre><p>I also used Ghex to check more details about the file.</p>
+<p>One thing that I found especially interesting is that for the data to be persisted in a file, I needed to run <code>checkpoint;</code> in the psql shell. Before that, the file was empty, and the data was only in memory. When <code>CHECKPOINT</code> is executed, all data is flushed to the disk.</p>
+<p>Another thing I found really interesting: I inserted only one row in the table, but when I run <code>stat</code> on the file, it shows that the file has 8192 bytes. Why? Is it the size of the Postgres page on disk? Interdb comes to help:</p>
 <blockquote>
 <p>Inside a data file (heap table, index, free space map, and visibility map), it is divided into pages (or blocks) of fixed length, which is 8192 bytes (8 KB) by default. The pages within each file are numbered sequentially from 0, and these numbers are called block numbers. If the file is full, PostgreSQL adds a new empty page to the end of the file to increase the file size.</p>
 </blockquote>
-<p>A page inside a file has three types of value: 1. the heap tuple (the data itself); 2. the line pointer (a pointer to each tuple); 3. the header data, containing general information about the page<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
-<p>So each new tuple is stacked in the bottom of the page. In my case, if I open the file with a hex editor like <code>ghex</code>, I can see my data at the end of the file.</p>
-<p>Postgres also stores a <code>TID</code> (tuple identifier). The TID has two values: the block number of the page that contains the tuple, and the offset number of the line pointer that points to the tuple. I don´t know yet, since it&rsquo;s the beginning of my studies on postgres, but I believe that the <code>TID</code> is used in the algorithm of efficient fetching data? Probably.</p>
-<p>Finally, I was thinking about what happens when postgres needs to read some data and fetch it into memory. What if the table is gigantic, what does it do? Reading everything into memory would be tremendously inefficient, right?</p>
-<p>To answer both questions temporarily (I will certainly come back to this problem), I found an excellent explanation: &ldquo;the scanning is done through the buffer cachee. The system uses a small buffer ring to prevent larger tables from pushing potentially useful data from the cache. When another process needs to scan the same table, it joins the buffer ring, saving disk read times&rdquo;<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
-<p>There are certainly big questions that needs to be answered, but the point of this text is clearly done: we can actually access the file in which postgres stores data (I found it really cool), and the layout of the page is also an interesting thing: postgres employs a technique to store pointers to tuples, knows the offset of the data, and stores the data at the bottom of the file &ndash; which is also a cool detail: if data were stored in the beginning or the middle of the file, bytes would need to be shifted more often and more heavily.</p>
+<p>A page inside a file has three types of values: 1. the heap tuple (the data itself); 2. the line pointer (a pointer to each tuple); 3. the header data, containing general information about the page<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>So each new tuple is stacked at the bottom of the page. In my case, if I open the file with a hex editor like <code>ghex</code>, I can see my data at the end of the file.</p>
+<p>Postgres also stores a <code>TID</code> (tuple identifier). The TID has two values: the block number of the page that contains the tuple, and the offset number of the line pointer that points to the tuple. I don’t know yet, since it&rsquo;s the beginning of my studies on Postgres, but I believe that the <code>TID</code> is used in the algorithm for efficient fetching of data? Probably.</p>
+<p>Finally, I was thinking about what happens when Postgres needs to read some data and fetch it into memory. What if the table is gigantic, what does it do? Reading everything into memory would be tremendously inefficient, right?</p>
+<p>To answer both questions temporarily (I will certainly come back to this problem), I found an excellent explanation: &ldquo;the scanning is done through the buffer cache. The system uses a small buffer ring to prevent larger tables from pushing potentially useful data from the cache. When another process needs to scan the same table, it joins the buffer ring, saving disk read times&rdquo;<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>There are certainly big questions that need to be answered, but the point of this text is clearly done: we can actually access the file in which Postgres stores data (I found it really cool), and the layout of the page is also an interesting thing: Postgres employs a technique to store pointers to tuples, knows the offset of the data, and stores the data at the bottom of the file &ndash; which is also a cool detail: if data were stored at the beginning or the middle of the file, bytes would need to be shifted more often and more heavily.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>

@@ -1,6 +1,6 @@
 +++ 
 date = 2024-07-09
-title = "IO multiplexing and concurrency"
+title = "Sockets, select and IO Multiplexing"
 tags = ["OS theory and fun"]
 +++
 

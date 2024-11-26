@@ -6,15 +6,8 @@
     <description>Recent content in OS Theory and Fun on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 15 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/blog/os-theory-and-fun/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/posts/socket/</link>
-      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
-    </item>
     <item>
       <title>Forcing fork() to fail</title>
       <link>https://fernandosimoes.com/posts/when-fork-fails/</link>
@@ -30,7 +23,7 @@
       <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
     </item>
     <item>
-      <title>IO multiplexing and concurrency</title>
+      <title>Sockets, select and IO Multiplexing</title>
       <link>https://fernandosimoes.com/posts/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/io-multiplexing/</guid>
@@ -49,6 +42,20 @@
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/unix-file-size/</guid>
       <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+    </item>
+    <item>
+      <title>What does it mean to bind to a port?</title>
+      <link>https://fernandosimoes.com/posts/socket/</link>
+      <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/socket/</guid>
+      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+    </item>
+    <item>
+      <title>Unix trivia</title>
+      <link>https://fernandosimoes.com/posts/update-tuple/</link>
+      <pubDate>Mon, 20 Nov 2023 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
+      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
     </item>
     <item>
       <title>Unix trivia</title>
