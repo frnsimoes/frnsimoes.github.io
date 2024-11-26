@@ -16,7 +16,7 @@
       <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
     </item>
     <item>
-      <title>What&#39;s the &#39;Porgres server&#39;?</title>
+      <title>What&#39;s the &#39;Postgres server&#39;?</title>
       <link>https://fernandosimoes.com/posts/postgres-process/</link>
       <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/postgres-process/</guid>

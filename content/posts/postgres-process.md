@@ -1,6 +1,6 @@
 +++ 
 date = 2024-11-06
-title = "What's the 'Porgres server'?"
+title = "What's the 'Postgres server'?"
 +++
 
 I Thought I was studying Postgres, but here we go again with operating systems and networking. Jokes aside, Postgres' process architecture is really interesting. A great overview on the topic is Suzuki's explanation of various types of processes, which you can find [here](https://www.interdb.jp/pg/pgsql02/01.html).
