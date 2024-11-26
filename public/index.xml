@@ -6,8 +6,15 @@
     <description>Recent content on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 06 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens when a row is updated?</title>
+      <link>https://fernandosimoes.com/posts/update-tuple/</link>
+      <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
+      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
+    </item>
     <item>
       <title>What&#39;s the &#39;Porgres server&#39;?</title>
       <link>https://fernandosimoes.com/posts/postgres-process/</link>
@@ -147,13 +154,6 @@
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
       <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
-    </item>
-    <item>
-      <title>Unix trivia</title>
-      <link>https://fernandosimoes.com/posts/update-tuple/</link>
-      <pubDate>Mon, 20 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
-      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
     </item>
     <item>
       <title>Unix trivia</title>

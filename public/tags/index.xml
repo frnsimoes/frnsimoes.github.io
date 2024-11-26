@@ -6,8 +6,15 @@
     <description>Recent content in Tags on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 03 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OS Theory and Fun</title>
+      <link>https://fernandosimoes.com/blog/os-theory-and-fun/</link>
+      <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/blog/os-theory-and-fun/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Relational Database</title>
       <link>https://fernandosimoes.com/blog/relational-database/</link>
@@ -20,13 +27,6 @@
       <link>https://fernandosimoes.com/blog/debugging/</link>
       <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/blog/debugging/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>OS Theory and Fun</title>
-      <link>https://fernandosimoes.com/blog/os-theory-and-fun/</link>
-      <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/blog/os-theory-and-fun/</guid>
       <description></description>
     </item>
     <item>

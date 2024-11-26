@@ -6,8 +6,15 @@
     <description>Recent content in OS Theory and Fun on frnsimoes</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/blog/os-theory-and-fun/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens when a row is updated?</title>
+      <link>https://fernandosimoes.com/posts/update-tuple/</link>
+      <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
+      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
+    </item>
     <item>
       <title>Forcing fork() to fail</title>
       <link>https://fernandosimoes.com/posts/when-fork-fails/</link>
@@ -49,13 +56,6 @@
       <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/socket/</guid>
       <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
-    </item>
-    <item>
-      <title>Unix trivia</title>
-      <link>https://fernandosimoes.com/posts/update-tuple/</link>
-      <pubDate>Mon, 20 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
-      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
     </item>
     <item>
       <title>Unix trivia</title>

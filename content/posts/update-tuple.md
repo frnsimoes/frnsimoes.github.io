@@ -1,6 +1,6 @@
 +++ 
-date = 2023-11-20
-title = "Unix trivia"
+date = 2024-11-20
+title = "What happens when a row is updated?"
 tags = ["OS theory and fun"]
 +++
 
