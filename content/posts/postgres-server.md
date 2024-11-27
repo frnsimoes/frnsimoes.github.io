@@ -48,14 +48,7 @@ postgres@frn:~$ cat /etc/postgresql/15/main/postgresql.conf | grep "shared_buffe
 shared_buffers = 128MB                  # min 128kB
 ```
 
-So Postgres allocates 128MB to the shared_buffer. What else can we know about it? Let's query the `pg_stat_bgwriter` view to check some things about the background processes.
-
-```
- checkpoints_timed | checkpoints_req | checkpoint_write_time | checkpoint_sync_time | buffers_checkpoint | buffers_clean | maxwritten_clean | buffers_backend | buffers_backend_fsync | buffers_alloc |          stats_reset
--------------------+-----------------+-----------------------+----------------------+--------------------+---------------+------------------+-----------------+-----------------------+---------------+-------------------------------
-               679 |              12 |                  2630 |                   87 |                 26 |             0 |                0 |               2 |                     0 |          1182 | 2024-10-30 11:37:08.536891-03
-(1 row)
-```
+So Postgres allocates 128MB to the shared_buffer. If you are curious, you can query `pg_stat_bgwriter` to check some things about the background processes.
 
 
 **Background processes**

@@ -7,7 +7,7 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>What&#39;s the &#39;Postgres server&#39;? | frnsimoes</title>
+<title>What&#39;s the &#39;Postgres server&#39;? | Fernando Simões</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -191,7 +191,7 @@
 <body>
   <header><div class="header-container">
   <a href="/" class="title">
-    <h2>frnsimoes</h2>
+    <h2>Fernando Simões</h2>
   </a>
   <div class="spacer"></div>
   <div class="right-links">
@@ -272,12 +272,8 @@ postgres=# SHOW config_file;
 
 postgres@frn:~$ cat /etc/postgresql/15/main/postgresql.conf | grep &#34;shared_buffers&#34;
 shared_buffers = 128MB                  # min 128kB
-</code></pre><p>So Postgres allocates 128MB to the shared_buffer. What else can we know about it? Let&rsquo;s query the <code>pg_stat_bgwriter</code> view to check some things about the background processes.</p>
-<pre tabindex="0"><code> checkpoints_timed | checkpoints_req | checkpoint_write_time | checkpoint_sync_time | buffers_checkpoint | buffers_clean | maxwritten_clean | buffers_backend | buffers_backend_fsync | buffers_alloc |          stats_reset
--------------------+-----------------+-----------------------+----------------------+--------------------+---------------+------------------+-----------------+-----------------------+---------------+-------------------------------
-               679 |              12 |                  2630 |                   87 |                 26 |             0 |                0 |               2 |                     0 |          1182 | 2024-10-30 11:37:08.536891-03
-(1 row)
-</code></pre><p><strong>Background processes</strong></p>
+</code></pre><p>So Postgres allocates 128MB to the shared_buffer. If you are curious, you can query <code>pg_stat_bgwriter</code> to check some things about the background processes.</p>
+<p><strong>Background processes</strong></p>
 <p>Suzuki also says that the Postgres server &ldquo;starts various background processes&rdquo;, but what are these processes?</p>
 <p>There are multiple background processes in Postgres. The most interesting that I found are the <code>autovacuum</code>, which cleans up dead rows in tables, and the <code>checkpoint</code>, which writes dirty pages to disk.</p>
 <p>The <code>WAL writer</code> is a really interesting one: it writes the WAL (Write-Ahead Logging) to disk. The WAL is a log of all changes made to the database and is used for crash recovery. One interesting thing about WAL is that it also has a buffer:</p>
