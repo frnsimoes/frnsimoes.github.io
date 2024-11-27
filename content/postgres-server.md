@@ -59,7 +59,7 @@ There are multiple background processes in Postgres. The most interesting that I
 
 The `WAL writer` is a really interesting one: it writes the WAL (Write-Ahead Logging) to disk. The WAL is a log of all changes made to the database and is used for crash recovery. One interesting thing about WAL is that it also has a buffer:
 
-```bash
+```
 postgres@frn:~$ cat /etc/postgresql/15/main/postgresql.conf | grep "wal_buffers"
 #wal_buffers = -1                       # min 32kB, -1 sets based on shared_buffers
 ```
