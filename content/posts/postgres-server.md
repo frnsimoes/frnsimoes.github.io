@@ -50,14 +50,13 @@ shared_buffers = 128MB                  # min 128kB
 
 So Postgres allocates 128MB to the shared_buffer. What else can we know about it? Let's query the `pg_stat_bgwriter` view to check some things about the background processes.
 
-```sql
+```
  checkpoints_timed | checkpoints_req | checkpoint_write_time | checkpoint_sync_time | buffers_checkpoint | buffers_clean | maxwritten_clean | buffers_backend | buffers_backend_fsync | buffers_alloc |          stats_reset
 -------------------+-----------------+-----------------------+----------------------+--------------------+---------------+------------------+-----------------+-----------------------+---------------+-------------------------------
                679 |              12 |                  2630 |                   87 |                 26 |             0 |                0 |               2 |                     0 |          1182 | 2024-10-30 11:37:08.536891-03
 (1 row)
 ```
 
-That's interesting. We can see that the `buffers_checkpoint` is 26. This means that 26 buffers were written to disk in the last checkpoint. The `buffers_clean` is 0, which means that no buffers are clean. The `buffers_backend` is 2, which means that 2 buffers are being used by the backend processes. The `buffers_backend_fsync` is 0, which means that no buffers are being used by the backend processes and are being written to disk.
 
 **Background processes**
 

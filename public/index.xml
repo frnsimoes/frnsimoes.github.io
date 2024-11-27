@@ -24,9 +24,9 @@
     </item>
     <item>
       <title>What&#39;s the &#39;Postgres server&#39;?</title>
-      <link>https://fernandosimoes.com/posts/postgres-process/</link>
+      <link>https://fernandosimoes.com/posts/postgres-server/</link>
       <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/postgres-process/</guid>
+      <guid>https://fernandosimoes.com/posts/postgres-server/</guid>
       <description>I Thought I was studying Postgres, but here we go again with operating systems and networking. Jokes aside, Postgres&amp;rsquo; process architecture is really interesting. A great overview on the topic is Suzuki&amp;rsquo;s explanation of various types of processes, which you can find here.&#xA;Postgres server process: the &amp;ldquo;parent&amp;rdquo; process that manages the database system. It&amp;rsquo;s the thing that has an IP and a port.&#xA;Backend process: It&amp;rsquo;s the entity that reads and writes queries.</description>
     </item>
     <item>
