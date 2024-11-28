@@ -5,7 +5,7 @@ title = "Study notes: locks"
 
 Exploring locks.
 
-```c
+```
 #include <stdio.h>
 #include <pthread.h>
 
@@ -42,7 +42,7 @@ How to build a lock, say, a "Spin Lock"?
 - First we need a state: lock held (acquired) or free (not acquired).
 - We could create a `lock` variable with values `0` (true) and `1` (false): `int lock;`
 
-```c
+```
 struct mutex {
     int lock;
 }
@@ -72,7 +72,7 @@ When lock is held
 
 The problem with this implementation is that two threads with `0` can enter the loop inside `mutex_lock`, resulting in two threads acquiring the lock simultaneously. For this reason, we need a more powerful instruction from the hardware. "Test and set instruction" or "atomic exchange". 
 
-```c
+```
 int TestAndSet(int *old_ptr, int new) {
     int old = *old_ptr;
     *old_ptr = new;
@@ -87,7 +87,7 @@ void mutex_lock (mutx *m) {
 ```
 
 1. **Thread T1 Acquires the Lock**:
-   ```markdown
+   ```
    lock(0,1)     old      new     unlock
    0 T&S(0, 1)   0        1       ---
    ```
@@ -96,7 +96,7 @@ void mutex_lock (mutx *m) {
    - T1 acquires the lock.
 
 2. **Thread T2 Tries to Acquire the Lock**:
-   ```markdown
+   ```
    lock(0,1)     old      new     unlock
    0 T&S(1, 1)   1        0       ---
    ```
@@ -112,7 +112,7 @@ Even more: what happens when a context switch occurs in a critical section, and 
 
 One possible solution is the ticket lock. It is a fair lock, where threads are served in the order they arrive. 
 
-```c
+```
 int fetch_and_add(int *addr) {
     int old = *addr;
     *addr = addr + 1;
