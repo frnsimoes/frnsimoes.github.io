@@ -14,72 +14,80 @@
 
   <link rel="alternate" type="application/rss+xml" href="https://fernandosimoes.com/posts/index.xml" title="Fernando Simões" />
   <style>
-  body {
-    font-family: Verdana, sans-serif;
-    margin: auto;
-    padding: 20px;
-    max-width: 720px;
-    text-align: left;
-    background-color: #fff;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: #444;
-  }
+body {
+  font-family: "Times New Roman", serif;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 800px;
+  text-align: left;
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 1.6;
+  border: 2px solid #0000ff;
+  box-sizing: border-box;
+}
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  strong,
-  b {
-    color: #222;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Arial", sans-serif;
+    color: #000080;
+    border-bottom: 1px dashed #000080;
   }
 
   a {
-    color: #3273dc;
-     
+    color: #0000ee;
+    text-decoration: underline;
   }
 
-  .title {
+  a:hover {
+    color: #ff0000;
     text-decoration: none;
-    border: 0;
   }
 
-  .title span {
-    font-weight: 400;
+  nav {
+    background-color: #e0e0ff;
+    padding: 10px;
+    border: 1px solid #000080;
+    margin-bottom: 20px;
   }
 
   nav a {
-    margin-right: 10px;
+    color: #000080;
+    font-weight: bold;
+    margin-right: 15px;
+    text-transform: uppercase;
   }
 
-  textarea {
-    width: 100%;
-    font-size: 16px;
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  content {
-    line-height: 1.6;
+  textarea, input {
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    padding: 5px;
+    border: 1px solid #000080;
+    background-color: #f0f0f0;
+    color: #000000;
   }
 
   table {
+    border: 1px solid #000080;
+    border-collapse: collapse;
     width: 100%;
+    margin: 20px 0;
+  }
+
+  table th, table td {
+    border: 1px solid #000080;
+    padding: 8px;
+    text-align: left;
+  }
+
+  table th {
+    background-color: #d0d0ff;
+    color: #000080;
   }
 
   img {
     max-width: 100%;
-  }
-
-  code {
-    padding: 2px 5px;
-    background-color: #f2f2f2;
+    border: 2px solid #000080;
+    padding: 5px;
   }
 
   pre code {
@@ -89,17 +97,17 @@
     white-space: pre-wrap;
     font-size: 12px;
     overflow-x: auto;
-    background-color: #f2f2f2;  
+    background-color: #f2f2f2; 
   }
 
   div.highlight pre {
-    background-color: #f2f2f2;  
-    color: #222;  
+    background-color: #f2f2f2; 
+    color: #222; 
   }
 
   div.highlight code {
-    background-color: #f2f2f2;  
-    color: #222;  
+    background-color: #f2f2f2; 
+    color: #222;
   }
 
   blockquote {
@@ -110,80 +118,41 @@
   }
 
   footer {
-    padding: 25px;
+    margin-top: 30px;
+    padding: 10px;
     text-align: center;
+    font-size: 12px;
+    color: #333;
+    background-color: #f4f4ff;
+    border-top: 1px dashed #000080;
   }
 
-  .helptext {
-    color: #777;
-    font-size: small;
-  }
-
-  .errorlist {
-    color: #eba613;
-    font-size: small;
-  }
-
-   
   ul.blog-posts {
-    list-style-type: none;
-    padding: unset;
+    list-style-type: disc;
+    padding-left: 40px;
   }
 
   ul.blog-posts li {
-    display: flex;
+    margin: 5px 0;
   }
 
   ul.blog-posts li span {
-    flex: 0 0 130px;
+    color: #666;
+  }
+
+  ul.blog-posts li a {
+    font-weight: bold;
   }
 
   ul.blog-posts li a:visited {
-    color: #8b6fcb;
+    color: #800080;
   }
 
-  @media (prefers-color-scheme: light) {
-    body {
-      background-color: #fff;
-      color: #444;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    strong,
-    b {
-      color: #222;
-    }
-
-    a {
-      color: #3273dc;
-    }
-
-    code {
-      background-color: #f2f2f2;
-    }
-
-    pre code {
-      color: #222;
-    }
-
-    blockquote {
-      color: #222;
-    }
-
-    textarea,
-    input {
-      background-color: #fff;
-      color: #444;
-    }
-
-    .helptext {
-      color: #777;
-    }
+   
+  marquee {
+    color: #000080;
+    font-weight: bold;
+    font-family: "Comic Sans MS", cursive;
   }
 </style>
 

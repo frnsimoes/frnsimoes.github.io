@@ -5,6 +5,9 @@
     <loc>https://fernandosimoes.com/</loc>
     <lastmod>2024-11-20T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/</loc>
+    <lastmod>2024-11-20T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/blog/os-theory-and-fun/</loc>
     <lastmod>2024-11-20T00:00:00+00:00</lastmod>
   </url><url>
@@ -14,14 +17,23 @@
     <loc>https://fernandosimoes.com/tags/</loc>
     <lastmod>2024-11-20T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/update-tuple/</loc>
+    <lastmod>2024-11-20T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/update-tuple/</loc>
     <lastmod>2024-11-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/postgres-server/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/postgres-server/</loc>
     <lastmod>2024-11-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/postgres-server/</loc>
     <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/postgres-table/</loc>
+    <lastmod>2024-11-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/postgres-table/</loc>
     <lastmod>2024-11-03T00:00:00+00:00</lastmod>
@@ -32,11 +44,20 @@
     <loc>https://fernandosimoes.com/blog/debugging/</loc>
     <lastmod>2024-09-28T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/go-scheduler/</loc>
+    <lastmod>2024-09-28T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/go-scheduler/</loc>
     <lastmod>2024-09-28T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/when-fork-fails/</loc>
+    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/when-fork-fails/</loc>
     <lastmod>2024-09-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/debugging-network/</loc>
+    <lastmod>2024-09-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/debugging-network/</loc>
     <lastmod>2024-09-19T00:00:00+00:00</lastmod>
@@ -44,8 +65,14 @@
     <loc>https://fernandosimoes.com/blog/computer-networking/</loc>
     <lastmod>2024-09-13T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/tcp/</loc>
+    <lastmod>2024-09-13T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/tcp/</loc>
     <lastmod>2024-09-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/ipv4-ttl/</loc>
+    <lastmod>2024-09-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/ipv4-ttl/</loc>
     <lastmod>2024-09-10T00:00:00+00:00</lastmod>
@@ -53,11 +80,20 @@
     <loc>https://fernandosimoes.com/blog/career-and-development/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/nerdy-cool-stuff/</loc>
+    <lastmod>2024-08-20T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/nerdy-cool-stuff/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/scheduler/</loc>
+    <lastmod>2024-08-08T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/scheduler/</loc>
     <lastmod>2024-08-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/socket/</loc>
+    <lastmod>2024-08-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/socket/</loc>
     <lastmod>2024-08-01T00:00:00+00:00</lastmod>
@@ -65,14 +101,26 @@
     <loc>https://fernandosimoes.com/blog/experiments/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/tcp-ack-seq/</loc>
+    <lastmod>2024-07-28T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/tcp-ack-seq/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/education-dilemma/</loc>
+    <lastmod>2024-07-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/education-dilemma/</loc>
     <lastmod>2024-07-14T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/locks-annotations/</loc>
+    <lastmod>2024-07-13T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/locks-annotations/</loc>
     <lastmod>2024-07-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/io-multiplexing/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/io-multiplexing/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>
@@ -86,23 +134,44 @@
     <loc>https://fernandosimoes.com/week-rule/</loc>
     <lastmod>2024-06-26T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/process/</loc>
+    <lastmod>2024-06-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/process/</loc>
     <lastmod>2024-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/unix-file-size/</loc>
+    <lastmod>2024-05-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/unix-file-size/</loc>
     <lastmod>2024-05-29T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/studying-cs/</loc>
+    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/studying-cs/</loc>
     <lastmod>2024-05-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/http-body/</loc>
+    <lastmod>2024-05-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/http-body/</loc>
     <lastmod>2024-05-03T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/wsgi-app/</loc>
+    <lastmod>2023-12-30T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/wsgi-app/</loc>
     <lastmod>2023-12-30T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/unix-trivia/</loc>
+    <lastmod>2023-06-25T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/unix-trivia/</loc>
     <lastmod>2023-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/software-descontentamentos/</loc>
+    <lastmod>2023-05-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/software-descontentamentos/</loc>
     <lastmod>2023-05-09T00:00:00+00:00</lastmod>
@@ -110,14 +179,26 @@
     <loc>https://fernandosimoes.com/blog/programming-languages/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/python-method/</loc>
+    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/python-method/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/invariants/</loc>
+    <lastmod>2022-06-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/invariants/</loc>
     <lastmod>2022-06-10T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/notes/list-post/</loc>
+    <lastmod>2021-12-20T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/list-post/</loc>
     <lastmod>2021-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/notes/recursion/</loc>
+    <lastmod>2021-12-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/recursion/</loc>
     <lastmod>2021-12-05T00:00:00+00:00</lastmod>
