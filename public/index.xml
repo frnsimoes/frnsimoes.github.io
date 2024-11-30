@@ -10,24 +10,10 @@
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>What happens when a row is updated?</title>
-      <link>https://fernandosimoes.com/notes/update-tuple/</link>
-      <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/update-tuple/</guid>
-      <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
-    </item>
-    <item>
-      <title>What happens when a row is updated?</title>
       <link>https://fernandosimoes.com/posts/update-tuple/</link>
       <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/update-tuple/</guid>
       <description>When we update a tuple in a page, a tuple-oriented dbms does the following steps:&#xA;check page directory to find location of the page; retrieve the page from disk if it&amp;rsquo;s not in memory; find the offset of the page; marks existing tuple as deleted and inserts new data.1 Let&amp;rsquo;s understand this better with a simple test table in Postgres.&#xA;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;); INSERT 0 1 postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;); INSERT 0 1 postgres=# select ctid, value from test; ctid | value -------+------- (0,1) | t1 (0,2) | t2 (2 rows) Here we have a table test with a column value.</description>
-    </item>
-    <item>
-      <title>What&#39;s the &#39;Postgres server&#39;?</title>
-      <link>https://fernandosimoes.com/notes/postgres-server/</link>
-      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/postgres-server/</guid>
-      <description>I Thought I was studying Postgres, but here we go again with operating systems and networking. Jokes aside, Postgres&amp;rsquo; process architecture is really interesting. A great overview on the topic is Suzuki&amp;rsquo;s explanation of various types of processes, which you can find here.&#xA;Postgres server process: the &amp;ldquo;parent&amp;rdquo; process that manages the database system. It&amp;rsquo;s the thing that has an IP and a port.&#xA;Backend process: It&amp;rsquo;s the entity that reads and writes queries.</description>
     </item>
     <item>
       <title>What&#39;s the &#39;Postgres server&#39;?</title>
@@ -45,24 +31,10 @@
     </item>
     <item>
       <title>Postgres tables on disk</title>
-      <link>https://fernandosimoes.com/notes/postgres-table/</link>
-      <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/postgres-table/</guid>
-      <description>I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, then inserted two records into it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of Postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
-    </item>
-    <item>
-      <title>Postgres tables on disk</title>
       <link>https://fernandosimoes.com/posts/postgres-table/</link>
       <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/postgres-table/</guid>
       <description>I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, then inserted two records into it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of Postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
-    </item>
-    <item>
-      <title>Taking a look at Go&#39;s runtime/proc.go</title>
-      <link>https://fernandosimoes.com/notes/go-scheduler/</link>
-      <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/go-scheduler/</guid>
-      <description>Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details1. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole.</description>
     </item>
     <item>
       <title>Taking a look at Go&#39;s runtime/proc.go</title>
@@ -73,24 +45,10 @@
     </item>
     <item>
       <title>Forcing fork() to fail</title>
-      <link>https://fernandosimoes.com/notes/when-fork-fails/</link>
-      <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/when-fork-fails/</guid>
-      <description>What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it&amp;rsquo;s 0, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s pid, and if it&amp;rsquo;s -1, fork() has failed.&#xA;But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child&amp;rsquo;s pid in the parent&amp;rsquo;s process?</description>
-    </item>
-    <item>
-      <title>Forcing fork() to fail</title>
       <link>https://fernandosimoes.com/posts/when-fork-fails/</link>
       <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/when-fork-fails/</guid>
       <description>What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it&amp;rsquo;s 0, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s pid, and if it&amp;rsquo;s -1, fork() has failed.&#xA;But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child&amp;rsquo;s pid in the parent&amp;rsquo;s process?</description>
-    </item>
-    <item>
-      <title>Debugging sessions? Iptables, Docker, etc.</title>
-      <link>https://fernandosimoes.com/notes/debugging-network/</link>
-      <pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/debugging-network/</guid>
-      <description>Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV).</description>
     </item>
     <item>
       <title>Debugging sessions? Iptables, Docker, etc.</title>
@@ -101,24 +59,10 @@
     </item>
     <item>
       <title>TCP may be tricky</title>
-      <link>https://fernandosimoes.com/notes/tcp/</link>
-      <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/tcp/</guid>
-      <description>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &amp;ldquo;receive window&amp;rdquo; (rwnd). The receive window indicates the maximum bytes that the TCP socket&amp;rsquo;s buffer can process. Until recent years, the de facto rwnd was 64KB. Nowadays, it can be up to 1 gigabyte1, depending on server configuration.</description>
-    </item>
-    <item>
-      <title>TCP may be tricky</title>
       <link>https://fernandosimoes.com/posts/tcp/</link>
       <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp/</guid>
       <description>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &amp;ldquo;receive window&amp;rdquo; (rwnd). The receive window indicates the maximum bytes that the TCP socket&amp;rsquo;s buffer can process. Until recent years, the de facto rwnd was 64KB. Nowadays, it can be up to 1 gigabyte1, depending on server configuration.</description>
-    </item>
-    <item>
-      <title>IPv4 TTL is not about time?</title>
-      <link>https://fernandosimoes.com/notes/ipv4-ttl/</link>
-      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/ipv4-ttl/</guid>
-      <description>Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.&#xA;In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &amp;ldquo;hop,&amp;rdquo; the packet&amp;rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.&#xA;Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.</description>
     </item>
     <item>
       <title>IPv4 TTL is not about time?</title>
@@ -129,24 +73,10 @@
     </item>
     <item>
       <title>The nerdy cool stuff</title>
-      <link>https://fernandosimoes.com/notes/nerdy-cool-stuff/</link>
-      <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/nerdy-cool-stuff/</guid>
-      <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
-    </item>
-    <item>
-      <title>The nerdy cool stuff</title>
       <link>https://fernandosimoes.com/posts/nerdy-cool-stuff/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/nerdy-cool-stuff/</guid>
       <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
-    </item>
-    <item>
-      <title>Unix Scheduler: overview</title>
-      <link>https://fernandosimoes.com/notes/scheduler/</link>
-      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/scheduler/</guid>
-      <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
     </item>
     <item>
       <title>Unix Scheduler: overview</title>
@@ -157,24 +87,10 @@
     </item>
     <item>
       <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/notes/socket/</link>
-      <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
-    </item>
-    <item>
-      <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/posts/socket/</link>
       <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/socket/</guid>
       <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
-    </item>
-    <item>
-      <title>TCP reliable delivery</title>
-      <link>https://fernandosimoes.com/notes/tcp-ack-seq/</link>
-      <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/tcp-ack-seq/</guid>
-      <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in [RFC793]:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
     </item>
     <item>
       <title>TCP reliable delivery</title>
@@ -185,13 +101,6 @@
     </item>
     <item>
       <title>Why education demands hard work?</title>
-      <link>https://fernandosimoes.com/notes/education-dilemma/</link>
-      <pubDate>Sun, 14 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/education-dilemma/</guid>
-      <description>I was watching Ramzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
-    </item>
-    <item>
-      <title>Why education demands hard work?</title>
       <link>https://fernandosimoes.com/posts/education-dilemma/</link>
       <pubDate>Sun, 14 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/education-dilemma/</guid>
@@ -199,24 +108,10 @@
     </item>
     <item>
       <title>Study notes: locks</title>
-      <link>https://fernandosimoes.com/notes/locks-annotations/</link>
-      <pubDate>Sat, 13 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/locks-annotations/</guid>
-      <description>Exploring locks.&#xA;#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;pthread.h&amp;gt; #define EACH_COUNT 1000 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; volatile int counter = 0; void* thread_entry(void *arg) { for (int i = 1; i &amp;lt; EACH_COUNT; i++) { pthread_mutex_lock(&amp;amp;lock); counter++; pthread_mutex_unlock(&amp;amp;lock); } return NULL; } int main() { pthread_t p1, p2; pthread_create(&amp;amp;p1, NULL, thread_entry, NULL); pthread_create(&amp;amp;p2, NULL, thread_entry, NULL); pthread_join(p1, NULL); pthread_join(p2, NULL); printf(&amp;#34;Final count %d (expected %d)\n&amp;#34;, counter, 2 * EACH_COUNT); } Scenario: Two threads: T1 and T2.</description>
-    </item>
-    <item>
-      <title>Study notes: locks</title>
       <link>https://fernandosimoes.com/posts/locks-annotations/</link>
       <pubDate>Sat, 13 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/locks-annotations/</guid>
       <description>Exploring locks.&#xA;#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;pthread.h&amp;gt; #define EACH_COUNT 1000 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; volatile int counter = 0; void* thread_entry(void *arg) { for (int i = 1; i &amp;lt; EACH_COUNT; i++) { pthread_mutex_lock(&amp;amp;lock); counter++; pthread_mutex_unlock(&amp;amp;lock); } return NULL; } int main() { pthread_t p1, p2; pthread_create(&amp;amp;p1, NULL, thread_entry, NULL); pthread_create(&amp;amp;p2, NULL, thread_entry, NULL); pthread_join(p1, NULL); pthread_join(p2, NULL); printf(&amp;#34;Final count %d (expected %d)\n&amp;#34;, counter, 2 * EACH_COUNT); } Scenario: Two threads: T1 and T2.</description>
-    </item>
-    <item>
-      <title>Sockets, select and IO Multiplexing</title>
-      <link>https://fernandosimoes.com/notes/io-multiplexing/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/io-multiplexing/</guid>
-      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
     </item>
     <item>
       <title>Sockets, select and IO Multiplexing</title>
@@ -248,24 +143,10 @@
     </item>
     <item>
       <title>Playing around with fork()</title>
-      <link>https://fernandosimoes.com/notes/process/</link>
-      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/process/</guid>
-      <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
-    </item>
-    <item>
-      <title>Playing around with fork()</title>
       <link>https://fernandosimoes.com/posts/process/</link>
       <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/process/</guid>
       <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
-    </item>
-    <item>
-      <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/notes/unix-file-size/</link>
-      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/unix-file-size/</guid>
-      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>
@@ -276,24 +157,10 @@
     </item>
     <item>
       <title>I started studying CS</title>
-      <link>https://fernandosimoes.com/notes/studying-cs/</link>
-      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/studying-cs/</guid>
-      <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
-    </item>
-    <item>
-      <title>I started studying CS</title>
       <link>https://fernandosimoes.com/posts/studying-cs/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/studying-cs/</guid>
       <description>(Checkout the repo).&#xA;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&#xA;Over the past couple of years, I’ve tried a lot of different things:&#xA;Reading the books listed on teachyourselfcs.com. Applying myself to the courses on OSSU. Exploring various perspectives on computer science, like one focused on functional programming (some really nice lessons on parallelism there).</description>
-    </item>
-    <item>
-      <title>What is an HTTP message body?</title>
-      <link>https://fernandosimoes.com/notes/http-body/</link>
-      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/http-body/</guid>
-      <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
@@ -304,24 +171,10 @@
     </item>
     <item>
       <title>I wrote a WSGI application</title>
-      <link>https://fernandosimoes.com/notes/wsgi-app/</link>
-      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/wsgi-app/</guid>
-      <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
-    </item>
-    <item>
-      <title>I wrote a WSGI application</title>
       <link>https://fernandosimoes.com/posts/wsgi-app/</link>
       <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
       <description>This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&#xA;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&#xA;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&#xA;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.</description>
-    </item>
-    <item>
-      <title>Unix trivia</title>
-      <link>https://fernandosimoes.com/notes/unix-trivia/</link>
-      <pubDate>Sun, 25 Jun 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/unix-trivia/</guid>
-      <description>The history of Unix has many curious aspects: a huge company like AT&amp;amp;T, which at the time owned Bell Labs (and therefore Unix), didn&amp;rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.&#xA;Until 1989, AT&amp;amp;T couldn&amp;rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;amp;T&amp;rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.</description>
     </item>
     <item>
       <title>Unix trivia</title>
@@ -332,24 +185,10 @@
     </item>
     <item>
       <title>Software e seus descontentamentos</title>
-      <link>https://fernandosimoes.com/notes/software-descontentamentos/</link>
-      <pubDate>Tue, 09 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/software-descontentamentos/</guid>
-      <description>(Tradução livre da segunda parte de uma série de 3 artigos de autoria de Kellan Elliot-McCrea. Todos os textos podem ser encontrados aqui(https://laughingmeme.org/)).&#xA;Esta é a parte 2 da minha série &amp;ldquo;Software e seus descontentamentos&amp;rdquo;. Essa série surgiu quando eu resolvi perguntar a uma porção de pessoas sobre o estado atual da engenharia de software: a sensação de que a engenharia de software não anda bem, as pessoas estão desiludidas e descontentes.</description>
-    </item>
-    <item>
-      <title>Software e seus descontentamentos</title>
       <link>https://fernandosimoes.com/posts/software-descontentamentos/</link>
       <pubDate>Tue, 09 May 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/software-descontentamentos/</guid>
       <description>(Tradução livre da segunda parte de uma série de 3 artigos de autoria de Kellan Elliot-McCrea. Todos os textos podem ser encontrados aqui(https://laughingmeme.org/)).&#xA;Esta é a parte 2 da minha série &amp;ldquo;Software e seus descontentamentos&amp;rdquo;. Essa série surgiu quando eu resolvi perguntar a uma porção de pessoas sobre o estado atual da engenharia de software: a sensação de que a engenharia de software não anda bem, as pessoas estão desiludidas e descontentes.</description>
-    </item>
-    <item>
-      <title>What happens when you call a method in Python</title>
-      <link>https://fernandosimoes.com/notes/python-method/</link>
-      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/python-method/</guid>
-      <description>A not-creative example (Bear with me).&#xA;class C: def sum_numbers(self, x, y): return x + y Who is sum_numbers? There is a difference in answers depending on who I ask.&#xA;If I ask class C if it knows sum_numbers, this is what it tells me:&#xA;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers &amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt; But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&#xA;&amp;gt;&amp;gt;&amp;gt; c = C() &amp;gt;&amp;gt;&amp;gt; c.</description>
     </item>
     <item>
       <title>What happens when you call a method in Python</title>
@@ -360,24 +199,10 @@
     </item>
     <item>
       <title>Invariants</title>
-      <link>https://fernandosimoes.com/notes/invariants/</link>
-      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/invariants/</guid>
-      <description>A rule in Domain-Driven Design (DDD) states that &amp;ldquo;each entity should self-validate.&amp;rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</description>
-    </item>
-    <item>
-      <title>Invariants</title>
       <link>https://fernandosimoes.com/posts/invariants/</link>
       <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/invariants/</guid>
       <description>A rule in Domain-Driven Design (DDD) states that &amp;ldquo;each entity should self-validate.&amp;rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.</description>
-    </item>
-    <item>
-      <title>Resources list</title>
-      <link>https://fernandosimoes.com/notes/list-post/</link>
-      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/list-post/</guid>
-      <description>The List Post: Resources How and what resources I used to get in love with software development Here is a list of things that I did to help myself learn how to program. I tried to create a chronological narrative, so, besides the list of resources, you can also follow the progress of interests and curiosities that I had.&#xA;From previous experiences, when I started I knew three things:&#xA;I knew that I had to get myself totally immersed in this new reality (this means: getting to know the people, the literature, the vocabulary, the mental map of everything).</description>
     </item>
     <item>
       <title>Resources list</title>
@@ -388,17 +213,17 @@
     </item>
     <item>
       <title>Brincando com recursão</title>
-      <link>https://fernandosimoes.com/notes/recursion/</link>
-      <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/notes/recursion/</guid>
-      <description>Assistindo ao CS61A (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:&#xA;O exemplo clássico do fatorial:&#xA;def fact(n): if n == 0: return 1 else: return n * fact(n-1) fact(3) # 3*2*1=6 O que acontece aqui?&#xA;Cada f é um frame isolado. A função é chamada recursivamente e o valor de n muda dinamicamente a cada chamada, conforme o argumento do fact() recursivo:</description>
-    </item>
-    <item>
-      <title>Brincando com recursão</title>
       <link>https://fernandosimoes.com/posts/recursion/</link>
       <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/recursion/</guid>
       <description>Assistindo ao CS61A (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:&#xA;O exemplo clássico do fatorial:&#xA;def fact(n): if n == 0: return 1 else: return n * fact(n-1) fact(3) # 3*2*1=6 O que acontece aqui?&#xA;Cada f é um frame isolado. A função é chamada recursivamente e o valor de n muda dinamicamente a cada chamada, conforme o argumento do fact() recursivo:</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/cooking/memory/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/cooking/memory/</guid>
+      <description>I like how Tanenbaum starts his chapter on virtual memory. He approaches the memory problem by worrying about how much space a program occupies in memory. One curious thing that he mentions is how early computers didn´t use any kind of memory abstraction or virtualization; each program only saw the physical memory, so two programs couldn&amp;rsquo;t run at the same time - if they did, program 2 could override a memory location of program 1, and then both would eventually crash.</description>
     </item>
     <item>
       <title></title>
