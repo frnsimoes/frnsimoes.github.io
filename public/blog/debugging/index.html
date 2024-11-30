@@ -29,33 +29,20 @@
     --blockquote-color: #222;
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        --background-color: #01242e;
-        --heading-color: #eee;
-        --text-color: #ddd;
-        --link-color: #8cc2dd;
-        --visited-color:  #8b6fcb;
-        --code-background-color: #000;
-        --code-color: #ddd;
-        --blockquote-color: #ccc;
-    }
-}
-
-body {
-    font-family: var(--font-secondary);
-    font-size: var(--font-scale);
+  body {
+    font-family: Verdana, sans-serif;
     margin: auto;
     padding: 20px;
-    max-width: var(--width);
+    max-width: 720px;
     text-align: left;
-    background-color: var(--background-color);
+    background-color: #fff;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
-    color: var(--text-color);
-box-sizing: border-box;
-}
+    color: #444;
+    border: 2px solid #0000ff;
+    box-sizing: border-box;
+  }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-main);
