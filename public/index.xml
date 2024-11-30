@@ -6,15 +6,8 @@
     <description>Recent content on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 29 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Career: software development, SRE? I&#39;m confused</title>
-      <link>https://fernandosimoes.com/posts/path-to-devops/</link>
-      <pubDate>Fri, 29 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/path-to-devops/</guid>
-      <description>A reader asked me if I work as a site reliability engineer. No, but sometimes I think about making a shift in my career. Since I started studying operating systems and networks, I can&amp;rsquo;t shake the feeling that I should try the SRE path. The good people from r/sre tried to dissuade me; they really don&amp;rsquo;t like being on call (who would?). But I can&amp;rsquo;t shake this feeling. The problem is: whenever I try to study a &amp;ldquo;devops tool&amp;rdquo; (GitLab pipelines, or AWS), I get bored as hell.</description>
-    </item>
     <item>
       <title>What happens when a row is updated?</title>
       <link>https://fernandosimoes.com/notes/update-tuple/</link>
