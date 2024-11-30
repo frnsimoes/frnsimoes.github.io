@@ -13,147 +13,166 @@
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
-body {
-  font-family: "Times New Roman", serif;
-  margin: 0 auto;
-  padding: 20px;
-  max-width: 800px;
-  text-align: left;
-  background-color: #ffffff;
-  color: #000000;
-  line-height: 1.6;
-  border: 2px solid #0000ff;
-  box-sizing: border-box;
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
 }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Arial", sans-serif;
-    color: #000080;
-    border-bottom: 1px dashed #000080;
-  }
+@media (prefers-color-scheme: light) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
 
-  a {
-    color: #0000ee;
-    text-decoration: underline;
-  }
-
-  a:hover {
-    color: #ff0000;
-    text-decoration: none;
-  }
-
-  nav {
-    background-color: #e0e0ff;
-    padding: 10px;
-    border: 1px solid #000080;
-    margin-bottom: 20px;
-  }
-
-  nav a {
-    color: #000080;
-    font-weight: bold;
-    margin-right: 15px;
-    text-transform: uppercase;
-  }
-
-  textarea, input {
-    font-family: "Courier New", monospace;
-    font-size: 14px;
-    padding: 5px;
-    border: 1px solid #000080;
-    background-color: #f0f0f0;
-    color: #000000;
-  }
-
-  table {
-    border: 1px solid #000080;
-    border-collapse: collapse;
-    width: 100%;
-    margin: 20px 0;
-  }
-
-  table th, table td {
-    border: 1px solid #000080;
-    padding: 8px;
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
     text-align: left;
-  }
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+box-sizing: border-box;
+}
 
-  table th {
-    background-color: #d0d0ff;
-    color: #000080;
-  }
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
 
-  img {
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+time {
+ 	font-family: monospace;
+  	font-style: normal;
+  	font-size: 15px;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
     max-width: 100%;
-    border: 2px solid #000080;
-    padding: 5px;
-  }
+}
 
-  pre code {
+  pre code { 
     color: #222;
     display: block;
     padding: 15px;
     white-space: pre-wrap;
     font-size: 12px;
     overflow-x: auto;
-    background-color: #f2f2f2; 
-  }
-
+    background-color: #f2f2f2;
+  } 
+  
   div.highlight pre {
-    background-color: #f2f2f2; 
+    background-color: #f2f2f2;
     color: #222; 
-  }
-
+  } 
+  
   div.highlight code {
-    background-color: #f2f2f2; 
-    color: #222;
-  }
+    background-color: #f2f2f2;
+    color: #222; 
+  } 
 
-  blockquote {
-    border-left: 1px solid #999;
-    color: #222;
-    padding-left: 20px;
-    font-style: italic;
-  }
-
-  footer {
-    margin-top: 30px;
-    padding: 10px;
+footer {
+    padding: 25px 0;
     text-align: center;
-    font-size: 12px;
-    color: #333;
-    background-color: #f4f4ff;
-    border-top: 1px dashed #000080;
-  }
+}
 
-  ul.blog-posts {
-    list-style-type: disc;
-    padding-left: 40px;
-  }
+.title:hover {
+    text-decoration: none;
+}
 
-  ul.blog-posts li {
-    margin: 5px 0;
-  }
+.title h1 {
+    font-size: 1.5em;
+}
 
-  ul.blog-posts li span {
-    color: #666;
-  }
+.inline {
+    width: auto !important;
+}
 
-  ul.blog-posts li a {
-    font-weight: bold;
-  }
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
 
-  ul.blog-posts li a:visited {
-    color: #800080;
-  }
+ 
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
 
-   
-  marquee {
-    color: #000080;
-    font-weight: bold;
-    font-family: "Comic Sans MS", cursive;
-  }
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
 </style>
+
 
 </head>
 
@@ -162,33 +181,13 @@ body {
     <h2>fernandosimoes</h2>
   <div class="spacer"></div>
   <div class="right-links">
+    <a href="/" class="home">home</a>
     <a href="/about" class="about-me">about</a>
     
-    <a href="/" class="home">home</a>
   </div>
 </div>
-<nav>
-</nav>
 
-<style>
-.header-container {
-  display: flex;
-  align-items: center;
-}
 
-.title {
-  margin: 0;
-}
-
-.spacer {
-  flex-grow: 1;  
-}
-
-.right-links {
-  display: flex;
-  gap: 10px;  
-}
-</style>
 </header>
   <main>
   <h4 style="text-align: center;">Taking a look at Go&#39;s runtime/proc.go</h4>
