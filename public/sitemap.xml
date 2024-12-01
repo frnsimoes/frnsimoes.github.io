@@ -3,12 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://fernandosimoes.com/</loc>
-    <lastmod>2024-11-20T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/blog/os-theory-and-fun/</loc>
-    <lastmod>2024-11-20T00:00:00+00:00</lastmod>
+    <loc>https://fernandosimoes.com/cooking/</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/cooking/memory/</loc>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/</loc>
+    <lastmod>2024-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/memory-ramblings/</loc>
+    <lastmod>2024-11-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/blog/os-theory-and-fun/</loc>
     <lastmod>2024-11-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/tags/</loc>
@@ -122,14 +131,10 @@
     <loc>https://fernandosimoes.com/posts/recursion/</loc>
     <lastmod>2021-12-05T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/cooking/memory/</loc>
-  </url><url>
     <loc>https://fernandosimoes.com/locks/</loc>
   </url><url>
     <loc>https://fernandosimoes.com/projects/</loc>
   </url><url>
     <loc>https://fernandosimoes.com/tag-system/</loc>
-  </url><url>
-    <loc>https://fernandosimoes.com/cooking/</loc>
   </url>
 </urlset>
