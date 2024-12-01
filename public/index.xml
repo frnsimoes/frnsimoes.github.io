@@ -107,7 +107,7 @@
       <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
     </item>
     <item>
-      <title>TCP reliable delivery</title>
+      <title>TCP acks and seqs</title>
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
