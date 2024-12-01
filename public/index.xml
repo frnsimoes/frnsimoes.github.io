@@ -20,7 +20,7 @@
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
-      <description>I&amp;rsquo;ve been reading about virtual memory for the past few days (hence, disclaimer: don&amp;rsquo;t quote me), and I like how Tanenbaum starts his chapter on virtual memory. He approaches the memory problem by worrying about how much space a program occupies in memory. One curious thing that he mentions is how early computers didn’t use any kind of memory abstraction or virtualization; each program only saw the physical memory, so two programs couldn&amp;rsquo;t run at the same time - if they did, program 2 could override a memory location of program 1, and then both would eventually crash.</description>
+      <description>I&amp;rsquo;ve been reading about virtual memory for the past few days (hence, disclaimer: don&amp;rsquo;t quote me), and I like how Tanenbaum startss his chapter on virtual memory. He approaches the memory problem by worrying about how much space a program occupies in memory. One curious thing that he mentions is how early computers didn’t use any kind of memory abstraction or virtualization; each program only saw the physical memory, so two programs couldn&amp;rsquo;t run at the same time - if they did, program 2 could override a memory location of program 1, and then both would eventually crash.</description>
     </item>
     <item>
       <title>What happens when a row is updated?</title>
