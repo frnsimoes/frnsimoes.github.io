@@ -1,24 +1,21 @@
-+++ 
-date = 2024-11-30
++++
+date = 2024-12-01
 title = "Rambling about virtual memory, faults, etc."
 +++
 
-I like how Tanenbaum starts his chapter on virtual memory. He approaches the memory problem by worrying about how much space a program occupies in memory. One curious thing that he mentions is how early computers didn´t use any kind of memory abstraction or virtualization; each program only saw the physical memory, so two programs couldn't run at the same time - if they did, program 2 could override a memory location of program 1, and then both would eventually crash. I tried to create a simple program to emulate this behavior using mmap: program 1 writes to memory; program 2 overrides the memory location and program 1 crashes. It's a fun experiment. 
+I've been reading about virtual memory for the past few days (hence, disclaimer: don't quote me), and I like how Tanenbaum starts his chapter on virtual memory. He approaches the memory problem by worrying about how much space a program occupies in memory. One curious thing that he mentions is how early computers didn’t use any kind of memory abstraction or virtualization; each program only saw the physical memory, so two programs couldn't run at the same time - if they did, program 2 could override a memory location of program 1, and then both would eventually crash. I tried to create a simple program to emulate this behavior using mmap: program 1 writes to memory; program 2 overrides the memory location and program 1 crashes. It's a fun experiment.
 
-The implementations to solve this problem seem wacky. Swapping was never really good enough - saving the program content to a non-volatile storage like hhd or ssd - because it is slow. 
+The implementations to solve this problem seem wacky. Base and bounds, another implementation, gave us the illusion of multiple memory spaces into physical memory. It works with two registers in the MMU: the base and the bounds. The base represents the address in physical memory where the address space of the currently running process starts. The bounds give us protection. Check we are within address space. If the memory is not "in bounds", if it's not OK to access that memory space, the hardware raises an exception. (Illegal memory access). The bad part of the base/bounds implementation is that it is hard to allocate memory because you have to always find large chunks of memory (to allocate contiguous memory); hard to expand. Hard to share memory. Base/bounds also have a lack of flexibility in allocating memory.  It limits the process to contiguous blocks, which makes it harder to handle dynamic allocation, resizing, and memory fragmentation.
 
-Base and bounds, another implementation, occupied too much space because of the necessity of contiguous space and the fact that heap and stack grow in opposite direction - causing the inevitable non used space between them in memory.
+Then we had segmentation that achieved multiple base/bounds instead of only one base/bounds. It got better because now we have small spaces that need to be contiguous, and not big spaces that have too much waste. But segmentation didn’t solve the waste problem, since inside each segment there was unused memory, causing fragmentation. Segmentation also had another problem: if a big chunk of data came into that particular segment, it needed to be compacted or rejected (for size reasons).
 
-Then we had segmentation that achieve multiple base/bounds instead of only one base/bounds. It got better, because now we have small spaces that need to be contiguous, and not big spaces that have too much waste. But segmentation didn´t solve the waste problem, since inside each segment there was non used memory, causing fragmentation. Segmentation also had another problem: if a big chunk of data came in to that particular segment, it needed to be compacted or rejected (for size reasons).
-
-Fragmentation and the need of choosing between two drastic options (reject or compact) were the main reasons for dissatisfaction with segmentation and the idea of paging. Paging is the idea of diving notionally (ideally?) the address space in blocks. With paging, we have this notion that we can divide (in abstraction) the physical memory in small blocks of 4kb, and then map these blocks in physical memory to 4kb blocks in virtual memory. 
+Fragmentation and the need of choosing between two drastic options (reject or compact) were the main reasons for dissatisfaction with segmentation and the idea of paging. Paging is the idea of dividing notionally (ideally?) the address space into blocks. With paging, we have this notion that we can divide (in abstraction) the physical memory into small blocks of 4kb, and then map these blocks in physical memory to 4kb blocks in virtual memory.
 
 The problem with this idea is that now we need to deal with the "map" part between physical and virtual memory. And how do we do the mapping? By translating it. This translation is handled by the Memory Management Unit (MMU), which uses a data structure called the page table to keep track of the mapping between virtual pages and physical frames.
 
 Dang. Now we have to worry about lookups. Virtual addresses need to be translated into physical addresses. The TLB (translation lookaside buffer) is a cache that helps with this translation. It is a small cache that stores the most recent translations. If the translation is not in the TLB (TLB miss), the MMU needs to look it up in the page table (page walk).
 
-The lookup may also fail if there is available translation for the virtual address. In this case, the OS sends a segment fault signal to the program, which can handle it or crash.
-
+The lookup may also fail if there is no available translation for the virtual address. In this case, the OS sends a segment fault signal to the program, which can handle it or crash.
 
 **A brief detour: segfault**
 
@@ -32,7 +29,7 @@ int main() {
 }
 ```
 
-Let's try to inspect what happened. First, lest compile the program with debugging information and run it to generate the core dump[^1] file:
+Let's try to inspect what happened. First, let's compile the program with debugging information and run it to generate the core dump[^1] file:
 
 ```
 ➜  segfault git:(main) ✗ gcc -g -o main main.c
@@ -63,7 +60,7 @@ What is SIGSEGV? It is a signal that is sent to a process when it tries to acces
 
 **what happens when a program is loaded into memory?**
 
-The question that I'm interested here is: when a new program starts, does the OS makes available a new and clean memory space for it? If not, does it have to clean the memory space before loading the program?
+The question that I'm interested in here is: when a new program starts, does the OS make available a new and clean memory space for it? If not, does it have to clean the memory space before loading the program?
 
 The answer is: it depends. The OS can make available a new and clean memory space for the program, or it can make available a memory space that was previously used by another program. In the second case, the OS needs to clean the memory space before loading the program. This is done by the OS by zeroing the memory space[^3] before loading the program. This is done to avoid leaking information from the previous program to the new program.
 
@@ -75,11 +72,9 @@ Imagine a simple `fork()`: a bash process that gives origin to another bash proc
 
 In this case, what will happen is that the child process will have a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages[^4].
 
-So, in physical memory (notionlly) there is this frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualizatio: Imagine physical memory as a box A, and the shared memory between parent and child as small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.
+So, in physical memory (notionally) there is this frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.
 
-
-
-[^1]: A core dump file contains a the recorded state of the program. You may need to have permissions to generate the core dump. The file may not be generated in the same directory as the program. Check the contents of `/proc/sys/kernel/core_pattern` to see where the core dump file is generated.
+[^1]: A core dump file contains the recorded state of the program. You may need to have permissions to generate the core dump. The file may not be generated in the same directory as the program. Check the contents of `/proc/sys/kernel/core_pattern` to see where the core dump file is generated.
 
 [^2]: `man 7 signal`
 
