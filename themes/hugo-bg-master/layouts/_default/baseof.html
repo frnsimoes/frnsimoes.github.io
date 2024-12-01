@@ -24,7 +24,7 @@
   your local /layouts/partials-directory -->
   {{- partial "custom_head.html" . -}}
 </head>
-
+<div class="container">
 <body>
   <header>
     {{- partial "header.html" . -}}
@@ -40,6 +40,10 @@
   Simply place a custom_body.html into
   your local /layouts/partials-directory -->
   {{- partial "custom_body.html" . -}}
+
+<!-- 100% privacy-first analytics -->
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 </body>
+</div>
 
 </html>
