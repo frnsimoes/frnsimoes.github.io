@@ -57,7 +57,6 @@ Another interesting topic is the following question: how long does the socket th
 One way to measure this time is to use the first handshake as a measure of the expected time in the "roundtrip." The roundtrip time includes both the outbound and return times. The problem is that RTT is influenced by various factors (distance between links, for example, or the number of clients). Therefore, another interesting measure is to measure the variation of the various RTTs.
 
 Therefore, returning to the problems mentioned at the beginning: Seq and ACKs are enough to: correctly reorder out-of-order received segments, as each segment has a unique sequential number. The absent ACK indicates to the client that a particular segment was not received, causing it to retransmit the data; and duplicate data is discarded based on sequence numbers and checksum.
-```
 
 [RFC793]: https://www.ietf.org/rfc/rfc793.txt
 

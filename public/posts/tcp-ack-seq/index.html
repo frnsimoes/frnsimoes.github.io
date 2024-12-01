@@ -185,7 +185,7 @@ ul.blog-posts li a:visited {
     
   </p>
   <content>
-    <p>&ldquo;Reliable delivery&rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &ldquo;reliable&rdquo; was defined in [RFC793]:</p>
+    <p>&ldquo;Reliable delivery&rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &ldquo;reliable&rdquo; was defined in <a href="https://www.ietf.org/rfc/rfc793.txt">RFC793</a>:</p>
 <blockquote>
 <p>The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.</p>
 </blockquote>
@@ -204,12 +204,12 @@ ul.blog-posts li a:visited {
 <li>Avoid receiving duplicate segments.</li>
 </ul>
 <p>I don&rsquo;t want to write about all these points in this text, but reflect a little on ACK and Seq, two fields of the TCP Header.</p>
-<p>TCP implements the notion of sequence number (seq #), linked to the size of the previously received bytes. When a TCP connection is established, the client and server agree on the sequence number for the initial packets, known as ISN (Initial Sequence Number)[^1]. Therefore, if the last segment contained seq: 10,000, the next sequence number will be based on the size of the previous segment&rsquo;s data.</p>
+<p>TCP implements the notion of sequence number (seq #), linked to the size of the previously received bytes. When a TCP connection is established, the client and server agree on the sequence number for the initial packets, known as ISN (Initial Sequence Number)<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Therefore, if the last segment contained seq: 10,000, the next sequence number will be based on the size of the previous segment&rsquo;s data.</p>
 <p>A simple example is when a segment is sent with a size of 1000 bytes. In this scenario, we have the following, in a simplified manner:</p>
 <pre tabindex="0"><code>Send: segment 1: seq = 1001, data = 1000 (bytes)
 Receive: ack = 2002
 </code></pre><p>This means that the server received segment 1, verified that the data is 1000 bytes, and now awaits the segment with seq = 2001.</p>
-<p>[RFC793] talks about &ldquo;data offsets,&rdquo; a field in the TCP header that indicates where the data begins. The receiver&rsquo;s kernel uses this field to check the next expected length based on the size of the already received segment.</p>
+<p><a href="https://www.ietf.org/rfc/rfc793.txt">RFC793</a> talks about &ldquo;data offsets,&rdquo; a field in the TCP header that indicates where the data begins. The receiver&rsquo;s kernel uses this field to check the next expected length based on the size of the already received segment.</p>
 <blockquote>
 <p>The number of 32 bit words in the TCP Header. This indicates where the data begins. The TCP header (even one including options) is an integral number of 32 bits long.</p>
 </blockquote>
@@ -227,11 +227,15 @@ Receive: ack = 2002
 <p>Another interesting topic is the following question: how long does the socket that sent the segment wait for the ACK until it decides to resend it, assuming it was lost?</p>
 <p>One way to measure this time is to use the first handshake as a measure of the expected time in the &ldquo;roundtrip.&rdquo; The roundtrip time includes both the outbound and return times. The problem is that RTT is influenced by various factors (distance between links, for example, or the number of clients). Therefore, another interesting measure is to measure the variation of the various RTTs.</p>
 <p>Therefore, returning to the problems mentioned at the beginning: Seq and ACKs are enough to: correctly reorder out-of-order received segments, as each segment has a unique sequential number. The absent ACK indicates to the client that a particular segment was not received, causing it to retransmit the data; and duplicate data is discarded based on sequence numbers and checksum.</p>
-<pre tabindex="0"><code>
-[RFC793]: https://www.ietf.org/rfc/rfc793.txt
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The sequence number in the header is the first octet in the segment, except when the SYN is present in the header.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 
-[^1]: The sequence number in the header is the first octet in the segment, except when the SYN is present in the header.
-</code></pre>
   </content>
 
   </main>
