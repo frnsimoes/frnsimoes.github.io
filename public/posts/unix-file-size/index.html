@@ -226,36 +226,36 @@ Access: 2024-06-22 16:52:42.909805004 +0000
 <p><strong>What is the size of the file on disk?</strong></p>
 <p>If the file has Size: 2, say, and the OS allocated 8 blocks (<code>8*512</code>) for it, the size of the file on disk is 4096 bytes.</p>
 <p>If the file has Size: 4097, and the OS allocated 16 blocks (<code>16*512</code>), the size of the file on disk is 8192 bytes.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;fcntl.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/stat.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;limits.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#define ONE_MEG 1024 * 1024
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> f <span style="color:#f92672">=</span> <span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;/tmp/foo&#34;</span>, O_WRONLY <span style="color:#f92672">|</span> O_TRUNC);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">blkcnt_t</span> prior_blocks <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">struct</span> stat st;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> ONE_MEG; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">write</span>(f, <span style="color:#e6db74">&#34;.&#34;</span>, <span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fstat</span>(f, <span style="color:#f92672">&amp;</span>st);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (st.st_blocks <span style="color:#f92672">!=</span> prior_blocks) {
-</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Size: %lld, blocks: %lld, on disk: %lld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, st.st_size, st.st_blocks, st.st_blocks <span style="color:#f92672">*</span> <span style="color:#ae81ff">512</span>);
-</span></span><span style="display:flex;"><span>			prior_blocks <span style="color:#f92672">=</span> st.st_blocks;
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">close</span>(f);
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div>
+<pre tabindex="0"><code>#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define ONE_MEG 1024 * 1024
+
+
+int main() {
+	int f = open(&#34;/tmp/foo&#34;, O_WRONLY | O_TRUNC);
+
+	blkcnt_t prior_blocks = -1;
+	struct stat st;
+
+	for (int i = 0; i &lt; ONE_MEG; i++) {
+		write(f, &#34;.&#34;, 1);
+		fstat(f, &amp;st);
+
+		if (st.st_blocks != prior_blocks) {
+			printf(&#34;Size: %lld, blocks: %lld, on disk: %lld\n&#34;, st.st_size, st.st_blocks, st.st_blocks * 512);
+			prior_blocks = st.st_blocks;
+		}
+	}
+
+	close(f);
+	return 0;
+}
+</code></pre>
   </content>
 
   </main>

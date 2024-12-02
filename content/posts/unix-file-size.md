@@ -65,7 +65,7 @@ If the file has Size: 2, say, and the OS allocated 8 blocks (`8*512`) for it, th
 
 If the file has Size: 4097, and the OS allocated 16 blocks (`16*512`), the size of the file on disk is 8192 bytes.
 
-```c
+```
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
