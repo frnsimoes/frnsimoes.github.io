@@ -6,15 +6,8 @@
     <description>Recent content on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 02 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Testing software</title>
-      <link>https://fernandosimoes.com/posts/testing-software/</link>
-      <pubDate>Mon, 02 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/testing-software/</guid>
-      <description>I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field.</description>
-    </item>
     <item>
       <title>Rambling about virtual memory, faults, etc.</title>
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
@@ -114,10 +107,10 @@
       <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
     </item>
     <item>
-      <title>Why education demands hard work?</title>
-      <link>https://fernandosimoes.com/posts/education-dilemma/</link>
+      <title>Education takes hard work</title>
+      <link>https://fernandosimoes.com/cooking/education-dilemma/</link>
       <pubDate>Sun, 14 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/education-dilemma/</guid>
+      <guid>https://fernandosimoes.com/cooking/education-dilemma/</guid>
       <description>I was watching Ramzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
     </item>
     <item>
@@ -182,6 +175,13 @@
       <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/http-body/</guid>
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
+    </item>
+    <item>
+      <title>Testing software</title>
+      <link>https://fernandosimoes.com/cooking/testing-software/</link>
+      <pubDate>Fri, 02 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/cooking/testing-software/</guid>
+      <description>I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field.</description>
     </item>
     <item>
       <title>I wrote a WSGI application</title>

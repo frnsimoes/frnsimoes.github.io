@@ -3,13 +3,10 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://fernandosimoes.com/</loc>
-    <lastmod>2024-12-02T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/</loc>
-    <lastmod>2024-12-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/testing-software/</loc>
-    <lastmod>2024-12-02T00:00:00+00:00</lastmod>
+    <lastmod>2024-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/memory-ramblings/</loc>
     <lastmod>2024-12-01T00:00:00+00:00</lastmod>
@@ -74,7 +71,10 @@
     <loc>https://fernandosimoes.com/posts/tcp-ack-seq/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/posts/education-dilemma/</loc>
+    <loc>https://fernandosimoes.com/cooking/</loc>
+    <lastmod>2024-07-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/cooking/education-dilemma/</loc>
     <lastmod>2024-07-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/locks-annotations/</loc>
@@ -103,6 +103,9 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/http-body/</loc>
     <lastmod>2024-05-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/cooking/testing-software/</loc>
+    <lastmod>2024-02-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/wsgi-app/</loc>
     <lastmod>2023-12-30T00:00:00+00:00</lastmod>
