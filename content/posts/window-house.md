@@ -15,6 +15,6 @@ Maybe I'm a little obsessed: there's one thing that Ian Cooper says that I don't
 
  Logging and testing consume time. Maybe the deadline is knocking on our doors. But testing and logging are techniques that need mastering the same way coding needs mastering. It's not part of the job, it's a requirement for doing the job professionally. Mastery of them should be a part of the craft. Maybe I'm grumpy today, I don't know, but, for me, there is no reliability without ensuring that correct functionality of the higher layer of the stack.
 
- [^1]: Ian Cooper has a nice history in this talk: https://www.youtube.com/watch?v=EZ05e7EMOLM
+ [^1]: Ian Cooper tells a good story in this talk: https://www.youtube.com/watch?v=EZ05e7EMOLM
 
  [a house full of windows]: https://ferd.ca/operable-software.html
