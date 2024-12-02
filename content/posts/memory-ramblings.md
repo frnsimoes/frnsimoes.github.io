@@ -70,8 +70,7 @@ When a program terminates, the operating system's kernel reclaims the memory tha
 
 Imagine a simple `fork()`: a bash process originates another bash process, which calls `cat` on a file, for example. In this case, the child process has a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages[^4].
 
-So, in physical memory (notionally) there is a frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.
-
+So, in physical memory (logically) there is a frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.
 
 [^1]: A core dump file contains the recorded state of the program. You may need to have permissions to generate the core dump. The file may not be generated in the same directory as the program. Check the contents of `/proc/sys/kernel/core_pattern` to see where the core dump file is generated.
 
