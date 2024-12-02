@@ -64,13 +64,14 @@ The answer is: it depends. The OS can make available a new and clean memory spac
 
 But what happens if that memory was used for some important, sensitive information? After all, we expect the operating system to respect the isolation of processes, right? If a program tries to access memory it does not have permission to access, it will cause a segmentation fault. The OS sends a SIGSEGV signal to the program, indicating an invalid memory access. This ensures that processes remain isolated and do not interfere with each other's memory.
 
+When a program terminates, the operating system's kernel reclaims the memory that was allocated to the program. This means the memory is marked as free and can be allocated to other programs. However, the contents of the memory are not immediately erased. Instead, the kernel ensures that any new program allocated this memory space cannot access the data left behind by the previous program. This is typically achieved by zeroing out the memory before it is allocated to a new program, maintaining the security and isolation between processes.
+
 **What happens when a child process tries to write?**
 
-Imagine a simple `fork()`: a bash process that gives origin to another bash process, which calls `cat` on a file, for example.
+Imagine a simple `fork()`: a bash process originates another bash process, which calls `cat` on a file, for example. In this case, the child process has a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages[^4].
 
-In this case, what will happen is that the child process will have a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages[^4].
+So, in physical memory (notionally) there is a frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.
 
-So, in physical memory (notionally) there is this frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.
 
 [^1]: A core dump file contains the recorded state of the program. You may need to have permissions to generate the core dump. The file may not be generated in the same directory as the program. Check the contents of `/proc/sys/kernel/core_pattern` to see where the core dump file is generated.
 
