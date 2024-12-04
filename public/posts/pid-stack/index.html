@@ -217,7 +217,7 @@ frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py
 [&lt;0&gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
 </code></pre><p>The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like <code>strace</code>, <code>&lt;pid&gt;/stack</code> can give an specific perspective of what&rsquo;s wrong with a process. Really, really cool stuff.</p>
 <p><strong>about proc</strong></p>
-<p><code>proc</code> is actually a notion in itself. Let&rsquo;s man proc.</p>
+<p><code>proc</code> is actually a system in itself. Let&rsquo;s man proc.</p>
 <blockquote>
 <p>The proc filesystem is a pseudo-filesystem which provides an interface to kernel data structures.  It is commonly mounted at /proc.  Typically, it is mounted automatically by the system, but it can also be mounted manually using a command such as:</p>
 </blockquote>

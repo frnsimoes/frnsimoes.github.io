@@ -22,7 +22,7 @@ The information I get from this trace is that epoll was called, so the kernel is
 
 **about proc**
 
-`proc` is actually a notion in itself. Let's man proc.
+`proc` is actually a system in itself. Let's man proc.
 
 > The proc filesystem is a pseudo-filesystem which provides an interface to kernel data structures.  It is commonly mounted at /proc.  Typically, it is mounted automatically by the system, but it can also be mounted manually using a command such as:
 
