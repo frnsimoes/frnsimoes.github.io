@@ -22,5 +22,12 @@
       <guid>https://fernandosimoes.com/cooking/testing-software/</guid>
       <description>I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field.</description>
     </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/cooking/buffer-io/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/cooking/buffer-io/</guid>
+      <description>Working with the terminal (and with stdout in general) has a lot of tricks. In a past project, I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you would do the same). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared.</description>
+    </item>
   </channel>
 </rss>
