@@ -26,6 +26,6 @@ The information I get from this trace is that epoll was called, so the kernel is
 
 > The proc filesystem is a pseudo-filesystem which provides an interface to kernel data structures.  It is commonly mounted at /proc.  Typically, it is mounted automatically by the system, but it can also be mounted manually using a command such as:
 
-So what we see in `proc/pid/stack` is not actually on disk (since `proc` is a pseudo-fylesystem.
+So what we see in `proc/pid/stack` is not actually on disk (since `proc` is a pseudo-filesystem).
 
 `proc/pid` has a lot of interesting information about a process: https://man7.org/linux/man-pages/man5/proc.5.html.
