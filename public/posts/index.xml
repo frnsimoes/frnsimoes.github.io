@@ -20,7 +20,7 @@
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
-      <description>Virtual addresses need to be translated into physical addresses. The TLB (translation lookaside buffer) is a cache that helps with this translation. It is a small cache that stores the most recent translations. If the translation is not in the TLB (TLB miss), the MMU needs to look it up in the page table (page walk). The lookup may also fail if there is no available translation for the virtual address.</description>
+      <description>The other day I was reading mmap documentation and there&amp;rsquo;s flag named MAP_HUGETLB. A huge page is a page that is bigger than the default page size of a system. In a linux machine, you can check the default page size with getconf PAGE_SIZE. In my case, it&amp;rsquo;s 4096 bytes. We can also check the HugePageSize in the machine: cat /proc/meminfo. In my case: Hugepagesize: 2048 kB.&#xA;but what are these pages, and why do they have sizes?</description>
     </item>
     <item>
       <title>What happens when a row is updated?</title>

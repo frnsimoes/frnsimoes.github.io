@@ -219,8 +219,12 @@
     
   </p>
   <content>
-    <p>Virtual addresses need to be translated into physical addresses. The TLB (translation lookaside buffer) is a cache that helps with this translation. It is a small cache that stores the most recent translations. If the translation is not in the TLB (TLB miss), the MMU needs to look it up in the page table (page walk). The lookup may also fail if there is no available translation for the virtual address. In this case, the OS sends a segment fault signal to the program, which can handle it or crash.</p>
-<p><strong>A brief detour: segfault</strong></p>
+    <p>The other day I was reading <code>mmap</code> documentation and there&rsquo;s flag named <code>MAP_HUGETLB</code>. A <a href="https://man7.org/linux/man-pages/man2/mmap.2.html">huge page</a> is a page that is bigger than the default page size of a system. In a linux machine, you can check the default page size with <code>getconf PAGE_SIZE</code>. In my case, it&rsquo;s <code>4096</code> bytes. We can also check the <code>HugePageSize</code> in the machine: <code>cat /proc/meminfo</code>. In my case: <code>Hugepagesize: 2048 kB</code>.</p>
+<p><strong>but what are these pages, and why do they have sizes?</strong></p>
+<p>The history of memory abstraction implementation in operating systems is both confusing and complex. I like how Tanenbaum mentions that early machines didn&rsquo;t have any kind of memory abstraction; all they could access was the physical memory. Imagine the horror: two programs couldn&rsquo;t run concurrently without crashing because one process could overwrite the memory locations of another. There was no notion of address space.</p>
+<p>Before paging, the implementations required memory blocks to be contiguous. The stack and heap grew in direct opposition, leading to inevitable waste of space in the middle of the memory block (I highly recommend OSTEP for studying base-and-bounds and segmentation).</p>
+<p>Nowadays, we use paging. The address space is composed of pages of <code>PAGE_SIZE</code>. These pages aren&rsquo;t contiguous but are instead mapped. We now use lookups: virtual addresses must be translated into physical addresses. The TLB (Translation Lookaside Buffer) is a cache that aids in this translation. If the translation is not found in the TLB (a TLB miss), the MMU performs a lookup in the page table (a page walk). This lookup can also fail if there is no available translation for the virtual address. In such cases, the OS sends a segmentation fault signal to the program, which can then handle it or crash.</p>
+<p><strong>segmentation fault</strong></p>
 <p>A segment fault can be emulated with a simple C program:</p>
 <pre tabindex="0"><code>int main() {
     int *ptr = (int *)0x12345678;  
