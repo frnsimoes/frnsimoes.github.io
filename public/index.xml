@@ -51,6 +51,13 @@
       <description>I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, then inserted two records into it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of Postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
     </item>
     <item>
+      <title>Education takes hard work</title>
+      <link>https://fernandosimoes.com/posts/education-dilemma/</link>
+      <pubDate>Mon, 14 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/education-dilemma/</guid>
+      <description>I was watching Ramzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
+    </item>
+    <item>
       <title>Taking a look at Go&#39;s runtime/proc.go</title>
       <link>https://fernandosimoes.com/posts/go-scheduler/</link>
       <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
@@ -112,13 +119,6 @@
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
       <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
-    </item>
-    <item>
-      <title>Education takes hard work</title>
-      <link>https://fernandosimoes.com/cooking/education-dilemma/</link>
-      <pubDate>Sun, 14 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/cooking/education-dilemma/</guid>
-      <description>I was watching Ramzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
     </item>
     <item>
       <title>Study notes: locks</title>
@@ -241,10 +241,10 @@
     </item>
     <item>
       <title></title>
-      <link>https://fernandosimoes.com/cooking/buffer-io/</link>
+      <link>https://fernandosimoes.com/cooking/print-strace/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/cooking/buffer-io/</guid>
-      <description>Working with the terminal (and with stdout in general) has a lot of tricks. In a past project, I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you would do the same). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared.</description>
+      <guid>https://fernandosimoes.com/cooking/print-strace/</guid>
+      <description>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again.</description>
     </item>
     <item>
       <title></title>

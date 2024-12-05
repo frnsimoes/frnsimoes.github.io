@@ -44,6 +44,13 @@
       <description>I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, then inserted two records into it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of Postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
     </item>
     <item>
+      <title>Education takes hard work</title>
+      <link>https://fernandosimoes.com/posts/education-dilemma/</link>
+      <pubDate>Mon, 14 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/education-dilemma/</guid>
+      <description>I was watching Ramzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
+    </item>
+    <item>
       <title>Taking a look at Go&#39;s runtime/proc.go</title>
       <link>https://fernandosimoes.com/posts/go-scheduler/</link>
       <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>

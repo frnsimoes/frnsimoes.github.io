@@ -66,7 +66,7 @@ But what happens if that memory was used for some important, sensitive informati
 
 When a program terminates, the operating system's kernel reclaims the memory that was allocated to the program. This means the memory is marked as free and can be allocated to other programs. However, the contents of the memory are not immediately erased. Instead, the kernel ensures that any new program allocated this memory space cannot access the data left behind by the previous program. This is typically achieved by zeroing out the memory before it is allocated to a new program, maintaining the security and isolation between processes.
 
-**What happens when a child process tries to write?**
+**what happens when a child process tries to write?**
 
 Imagine a simple `fork()`: a bash process originates another bash process, which calls `cat` on a file, for example. In this case, the child process has a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages[^4].
 

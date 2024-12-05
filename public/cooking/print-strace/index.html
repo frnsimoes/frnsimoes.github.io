@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fernando Simões</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+     
+    box-sizing: border-box;
+  }
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+time {
+ 	font-family: monospace;
+  	font-style: normal;
+  	font-size: 15px;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+  pre code { 
+	font-family: Courier, "Courier New", mono;
+    color: #222;
+    display: block;
+    padding: 15px;
+    white-space: pre-wrap;
+    font-size: 11px;
+    overflow-x: scroll;
+    background-color: #f7f7f7;
+     
+    border-style: dashed;
+    border-width: 1px;
+  } 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+  div.highlight pre {
+    background-color: #f2f2f2;
+    color: #222; 
+  } 
+  
+  div.highlight code {
+    background-color: #f2f2f2;
+    color: #222; 
+  } 
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+ 
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+</style>
+
+
+</head>
+<body>
+  <header><div class="header-container">
+    <h2>fernandosimoes</h2>
+  <div class="spacer"></div>
+  <div class="right-links">
+    <a href="/" class="home">home</a>
+    <a href="/about" class="about-me">about</a>
+    
+  </div>
+</div>
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;"></h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.</p>
+<p>What happened? Let&rsquo;s find out how <code>print</code> works, and what&rsquo;s line and block buffering.</p>
+<p>Python <code>print()</code> actually calls <code>sys.stdout.write()</code>. Let&rsquo;s check out how this works:</p>
+<pre tabindex="0"><code>import sys
+def hello():
+    print(&#34;hello from print&#34;)
+    sys.stdout.write(&#34;hello from stdout.write&#34;)
+
+hello()
+</code></pre><p>In <code>strace</code>, we can spot two <code>write</code> calls:</p>
+<pre tabindex="0"><code>write(1, &#34;hello from print\n&#34;, 17hello from print
+)      = 17
+write(1, &#34;hello from stdout.write&#34;, 23hello from stdout.write) = 23
+</code></pre><p>The difference between them is that <code>print</code> adds a new line; <code>sys.stdout.write</code> doesn&rsquo;t. Why?</p>
+<p>Python&rsquo;s <code>print</code> actually calls <code>sys.stdout.write</code> internally and adds a <code>\n</code>. This happens because Python is line buffering <code>print()</code>. So whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.</p>
+<p>Python doesn&rsquo;t always use line buffering, though. If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:</p>
+<pre tabindex="0"><code>import time
+
+while True:
+    print(&#34;hello from print&#34;)
+    time.sleep(.01)
+</code></pre><p>If you <code>python file.py | cat</code>, you won&rsquo;t see &ldquo;hello from print&rdquo; being written to stdout. You will only see the block of text once the buffer is full, so it will output everything at once.</p>
+<p><strong>why does it happen?</strong></p>
+<p>Internally, Python chooses the buffering mode based on <code>isatty()</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. This function tests if the file descriptor it is trying to write to is the terminal. (tty stands for <code>teletypewriter</code>. A legacy name that persisted from the days when we used these machines for telecommunication.).</p>
+<p>If <code>isatty</code> returns <code>true</code>, then Python buffering is line buffering; if <code>false</code>, it&rsquo;s block buffering.</p>
+<p><strong>docker wasn&rsquo;t writing to a <code>tty</code>?</strong></p>
+<p>I wasn&rsquo;t running Docker with the <a href="https://docs.docker.com/reference/cli/docker/container/run/#tty">-t</a> flag. By using <code>-t</code>, Docker attaches a pseudo-tty to the container, satisfying the <code>isatty()</code> requirement. Another thing I could have done is change the env <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-u">PYTHONUNBUFFERED</a> to a non-empty string value. This would force the stdout to be unbuffered (no line or block buffering).</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.man7.org/linux/man-pages/man3/isatty.3.html">https://www.man7.org/linux/man-pages/man3/isatty.3.html</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+  </content>
+
+  </main>
+  <footer></footer>
+
+    
+</body>
+
+</html>
