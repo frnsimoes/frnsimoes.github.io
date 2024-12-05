@@ -1,5 +1,5 @@
 +++ 
-date = 2024-09-10
+date = 2024-08-28
 title = "IPv4 TTL is not about time?"
 +++
 

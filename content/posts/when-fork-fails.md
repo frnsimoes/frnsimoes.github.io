@@ -1,5 +1,5 @@
 +++
-date = 2024-09-22
+date = 2024-10-22
 title = "Forcing fork() to fail"
 tags = ["OS theory and fun"]
 +++

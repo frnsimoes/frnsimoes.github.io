@@ -38,6 +38,9 @@
     <loc>https://fernandosimoes.com/blog/relational-database/</loc>
     <lastmod>2024-11-03T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/posts/when-fork-fails/</loc>
+    <lastmod>2024-10-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/education/</loc>
     <lastmod>2024-10-14T00:00:00+00:00</lastmod>
   </url><url>
@@ -46,9 +49,6 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/go-scheduler/</loc>
     <lastmod>2024-09-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/posts/when-fork-fails/</loc>
-    <lastmod>2024-09-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/debugging-network/</loc>
     <lastmod>2024-09-19T00:00:00+00:00</lastmod>
@@ -60,7 +60,7 @@
     <lastmod>2024-09-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/ipv4-ttl/</loc>
-    <lastmod>2024-09-10T00:00:00+00:00</lastmod>
+    <lastmod>2024-08-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/nerdy-cool-stuff/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
