@@ -1,9 +1,15 @@
 +++
 date = 2024-12-01
-title = "Rambling about virtual memory, faults, etc."
+title = "Rambling about virtual memory, MAP_HUGETLB and other things"
 +++
 
-The other day I was reading `mmap` documentation and there's flag named `MAP_HUGETLB`. A [huge page](https://man7.org/linux/man-pages/man2/mmap.2.html) is a page that is bigger than the default page size of a system. In a linux machine, you can check the default page size with `getconf PAGE_SIZE`. In my case, it's `4096` bytes. We can also check the `HugePageSize` in the machine: `cat /proc/meminfo`. In my case: `Hugepagesize: 2048 kB`.
+The other day I was reading `mmap` documentation and there's flag named `MAP_HUGETLB`. A [huge page](https://man7.org/linux/man-pages/man2/mmap.2.html) is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:
+- `getconf PAGE_SIZE` shows the default page size in the operating system.
+- `cat /proc/meminfo` has info about the `Hugepagesize`. 
+
+In my case, the default page size is `4096` bytes and the `hugepagesize` is `2048kB`.
+
+So, what does `MAP_HUGETLB` do? It requests pages larger than the default page size for memory mappings. This is useful for programs with a large memory footprint. For example, consider a process that uses 2 MB of memory. Using the default 4 KB pages, mapping this memory would require 512 entries in the TLB (Translation Lookaside Buffer). This increases the likelihood of TLB misses and results in more costly page table walks. Using a huge page size (e.g., 2 MB) allows the same memory to be mapped with a single TLB entry, significantly reducing TLB misses and improving efficiency.
 
 **but what are these pages, and why do they have sizes?**
 

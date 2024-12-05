@@ -16,11 +16,11 @@
       <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
     </item>
     <item>
-      <title>Rambling about virtual memory, faults, etc.</title>
+      <title>Rambling about virtual memory, MAP_HUGETLB and other things</title>
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
-      <description>The other day I was reading mmap documentation and there&amp;rsquo;s flag named MAP_HUGETLB. A huge page is a page that is bigger than the default page size of a system. In a linux machine, you can check the default page size with getconf PAGE_SIZE. In my case, it&amp;rsquo;s 4096 bytes. We can also check the HugePageSize in the machine: cat /proc/meminfo. In my case: Hugepagesize: 2048 kB.&#xA;but what are these pages, and why do they have sizes?</description>
+      <description>The other day I was reading mmap documentation and there&amp;rsquo;s flag named MAP_HUGETLB. A huge page is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:&#xA;getconf PAGE_SIZE shows the default page size in the operating system. cat /proc/meminfo has info about the Hugepagesize. In my case, the default page size is 4096 bytes and the hugepagesize is 2048kB.</description>
     </item>
     <item>
       <title>What happens when a row is updated?</title>
