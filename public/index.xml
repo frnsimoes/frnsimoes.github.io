@@ -55,7 +55,7 @@
       <link>https://fernandosimoes.com/posts/education/</link>
       <pubDate>Mon, 14 Oct 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/education/</guid>
-      <description>I was watching Ramzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
+      <description>I was watching Remzi&amp;rsquo;s course on operating systems, and he said something that I found interesting: something like, &amp;ldquo;Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance.&amp;rdquo; Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don&amp;rsquo;t understand; 3.</description>
     </item>
     <item>
       <title>Taking a look at Go&#39;s runtime/proc.go</title>

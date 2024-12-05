@@ -3,7 +3,7 @@ date = 2024-10-14
 title = "Education takes hard work"
 +++
 
-I was watching Ramzi's course on operating systems, and he said something that I found interesting: something like, "Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance." Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don't understand; 3. You think you understand something you don't.
+I was watching Remzi's course on operating systems, and he said something that I found interesting: something like, "Do not just understand the high-level aspects. Understand the details. Not understanding the details is exactly the definition of ignorance." Having only an abstract notion of what a thing is can be dangerous if you think about it. 1. You cannot do anything practical with that knowledge; 2. You are now biased about something you don't understand; 3. You think you understand something you don't.
 
 The problem with "knowing the details" is that often the details are dirty things. They require hard work and sweaty labor. Knowing the details of something means you've dealt with the hard intricacies of that thing, played with it, and extracted a treasure buried with your bare hands.
 
