@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Maybes on Fernando Simões</title>
+    <link>https://fernandosimoes.com/maybe/</link>
+    <description>Recent content in Maybes on Fernando Simões</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://fernandosimoes.com/maybe/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Unix Scheduler: overview</title>
+      <link>https://fernandosimoes.com/maybe/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/maybe/scheduler/</guid>
+      <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
+    </item>
+    <item>
+      <title>Sockets, select and IO Multiplexing</title>
+      <link>https://fernandosimoes.com/maybe/io-multiplexing/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/maybe/io-multiplexing/</guid>
+      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
+    </item>
+    <item>
+      <title>Playing around with fork()</title>
+      <link>https://fernandosimoes.com/maybe/process/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/maybe/process/</guid>
+      <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
+    </item>
+  </channel>
+</rss>

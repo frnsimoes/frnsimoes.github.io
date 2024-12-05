@@ -1,5 +1,5 @@
 +++ 
-date = 2024-05-03
+date = 2024-07-03
 title = "What is an HTTP message body?"
 tags = ["experiments"]
 +++
@@ -14,7 +14,7 @@ Imagine that the body has, say, 32768 bytes. The receiver socket doesn't know ho
 
 But what do I mean by "sequence of bytes transmitted within the message"? What's "the message"?
 
-In the context of HTTP specifications, a request has fundamentally three elements (there are more, but they don't concern us here):
+In the context of HTTP specifications, a request has fundamentally three elements (there are more ):
 
 - Request Line
 - Header Fields

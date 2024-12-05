@@ -10,15 +10,15 @@
     <atom:link href="https://fernandosimoes.com/blog/experiments/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>TCP acks and seqs</title>
-      <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
+      <link>https://fernandosimoes.com/cooking/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
+      <guid>https://fernandosimoes.com/cooking/tcp-ack-seq/</guid>
       <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
       <link>https://fernandosimoes.com/posts/http-body/</link>
-      <pubDate>Fri, 03 May 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/http-body/</guid>
       <description>An HTTP body is a &amp;ldquo;stream of data&amp;rdquo;, a sequence of bytes transmitted in the HTTP message1.&#xA;When an HTTP message is sent by the client socket to the server socket, the server socket &amp;ldquo;receives&amp;rdquo; the HTTP message from a buffer, which means the receiving socket&amp;rsquo;s recv method (refer to man recv2) retrieves data from a temporary storage known as a buffer, which has a finite capacity.&#xA;This is as simple as saying something like this: client_socket = server_socket.</description>
     </item>

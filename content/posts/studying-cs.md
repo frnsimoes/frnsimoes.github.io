@@ -1,5 +1,5 @@
 ---
-Title: "I started studying CS"
+Title: "Studying Computer Science"
 Date: 2024-05-15
 tags: ["career and development"]
 ---

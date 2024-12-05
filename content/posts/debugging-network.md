@@ -4,7 +4,7 @@ title = "Debugging sessions? Iptables, Docker, etc."
 tags = ["debugging"]
 +++
 
-Noob me. I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let's make this straight and brief, so we can get to the more on point question: Docker.
+I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let's make this straight and brief, so we can get to the more on point question: Docker.
 
 We are in the application layer, using the internet through a protocol, probably HTTP. HTTP is almost like an external layer that deals with formatting and encoding; its role is to create a contract between client and server. An HTTP request can look like this:
 

@@ -1,5 +1,5 @@
 +++ 
-date = 2023-06-25
+date = 2024-06-25
 title = "Unix trivia"
 tags = ["OS theory and fun"]
 +++

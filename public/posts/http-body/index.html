@@ -212,7 +212,7 @@ ul.blog-posts li a:visited {
 <p>This is as simple as saying something like this: <code>client_socket = server_socket.accept(); client_socket.recv(4096)</code>.</p>
 <p>Imagine that the body has, say, 32768 bytes. The receiver socket doesn&rsquo;t know how many bytes the data has, so it has to process that data iteratively until it completes. It will process the data in chunks of 4096 bytes, since, in our case, the socket&rsquo;s buffer has the maximum size of 4096 bytes.</p>
 <p>But what do I mean by &ldquo;sequence of bytes transmitted within the message&rdquo;? What&rsquo;s &ldquo;the message&rdquo;?</p>
-<p>In the context of HTTP specifications, a request has fundamentally three elements (there are more, but they don&rsquo;t concern us here):</p>
+<p>In the context of HTTP specifications, a request has fundamentally three elements (there are more ):</p>
 <ul>
 <li>Request Line</li>
 <li>Header Fields</li>
