@@ -83,16 +83,16 @@ Whenever a client opens a socket and sends a TCP request to the Postgres server 
 We can query backend processes:
 
 ```
-postgres=# SELECT pid, datname, usename, application_name, client_addr, backend_start, state
+postgres=# SELECT pid, datname, application_name, backend_start, state
 FROM pg_stat_activity;
-  pid  | datname  | usename  | application_name | client_addr |         backend_start         | state
--------+----------+----------+------------------+-------------+-------------------------------+--------
-   974 |          |          |                  |             | 2024-11-06 18:25:07.26712-03  |
-   975 |          | postgres |                  |             | 2024-11-06 18:25:07.267439-03 |
- 15486 | postgres | postgres | psql             |             | 2024-11-06 20:38:39.940907-03 | active
-   965 |          |          |                  |             | 2024-11-06 18:25:07.170085-03 |
-   964 |          |          |                  |             | 2024-11-06 18:25:07.169509-03 |
-   973 |          |          |                  |             | 2024-11-06 18:25:07.266529-03 |
+  pid   | datname  | application_name |         backend_start         | state
+--------+----------+------------------+-------------------------------+--------
+   1002 |          |                  | 2024-12-04 01:34:20.401326-03 |
+   1003 |          |                  | 2024-12-04 01:34:20.401672-03 |
+ 120192 | postgres | psql             | 2024-12-05 04:34:26.146744-03 | active
+    996 |          |                  | 2024-12-04 01:34:20.304368-03 |
+    995 |          |                  | 2024-12-04 01:34:20.303737-03 |
+   1001 |          |                  | 2024-12-04 01:34:20.400988-03 |
 (6 rows)
 ```
 

@@ -4,8 +4,6 @@ title = "What happens when you call a method in Python"
 tags = ["programming languages"]
 +++
 
-A not-creative example (Bear with me).
-
 ```
 class C:
     def sum_numbers(self, x, y):

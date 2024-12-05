@@ -14,172 +14,184 @@
 
   <style>
 :root {
-    --width: 720px;
-    --font-main: Verdana, sans-serif;
-    --font-secondary: Verdana, sans-serif;
-    --font-scale: 1em;
-    --background-color: #fff;
-    --heading-color: #222;
-    --text-color: #444;
-    --link-color: #3273dc;
-    --visited-color:  #8b6fcb;
-    --code-background-color: #f2f2f2;
-    --code-color: #222;
-    --blockquote-color: #222;
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
 }
 
   body {
-    font-family: Verdana, sans-serif;
-    margin: auto;
-    padding: 20px;
-    max-width: 720px;
-    text-align: left;
-    background-color: #fff;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: #444;
-     
-    box-sizing: border-box;
+	  font-family: Verdana, sans-serif;
+	  margin: auto;
+	  padding: 20px;
+	  max-width: 720px;
+	  text-align: left;
+	  background-color: #fff;
+	  word-wrap: break-word;
+	  overflow-wrap: break-word;
+	  line-height: 1.5;
+	  color: #444;
+	   
+	  box-sizing: border-box;
   }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-main);
-    color: var(--heading-color);
-}
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
 
-a {
-    color: var(--link-color);
-    cursor: pointer;
-    text-decoration: none;
-}
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
 
-a:hover {
-    text-decoration: underline; 
-}
+  a:hover {
+	  text-decoration: underline; 
+  }
 
-nav a {
-    margin-right: 8px;
-}
+  nav a {
+	  margin-right: 8px;
+  }
 
-strong, b {
-    color: var(--heading-color);
-}
+  strong, b {
+	  color: var(--heading-color);
+  }
 
-button {
-    margin: 0;
-    cursor: pointer;
-}
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
 
-time {
- 	font-family: monospace;
-  	font-style: normal;
-  	font-size: 15px;
-}
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
 
-main {
-    line-height: 1.6;
-}
+  main {
+	  line-height: 1.6;
+  }
 
-table {
-    width: 100%;
-}
+  table {
+	  width: 100%;
+  }
 
-hr {
-    border: 0;
-    border-top: 1px dashed;
-}
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
 
-img {
-    max-width: 100%;
-}
+  img {
+	  max-width: 100%;
+  }
 
   pre code { 
-	font-family: Courier, "Courier New", mono;
-    color: #222;
-    display: block;
-    padding: 15px;
-    white-space: pre-wrap;
-    font-size: 11px;
-    overflow-x: scroll;
-    background-color: #f7f7f7;
-     
-     
-    border: #cccccc;
-    border-style: solid;
-    border-width: 1px;
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
   } 
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	  overflow: auto;
+  }
 
-  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
   div.highlight pre {
-    background-color: #f2f2f2;
-    color: #222; 
+	  background-color: #f2f2f2;
+	  color: #222; 
   } 
-  
+
   div.highlight code {
-    background-color: #f2f2f2;
-    color: #222; 
+	  background-color: #f2f2f2;
+	  color: #222; 
   } 
 
-footer {
-    padding: 25px 0;
-    text-align: center;
-}
+  footer {
+	  padding: 25px 0;
+	  text-align: center;
+  }
 
-.title:hover {
-    text-decoration: none;
-}
+  .title:hover {
+	  text-decoration: none;
+  }
 
-.title h1 {
-    font-size: 1.5em;
-}
+  .title h1 {
+	  font-size: 1.5em;
+  }
 
-.inline {
-    width: auto !important;
-}
+  .inline {
+	  width: auto !important;
+  }
 
-.highlight, .code {
-    padding: 1px 15px;
-    background-color: var(--code-background-color);
-    color: var(--code-color);
-    border-radius: 3px;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    overflow-x: auto;
-}
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
 
- 
-ul.blog-posts {
-    list-style-type: none;
-    padding: unset;
-}
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
 
-ul.blog-posts li {
-    display: flex;
-}
+  ul.blog-posts li {
+	  display: flex;
+  }
 
-ul.blog-posts li span {
-    flex: 0 0 130px;
-}
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
 
-ul.blog-posts li a:visited {
-    color: var(--visited-color);
-}
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
 </style>
 
 
@@ -263,16 +275,16 @@ shared_buffers = 128MB                  # min 128kB
 <p>The Postgres server has an IP and a port. The Postgres server manages a cluster of databases. Databases are identified by their &ldquo;name&rdquo;, and it&rsquo;s only the Postgres server that has a socket address.</p>
 <p>Whenever a client opens a socket and sends a TCP request to the Postgres server socket, it spawns a backend process to handle the request. The backend process parses SQL queries, plans query execution strategies, executes the query, and fetches results; it also handles transaction management and returns the results to the client.</p>
 <p>We can query backend processes:</p>
-<pre tabindex="0"><code>postgres=# SELECT pid, datname, usename, application_name, client_addr, backend_start, state
+<pre tabindex="0"><code>postgres=# SELECT pid, datname, application_name, backend_start, state
 FROM pg_stat_activity;
-  pid  | datname  | usename  | application_name | client_addr |         backend_start         | state
--------+----------+----------+------------------+-------------+-------------------------------+--------
-   974 |          |          |                  |             | 2024-11-06 18:25:07.26712-03  |
-   975 |          | postgres |                  |             | 2024-11-06 18:25:07.267439-03 |
- 15486 | postgres | postgres | psql             |             | 2024-11-06 20:38:39.940907-03 | active
-   965 |          |          |                  |             | 2024-11-06 18:25:07.170085-03 |
-   964 |          |          |                  |             | 2024-11-06 18:25:07.169509-03 |
-   973 |          |          |                  |             | 2024-11-06 18:25:07.266529-03 |
+  pid   | datname  | application_name |         backend_start         | state
+--------+----------+------------------+-------------------------------+--------
+   1002 |          |                  | 2024-12-04 01:34:20.401326-03 |
+   1003 |          |                  | 2024-12-04 01:34:20.401672-03 |
+ 120192 | postgres | psql             | 2024-12-05 04:34:26.146744-03 | active
+    996 |          |                  | 2024-12-04 01:34:20.304368-03 |
+    995 |          |                  | 2024-12-04 01:34:20.303737-03 |
+   1001 |          |                  | 2024-12-04 01:34:20.400988-03 |
 (6 rows)
 </code></pre><p>One interesting thing is the data transmission between the client and the server. You can monitor a TCP request/response with something like Wireshark, for example, and see how lazily a backend process handles the request. The backend process streams the data, sending the result data as soon as it&rsquo;s ready, without waiting to complete the entire query. In this way, the client can start processing the data as soon as it arrives, without waiting for the entire query to complete.</p>
 <div class="footnotes" role="doc-endnotes">

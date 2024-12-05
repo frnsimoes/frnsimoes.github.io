@@ -132,7 +132,7 @@
       <link>https://fernandosimoes.com/posts/python-method/</link>
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/python-method/</guid>
-      <description>A not-creative example (Bear with me).&#xA;class C: def sum_numbers(self, x, y): return x + y Who is sum_numbers? There is a difference in answers depending on who I ask.&#xA;If I ask class C if it knows sum_numbers, this is what it tells me:&#xA;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers &amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt; But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&#xA;&amp;gt;&amp;gt;&amp;gt; c = C() &amp;gt;&amp;gt;&amp;gt; c.</description>
+      <description>class C: def sum_numbers(self, x, y): return x + y Who is sum_numbers? There is a difference in answers depending on who I ask.&#xA;If I ask class C if it knows sum_numbers, this is what it tells me:&#xA;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers &amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt; But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&#xA;&amp;gt;&amp;gt;&amp;gt; c = C() &amp;gt;&amp;gt;&amp;gt; c.sum_numbers &amp;lt;bound method C.</description>
     </item>
     <item>
       <title>Invariants</title>
