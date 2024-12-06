@@ -16,13 +16,6 @@
       <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
     </item>
     <item>
-      <title>strace print</title>
-      <link>https://fernandosimoes.com/cooking/print-strace/</link>
-      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/cooking/print-strace/</guid>
-      <description>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again.</description>
-    </item>
-    <item>
       <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/cooking/socket/</link>
       <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
