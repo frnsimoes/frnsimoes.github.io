@@ -1,6 +1,6 @@
 +++
 date = 2024-12-01
-title = "Rambling about virtual memory, MAP_HUGETLB and other things"
+title = "Rambling about virtual memory, map_hugetlb and other things"
 +++
 
 The other day I was reading `mmap` documentation and there's flag named `MAP_HUGETLB`. A [huge page](https://man7.org/linux/man-pages/man2/mmap.2.html) is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:
