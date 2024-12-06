@@ -86,6 +86,13 @@
       <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
     </item>
     <item>
+      <title>Scheduler: Notes from Remzi&#39;s lectures</title>
+      <link>https://fernandosimoes.com/posts/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/scheduler/</guid>
+      <description>(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&#xA;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms.</description>
+    </item>
+    <item>
       <title>What is an HTTP message body?</title>
       <link>https://fernandosimoes.com/posts/http-body/</link>
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>

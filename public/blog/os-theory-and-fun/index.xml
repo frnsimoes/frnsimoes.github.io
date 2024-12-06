@@ -23,18 +23,25 @@
       <description>What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it&amp;rsquo;s 0, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s pid, and if it&amp;rsquo;s -1, fork() has failed.&#xA;But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child&amp;rsquo;s pid in the parent&amp;rsquo;s process?</description>
     </item>
     <item>
+      <title>Scheduler: Notes from Remzi&#39;s lectures</title>
+      <link>https://fernandosimoes.com/maybe/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/maybe/scheduler/</guid>
+      <description>(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&#xA;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms.</description>
+    </item>
+    <item>
+      <title>Scheduler: Notes from Remzi&#39;s lectures</title>
+      <link>https://fernandosimoes.com/posts/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/scheduler/</guid>
+      <description>(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&#xA;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms.</description>
+    </item>
+    <item>
       <title>strace print</title>
       <link>https://fernandosimoes.com/cooking/print-strace/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/cooking/print-strace/</guid>
       <description>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again.</description>
-    </item>
-    <item>
-      <title>Unix Scheduler: overview</title>
-      <link>https://fernandosimoes.com/maybe/scheduler/</link>
-      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/maybe/scheduler/</guid>
-      <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
     </item>
     <item>
       <title>What does it mean to bind to a port?</title>

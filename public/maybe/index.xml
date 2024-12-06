@@ -9,11 +9,11 @@
     <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/maybe/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Unix Scheduler: overview</title>
+      <title>Scheduler: Notes from Remzi&#39;s lectures</title>
       <link>https://fernandosimoes.com/maybe/scheduler/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/maybe/scheduler/</guid>
-      <description>One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call.</description>
+      <description>(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&#xA;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms.</description>
     </item>
     <item>
       <title>Sockets, select and IO Multiplexing</title>
