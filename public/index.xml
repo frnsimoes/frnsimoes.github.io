@@ -178,9 +178,9 @@
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/posts/unix-file-size/</link>
+      <link>https://fernandosimoes.com/cooking/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/unix-file-size/</guid>
+      <guid>https://fernandosimoes.com/cooking/unix-file-size/</guid>
       <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
     </item>
     <item>
