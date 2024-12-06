@@ -68,12 +68,6 @@
     <loc>https://fernandosimoes.com/posts/nerdy-cool-stuff/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/maybe/</loc>
-    <lastmod>2024-08-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/maybe/scheduler/</loc>
-    <lastmod>2024-08-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://fernandosimoes.com/posts/scheduler/</loc>
     <lastmod>2024-08-08T00:00:00+00:00</lastmod>
   </url><url>
@@ -88,6 +82,9 @@
   </url><url>
     <loc>https://fernandosimoes.com/cooking/tcp-ack-seq/</loc>
     <lastmod>2024-07-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/maybe/</loc>
+    <lastmod>2024-07-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/maybe/io-multiplexing/</loc>
     <lastmod>2024-07-09T00:00:00+00:00</lastmod>

@@ -1,6 +1,6 @@
 +++
 date = 2024-08-08
-title = "Scheduler: Notes from Remzi's lectures"
+title = "Scheduler: notes from Remzi's lectures"
 tags = ["OS theory and fun"]
 +++ 
 
