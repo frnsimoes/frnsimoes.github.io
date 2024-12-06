@@ -19,3 +19,4 @@ I really wish I had made contact with these possibilities in the beginning of my
 
 [blog]: https://jvns.ca/
 [reflections on coding]: https://www.scattered-thoughts.net/writing/reflections-on-a-decade-of-coding/
+
