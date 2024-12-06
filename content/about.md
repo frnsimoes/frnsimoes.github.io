@@ -22,5 +22,5 @@ If you want to nerd out and talk about computer stuff, feel free to send a messa
 [linkedin]: https://linkedin.com/in/frnsimoes
 [summary]: /background
 [structured way]: https://structuredprocrastination.com/
-[^1]: The internet began to connect all humankind; the computer was a promise of infinite possibility and mystery, and of a promise of a better tomorrow.
+[^1]: The computer was a promise of infinite possibility and mystery.
 
