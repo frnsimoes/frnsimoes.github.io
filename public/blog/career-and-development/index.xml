@@ -10,9 +10,9 @@
     <atom:link href="https://fernandosimoes.com/blog/career-and-development/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>We can actually peek at the kernel stack of &lt;pid&gt;</title>
-      <link>https://fernandosimoes.com/posts/proc-pid-stack/</link>
+      <link>https://fernandosimoes.com/cooking/proc-pid-stack/</link>
       <pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/proc-pid-stack/</guid>
+      <guid>https://fernandosimoes.com/cooking/proc-pid-stack/</guid>
       <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
     </item>
     <item>

@@ -20,12 +20,6 @@ frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py
 
 The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like `strace`, `<pid>/stack` can give an specific perspective of what's wrong with a process. Really, really cool stuff.
 
-**about proc**
+**about procfs**
 
-`proc` is actually a system in itself. Let's man proc.
-
-> The proc filesystem is a pseudo-filesystem which provides an interface to kernel data structures.  It is commonly mounted at /proc.  Typically, it is mounted automatically by the system, but it can also be mounted manually using a command such as:
-
-So what we see in `proc/pid/stack` is not actually on disk (since `proc` is a pseudo-filesystem).
-
-`proc/pid` has a lot of interesting information about a process: https://man7.org/linux/man-pages/man5/proc.5.html.
+`proc` (procfs) is a pseudo-filesystem; it dynamically generate directories for processes. The files within `/proc` doesn't like on disk, similarly to the `/dev` directory. [Wikipedia](https://en.wikipedia.org/wiki/Procfs#History) lists the history of procfs implementation, which goes back to 1984. 

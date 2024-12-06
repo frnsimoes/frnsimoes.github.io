@@ -7,7 +7,7 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fernando Simões</title>
+<title>strace print | Fernando Simões</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -210,7 +210,7 @@
 
 </header>
   <main>
-  <h4 style="text-align: center;"></h4>
+  <h4 style="text-align: center;">strace print</h4>
   <p>
     
     
@@ -242,7 +242,7 @@ while True:
     time.sleep(.01)
 </code></pre><p>If you <code>python file.py | cat</code>, you won&rsquo;t see &ldquo;hello from print&rdquo; being written to stdout. You will only see the block of text once the buffer is full, so it will output everything at once.</p>
 <p><strong>why does it happen?</strong></p>
-<p>Internally, Python chooses the buffering mode based on <code>isatty()</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. This function tests if the file descriptor it is trying to write to is the terminal. (tty stands for <code>teletypewriter</code>. A legacy name that persisted from the days when we used these machines for telecommunication.).</p>
+<p>Internally, Python chooses the buffering mode based on <code>isatty()</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. This function tests if the file descriptor is trying to write to the terminal (tty stands for <code>teletypewriter</code>. A legacy name that persisted from the days when we used these machines for telecommunication).</p>
 <p>If <code>isatty</code> returns <code>true</code>, then Python buffering is line buffering; if <code>false</code>, it&rsquo;s block buffering.</p>
 <p><strong>docker wasn&rsquo;t writing to a <code>tty</code>?</strong></p>
 <p>I wasn&rsquo;t running Docker with the <a href="https://docs.docker.com/reference/cli/docker/container/run/#tty">-t</a> flag. By using <code>-t</code>, Docker attaches a pseudo-tty to the container, satisfying the <code>isatty()</code> requirement. Another thing I could have done is change the env <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-u">PYTHONUNBUFFERED</a> to a non-empty string value. This would force the stdout to be unbuffered (no line or block buffering).</p>

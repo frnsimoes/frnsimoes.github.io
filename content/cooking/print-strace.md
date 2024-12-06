@@ -1,3 +1,9 @@
++++
+date = 2024-08-08
+title = "strace print"
+tags = ["OS theory and fun"]
++++ 
+
 A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don't judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.
 
 What happened? Let's find out how `print` works, and what's line and block buffering.
@@ -40,7 +46,7 @@ If you `python file.py | cat`, you won't see "hello from print" being written to
 
 **why does it happen?**
 
-Internally, Python chooses the buffering mode based on `isatty()`[^1]. This function tests if the file descriptor it is trying to write to is the terminal. (tty stands for `teletypewriter`. A legacy name that persisted from the days when we used these machines for telecommunication.).
+Internally, Python chooses the buffering mode based on `isatty()`[^1]. This function tests if the file descriptor is trying to write to the terminal (tty stands for `teletypewriter`. A legacy name that persisted from the days when we used these machines for telecommunication).
 
 If `isatty` returns `true`, then Python buffering is line buffering; if `false`, it's block buffering. 
 
