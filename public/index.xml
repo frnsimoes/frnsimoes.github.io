@@ -16,7 +16,7 @@
       <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
     </item>
     <item>
-      <title>Rambling about virtual memory, map_hugetlb and other things</title>
+      <title>Some notes on paging</title>
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
