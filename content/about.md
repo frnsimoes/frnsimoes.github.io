@@ -20,5 +20,4 @@ Before becoming a developer, I read a bunch of classical literature and philosop
 If you want to nerd out and talk about computer stuff, feel free to send a message on [Linkedin].
 
 [linkedin]: https://linkedin.com/in/frnsimoes
-[summary]: /background
 [structured way]: https://structuredprocrastination.com/

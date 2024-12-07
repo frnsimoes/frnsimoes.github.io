@@ -220,7 +220,7 @@
   </p>
   <content>
     <p>A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.</p>
-<p>What happened? Let&rsquo;s find out how <code>print</code> works, and what&rsquo;s line and block buffering.</p>
+<p>What happened? Let&rsquo;s find out how <code>print</code> and buffering works.</p>
 <p><strong>how print() works</strong></p>
 <p>Python <code>print()</code> actually calls <code>sys.stdout.write()</code>. Let&rsquo;s check out how this works:</p>
 <pre tabindex="0"><code>import sys
@@ -238,7 +238,7 @@ write(1, &#34;hello from stdout.write&#34;, 23hello from stdout.write) = 23
 <pre tabindex="0"><code> print(*objects, sep=&#39; &#39;, end=&#39;\n&#39;, file=None, flush=False)
 
 The file argument must be an object with a write(string) method; if it is not present or None, sys.stdout will be used.
-</code></pre><p>Adding a new line is a detail the system expects. Its origins probably have some relation to the way we used to type in old typing machines. In any case, the operating system uses new lines to handle <em>line buffering</em>; this reverberates on Python: whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.</p>
+</code></pre><p>Adding a new line is a detail the system expects: its origins are in the &ldquo;cooked mode&rdquo; of the tty (<a href="https://www.linusakesson.net/programming/tty/index.php">this</a> is a brilliant article about the history of terminals, if you are curious about this topic, also: check <code>man 1 stty</code>). In any case, the operating system uses new lines to handle <em>line buffering</em>; this reverberates on Python: whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.</p>
 <p>Python doesn&rsquo;t always use line buffering, though (more on this below). If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:</p>
 <pre tabindex="0"><code>import time
 

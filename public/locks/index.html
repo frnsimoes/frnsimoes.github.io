@@ -220,81 +220,81 @@
   </p>
   <content>
     <p>Exploring locks.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;pthread.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#define EACH_COUNT 1000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pthread_mutex_t</span> lock <span style="color:#f92672">=</span> PTHREAD_MUTEX_INITIALIZER;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">int</span> counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">thread_entry</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>arg) {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> EACH_COUNT; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">pthread_mutex_lock</span>(<span style="color:#f92672">&amp;</span>lock);
-</span></span><span style="display:flex;"><span>        counter<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">pthread_mutex_unlock</span>(<span style="color:#f92672">&amp;</span>lock);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">pthread_t</span> p1, p2;
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pthread_create</span>(<span style="color:#f92672">&amp;</span>p1, NULL, thread_entry, NULL);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pthread_create</span>(<span style="color:#f92672">&amp;</span>p2, NULL, thread_entry, NULL);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pthread_join</span>(p1, NULL);
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pthread_join</span>(p2, NULL);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Final count %d (expected %d)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, counter, <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> EACH_COUNT);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Scenario: Two threads: T1 and T2. T1 -&gt; Lock -&gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when <code>unlock()</code> is called.</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+#define EACH_COUNT 1000
+
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+
+volatile int counter = 0;
+
+void* thread_entry(void *arg) {
+	for (int i = 1; i &lt; EACH_COUNT; i++) {
+    pthread_mutex_lock(&amp;lock);
+        counter++;
+    pthread_mutex_unlock(&amp;lock);
+    }
+	return NULL;
+}
+
+int main() {
+	pthread_t p1, p2;
+	pthread_create(&amp;p1, NULL, thread_entry, NULL);
+	pthread_create(&amp;p2, NULL, thread_entry, NULL);
+
+	pthread_join(p1, NULL);
+	pthread_join(p2, NULL);
+
+	printf(&#34;Final count %d (expected %d)\n&#34;, counter, 2 * EACH_COUNT);
+}
+</code></pre><p>Scenario: Two threads: T1 and T2. T1 -&gt; Lock -&gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when <code>unlock()</code> is called.</p>
 <p>How to build a lock, say, a &ldquo;Spin Lock&rdquo;?</p>
 <ul>
 <li>First we need a state: lock held (acquired) or free (not acquired).</li>
 <li>We could create a <code>lock</code> variable with values <code>0</code> (true) and <code>1</code> (false): <code>int lock;</code></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> mutex {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> lock;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutex_init</span> (mutex <span style="color:#f92672">*</span>m) {
-</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">-&gt;</span>lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutex_lock</span> (mutx <span style="color:#f92672">*</span>m) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (m<span style="color:#f92672">-&gt;</span>lock <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
-</span></span><span style="display:flex;"><span>        ;
-</span></span><span style="display:flex;"><span>        m<span style="color:#f92672">-&gt;</span>lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutex_unlock</span> (mutex <span style="color:#f92672">*</span>m) {
-</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">-&gt;</span>lock<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Goals:
+<pre tabindex="0"><code>struct mutex {
+    int lock;
+}
+
+void mutex_init (mutex *m) {
+    m-&gt;lock = 0;
+}
+
+void mutex_lock (mutx *m) {
+    while (m-&gt;lock == 1) {
+        ;
+        m-&gt;lock = 1;
+    }
+}
+
+void mutex_unlock (mutex *m) {
+    m-&gt;lock=0;
+}
+</code></pre><p>Goals:
 When local is not held (free)
 pthread_mutex_lock() -&gt; should return immediately and lock should become held
 When lock is held
 pthread_mutex_lock() -&gt; thread should get stuck here (until lock can be acquired)</p>
 <p>The problem with this implementation is that two threads with <code>0</code> can enter the loop inside <code>mutex_lock</code>, resulting in two threads acquiring the lock simultaneously. For this reason, we need a more powerful instruction from the hardware. &ldquo;Test and set instruction&rdquo; or &ldquo;atomic exchange&rdquo;.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">TestAndSet</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>old_ptr, <span style="color:#66d9ef">int</span> new) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> old <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>old_ptr;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>old_ptr <span style="color:#f92672">=</span> new;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> old;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutex_lock</span> (mutx <span style="color:#f92672">*</span>m) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">TestAndSet</span>(<span style="color:#f92672">&amp;</span>mutex<span style="color:#f92672">-&gt;</span>lock, <span style="color:#ae81ff">1</span>) {
-</span></span><span style="display:flex;"><span>        ;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><ol>
+<pre tabindex="0"><code>int TestAndSet(int *old_ptr, int new) {
+    int old = *old_ptr;
+    *old_ptr = new;
+    return old;
+}
+
+void mutex_lock (mutx *m) {
+    while (TestAndSet(&amp;mutex-&gt;lock, 1) {
+        ;
+    }
+}
+</code></pre><ol>
 <li>
 <p><strong>Thread T1 Acquires the Lock</strong>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>lock(0,1)     old      new     unlock
-</span></span><span style="display:flex;"><span>0 T<span style="color:#960050;background-color:#1e0010">&amp;</span>S(0, 1)   0        1       ---
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>lock(0,1)     old      new     unlock
+0 T&amp;S(0, 1)   0        1       ---
+</code></pre><ul>
 <li>T1 calls <code>TestAndSet(&amp;m-&gt;lock, 1)</code>.</li>
 <li><code>TestAndSet</code> returns <code>0</code> (old value), and sets <code>m-&gt;lock</code> to <code>1</code>.</li>
 <li>T1 acquires the lock.</li>
@@ -302,9 +302,9 @@ pthread_mutex_lock() -&gt; thread should get stuck here (until lock can be acqui
 </li>
 <li>
 <p><strong>Thread T2 Tries to Acquire the Lock</strong>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>lock(0,1)     old      new     unlock
-</span></span><span style="display:flex;"><span>0 T<span style="color:#960050;background-color:#1e0010">&amp;</span>S(1, 1)   1        0       ---
-</span></span></code></pre></div><ul>
+<pre tabindex="0"><code>lock(0,1)     old      new     unlock
+0 T&amp;S(1, 1)   1        0       ---
+</code></pre><ul>
 <li>T2 calls <code>TestAndSet(&amp;m-&gt;lock, 1)</code> while T1 is holding the lock.</li>
 <li><code>TestAndSet</code> returns <code>1</code> (old value), and <code>m-&gt;lock</code> remains <code>1</code>.</li>
 <li>Since <code>TestAndSet</code> returned <code>1</code>, T2 will spin-wait (not acquire the lock).</li>
@@ -314,32 +314,32 @@ pthread_mutex_lock() -&gt; thread should get stuck here (until lock can be acqui
 <p>The major problem with spinning lock is that when T2 is trying to access the critical section that is held by T1, it will spin, and spin, and spin, it will try to access the critical section every time an interrupt occurs, only to find out that the value didn´t change, and it can&rsquo;t take hold of the lock.</p>
 <p>Even more: what happens when a context switch occurs in a critical section, and threads start to spin endlessly, waiting for the interrupted (lock-holding) thread to be run again? (Remzi)</p>
 <p>One possible solution is the ticket lock. It is a fair lock, where threads are served in the order they arrive.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">fetch_and_add</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>addr) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> old <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>addr;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>addr <span style="color:#f92672">=</span> addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> old;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> __lock_t {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> ticket;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> turn;
-</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">lock_t</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">lock_init</span>(<span style="color:#66d9ef">lock_t</span> <span style="color:#f92672">*</span>lock) {
-</span></span><span style="display:flex;"><span>    lock<span style="color:#f92672">-&gt;</span>ticket <span style="color:#f92672">=</span> lock<span style="color:#f92672">-&gt;</span>turn <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">acquire</span>(<span style="color:#66d9ef">lock_t</span> <span style="color:#f92672">*</span>lock) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> myturn <span style="color:#f92672">=</span> <span style="color:#a6e22e">fetch_and_add</span>(<span style="color:#f92672">&amp;</span>lock<span style="color:#f92672">-&gt;</span>ticket);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (lock<span style="color:#f92672">-&gt;</span>turn <span style="color:#f92672">!=</span> myturn) {
-</span></span><span style="display:flex;"><span>        ;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">release</span>(<span style="color:#66d9ef">lock_t</span> <span style="color:#f92672">*</span>lock) {
-</span></span><span style="display:flex;"><span>    lock<span style="color:#f92672">-&gt;</span>turn <span style="color:#f92672">=</span> lock<span style="color:#f92672">-&gt;</span>turn <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Ticket Lock is trying to solve the fairness/starvation problem.</p>
+<pre tabindex="0"><code>int fetch_and_add(int *addr) {
+    int old = *addr;
+    *addr = addr + 1;
+    return old;
+}
+
+typedef struct __lock_t {
+    int ticket;
+    int turn;
+} lock_t;
+
+void lock_init(lock_t *lock) {
+    lock-&gt;ticket = lock-&gt;turn = 0;
+}
+
+void acquire(lock_t *lock) {
+    int myturn = fetch_and_add(&amp;lock-&gt;ticket);
+    while (lock-&gt;turn != myturn) {
+        ;
+    }
+}
+
+void release(lock_t *lock) {
+    lock-&gt;turn = lock-&gt;turn + 1;
+}
+</code></pre><p>Ticket Lock is trying to solve the fairness/starvation problem.</p>
 <ol>
 <li>
 <p><strong>Thread T1 calls <code>acquire(lock_t *lock)</code></strong>:</p>

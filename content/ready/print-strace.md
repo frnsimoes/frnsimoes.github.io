@@ -5,7 +5,7 @@ title = "What happens when you call print()?: tty, buffering, etc."
 
 A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don't judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.
 
-What happened? Let's find out how `print` works, and what's line and block buffering.
+What happened? Let's find out how `print` and buffering works.
 
 **how print() works**
 
@@ -39,7 +39,7 @@ Let's see what Python's documentation says about the `print` function all:
 The file argument must be an object with a write(string) method; if it is not present or None, sys.stdout will be used.
 ```
 
-Adding a new line is a detail the system expects. Its origins probably have some relation to the way we used to type in old typing machines. In any case, the operating system uses new lines to handle *line buffering*; this reverberates on Python: whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.
+Adding a new line is a detail the system expects: its origins are in the "cooked mode" of the tty ([this](https://www.linusakesson.net/programming/tty/index.php) is a brilliant article about the history of terminals, if you are curious about this topic, also: check `man 1 stty`). In any case, the operating system uses new lines to handle *line buffering*; this reverberates on Python: whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.
 
 Python doesn't always use line buffering, though (more on this below). If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:
 

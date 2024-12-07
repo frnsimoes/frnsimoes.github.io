@@ -94,6 +94,13 @@
     </item>
     <item>
       <title>The nerdy cool stuff</title>
+      <link>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</link>
+      <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</guid>
+      <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
+    </item>
+    <item>
+      <title>The nerdy cool stuff</title>
       <link>https://fernandosimoes.com/maybe/nerdy-cool-stuff/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/maybe/nerdy-cool-stuff/</guid>
@@ -129,6 +136,13 @@
     </item>
     <item>
       <title>Sockets, select and IO Multiplexing</title>
+      <link>https://fernandosimoes.com/backup/maybe/io-multiplexing/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/io-multiplexing/</guid>
+      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
+    </item>
+    <item>
+      <title>Sockets, select and IO Multiplexing</title>
       <link>https://fernandosimoes.com/maybe/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/maybe/io-multiplexing/</guid>
@@ -149,13 +163,6 @@
       <description>About the blog&#xA;This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a structured way.&#xA;About me&#xA;I&amp;rsquo;m a software developer. I currently live in Brazil with my wife and kids.&#xA;I grew up in the &amp;rsquo;90s, so I have a natural love for computers and the internet as a &amp;ldquo;promise of a better future&amp;rdquo;.</description>
     </item>
     <item>
-      <title></title>
-      <link>https://fernandosimoes.com/background/</link>
-      <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/background/</guid>
-      <description>I think the best way to get to know me is to get a brief summary of what has caught my attention in the past years:&#xA;2009-2011 In 2009, I became interested in philosophy. What I wanted to understand the most was the nature of reality. It was a big enterprise for the little man that I was (only 20 years old). Still, I think I achieved some nice accomplishments back then and learned some Greek to read Plato and Aristotle.</description>
-    </item>
-    <item>
       <title>One week rule</title>
       <link>https://fernandosimoes.com/week-rule/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
@@ -168,6 +175,13 @@
       <pubDate>Tue, 25 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/unix-trivia/</guid>
       <description>The history of Unix has many curious aspects: a huge company like AT&amp;amp;T, which at the time owned Bell Labs (and therefore Unix), didn&amp;rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.&#xA;Until 1989, AT&amp;amp;T couldn&amp;rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;amp;T&amp;rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began.</description>
+    </item>
+    <item>
+      <title>Playing around with fork()</title>
+      <link>https://fernandosimoes.com/backup/maybe/process/</link>
+      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/process/</guid>
+      <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
     </item>
     <item>
       <title>Playing around with fork()</title>

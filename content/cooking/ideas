@@ -1,9 +1,7 @@
-
-
-
 - iptables
 - congestion control
 - TCP algorithms
 - /dev/null?
 - floats?
 - "heap and stack"?
+- how a binary is executed?
