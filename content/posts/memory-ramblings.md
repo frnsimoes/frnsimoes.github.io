@@ -9,7 +9,7 @@ The other day I was reading `mmap` documentation and there's flag named `MAP_HUG
 
 In my case, the default page size is `4096` bytes and the `hugepagesize` is `2048kB`.
 
-So, what does `MAP_HUGETLB` do? It requests pages larger than the default page size for memory mappings. This is useful for programs with a large memory footprint. For example, consider a process that uses 2 MB of memory. Using the default 4 KB pages, mapping this memory would require 512 entries in the TLB (Translation Lookaside Buffer). This increases the likelihood of TLB misses and results in more costly page table walks. Using a huge page size (e.g., 2 MB) allows the same memory to be mapped with a single TLB entry, significantly reducing TLB misses and improving efficiency.
+So, what does `MAP_HUGETLB` do? It requests pages larger than the default page size for memory mappings. This is useful for programs with a large memory footprint. For example, consider a process that uses 2 MB of memory. Using the default 4 KB pages, mapping this memory would require 512 entries in the TLB (Translation Lookaside Buffer). In more costly page table walks, this increases the likelihood of TLB misses. Instead, we can Use a huge page size (e.g., 2 MB), allowing the same memory to be mapped with a single TLB entry, significantly reducing TLB misses and improving efficiency.
 
 **but what are these pages, and why do they have sizes?**
 
@@ -17,7 +17,7 @@ The history of memory abstraction implementation in operating systems is both co
 
 Before paging, the implementations required memory blocks to be contiguous. The stack and heap grew in direct opposition, leading to inevitable waste of space in the middle of the memory block (I highly recommend OSTEP for studying base-and-bounds and segmentation).
 
-Nowadays, we use paging. The address space is composed of pages of `PAGE_SIZE`. These pages aren't contiguous but are instead mapped. We now use lookups: virtual addresses must be translated into physical addresses. The TLB (Translation Lookaside Buffer) is a cache that aids in this translation. If the translation is not found in the TLB (a TLB miss), the MMU performs a lookup in the page table (a page walk). This lookup can also fail if there is no available translation for the virtual address. In such cases, the OS sends a segmentation fault signal to the program, which can then handle it or crash.
+Nowadays, we use paging. The address space is composed of pages of `PAGE_SIZE`. These pages aren't contiguous but are instead mapped. We now use lookups: virtual addresses must be translated into physical addresses. The TLB is a cache that aids in this translation. If the translation is not found in the TLB (a TLB miss), the MMU performs a lookup in the page table (a page walk). This lookup can also fail if there is no available translation for the virtual address. In such cases, the OS sends a segmentation fault signal to the program, which can then handle it or crash.
 
 **segmentation fault**
 
