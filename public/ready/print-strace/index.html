@@ -221,6 +221,7 @@
   <content>
     <p>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.</p>
 <p>What happened? Let&rsquo;s find out how <code>print</code> works, and what&rsquo;s line and block buffering.</p>
+<p><strong>how print() works</strong></p>
 <p>Python <code>print()</code> actually calls <code>sys.stdout.write()</code>. Let&rsquo;s check out how this works:</p>
 <pre tabindex="0"><code>import sys
 def hello():

@@ -7,6 +7,8 @@ A few months back I encountered an interesting behavior: I was trying to debug a
 
 What happened? Let's find out how `print` works, and what's line and block buffering.
 
+**how print() works**
+
 Python `print()` actually calls `sys.stdout.write()`. Let's check out how this works:
 
 
