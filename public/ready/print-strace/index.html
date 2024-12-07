@@ -219,7 +219,7 @@
     
   </p>
   <content>
-    <p>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.</p>
+    <p>A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.</p>
 <p>What happened? Let&rsquo;s find out how <code>print</code> works, and what&rsquo;s line and block buffering.</p>
 <p><strong>how print() works</strong></p>
 <p>Python <code>print()</code> actually calls <code>sys.stdout.write()</code>. Let&rsquo;s check out how this works:</p>
@@ -233,9 +233,13 @@ hello()
 <pre tabindex="0"><code>write(1, &#34;hello from print\n&#34;, 17hello from print
 )      = 17
 write(1, &#34;hello from stdout.write&#34;, 23hello from stdout.write) = 23
-</code></pre><p>The difference between them is that <code>print</code> adds a new line; <code>sys.stdout.write</code> doesn&rsquo;t. Why?</p>
-<p>Python&rsquo;s <code>print</code> actually calls <code>sys.stdout.write</code> internally and adds a <code>\n</code>. This happens because Python is line buffering <code>print()</code>. So whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.</p>
-<p>Python doesn&rsquo;t always use line buffering, though. If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:</p>
+</code></pre><p>Python&rsquo;s <code>print</code> actually calls <code>sys.stdout.write</code> internally and appends a <code>\n</code> by default. This does not happen by chance or arbitrarily. The new line is used to <em>flush</em> its contents to the file (be it a real file on disk, be it a terminal (<code>tty</code>)). In C we see the same behavior regarding to <code>flush</code>, but we need to add the new line manually. This is not a Python specific behavior.</p>
+<p>Let&rsquo;s see what Python&rsquo;s documentation says about the <code>print</code> function all:</p>
+<pre tabindex="0"><code> print(*objects, sep=&#39; &#39;, end=&#39;\n&#39;, file=None, flush=False)
+
+The file argument must be an object with a write(string) method; if it is not present or None, sys.stdout will be used.
+</code></pre><p>Adding a new line is a detail the system expects. Its origins probably have some relation to the way we used to type in old typing machines. In any case, the operating system uses new lines to handle <em>line buffering</em>; this reverberates on Python: whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.</p>
+<p>Python doesn&rsquo;t always use line buffering, though (more on this below). If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:</p>
 <pre tabindex="0"><code>import time
 
 while True:
@@ -265,8 +269,6 @@ while True:
 </ul>
 <p>Without the <a href="https://docs.docker.com/reference/cli/docker/container/run/#tty">-t</a> flag, Docker does not attach a pseudo-terminal to the container’s stdout, so <code>isatty()</code> fails. Consequently, Python treats stdout as a pipe, enabling block buffering.</p>
 <p>Docker has a pseudo-TTY<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container&rsquo;s stdin and stdout. Internally, this makes <code>isatty()</code> return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures stdout.</p>
-<p><strong>back to Python&rsquo;s print: a workaround</strong></p>
-<p>If you set <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-u">PYTHONUNBUFFERED</a> or use the -u flag, Python bypasses the default logic entirely, ignoring <code>isatty()</code> and forcing unbuffered output. Internally, this disables the use of a buffer for stdout and stderr, ensuring all writes go directly to the underlying file descriptor without delay. While practical, this bypass skips Python’s internal optimization mechanisms, making it a less nuanced solution compared to understanding and controlling the environment directly.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>

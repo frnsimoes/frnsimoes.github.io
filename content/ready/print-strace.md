@@ -3,7 +3,7 @@ date = 2024-08-08
 title = "What happens when you call print()?: tty, buffering, etc."
 +++ 
 
-A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don't judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.
+A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don't judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.
 
 What happened? Let's find out how `print` works, and what's line and block buffering.
 
@@ -29,11 +29,19 @@ write(1, "hello from print\n", 17hello from print
 write(1, "hello from stdout.write", 23hello from stdout.write) = 23
 ```
 
-The difference between them is that `print` adds a new line; `sys.stdout.write` doesn't. Why?
+Python's `print` actually calls `sys.stdout.write` internally and appends a `\n` by default. This does not happen by chance or arbitrarily. The new line is used to *flush* its contents to the file (be it a real file on disk, be it a terminal (`tty`)). In C we see the same behavior regarding to `flush`, but we need to add the new line manually. This is not a Python specific behavior.
 
-Python's `print` actually calls `sys.stdout.write` internally and adds a `\n`. This happens because Python is line buffering `print()`. So whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.
+Let's see what Python's documentation says about the `print` function all:
 
-Python doesn't always use line buffering, though. If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:
+```
+ print(*objects, sep=' ', end='\n', file=None, flush=False)
+
+The file argument must be an object with a write(string) method; if it is not present or None, sys.stdout will be used.
+```
+
+Adding a new line is a detail the system expects. Its origins probably have some relation to the way we used to type in old typing machines. In any case, the operating system uses new lines to handle *line buffering*; this reverberates on Python: whenever Python sees a new line, it flushes the content of the buffer to display the text on stdout.
+
+Python doesn't always use line buffering, though (more on this below). If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:
 
 ```
 import time
@@ -77,10 +85,6 @@ When a Python program runs, its standard output is typically attached to a file 
 Without the [-t](https://docs.docker.com/reference/cli/docker/container/run/#tty) flag, Docker does not attach a pseudo-terminal to the container’s stdout, so `isatty()` fails. Consequently, Python treats stdout as a pipe, enabling block buffering.
 
 Docker has a pseudo-TTY[^2], When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container's stdin and stdout. Internally, this makes `isatty()` return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures stdout.
-
-**back to Python's print: a workaround**
-
-If you set [PYTHONUNBUFFERED](https://docs.python.org/3/using/cmdline.html#cmdoption-u) or use the -u flag, Python bypasses the default logic entirely, ignoring `isatty()` and forcing unbuffered output. Internally, this disables the use of a buffer for stdout and stderr, ensuring all writes go directly to the underlying file descriptor without delay. While practical, this bypass skips Python’s internal optimization mechanisms, making it a less nuanced solution compared to understanding and controlling the environment directly.
 
 [^1]: https://www.man7.org/linux/man-pages/man3/isatty.3.html
 [^2]: I was searching for more information and found [this](https://stackoverflow.com/questions/30137135/confused-about-docker-t-option-to-allocate-a-pseudo-tty) to be a good explanation.

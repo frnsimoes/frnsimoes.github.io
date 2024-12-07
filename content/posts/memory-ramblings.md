@@ -3,7 +3,7 @@ date = 2024-12-01
 title = "Some notes on paging and other memory stuff"
 +++
 
-One of the most practical things we can do on a linux box regarding memory is to use `mmap` to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the `mmap` documentation when I found a flag named `MAP_HUGETLB`. I got hooked by this and couldn't stop myself from finding out more. This text explores some details of our paging system.
+One of the most practical things we can do on a linux box regarding memory is to use `mmap` to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the `mmap` documentation when I found a flag named `MAP_HUGETLB`. I got hooked by this and couldn't stop myself from finding out more. 
 
 So here it is: A [huge page](https://man7.org/linux/man-pages/man2/mmap.2.html) is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:
 

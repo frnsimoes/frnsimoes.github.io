@@ -20,7 +20,7 @@
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
-      <description>One of the most practical things we can do on a linux box regarding memory is to use mmap to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the mmap documentation when I found a flag named MAP_HUGETLB. I got hooked by this and couldn&amp;rsquo;t stop myself from finding out more. This text explores some details of our paging system.</description>
+      <description>One of the most practical things we can do on a linux box regarding memory is to use mmap to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the mmap documentation when I found a flag named MAP_HUGETLB. I got hooked by this and couldn&amp;rsquo;t stop myself from finding out more.&#xA;So here it is: A huge page is a page that is bigger than the default page size of a system.</description>
     </item>
     <item>
       <title>What happens when a row is updated?</title>
@@ -111,7 +111,7 @@
       <link>https://fernandosimoes.com/ready/print-strace/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/ready/print-strace/</guid>
-      <description>A few months back I encountered an interesting behavior: I was trying to debug a legacy Flask API running on Docker. Since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again.</description>
+      <description>A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing.</description>
     </item>
     <item>
       <title>What does it mean to bind to a port?</title>
