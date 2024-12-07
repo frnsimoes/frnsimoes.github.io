@@ -219,7 +219,8 @@
     
   </p>
   <content>
-    <p>The other day I was reading <code>mmap</code> documentation and there&rsquo;s flag named <code>MAP_HUGETLB</code>. A <a href="https://man7.org/linux/man-pages/man2/mmap.2.html">huge page</a> is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:</p>
+    <p>One of the most practical things we can do on a linux box regarding memory is to use <code>mmap</code> to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the <code>mmap</code> documentation when I found a flag named <code>MAP_HUGETLB</code>. I got hooked by this and couldn&rsquo;t stop myself from finding out more. This text explores some details of our paging system.</p>
+<p>So here it is: A <a href="https://man7.org/linux/man-pages/man2/mmap.2.html">huge page</a> is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:</p>
 <ul>
 <li><code>getconf PAGE_SIZE</code> shows the default page size in the operating system.</li>
 <li><code>cat /proc/meminfo</code> has info about the <code>Hugepagesize</code>.</li>
