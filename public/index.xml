@@ -16,7 +16,7 @@
       <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
     </item>
     <item>
-      <title>Some notes on paging</title>
+      <title>Some notes on paging and other memory stuff</title>
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
@@ -100,7 +100,7 @@
       <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
     </item>
     <item>
-      <title>A block buffering problem</title>
+      <title>Block buffering in Docker&#39;s pseudo-tty</title>
       <link>https://fernandosimoes.com/ready/print-strace/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/ready/print-strace/</guid>
@@ -146,7 +146,7 @@
       <link>https://fernandosimoes.com/about/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/about/</guid>
-      <description>About the blog&#xA;This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a structured way.</description>
+      <description>About the blog&#xA;This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a structured way.&#xA;About me&#xA;I&amp;rsquo;m a software developer. I currently live in Brazil with my wife and kids.&#xA;I grew up in the &amp;rsquo;90s, so I have a natural love for computers and the internet as a &amp;ldquo;promise of a better future&amp;rdquo;.</description>
     </item>
     <item>
       <title></title>

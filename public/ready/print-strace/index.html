@@ -7,7 +7,7 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>A block buffering problem | Fernando Simões</title>
+<title>Block buffering in Docker&#39;s pseudo-tty | Fernando Simões</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
@@ -210,7 +210,7 @@
 
 </header>
   <main>
-  <h4 style="text-align: center;">A block buffering problem</h4>
+  <h4 style="text-align: center;">Block buffering in Docker&#39;s pseudo-tty</h4>
   <p>
     
     
@@ -241,20 +241,31 @@ while True:
     print(&#34;hello from print&#34;)
     time.sleep(.01)
 </code></pre><p>If you <code>python file.py | cat</code>, you won&rsquo;t see &ldquo;hello from print&rdquo; being written to stdout. You will only see the block of text once the buffer is full, so it will output everything at once.</p>
-<p><strong>how linux <code>write()</code> behaves?</strong></p>
+<p><strong>A few words on write()</strong></p>
+<p><code>strace</code> showed us that the operating system calls <code>write(fd, ...)</code> when Python prints something. But what&rsquo;s really happening? I found a really great answer in the <a href="https://man7.org/tlpi/">Linux Programming Interface</a>: <code>write()</code> doesn&rsquo;t directly access the physical file or terminal (such as stdout). Instead, it transfers data from a user-space buffer to a kernel buffer cache.</p>
+<p>For disk files, the operating system may defer writing to the physical storage device for performance reasons. The data is eventually flushed to the file either by the kernel (when the buffer fills up) or explicitly by the program (via <code>fflush</code>, for example).</p>
+<p>If a process issues a <code>read()</code> for data that has been written but not yet flushed to disk, the operating system will supply the data from the buffer cache rather than the physical file. For terminals (e.g., stdout), <code>write()</code> may bypass this deferred behavior, depending on whether the stream is line-buffered or unbuffered.</p>
+<p>The pass-through-buffers behavior is an important mechanism to reduce system calls (the <code>flush</code> occurs only when certain conditions are satisfied; but image what would happen if this was not the case).</p>
+<p><strong>buffering modes?</strong></p>
+<p>Line, blocking and non-blocking buffering is not something that is specific to Python. It&rsquo;s in the C standard library. <code>setvbuf</code> is called behind the scenes whenever an I/O function from libc is called; the OS handles the buffering and we are free to not care much about this. From manpage:</p>
+<blockquote>
+<p>The three types of buffering available are unbuffered, block buffered, and line buffered.  When an output stream is unbuffered, information appears on the destination file or terminal as soon as written; when it is block buffered, many characters are saved up and written as a block; when it is line buffered, characters are saved up until a newline is output or input is read from any stream attached to a terminal device (typically stdin). (&hellip;)</p>
+</blockquote>
+<blockquote>
+<p>Normally all files are block buffered. If a stream refers to a terminal (as stdout normally does), it is line buffered. (&hellip;) The setvbuf() function may be used on any open stream to change its buffer.</p>
+</blockquote>
 <p><strong>why didn’t Docker write to a <code>tty</code>?</strong></p>
-<p>One thing I did not understand at first was why Docker wasn&rsquo;t writing to <code>stdout</code>. I had print() logs, right? I was executing the process. Everything was cool. I found out that the inconsistency happened because Python determines its buffering mode based on whether the output file descriptor is connected to a terminal, as detected by <code>isatty()</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> (tty stands for <code>teletypewriter</code>. A legacy name that persisted from the days when we used these machines for telecommunication). In a Docker container, unless the -t flag is used, the standard output is not connected to a terminal but instead to a pipe or a file-like object. This causes <code>isatty()</code> to return false, and Python switches from line buffering to block buffering.</p>
+<p>One thing I did not understand at first was why Docker wasn&rsquo;t writing to stdout. I was calling <code>print()</code>, right? I was executing the process. Everything was cool. I found out that the inconsistency happened because Python determines its buffering mode based on whether the output file descriptor is connected to a terminal, as detected by <code>isatty()</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> (tty stands for <code>teletypewriter</code>. A legacy name that persisted from the days when we used these machines for telecommunication).</p>
+<p>In a Docker container, unless the -t flag is used, the standard output is not connected to a terminal but instead to a pipe or a file-like object. This causes <code>isatty()</code> to return false, and Python switches from line buffering to block buffering.</p>
 <p>When a Python program runs, its standard output is typically attached to a file descriptor, which could point to a terminal, a file, or a pipe. The behavior of <code>isatty()</code> is central here:</p>
 <ul>
-<li>If <code>isatty()</code> returns true (indicating the file descriptor is a terminal), Python defaults to line buffering. Each line (ending with \n) triggers an immediate flush to <code>stdout</code>.</li>
+<li>If <code>isatty()</code> returns true (indicating the file descriptor is a terminal), Python defaults to line buffering. Each line (ending with \n) triggers an immediate flush to stdout.</li>
 <li>If <code>isatty()</code> returns false (e.g., for pipes or files), Python uses block buffering, where data accumulates in an internal buffer (usually 4KB or 8KB) before being flushed.</li>
 </ul>
-<p>Without the <a href="https://docs.docker.com/reference/cli/docker/container/run/#tty">-t</a> flag, Docker does not attach a pseudo-terminal to the container’s <code>stdout</code>, so <code>isatty()</code> fails. Consequently, Python treats <code>stdout</code> as a pipe, enabling block buffering.</p>
-<p>Docker has a pseudo-TTY<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container&rsquo;s stdin and <code>stdout</code>. Internally, this makes <code>isatty()</code> return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures <code>stdout</code>.</p>
-<p><strong>but what&rsquo;s a tty, really?</strong>
-<a href="https://unix.stackexchange.com/questions/4126/what-is-the-exact-difference-between-a-terminal-a-shell-a-tty-and-a-con">https://unix.stackexchange.com/questions/4126/what-is-the-exact-difference-between-a-terminal-a-shell-a-tty-and-a-con</a></p>
-<p><strong>a workaround</strong></p>
-<p>If you set <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-u">PYTHONUNBUFFERED</a> or use the -u flag, Python bypasses the default logic entirely, ignoring <code>isatty()</code> and forcing unbuffered output. Internally, this disables the use of a buffer for <code>stdout</code> and stderr, ensuring all writes go directly to the underlying file descriptor without delay. While practical, this bypass skips Python’s internal optimization mechanisms, making it a less nuanced solution compared to understanding and controlling the environment directly.</p>
+<p>Without the <a href="https://docs.docker.com/reference/cli/docker/container/run/#tty">-t</a> flag, Docker does not attach a pseudo-terminal to the container’s stdout, so <code>isatty()</code> fails. Consequently, Python treats stdout as a pipe, enabling block buffering.</p>
+<p>Docker has a pseudo-TTY<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container&rsquo;s stdin and stdout. Internally, this makes <code>isatty()</code> return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures stdout.</p>
+<p><strong>back to Python&rsquo;s print: a workaround</strong></p>
+<p>If you set <a href="https://docs.python.org/3/using/cmdline.html#cmdoption-u">PYTHONUNBUFFERED</a> or use the -u flag, Python bypasses the default logic entirely, ignoring <code>isatty()</code> and forcing unbuffered output. Internally, this disables the use of a buffer for stdout and stderr, ensuring all writes go directly to the underlying file descriptor without delay. While practical, this bypass skips Python’s internal optimization mechanisms, making it a less nuanced solution compared to understanding and controlling the environment directly.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -262,8 +273,7 @@ while True:
 <p><a href="https://www.man7.org/linux/man-pages/man3/isatty.3.html">https://www.man7.org/linux/man-pages/man3/isatty.3.html</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2">
-<p>this is a nice informative comment on <a href="https://stackoverflow.com/questions/30137135/confused-about-docker-t-option-to-allocate-a-pseudo-tty">stackoverflow</a>:
-The -t option goes to how Unix/Linux handles terminal access. In the past, a terminal was a hardline connection, later a modem based connection. These had physical device drivers (they were real pieces of equipment). Once generalized networks came into use, a pseudo-terminal driver was developed. This is because it creates a separation between understanding what terminal capabilities can be used without the need to write it into your program directly (read man pages on stty, curses). So, with that as background, run a container with no options and by default you have a stdout stream (so docker run | <!-- raw HTML omitted --> works); run with -i, and you get stdin stream added (so <!-- raw HTML omitted --> | docker run -i works); use -t, usually in the combination -it and you have a terminal driver added, which if you are interacting with the process is likely what you want. It basically makes the container start look like a terminal connection session.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>I was searching for more information and found <a href="https://stackoverflow.com/questions/30137135/confused-about-docker-t-option-to-allocate-a-pseudo-tty">this</a> to be a good explanation.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
