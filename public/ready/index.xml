@@ -9,7 +9,7 @@
     <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/ready/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>What happens when you call print()?: tty, buffering, etc.</title>
+      <title>What happens when you call print()?: tty, buffering</title>
       <link>https://fernandosimoes.com/ready/print-strace/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/ready/print-strace/</guid>

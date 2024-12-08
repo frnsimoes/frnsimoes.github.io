@@ -114,7 +114,7 @@
       <description>(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&#xA;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&#xA;The OS must, somehow, track processes that are running. And handle their states. The OS have mechanisms for this, for example: when the OS boots, it loads traps, or exception and interrupts handling mechanisms.</description>
     </item>
     <item>
-      <title>What happens when you call print()?: tty, buffering, etc.</title>
+      <title>What happens when you call print()?: tty, buffering</title>
       <link>https://fernandosimoes.com/ready/print-strace/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/ready/print-strace/</guid>

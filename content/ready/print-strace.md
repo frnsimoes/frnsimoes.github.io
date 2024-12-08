@@ -1,6 +1,6 @@
 +++
 date = 2024-08-08
-title = "What happens when you call print()?: tty, buffering, etc."
+title = "What happens when you call print()?: tty, buffering"
 +++ 
 
 A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don't judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.
