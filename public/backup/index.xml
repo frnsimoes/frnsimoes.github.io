@@ -6,14 +6,35 @@
     <description>Recent content in Backups on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 04 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/backup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>We can actually peek at the kernel stack of &lt;pid&gt;</title>
+      <link>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</link>
+      <pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</guid>
+      <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
+    </item>
     <item>
       <title>The nerdy cool stuff</title>
       <link>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</guid>
       <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
+    </item>
+    <item>
+      <title>What does it mean to bind to a port?</title>
+      <link>https://fernandosimoes.com/backup/maybe/socket/</link>
+      <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/socket/</guid>
+      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+    </item>
+    <item>
+      <title>TCP acks and seqs</title>
+      <link>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</link>
+      <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</guid>
+      <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
     </item>
     <item>
       <title>Sockets, select and IO Multiplexing</title>
@@ -28,6 +49,34 @@
       <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/process/</guid>
       <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
+    </item>
+    <item>
+      <title>What&#39;s the size of a file on disk?</title>
+      <link>https://fernandosimoes.com/backup/maybe/unix-file-size/</link>
+      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/unix-file-size/</guid>
+      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+    </item>
+    <item>
+      <title>Testing software</title>
+      <link>https://fernandosimoes.com/backup/maybe/testing-software/</link>
+      <pubDate>Fri, 02 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/testing-software/</guid>
+      <description>I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/backup/maybe/strace-print/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/strace-print/</guid>
+      <description>I guess you can&amp;rsquo;t consider yourself a tRuE nErD if you aren&amp;rsquo;t interested in the terminal, this beautiful and practical entity. Let&amp;rsquo;s consider a problem that most of us have encountered before: printing, and not seeing the output immediately.&#xA;I found this problem a few months back, when I was trying to debug an API running on Docker. I did print, but priting was only writing to stdout in blocks. Let&amp;rsquo;s find out why.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://fernandosimoes.com/backup/maybe/year-2024/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/maybe/year-2024/</guid>
+      <description>So many nice things happened this year. I think the last time I saw these many changes was back in 2020.&#xA;I changed companies after two and half years. And I changed two times! Went from healthtech to fintech and back to heathtech. I had the chance to know great engineers in this year, and learned a lot from them.&#xA;I started using vim. After one and a half year using the key bindings in VS Code, in finally made the jump.</description>
     </item>
   </channel>
 </rss>

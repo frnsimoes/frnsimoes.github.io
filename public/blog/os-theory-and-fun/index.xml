@@ -31,9 +31,9 @@
     </item>
     <item>
       <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/cooking/socket/</link>
+      <link>https://fernandosimoes.com/backup/maybe/socket/</link>
       <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/cooking/socket/</guid>
+      <guid>https://fernandosimoes.com/backup/maybe/socket/</guid>
       <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
     </item>
     <item>
@@ -41,13 +41,6 @@
       <link>https://fernandosimoes.com/backup/maybe/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/io-multiplexing/</guid>
-      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
-    </item>
-    <item>
-      <title>Sockets, select and IO Multiplexing</title>
-      <link>https://fernandosimoes.com/maybe/io-multiplexing/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/maybe/io-multiplexing/</guid>
       <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
     </item>
     <item>
@@ -65,17 +58,10 @@
       <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
     </item>
     <item>
-      <title>Playing around with fork()</title>
-      <link>https://fernandosimoes.com/maybe/process/</link>
-      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/maybe/process/</guid>
-      <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
-    </item>
-    <item>
       <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/cooking/unix-file-size/</link>
+      <link>https://fernandosimoes.com/backup/maybe/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/cooking/unix-file-size/</guid>
+      <guid>https://fernandosimoes.com/backup/maybe/unix-file-size/</guid>
       <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
     </item>
   </channel>

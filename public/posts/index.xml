@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 08 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Investigating line buffering and write(2)</title>
+      <link>https://fernandosimoes.com/posts/print-strace/</link>
+      <pubDate>Sun, 08 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/print-strace/</guid>
+      <description>A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing.</description>
+    </item>
     <item>
       <title>Some notes on paging and other memory stuff</title>
       <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
