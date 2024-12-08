@@ -45,6 +45,13 @@
     </item>
     <item>
       <title></title>
+      <link>https://fernandosimoes.com/cooking/strace-print/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/cooking/strace-print/</guid>
+      <description>I guess you can&amp;rsquo;t consider yourself a tRuE nErD if you aren&amp;rsquo;t interested in the terminal, this beautiful and practical entity. Let&amp;rsquo;s consider a problem that most of us have encountered before: printing, and not seeing the output immediately.&#xA;I found this problem a few months back, when I was trying to debug an API running on Docker. I did print, but priting was only writing to stdout in blocks. Let&amp;rsquo;s find out why.</description>
+    </item>
+    <item>
+      <title></title>
       <link>https://fernandosimoes.com/cooking/year-2024/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/cooking/year-2024/</guid>

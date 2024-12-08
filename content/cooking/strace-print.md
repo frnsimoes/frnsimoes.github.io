@@ -1,13 +1,8 @@
-+++
-date = 2024-08-08
-title = "What happens when you call print()?: tty, buffering, etc."
-+++ 
+I guess you can't consider yourself a tRuE nErD if you aren't interested in the *terminal*, this beautiful and practical entity. Let's consider a problem that most of us have encountered before: printing, and not seeing the output immediately. 
 
-A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don't judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.
+I found this problem a few months back, when I was trying to debug an API running on Docker. I did print, but priting was only writing to stdout in blocks. Let's find out why.
 
-Why is that? First we need to understand what `print` is doing behind the scenes, and get a notion to the buffering from the operating system perspective.
-
-**how print works?**
+**How print works?**
 
 ```
 import sys
@@ -18,7 +13,7 @@ def hello():
 hello()
 ```
 
-Let me run this program with `strace` so we can get insights by checking out the syscalls:
+Let me run this problem with `strace` so we can get insights by checking out the syscalls:
 
 ```
 write(1, "hello from print\n", 17hello from print
@@ -33,17 +28,17 @@ With the information we have right now, there are two questions that requires ou
 
 We actually had physical terminals in the early days of computing, and even before. For example, stock tickers were 'electro-mechanical machines consisting of a typewriter, a long pair of wires, and a ticker tape printer, designed to distribute stock prices over long distances in real time'[^1]. Later, the Telex network[^2] was developed, enabling the transmission of messages via teleprinters over telephone lines.
 
-Teletypes were *devices*, external physical tools, with a keyboard, wires, and screen, used to write something to be send to another location. They got extinct, but the "teletype as a device" didn't. 
+Teletypes were *devices*, external physical tools, used to write something to be send to another location. They got extinct, but the "teletype as a device" didn't. 
 
-But how does the teletype's keyboard sends words to the teletype screen? Imagine a phrase is being typed: "hello from new york city"; at what moment should the teletype send the message? How does it know it is complete? The terminal has two modes: *cooked* (!!!) mode and *raw* mode. What's the difference? Raw mode works like this:
+But how does the teletype's keyboard sends words to the teletype screen? Imagine a phrase is being typed: "hello from new york city"; at what moment should the teletype send the message? How does it know it is complete? The terminal has two modes: *cooked* (!!!) mode and *raw* mode. What's the difference?
 
-- Input is delivered to the application immediately, without waiting for a new line (`\n`, remember?).
+- In raw mode, the input is delivered to the application immediately, without waiting for a new line (`\n`, remember?).
 - Special characters (such as backspace) are not pre-processed (so if the user typed AB<BACKSPACE>C, raw mode interprets it as is).
 - Line editing features are disabled.
 
 **buffering modes?**
 
-New lines, as we saw, are used as delimiters to signal that the message is ready to be consumed. This subtle pratice from the early days arrived to our days translated by the notion of *buffering modes*. 
+New lines, as we saw, are used as delimiters to signal that the message is ready to be consumed. This practical habit arrived to our days translated by the notion of *buffering modes*. 
 
 We have three main buffering modes: line, blocking and non-blocking. This is not a Python specific feature. It's in the C standard library. The system call `setvbuf` is called behind the scenes whenever an I/O function (including `write(2)`) from libc is called; the OS handles the buffering and we are free to not care much about this. From manpage:
 
@@ -53,17 +48,6 @@ Line, blocking and non-blocking buffering is not something that is specific to P
 
 > Normally all files are block buffered. If a stream refers to a terminal (as stdout normally does), it is line buffered. (...) The setvbuf() function may be used on any open stream to change its buffer. 
 
-But Python doesn't always use line buffering. If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:
-
-```
-import time
-
-while True:
-    print("hello from print")
-    time.sleep(.01)
-```
-
-If you `python file.py | cat`, you won't see "hello from print" being written to stdout. You will only see the block of text once the buffer is full, so it will output everything at once.
 
 **ok, how write(2) works?**
 
@@ -76,10 +60,10 @@ If a process issues a `read()` for data that has been written but not yet flushe
 The pass-through-buffers behavior is an important mechanism to reduce system calls (the `flush` occurs only when certain conditions are satisfied; but image what would happen if this was not the case).
 
 
-**alright, but why didn't print write to docker stdout?**
+**alright, a nice problem now: why didn't print write to docker stdout?**
 
 
-One thing I did not understand at first was why Docker wasn't writing to stdout. I was calling `print()`, right? I was executing the process. Everything was cool. I found out that the inconsistency happened because Python determines its buffering mode based on whether the output file descriptor is connected to a terminal, as detected by `isatty()`[^3]. 
+One thing I did not understand at first was why Docker wasn't writing to stdout. I was calling `print()`, right? I was executing the process. Everything was cool. I found out that the inconsistency happened because Python determines its buffering mode based on whether the output file descriptor is connected to a terminal, as detected by `isatty()`[^2] (tty stands for `teletypewriter`. A legacy name that persisted from the days when we used these machines for telecommunication). 
 
 In a Docker container, unless the -t flag is used, the standard output is not connected to a terminal but instead to a pipe or a file-like object. This causes `isatty()` to return false, and Python switches from line buffering to block buffering.
 
@@ -90,7 +74,7 @@ When a Python program runs, its standard output is typically attached to a file 
 
 Without the [-t](https://docs.docker.com/reference/cli/docker/container/run/#tty) flag, Docker does not attach a pseudo-terminal to the container’s stdout, so `isatty()` fails. Consequently, Python treats stdout as a pipe, enabling block buffering.
 
-Docker has a pseudo-TTY[^4], When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container's stdin and stdout. Internally, this makes `isatty()` return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures stdout.
+Docker has a pseudo-TTY[^3], When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container's stdin and stdout. Internally, this makes `isatty()` return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures stdout.
 
 
  
