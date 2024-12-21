@@ -13,70 +13,63 @@
       <link>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</link>
       <pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</guid>
-      <description>I found a cool trick to see what&amp;rsquo;s happening to a blocked (sleeping) process: cat /proc/pid/stack. Yep, you can peek at the trace of kernel functions related to a process! I was playing with sys.stdout.buffer, and the process got blocked.&#xA;➜ pexpl git:(main) ✗ ps aux | grep p.py frns 23703 0.0 0.0 13888 7948 pts/3 Sl+ 02:48 0:00 nvim p.py ➜ pexpl git:(main) ✗ sudo cat /proc/23703/stack [&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0 [&amp;lt;0&amp;gt;] do_compat_epoll_pwait.</description>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process! I was playing with &lt;code&gt;sys.stdout.buffer&lt;/code&gt;, and the process got blocked.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. Really, really cool stuff.&lt;/p&gt;</description>
     </item>
     <item>
       <title>The nerdy cool stuff</title>
       <link>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</link>
       <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</guid>
-      <description>Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.</description>
+      <description>&lt;p&gt;Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What does it mean to bind to a port?</title>
       <link>https://fernandosimoes.com/backup/maybe/socket/</link>
       <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/socket/</guid>
-      <description>The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one1.&#xA;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.</description>
+      <description>&lt;p&gt;The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>TCP acks and seqs</title>
       <link>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</guid>
-      <description>&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in RFC793:&#xA;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted.</description>
+      <description>&lt;p&gt;&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in &lt;a href=&#34;https://www.ietf.org/rfc/rfc793.txt&#34;&gt;RFC793&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Sockets, select and IO Multiplexing</title>
       <link>https://fernandosimoes.com/backup/maybe/io-multiplexing/</link>
       <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/io-multiplexing/</guid>
-      <description>IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&#xA;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&#xA;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario.</description>
+      <description>&lt;p&gt;IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&lt;/p&gt;&#xA;&lt;p&gt;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&lt;/p&gt;&#xA;&lt;p&gt;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario. It&amp;rsquo;s a way of diligently proxying receipts to their appropriate recipients.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Playing around with fork()</title>
       <link>https://fernandosimoes.com/backup/maybe/process/</link>
       <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/process/</guid>
-      <description>The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall create, or something like that.&#xA;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&#xA;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.</description>
+      <description>&lt;p&gt;The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall &lt;code&gt;create&lt;/code&gt;, or something like that.&lt;/p&gt;&#xA;&lt;p&gt;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&lt;/p&gt;&#xA;&lt;p&gt;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>
       <link>https://fernandosimoes.com/backup/maybe/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/unix-file-size/</guid>
-      <description>I&amp;rsquo;ve been playing a little bit with the OS and files.&#xA;I found the stat posix command. From manpage:&#xA;the stat utility displays information about the file pointed to by file.&#xA;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&#xA;Experiment:&#xA;root@d6e5e8ac056e:/code# stat tmp File: tmp Size: 0 Blocks: 8 IO Block: 4096 regular file Device: 0,67 Inode: 397692 Links: 1 Access: (0644/-rw-r--r--) Uid: ( 0/ root) Gid: ( 0/ root) Access: 2024-06-22 16:43:42.</description>
+      <description>&lt;p&gt;I&amp;rsquo;ve been playing a little bit with the OS and files.&lt;/p&gt;&#xA;&lt;p&gt;I found the &lt;code&gt;stat&lt;/code&gt; posix command. From manpage:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;the stat utility displays information about the file pointed to by file.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&lt;/p&gt;&#xA;&lt;p&gt;Experiment:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@d6e5e8ac056e:/code# stat tmp&#xA;File: tmp&#xA;Size: 0               Blocks: 8          IO Block: 4096   regular file&#xA;Device: 0,67    Inode: 397692      Links: 1&#xA;Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)&#xA;Access: 2024-06-22 16:43:42.909805004 +0000&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;tmp&lt;/code&gt; is an empty file, the &lt;code&gt;Blocks&lt;/code&gt; is 8 and IO Block is &lt;code&gt;4096&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Testing software</title>
       <link>https://fernandosimoes.com/backup/maybe/testing-software/</link>
       <pubDate>Fri, 02 Feb 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/testing-software/</guid>
-      <description>I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field.</description>
-    </item>
-    <item>
-      <title></title>
-      <link>https://fernandosimoes.com/backup/maybe/strace-print/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/strace-print/</guid>
-      <description>I guess you can&amp;rsquo;t consider yourself a tRuE nErD if you aren&amp;rsquo;t interested in the terminal, this beautiful and practical entity. Let&amp;rsquo;s consider a problem that most of us have encountered before: printing, and not seeing the output immediately.&#xA;I found this problem a few months back, when I was trying to debug an API running on Docker. I did print, but priting was only writing to stdout in blocks. Let&amp;rsquo;s find out why.</description>
+      <description>&lt;p&gt;I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field. Even worse: developers who don&amp;rsquo;t write tests deliver features faster. Product owners and stakeholders are happy, and the business is happy&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title></title>
       <link>https://fernandosimoes.com/backup/maybe/year-2024/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/year-2024/</guid>
-      <description>So many nice things happened this year. I think the last time I saw these many changes was back in 2020.&#xA;I changed companies after two and half years. And I changed two times! Went from healthtech to fintech and back to heathtech. I had the chance to know great engineers in this year, and learned a lot from them.&#xA;I started using vim. After one and a half year using the key bindings in VS Code, in finally made the jump.</description>
+      <description>&lt;p&gt;So many nice things happened this year. I think the last time I saw these many changes was back in 2020.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;I changed companies after two and half years. And I changed two times!&#xA;Went from healthtech to fintech and back to heathtech. I had the chance to know great engineers in this year, and learned a lot from them.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;I started using vim.&#xA;After one and a half year using the key bindings in VS Code, in finally made the jump.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

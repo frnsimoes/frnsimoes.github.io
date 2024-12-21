@@ -71,13 +71,7 @@
     <loc>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/ready/</loc>
-    <lastmod>2024-08-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://fernandosimoes.com/posts/scheduler/</loc>
-    <lastmod>2024-08-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/ready/print-strace/</loc>
     <lastmod>2024-08-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/backup/maybe/socket/</loc>
@@ -110,6 +104,9 @@
     <loc>https://fernandosimoes.com/backup/maybe/unix-file-size/</loc>
     <lastmod>2024-05-29T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/posts/unix-file-size/</loc>
+    <lastmod>2024-05-29T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/studying-cs/</loc>
     <lastmod>2024-05-15T00:00:00+00:00</lastmod>
   </url><url>
@@ -133,8 +130,6 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/recursion/</loc>
     <lastmod>2021-12-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/backup/maybe/strace-print/</loc>
   </url><url>
     <loc>https://fernandosimoes.com/backup/maybe/year-2024/</loc>
   </url><url>

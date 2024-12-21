@@ -13,7 +13,7 @@
       <link>https://fernandosimoes.com/posts/postgres-table/</link>
       <pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/postgres-table/</guid>
-      <description>I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&#xA;I created a simple table, foo, then inserted two records into it.&#xA;postgres=# create table foo (id int, age smallint, name varchar(100)); CREATE TABLE We can find the location of Postgres data files by running SHOW data_directory; in the psql shell. And the file related to that specific table with the command SELECT pg_relation_filepath(&#39;table_name&#39;);.</description>
+      <description>&lt;p&gt;I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&lt;/p&gt;&#xA;&lt;p&gt;I created a simple table, &lt;code&gt;foo&lt;/code&gt;, then inserted two records into it.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;postgres=# create table foo (id int, age smallint, name varchar(100));&#xA;CREATE TABLE&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can find the location of Postgres data files by running &lt;code&gt;SHOW data_directory;&lt;/code&gt; in the psql shell. And the file related to that specific table with the command &lt;code&gt;SELECT pg_relation_filepath(&#39;table_name&#39;);&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

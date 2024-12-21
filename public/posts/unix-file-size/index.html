@@ -7,12 +7,11 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Readies | Fernando Simões</title>
+<title>What&#39;s the size of a file on disk? | Fernando Simões</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
-  <link rel="alternate" type="application/rss+xml" href="https://fernandosimoes.com/ready/index.xml" title="Fernando Simões" />
   <style>
 :root {
 	--width: 720px;
@@ -211,44 +210,87 @@
 
 </header>
   <main>
-<content>
-  
-  <ul class="blog-posts">
-    
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-08-08' pubdate>
-            08 Aug, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/ready/print-strace/">What happens when you call print()?: tty, buffering</a>
-    </li>
-    
-  </ul>
-  
+  <h4 style="text-align: center;">What&#39;s the size of a file on disk?</h4>
+  <p>
     
     
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</content>
+  </p>
+  <content>
+    <p>I&rsquo;ve been playing a little bit with the OS and files.</p>
+<p>I found the <code>stat</code> posix command. From manpage:</p>
+<blockquote>
+<p>the stat utility displays information about the file pointed to by file.</p>
+</blockquote>
+<p>I&rsquo;m mostly interested in two of the metadata information: Block and Block IO:</p>
+<p>Experiment:</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 0               Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:43:42.909805004 +0000
+...
+</code></pre><p><code>tmp</code> is an empty file, the <code>Blocks</code> is 8 and IO Block is <code>4096</code>.</p>
+<pre tabindex="0"><code>cat /dev/urandom | head -c 4096 &gt; tmp
+
+stat tmp
+
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4096            Blocks: 8          IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>What would happen if one more byte was added to the tmp file?</p>
+<pre tabindex="0"><code>root@d6e5e8ac056e:/code# echo -n &#39;.&#39; &gt;&gt; tmp
+root@d6e5e8ac056e:/code# stat tmp
+File: tmp
+Size: 4097            Blocks: 16         IO Block: 4096   regular file
+Device: 0,67    Inode: 397692      Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid&lt;LeftMouse&gt;: (    0/    root)
+Access: 2024-06-22 16:52:42.909805004 +0000
+...
+</code></pre><p>Now we have <code>Blocks: 16</code>. The OS &ldquo;allocated&rdquo; (virtualized?) 8 new blocks for a file with 4097 bytes.</p>
+<p>Why 8 blocks?</p>
+<p>8 blocks is a measurement unit. Blocks are counted in 512 bytes unities.</p>
+<p><strong>What is the size of the file on disk?</strong></p>
+<p>If the file has Size: 2, say, and the OS allocated 8 blocks (<code>8*512</code>) for it, the size of the file on disk is 4096 bytes.</p>
+<p>If the file has Size: 4097, and the OS allocated 16 blocks (<code>16*512</code>), the size of the file on disk is 8192 bytes.</p>
+<pre tabindex="0"><code>#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define ONE_MEG 1024 * 1024
+
+
+int main() {
+	int f = open(&#34;/tmp/foo&#34;, O_WRONLY | O_TRUNC);
+
+	blkcnt_t prior_blocks = -1;
+	struct stat st;
+
+	for (int i = 0; i &lt; ONE_MEG; i++) {
+		write(f, &#34;.&#34;, 1);
+		fstat(f, &amp;st);
+
+		if (st.st_blocks != prior_blocks) {
+			printf(&#34;Size: %lld, blocks: %lld, on disk: %lld\n&#34;, st.st_size, st.st_blocks, st.st_blocks * 512);
+			prior_blocks = st.st_blocks;
+		}
+	}
+
+	close(f);
+	return 0;
+}
+</code></pre>
+  </content>
 
   </main>
   <footer></footer>
