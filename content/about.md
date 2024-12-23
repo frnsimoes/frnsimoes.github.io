@@ -11,7 +11,7 @@ This blog is a collection of my notes and casual experiments. It also serves as 
 
 ## About me
 
-There are many things that capture my attention:
+There are many things that capture my attention, but I want to talk about two of them in particular:
 
 **Computers**
 
@@ -27,7 +27,7 @@ In the beginning of 2024, I started studying computer science by solving problem
 
 **Literature**
 
-In my teenage years, I didn't know what I wanted to do, so I did nothing - or perharps I did too much. My life was a mess until I discovered literature in 2007: I saw a book with an interesting title, "Crime and Punishment", and bought it. After that I read everything Dostoevsky wrote, and then Tolstoy, and then Homero, and then Faulkner, Dickens, Houellebecq.
+In my teenage years, I didn't know what I wanted to do, so I did nothing - or perharps I did too much. Life was messy until I discovered literature in 2007: I saw a book with an interesting title, "Crime and Punishment", and bought it. After that I read everything Dostoevsky wrote, and then Tolstoy, and then Homero, and then Faulkner, Dickens, Houellebecq.
 
 In 2016, I began reading Shakespeare. Since english is not my native language, I became obsessed with fully understanding his works, so I spent too much money on commented editions, translations into portuguese, essays, etc. For two years, I almost exclusively read Shakespeare in my free time. I wrote an [article] comparting different Shakespare commented editions and translations into portuguese, and I had a finger in the translation of the "The Tempest" into portuguese, an edition published by Companhia das Letras.
 
@@ -35,7 +35,12 @@ In 2016, I began reading Shakespeare. Since english is not my native language, I
 
 If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.dev@gmail.com). I would love to hear from you.
 
-[CS Primer]: csprimer.com
+**Other things that capture my attention**
+- Mechanical things, tokens of a "forgotten future", like keyboards;
+- From Software games - I love all of them;
+- The Sopranos and Mr. Robot TV series.
+
+[CS Primer]: https://csprimer.com
 [article]: https://fsimoesgarcia.medium.com/a-pregui%C3%A7osos-e-diletantes-shakespeare-51d18ca52377
 [linkedin]: https://linkedin.com/in/frnsimoes
 [structured way]: https://structuredprocrastination.com/
