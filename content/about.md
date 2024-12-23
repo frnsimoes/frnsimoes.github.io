@@ -15,9 +15,9 @@ There are many things that capture my attention, but I want to talk about two of
 
 **Computers**
 
-I spend a significant portion of my time tinkering with computers, learning more about the tools I use and computers in general. I'm interested in computers "as a thing", especially operating systems, computer networking and systems in general. Remember how, in the 90s, computers and the internet would change how we live and interact with the world? Well, my interest in computers is but a reflection of this memory / sentiment. 
+I spend a significant portion of my time tinkering with computers, learning more about the tools I use and about computers in general. I'm interested in computers "as a thing", especially operating systems, computer networking and systems in general. Remember how, in the 90s, computers and the internet would change how we live and interact with the world? Well, my interest in computers is but a reflection of this memory / sentiment. 
 
-I use Python and Golang, and on some days, when I think I'm cool enough for the task,  I do some bash scripting aswell. My day to day work is backend development, but what I really love is computers, as I mentioned before. I enjoy tinkering and messing around. I'm good at debugging and fixing things that don't work well, and at understanding niche things deeply to solve a particular problem that others might not be interested to address.
+I use Python and Golang, and on some days, when I think I'm cool enough for the task,  I do some bash scripting aswell. My day to day work is backend development, but what I'm good at is debugging and fixing things that don't work well, and tinkering and understanding niche things deeply to solve a particular problem that others might not be interested in addressing.
 
 In the beginning of 2024, I started studying computer science by solving problems in [CS Primer]. Oz Nova changed the way I study computers and interact with them. And slowly I'm discovering what I really like to do computer-wise. (But I'm guessing systems / Site Reliability Engineering is what I will end up doing.)
 
