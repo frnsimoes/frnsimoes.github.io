@@ -8,13 +8,16 @@
     <loc>https://fernandosimoes.com/posts/</loc>
     <lastmod>2025-01-05T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/backup/</loc>
+    <lastmod>2024-12-22T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/blog/career-and-development/</loc>
     <lastmod>2024-12-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/tags/</loc>
     <lastmod>2024-12-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://fernandosimoes.com/posts/proc-pid-stack/</loc>
+    <loc>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</loc>
     <lastmod>2024-12-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/print-strace/</loc>
@@ -64,9 +67,6 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/ipv4-ttl/</loc>
     <lastmod>2024-08-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/backup/</loc>
-    <lastmod>2024-08-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</loc>
     <lastmod>2024-08-20T00:00:00+00:00</lastmod>
