@@ -59,13 +59,6 @@
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/backup/maybe/unix-file-size/</link>
-      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/unix-file-size/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been playing a little bit with the OS and files.&lt;/p&gt;&#xA;&lt;p&gt;I found the &lt;code&gt;stat&lt;/code&gt; posix command. From manpage:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;the stat utility displays information about the file pointed to by file.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&lt;/p&gt;&#xA;&lt;p&gt;Experiment:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@d6e5e8ac056e:/code# stat tmp&#xA;File: tmp&#xA;Size: 0               Blocks: 8          IO Block: 4096   regular file&#xA;Device: 0,67    Inode: 397692      Links: 1&#xA;Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)&#xA;Access: 2024-06-22 16:43:42.909805004 +0000&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;tmp&lt;/code&gt; is an empty file, the &lt;code&gt;Blocks&lt;/code&gt; is 8 and IO Block is &lt;code&gt;4096&lt;/code&gt;.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>What&#39;s the size of a file on disk?</title>
       <link>https://fernandosimoes.com/posts/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/unix-file-size/</guid>

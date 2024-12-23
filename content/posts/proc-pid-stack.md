@@ -1,10 +1,10 @@
 +++ 
-date = 2024-12-04
+date = 2024-12-22
 title = "We can actually peek at the kernel stack of <pid>"
 tags = ["career and development"]
 +++
 
-I found a cool trick to see what's happening to a blocked (`sleeping`) process: `cat /proc/pid/stack`. Yep, you can peek at the trace of kernel functions related to a process! I was playing with `sys.stdout.buffer`, and the process got blocked.
+I found a cool trick to see what's happening to a blocked (`sleeping`) process: `cat /proc/pid/stack`. Yep, you can peek at the trace of kernel functions related to a process! 
 
 ```
 ➜  pexpl git:(main) ✗ ps aux | grep p.py
@@ -18,7 +18,7 @@ frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py
 [<0>] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
 ```
 
-The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like `strace`, `<pid>/stack` can give an specific perspective of what's wrong with a process. Really, really cool stuff.
+The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like `strace`, `<pid>/stack` can give an specific perspective of what's wrong with a process. How cool is that?
 
 **about procfs**
 

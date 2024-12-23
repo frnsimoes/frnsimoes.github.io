@@ -6,21 +6,21 @@
     <description>Recent content on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 08 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>We can actually peek at the kernel stack of &lt;pid&gt;</title>
+      <link>https://fernandosimoes.com/posts/proc-pid-stack/</link>
+      <pubDate>Sun, 22 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Investigating line buffering and write(2)</title>
       <link>https://fernandosimoes.com/posts/print-strace/</link>
       <pubDate>Sun, 08 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/print-strace/</guid>
       <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>We can actually peek at the kernel stack of &lt;pid&gt;</title>
-      <link>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</link>
-      <pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</guid>
-      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process! I was playing with &lt;code&gt;sys.stdout.buffer&lt;/code&gt;, and the process got blocked.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. Really, really cool stuff.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Some notes on paging and other memory stuff</title>
@@ -121,10 +121,10 @@
       <description>&lt;p&gt;The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;</description>
     </item>
     <item>
-      <title>TCP acks and seqs</title>
-      <link>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</link>
+      <title>TCP acks and seqs: notes from Kurose&#39;s lectures</title>
+      <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</guid>
+      <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
       <description>&lt;p&gt;&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in &lt;a href=&#34;https://www.ietf.org/rfc/rfc793.txt&#34;&gt;RFC793&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.&lt;/p&gt;</description>
     </item>
     <item>
@@ -146,7 +146,7 @@
       <link>https://fernandosimoes.com/about/</link>
       <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/about/</guid>
-      <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;&lt;strong&gt;About the blog&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a &lt;a href=&#34;https://structuredprocrastination.com/&#34;&gt;structured way&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;About me&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;m a software developer. I currently live in Brazil with my wife and kids.&lt;/p&gt;&#xA;&lt;p&gt;I grew up in the &amp;rsquo;90s, so I have a natural love for computers and the internet as a &amp;ldquo;promise of a better future&amp;rdquo;. My interest in engineering is nothing more than a reflection of this sentiment.&lt;/p&gt;</description>
+      <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;&lt;strong&gt;About the blog&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a &lt;a href=&#34;https://structuredprocrastination.com/&#34;&gt;structured way&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;About me&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;I grew up in the &amp;rsquo;90s, so I have a natural love for computers and the internet as a &amp;ldquo;promise of a better future&amp;rdquo;. My interest in engineering is nothing more than a reflection of this sentiment.&lt;/p&gt;</description>
     </item>
     <item>
       <title>One week rule</title>
@@ -171,13 +171,6 @@
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>
-      <link>https://fernandosimoes.com/backup/maybe/unix-file-size/</link>
-      <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/unix-file-size/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been playing a little bit with the OS and files.&lt;/p&gt;&#xA;&lt;p&gt;I found the &lt;code&gt;stat&lt;/code&gt; posix command. From manpage:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;the stat utility displays information about the file pointed to by file.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;I&amp;rsquo;m mostly interested in two of the metadata information: Block and Block IO:&lt;/p&gt;&#xA;&lt;p&gt;Experiment:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@d6e5e8ac056e:/code# stat tmp&#xA;File: tmp&#xA;Size: 0               Blocks: 8          IO Block: 4096   regular file&#xA;Device: 0,67    Inode: 397692      Links: 1&#xA;Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)&#xA;Access: 2024-06-22 16:43:42.909805004 +0000&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;tmp&lt;/code&gt; is an empty file, the &lt;code&gt;Blocks&lt;/code&gt; is 8 and IO Block is &lt;code&gt;4096&lt;/code&gt;.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>What&#39;s the size of a file on disk?</title>
       <link>https://fernandosimoes.com/posts/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/unix-file-size/</guid>
@@ -196,6 +189,13 @@
       <pubDate>Fri, 02 Feb 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/backup/maybe/testing-software/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field. Even worse: developers who don&amp;rsquo;t write tests deliver features faster. Product owners and stakeholders are happy, and the business is happy&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Shell, process group, sids and sourcing</title>
+      <link>https://fernandosimoes.com/backup/cooking/understanding-shell/</link>
+      <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/backup/cooking/understanding-shell/</guid>
+      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
     </item>
     <item>
       <title>I wrote a WSGI application</title>

@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Fernando Simões</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 08 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>We can actually peek at the kernel stack of &lt;pid&gt;</title>
+      <link>https://fernandosimoes.com/posts/proc-pid-stack/</link>
+      <pubDate>Sun, 22 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Investigating line buffering and write(2)</title>
       <link>https://fernandosimoes.com/posts/print-strace/</link>
@@ -91,6 +98,13 @@
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/scheduler/</guid>
       <description>&lt;p&gt;(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&lt;/p&gt;&#xA;&lt;p&gt;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&lt;/p&gt;&#xA;&lt;p&gt;The OS must, somehow, track processes that are running. And handle their states. The OS have &lt;strong&gt;mechanisms&lt;/strong&gt; for this, for example: when the OS boots, it loads &lt;code&gt;traps&lt;/code&gt;, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call. The system call interacts with the Kernel and runs the procedure there. So there an inter-communication that happens all the time between privileged space and unprivileged space. The OS also handles processes states: a process may be running, or may be ready to run, or maybe be a zombie (funny name, who had the idea?).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>TCP acks and seqs: notes from Kurose&#39;s lectures</title>
+      <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
+      <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
+      <description>&lt;p&gt;&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in &lt;a href=&#34;https://www.ietf.org/rfc/rfc793.txt&#34;&gt;RFC793&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>

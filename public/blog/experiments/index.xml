@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 28 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/blog/experiments/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>TCP acks and seqs</title>
-      <link>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</link>
+      <title>TCP acks and seqs: notes from Kurose&#39;s lectures</title>
+      <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/tcp-ack-seq/</guid>
+      <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
       <description>&lt;p&gt;&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in &lt;a href=&#34;https://www.ietf.org/rfc/rfc793.txt&#34;&gt;RFC793&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.&lt;/p&gt;</description>
     </item>
     <item>

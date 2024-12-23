@@ -1,6 +1,6 @@
 +++ 
 date = 2024-07-28
-title = "TCP acks and seqs"
+title = "TCP acks and seqs: notes from Kurose's lectures"
 tags = ["experiments"]
 +++
 
