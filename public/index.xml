@@ -226,20 +226,6 @@
       <description>&lt;p&gt;A rule in Domain-Driven Design (DDD) states that &amp;ldquo;each entity should self-validate.&amp;rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Resources list</title>
-      <link>https://fernandosimoes.com/posts/list-post/</link>
-      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/list-post/</guid>
-      <description>&lt;h2 id=&#34;the-list-post-resources&#34;&gt;The List Post: Resources&lt;/h2&gt;&#xA;&lt;h3 id=&#34;how-and-what-resources-i-used-to-get-in-love-with-software-development&#34;&gt;How and what resources I used to get in love with software development&lt;/h3&gt;&#xA;&lt;p&gt;Here is a list of things that I did to help myself learn how to program. I tried to create a chronological narrative, so, besides the list of resources, you can also follow the progress of interests and curiosities that I had.&lt;/p&gt;&#xA;&lt;p&gt;From previous experiences, when I started I knew three things:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;I knew that I had to get myself totally immersed in this new reality (this means: getting to know the people, the literature, the vocabulary, the mental map of everything).&lt;/li&gt;&#xA;&lt;li&gt;I knew that I had to build a personal project, one that got me interested in learning because the final result would be of personal importance.&lt;/li&gt;&#xA;&lt;li&gt;I knew that I had to follow my eccentricities, personal curiosity and interests rather than a more formal curriculum.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Here is it:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Brincando com recursão</title>
-      <link>https://fernandosimoes.com/posts/recursion/</link>
-      <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/recursion/</guid>
-      <description>&lt;p&gt;Assistindo ao &lt;a href=&#34;https://www.youtube.com/@JohnDeNero/videos&#34;&gt;CS61A&lt;/a&gt; (miss you, John), bati muito a cabeça para entender como funções recursivas funcionam. Para entender melhor o problema, resolvi (tentar) desenhar o passo a passo para mim mesmo:&lt;/p&gt;&#xA;&lt;p&gt;O exemplo clássico do fatorial:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;def fact(n):&#xA;&#x9;if n == 0:&#xA;&#x9;&#x9;return 1&#xA;&#x9;else:&#xA;&#x9;&#x9;return n * fact(n-1)&#xA;&#xA;fact(3) # 3*2*1=6&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;O que acontece aqui?&lt;/p&gt;&#xA;&lt;p&gt;Cada &lt;code&gt;f&lt;/code&gt; é um frame isolado. A função é chamada recursivamente e o valor de &lt;code&gt;n&lt;/code&gt; muda dinamicamente a cada chamada, conforme o argumento do &lt;code&gt;fact()&lt;/code&gt; recursivo:&lt;/p&gt;</description>
-    </item>
-    <item>
       <title></title>
       <link>https://fernandosimoes.com/backup/maybe/year-2024/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

@@ -36,12 +36,5 @@
       <guid>https://fernandosimoes.com/posts/wsgi-app/</guid>
       <description>&lt;p&gt;This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&lt;/p&gt;&#xA;&lt;p&gt;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&lt;/p&gt;&#xA;&lt;p&gt;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&lt;/p&gt;&#xA;&lt;p&gt;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.&lt;/p&gt;</description>
     </item>
-    <item>
-      <title>Resources list</title>
-      <link>https://fernandosimoes.com/posts/list-post/</link>
-      <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/list-post/</guid>
-      <description>&lt;h2 id=&#34;the-list-post-resources&#34;&gt;The List Post: Resources&lt;/h2&gt;&#xA;&lt;h3 id=&#34;how-and-what-resources-i-used-to-get-in-love-with-software-development&#34;&gt;How and what resources I used to get in love with software development&lt;/h3&gt;&#xA;&lt;p&gt;Here is a list of things that I did to help myself learn how to program. I tried to create a chronological narrative, so, besides the list of resources, you can also follow the progress of interests and curiosities that I had.&lt;/p&gt;&#xA;&lt;p&gt;From previous experiences, when I started I knew three things:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;I knew that I had to get myself totally immersed in this new reality (this means: getting to know the people, the literature, the vocabulary, the mental map of everything).&lt;/li&gt;&#xA;&lt;li&gt;I knew that I had to build a personal project, one that got me interested in learning because the final result would be of personal importance.&lt;/li&gt;&#xA;&lt;li&gt;I knew that I had to follow my eccentricities, personal curiosity and interests rather than a more formal curriculum.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Here is it:&lt;/p&gt;</description>
-    </item>
   </channel>
 </rss>
