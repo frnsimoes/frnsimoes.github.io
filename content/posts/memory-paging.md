@@ -1,6 +1,6 @@
 +++
 date = 2024-12-01
-title = "Some notes on paging and other memory stuff"
+title = "Notes on paging and other memory stuff"
 +++
 
 One of the most practical things we can do on a linux box regarding memory is to use `mmap` to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the `mmap` documentation when I found a flag named `MAP_HUGETLB`. I got hooked by this and couldn't stop myself from finding out more. 

@@ -16,17 +16,17 @@
       <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Investigating line buffering and write(2)</title>
+      <title>Line buffering, tty and write(2)</title>
       <link>https://fernandosimoes.com/posts/print-strace/</link>
       <pubDate>Sun, 08 Dec 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/print-strace/</guid>
       <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Some notes on paging and other memory stuff</title>
-      <link>https://fernandosimoes.com/posts/memory-ramblings/</link>
+      <title>Notes on paging and other memory stuff</title>
+      <link>https://fernandosimoes.com/posts/memory-paging/</link>
       <pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/posts/memory-ramblings/</guid>
+      <guid>https://fernandosimoes.com/posts/memory-paging/</guid>
       <description>&lt;p&gt;One of the most practical things we can do on a linux box regarding memory is to use &lt;code&gt;mmap&lt;/code&gt; to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the &lt;code&gt;mmap&lt;/code&gt; documentation when I found a flag named &lt;code&gt;MAP_HUGETLB&lt;/code&gt;. I got hooked by this and couldn&amp;rsquo;t stop myself from finding out more.&lt;/p&gt;&#xA;&lt;p&gt;So here it is: A &lt;a href=&#34;https://man7.org/linux/man-pages/man2/mmap.2.html&#34;&gt;huge page&lt;/a&gt; is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:&lt;/p&gt;</description>
     </item>
     <item>
