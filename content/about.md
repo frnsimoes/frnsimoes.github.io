@@ -11,11 +11,15 @@ This blog is a collection of my notes and casual experiments. It also serves as 
 
 **About me**
 
-I grew up in the '90s, so I have a natural love for computers and the internet as a "promise of a better future". My interest in engineering is nothing more than a reflection of this sentiment. 
+Hi! I'm Fernando. I live in Brazil with my wife and kids.
 
-Before becoming a developer, I read a bunch of classical literature and philosophy. I worked as a lawyer (involuntarily), copyeditor, proofreader (portuguese), and learning assistant.
+I'm currently working with backend development, but what I really like are computers in general. I'm deeply interested in how everything works behind the scenes, especially nerdy stuff like operating systems, networks, and systems in general. Remember how, in the 90s, the computer and the internet were so cool, and how they would change how we live and interact with the world? My interest in computers are but a reflection of that sweet sentiment.
 
-If you want to nerd out and talk about computer stuff, feel free to send a message on [Linkedin].
+I am also a literature nerd. I have a especial love for Shakespeare and Tolstoy. If you are interested, a few years back I wrote an [article](https://fsimoesgarcia.medium.com/a-pregui%C3%A7osos-e-diletantes-shakespeare-51d18ca52377) comparing different Shakespeare commented editions and translations to portuguese. I also had a finger in the translation of the "The Tempest" into Portuguese, an edition published by Companhia das Letras.
+
+Whenever I feel like gaming, I do Dark Souls. FromSoftware games are one of my passions when it comes to video-gaming. But I also love some old titles that I replay every two years or so: Shenmue, Chrono Cross and Silent Hill are the top three. 
+
+If you wanna chat or give feedback, I would love to read you. Send me an [email](mailto:fernandosimoes.dev@gmail.com).
 
 [linkedin]: https://linkedin.com/in/frnsimoes
 [structured way]: https://structuredprocrastination.com/
