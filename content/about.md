@@ -29,7 +29,7 @@ In 2016, I began reading Shakespeare. Since english is not my native language, I
 
 **Send me a message**
 
-If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.dev@gmail.com). I would love to hear from you.
+If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.dev@gmail.com)! I'm also at [bsky], [x/twitter] and [linkedin].
 
 **Other things that I like**
 - Mechanical things, tokens of a "forgotten future", like keyboards;
@@ -40,3 +40,5 @@ If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.
 [article]: https://fsimoesgarcia.medium.com/a-pregui%C3%A7osos-e-diletantes-shakespeare-51d18ca52377
 [linkedin]: https://linkedin.com/in/frnsimoes
 [structured way]: https://structuredprocrastination.com/
+[bsky]: https://bsky.app/profile/fernandosimoes.com
+[x/twitter]: https://x.com/RotatingPuzzle
