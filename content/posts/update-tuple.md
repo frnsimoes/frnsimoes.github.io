@@ -107,8 +107,5 @@ postgres=# select ctid, value, xmax from test;
 (1 row)
 ```
 
-Postgres' [concurrency model](https://www.interdb.jp/pg/pgsql05.html) is certainly interesting, and I plan to investigate it more deeply in the future.
-
-
 [^1]: https://www.youtube.com/watch?v=IHtVWGhG0Xg&list=PLSE8ODhjZXjYDBpQnSymaectKjxCy6BYq
 [^2]: https://www.postgresql.org/docs/current/ddl-system-columns.html#DDL-SYSTEM-COLUMNS-CTID
