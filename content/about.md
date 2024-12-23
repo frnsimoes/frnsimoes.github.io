@@ -31,7 +31,7 @@ In 2016, I began reading Shakespeare. Since english is not my native language, I
 
 If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.dev@gmail.com). I would love to hear from you.
 
-**Other things that capture my attention**
+**Other things that I like**
 - Mechanical things, tokens of a "forgotten future", like keyboards;
 - From Software games - I love all of them;
 - The Sopranos and Mr. Robot TV series.
