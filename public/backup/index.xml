@@ -52,16 +52,9 @@
     </item>
     <item>
       <title>Shell, process group, sids and sourcing</title>
-      <link>https://fernandosimoes.com/backup/cooking/understanding-shell/</link>
+      <link>https://fernandosimoes.com/backup/cooking/shell-source/</link>
       <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/cooking/understanding-shell/</guid>
-      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Shell, process group, sids and sourcing</title>
-      <link>https://fernandosimoes.com/backup/maybe/understanding-shell/</link>
-      <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/understanding-shell/</guid>
+      <guid>https://fernandosimoes.com/backup/cooking/shell-source/</guid>
       <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
     </item>
     <item>

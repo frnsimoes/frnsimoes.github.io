@@ -5,11 +5,11 @@ date =  2024-06-26
 <!---->
 <!---->
 
-## About the blog
+### About the blog
 
 This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love, and to procrastinate in a [structured way].
 
-## About me
+### About me
 
 There are many things that capture my attention, but I want to talk about two of them in particular:
 
@@ -35,6 +35,20 @@ If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.
 - Mechanical things, tokens of a "forgotten future", like keyboards;
 - From Software games - I love all of them;
 - The Sopranos and Mr. Robot TV series.
+
+
+### Links
+
+**Blogs I read**
+- [Julia Evans](https://jvns.ca/)
+- [rachel by the bay](https://rachelbythebay.com/w/)
+- [Kognise](https://kognise.dev/)
+- [Dimitry Mazin](https://www.cyberdemon.org/)
+
+**Others**
+- The [first website](https://info.cern.ch/hypertext/WWW/TheProject.html) is still on the web.
+- [Unix trivia quiz](https://www.talisman.org/~erlkonig/misc/unix-c-history/unix-quiz.html) to ease boredom.
+
 
 [CS Primer]: https://csprimer.com
 [article]: https://fsimoesgarcia.medium.com/a-pregui%C3%A7osos-e-diletantes-shakespeare-51d18ca52377
