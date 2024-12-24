@@ -100,6 +100,13 @@
       <description>&lt;p&gt;Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.&lt;/p&gt;&#xA;&lt;p&gt;In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &amp;ldquo;hop,&amp;rdquo; the packet&amp;rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.&lt;/p&gt;&#xA;&lt;p&gt;Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.25 minutes. (Just imagine the discussions this must have sparked&amp;hellip;)&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Cool: the kernel stack of a process</title>
+      <link>https://fernandosimoes.com/posts/proc-pid-stack/</link>
+      <pubDate>Thu, 15 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://fernandosimoes.com/posts/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Scheduler: notes from Remzi&#39;s lectures</title>
       <link>https://fernandosimoes.com/posts/scheduler/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>

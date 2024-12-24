@@ -62,6 +62,12 @@
     <loc>https://fernandosimoes.com/posts/ipv4-ttl/</loc>
     <lastmod>2024-08-28T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://fernandosimoes.com/blog/career-and-development/</loc>
+    <lastmod>2024-08-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://fernandosimoes.com/posts/proc-pid-stack/</loc>
+    <lastmod>2024-08-15T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://fernandosimoes.com/posts/scheduler/</loc>
     <lastmod>2024-08-08T00:00:00+00:00</lastmod>
   </url><url>
@@ -85,9 +91,6 @@
   </url><url>
     <loc>https://fernandosimoes.com/posts/unix-file-size/</loc>
     <lastmod>2024-05-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://fernandosimoes.com/blog/career-and-development/</loc>
-    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://fernandosimoes.com/posts/studying-cs/</loc>
     <lastmod>2024-05-15T00:00:00+00:00</lastmod>

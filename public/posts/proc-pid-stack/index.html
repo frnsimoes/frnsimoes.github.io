@@ -7,12 +7,11 @@
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Career and Development | Fernando Simões</title>
+<title>Cool: the kernel stack of a process | Fernando Simões</title>
 
   
   <meta name="referrer" content="no-referrer-when-downgrade" />
 
-  <link rel="alternate" type="application/rss+xml" href="https://fernandosimoes.com/blog/career-and-development/index.xml" title="Fernando Simões" />
   <style>
 :root {
 	--width: 720px;
@@ -213,52 +212,30 @@ body {
 
 </header>
   <main>
-<content>
-  
-  <h3 style="margin-bottom:0">Filtering for "Career and Development"</h3>
-  <small>
-    <a href="/blog">Remove filter</a>
-  </small>
-  
-  <ul class="blog-posts">
+  <h4 style="text-align: center;">Cool: the kernel stack of a process</h4>
+  <p>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-08-15' pubdate>
-            15 Aug, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/posts/proc-pid-stack/">Cool: the kernel stack of a process</a>
-    </li>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2024-05-15' pubdate>
-            15 May, 2024
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/posts/studying-cs/">Studying Computer Science</a>
-    </li>
     
-    <li>
-      <span>
-        <i>
-          <time datetime='2023-12-30' pubdate>
-            30 Dec, 2023
-          </time>
-        </i>
-      </span>
-      <a href="https://fernandosimoes.com/posts/wsgi-app/">I wrote a WSGI application</a>
-    </li>
     
-  </ul>
-  
-  
-</content>
+    
+  </p>
+  <content>
+    <p>I found a cool trick to see what&rsquo;s happening to a blocked (<code>sleeping</code>) process: <code>cat /proc/pid/stack</code>. Yep, you can peek at the trace of kernel functions related to a process!</p>
+<pre tabindex="0"><code>➜  pexpl git:(main) ✗ ps aux | grep p.py
+frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py
+
+➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack
+[&lt;0&gt;] do_epoll_wait+0x698/0x7d0
+[&lt;0&gt;] do_compat_epoll_pwait.part.0+0xb/0x70
+[&lt;0&gt;] __x64_sys_epoll_pwait+0x91/0x140
+[&lt;0&gt;] do_syscall_64+0x55/0xb0
+[&lt;0&gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+</code></pre><p>The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like <code>strace</code>, <code>&lt;pid&gt;/stack</code> can give an specific perspective of what&rsquo;s wrong with a process. How cool is that?</p>
+<p><strong>about procfs</strong></p>
+<p><code>proc</code> (procfs) is a pseudo-filesystem; it dynamically generate directories for processes. The files within <code>/proc</code> doesn&rsquo;t like on disk, similarly to the <code>/dev</code> directory. <a href="https://en.wikipedia.org/wiki/Procfs#History">Wikipedia</a> lists the history of procfs implementation, which goes back to 1984.</p>
+
+  </content>
 
   </main>
   <footer></footer>
