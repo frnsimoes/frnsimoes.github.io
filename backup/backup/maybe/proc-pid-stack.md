@@ -1,5 +1,5 @@
 +++ 
-date = 2024-12-22
+date = 
 title = "We can actually peek at the kernel stack of <pid>"
 tags = ["career and development"]
 +++

@@ -1,5 +1,5 @@
 +++ 
-date = 2024-01-05
+date = 2024-12-22
 title = "Shell, process group, sids and sourcing"
 +++
 

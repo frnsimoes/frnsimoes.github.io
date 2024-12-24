@@ -30,32 +30,11 @@
       <description>&lt;p&gt;(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&lt;/p&gt;&#xA;&lt;p&gt;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&lt;/p&gt;&#xA;&lt;p&gt;The OS must, somehow, track processes that are running. And handle their states. The OS have &lt;strong&gt;mechanisms&lt;/strong&gt; for this, for example: when the OS boots, it loads &lt;code&gt;traps&lt;/code&gt;, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call. The system call interacts with the Kernel and runs the procedure there. So there an inter-communication that happens all the time between privileged space and unprivileged space. The OS also handles processes states: a process may be running, or may be ready to run, or maybe be a zombie (funny name, who had the idea?).&lt;/p&gt;</description>
     </item>
     <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/backup/maybe/socket/</link>
-      <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/socket/</guid>
-      <description>&lt;p&gt;The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Sockets, select and IO Multiplexing</title>
-      <link>https://fernandosimoes.com/backup/maybe/io-multiplexing/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/io-multiplexing/</guid>
-      <description>&lt;p&gt;IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&lt;/p&gt;&#xA;&lt;p&gt;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&lt;/p&gt;&#xA;&lt;p&gt;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario. It&amp;rsquo;s a way of diligently proxying receipts to their appropriate recipients.&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>Unix trivia</title>
       <link>https://fernandosimoes.com/posts/unix-trivia/</link>
       <pubDate>Tue, 25 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/unix-trivia/</guid>
       <description>&lt;p&gt;The history of Unix has many curious aspects: a huge company like AT&amp;amp;T, which at the time owned Bell Labs (and therefore Unix), didn&amp;rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.&lt;/p&gt;&#xA;&lt;p&gt;Until 1989, AT&amp;amp;T couldn&amp;rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;amp;T&amp;rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began. Bill Joy, from Berkeley, was 25 at the time, and 2BSD had already been released.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Playing around with fork()</title>
-      <link>https://fernandosimoes.com/backup/maybe/process/</link>
-      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/process/</guid>
-      <description>&lt;p&gt;The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall &lt;code&gt;create&lt;/code&gt;, or something like that.&lt;/p&gt;&#xA;&lt;p&gt;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&lt;/p&gt;&#xA;&lt;p&gt;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What&#39;s the size of a file on disk?</title>

@@ -9,11 +9,11 @@
     <lastBuildDate>Sun, 22 Dec 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://fernandosimoes.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>We can actually peek at the kernel stack of &lt;pid&gt;</title>
-      <link>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</link>
+      <title>Shell, process group, sids and sourcing</title>
+      <link>https://fernandosimoes.com/posts/shell-source/</link>
       <pubDate>Sun, 22 Dec 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/proc-pid-stack/</guid>
-      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+      <guid>https://fernandosimoes.com/posts/shell-source/</guid>
+      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Line buffering, tty and write(2)</title>
@@ -100,13 +100,6 @@
       <description>&lt;p&gt;Another interesting historical nerdiness: to prevent packets from getting stuck or looping endlessly between routers, a TTL (time to live) was added to the IPv4 header.&lt;/p&gt;&#xA;&lt;p&gt;In RFC760 (from 1980!!), the idea of TTL was really about controlling the amount of time a datagram could circulate among routers: with each &amp;ldquo;hop,&amp;rdquo; the packet&amp;rsquo;s TTL would decrease by the presumed number of seconds that router took to process it.&lt;/p&gt;&#xA;&lt;p&gt;Consequently, with 8 bits as the maximum TTL value (255), the longest a packet could circulate on the internet would be 4.25 minutes. (Just imagine the discussions this must have sparked&amp;hellip;)&lt;/p&gt;</description>
     </item>
     <item>
-      <title>The nerdy cool stuff</title>
-      <link>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</link>
-      <pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/nerdy-cool-stuff/</guid>
-      <description>&lt;p&gt;Being a software developer is a really hard task. We all know this. When you are a self-taught developer, it&amp;rsquo;s even harder—not because you didn’t have formal education, but because you don’t even know what the best formal education is all about. You learn some Python or JavaScript and start scripting, building a thing or two, following traces of errors and fixing them, searching for solutions online. But there’s a potential prejudicial effect in learning this way: you think that software engineering is all about doing.&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>Scheduler: notes from Remzi&#39;s lectures</title>
       <link>https://fernandosimoes.com/posts/scheduler/</link>
       <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
@@ -114,25 +107,11 @@
       <description>&lt;p&gt;(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&lt;/p&gt;&#xA;&lt;p&gt;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&lt;/p&gt;&#xA;&lt;p&gt;The OS must, somehow, track processes that are running. And handle their states. The OS have &lt;strong&gt;mechanisms&lt;/strong&gt; for this, for example: when the OS boots, it loads &lt;code&gt;traps&lt;/code&gt;, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call. The system call interacts with the Kernel and runs the procedure there. So there an inter-communication that happens all the time between privileged space and unprivileged space. The OS also handles processes states: a process may be running, or may be ready to run, or maybe be a zombie (funny name, who had the idea?).&lt;/p&gt;</description>
     </item>
     <item>
-      <title>What does it mean to bind to a port?</title>
-      <link>https://fernandosimoes.com/backup/maybe/socket/</link>
-      <pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/socket/</guid>
-      <description>&lt;p&gt;The socket implementation is a really messy thing to do by hand. Parsing bytes and saving states of a network communication is a tremendous work, but every piece of software that is an abstraction over the network must create its own socket abstraction or use an existing one&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Sockets are so fundamental to networking communication because a network application typically consists of a pair a programs - a client program and a server program - residing in different end systems.&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>TCP acks and seqs: notes from Kurose&#39;s lectures</title>
       <link>https://fernandosimoes.com/posts/tcp-ack-seq/</link>
       <pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/tcp-ack-seq/</guid>
       <description>&lt;p&gt;&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in &lt;a href=&#34;https://www.ietf.org/rfc/rfc793.txt&#34;&gt;RFC793&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Sockets, select and IO Multiplexing</title>
-      <link>https://fernandosimoes.com/backup/maybe/io-multiplexing/</link>
-      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/io-multiplexing/</guid>
-      <description>&lt;p&gt;IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&lt;/p&gt;&#xA;&lt;p&gt;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&lt;/p&gt;&#xA;&lt;p&gt;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario. It&amp;rsquo;s a way of diligently proxying receipts to their appropriate recipients.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What is an HTTP message body?</title>
@@ -163,13 +142,6 @@
       <description>&lt;p&gt;The history of Unix has many curious aspects: a huge company like AT&amp;amp;T, which at the time owned Bell Labs (and therefore Unix), didn&amp;rsquo;t care much about Unix until 1979, ten years after Thompson and Ritchie started the project.&lt;/p&gt;&#xA;&lt;p&gt;Until 1989, AT&amp;amp;T couldn&amp;rsquo;t commercialize Unix due to a telecommunications monopoly contract with the US government. AT&amp;amp;T&amp;rsquo;s lack of interest in Unix allowed the system to grow freely with various independent contributions, at least until 1979 when legal disputes against Berkeley and BSD began. Bill Joy, from Berkeley, was 25 at the time, and 2BSD had already been released.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Playing around with fork()</title>
-      <link>https://fernandosimoes.com/backup/maybe/process/</link>
-      <pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/process/</guid>
-      <description>&lt;p&gt;The way Unix systems create a process is really not intuitive. At first, I would imagine that creating a process in the OS would be as simple as calling a systemcall &lt;code&gt;create&lt;/code&gt;, or something like that.&lt;/p&gt;&#xA;&lt;p&gt;But, in reality, the genesis of a process creation in Unix involves creating a hierarquical tree of processes.&lt;/p&gt;&#xA;&lt;p&gt;The running program you are using to create a new process is a process itself, so the way you can create a new process is by creating a child of the current process.&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>What&#39;s the size of a file on disk?</title>
       <link>https://fernandosimoes.com/posts/unix-file-size/</link>
       <pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate>
@@ -182,20 +154,6 @@
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/studying-cs/</guid>
       <description>&lt;p&gt;(Checkout the &lt;a href=&#34;https://github.com/frnsimoes/computer-science-studies&#34;&gt;repo&lt;/a&gt;).&lt;/p&gt;&#xA;&lt;p&gt;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&lt;/p&gt;&#xA;&lt;p&gt;Over the past couple of years, I’ve tried a lot of different things:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Reading the books listed on &lt;a href=&#34;https://teachyourselfcs.com&#34;&gt;teachyourselfcs.com&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Applying myself to the courses on &lt;a href=&#34;https://github.com/ossu/computer-science&#34;&gt;OSSU&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Exploring various perspectives on computer science, like one focused on &lt;a href=&#34;https://functionalcs.github.io/curriculum/#Introduction&#34;&gt;functional programming&lt;/a&gt; (some really nice lessons on parallelism there).&lt;/li&gt;&#xA;&lt;li&gt;Completing &lt;a href=&#34;https://inst.eecs.berkeley.edu/~cs61a/fa18/&#34;&gt;CS61A&lt;/a&gt; in 2021, which I loved. This led me to try &lt;a href=&#34;https://www.youtube.com/watch?v=h59h5DoNhL4&amp;amp;list=PLgNUCz66KaWRSVzIeT_qB2yBgHocLmRWI&#34;&gt;CS61B&lt;/a&gt; (data structures and algorithms) and &lt;a href=&#34;https://www.youtube.com/watch?v=VJ6tuX5bBf4&amp;amp;list=PL0j-r-omG7i0-mnsxN5T4UcVS1Di0isqf&amp;amp;index=1&#34;&gt;CS61C&lt;/a&gt; (computer systems, C, and Assembly). I couldn’t get through CS61B at all, and CS61C was really fun until the C part.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;None of these methods worked too well for me. I would start one, get excited (I loved &lt;a href=&#34;https://www.edx.org/learn/coding/university-of-british-columbia-how-to-code-simple-data&#34;&gt;Systematic Program Design&lt;/a&gt;, for example), but then leave it behind for various reasons.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Testing software</title>
-      <link>https://fernandosimoes.com/backup/maybe/testing-software/</link>
-      <pubDate>Fri, 02 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/testing-software/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field. Even worse: developers who don&amp;rsquo;t write tests deliver features faster. Product owners and stakeholders are happy, and the business is happy&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Shell, process group, sids and sourcing</title>
-      <link>https://fernandosimoes.com/backup/cooking/shell-source/</link>
-      <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/cooking/shell-source/</guid>
-      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
     </item>
     <item>
       <title>I wrote a WSGI application</title>
@@ -217,13 +175,6 @@
       <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://fernandosimoes.com/posts/invariants/</guid>
       <description>&lt;p&gt;A rule in Domain-Driven Design (DDD) states that &amp;ldquo;each entity should self-validate.&amp;rdquo; This rule is clear, simple, and functional when we think of an entity like Person, where the name attribute cannot be an empty string. It would be strange and absurd to consider that the validation of name should occur outside the Person entity, either during instance creation or when calling the method. There are various ways to perform internal validation, and this article provides an interesting perspective on them.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title></title>
-      <link>https://fernandosimoes.com/backup/maybe/year-2024/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://fernandosimoes.com/backup/maybe/year-2024/</guid>
-      <description>&lt;p&gt;So many nice things happened this year. I think the last time I saw these many changes was back in 2020.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;I changed companies after two and half years. And I changed two times!&#xA;Went from healthtech to fintech and back to heathtech. I had the chance to know great engineers in this year, and learned a lot from them.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;I started using vim.&#xA;After one and a half year using the key bindings in VS Code, in finally made the jump.&lt;/p&gt;</description>
     </item>
     <item>
       <title></title>
