@@ -29,7 +29,7 @@ In 2016, I began reading Shakespeare. Since english is not my native language, I
 
 **Send me a message**
 
-If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.dev@gmail.com)! I'm also at [bsky], [x/twitter], [github] and [linkedin].
+If you wanna chat or give me feedback, send me an [email](mailto:fernandosimoes.dev@gmail.com)! I would be happy to hear what you think. I'm also at [bsky], [x/twitter], [github] and [linkedin].
 
 **Other things that I like**
 - Mechanical things, tokens of a "forgotten future", like keyboards;
