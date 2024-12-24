@@ -1,6 +1,6 @@
 +++ 
-date = 
-title = "We can actually peek at the kernel stack of <pid>"
+date = 2024-08-15
+title = "Cool: the kernel stack of a process"
 tags = ["career and development"]
 +++
 
