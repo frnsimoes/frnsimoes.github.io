@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Career and Development on frn.sh</title>
+    <link>http://localhost:1313/tags/career-and-development/</link>
+    <description>Recent content in Career and Development on frn.sh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sat, 30 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/career-and-development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>I wrote a WSGI application</title>
+      <link>http://localhost:1313/posts/wsgi-app/</link>
+      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/wsgi-app/</guid>
+      
+      <description>&lt;p&gt;This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&lt;/p&gt;
+&lt;p&gt;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&lt;/p&gt;
+&lt;p&gt;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&lt;/p&gt;
+&lt;p&gt;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

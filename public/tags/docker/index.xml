@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on frn.sh</title>
+    <link>http://localhost:1313/tags/docker/</link>
+    <description>Recent content in Docker on frn.sh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 19 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Debugging session: Iptables, Docker, etc.</title>
+      <link>http://localhost:1313/posts/debugging-network/</link>
+      <pubDate>Tue, 19 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/debugging-network/</guid>
+      
+      <description>&lt;p&gt;I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&amp;rsquo;s make this straight and brief, so we can get to the more on point question: Docker.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

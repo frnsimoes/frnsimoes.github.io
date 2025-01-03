@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Buffering on frn.sh</title>
+    <link>//localhost:1313/blog/buffering/</link>
+    <description>Recent content in Buffering on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/buffering/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Line buffering, tty and write(2)</title>
+      <link>//localhost:1313/posts/print-strace/</link>
+      <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/print-strace/</guid>
+      <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

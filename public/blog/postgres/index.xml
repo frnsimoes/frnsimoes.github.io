@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Postgres on frn.sh</title>
+    <link>//localhost:1313/blog/postgres/</link>
+    <description>Recent content in Postgres on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Wed, 06 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/postgres/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What&#39;s the Postgres server?</title>
+      <link>//localhost:1313/posts/postgres-server/</link>
+      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/postgres-server/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m finding Postgres&amp;rsquo; process architecture really interesting. A great overview on the topic is Suzuki&amp;rsquo;s explanation of various types of processes, which you can find &lt;a href=&#34;https://www.interdb.jp/pg/pgsql02/01.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Postgres server process: the &amp;ldquo;parent&amp;rdquo; process that manages the database system. It&amp;rsquo;s the thing that has an IP and a port.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Backend process: It&amp;rsquo;s the entity that reads and writes queries.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Background process: a process created by the server process to perform various tasks, such as vacuuming, archiving, and replication. Background processes run independently of the client connections.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What happens when a row is updated?</title>
+      <link>//localhost:1313/posts/update-tuple/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/update-tuple/</guid>
+      <description>&lt;p&gt;When we update a tuple in a page, a tuple-oriented dbms does the following steps:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;check page directory to find location of the page;&lt;/li&gt;&#xA;&lt;li&gt;retrieve the page from disk if it&amp;rsquo;s not in memory;&lt;/li&gt;&#xA;&lt;li&gt;find the offset of the page;&lt;/li&gt;&#xA;&lt;li&gt;marks existing tuple as deleted and inserts new data.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s understand this better with a simple &lt;code&gt;test&lt;/code&gt; table in Postgres.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;);&#xA;INSERT 0 1&#xA;postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;);&#xA;INSERT 0 1&#xA;postgres=# select ctid, value from test;&#xA; ctid  | value&#xA;-------+-------&#xA; (0,1) | t1&#xA; (0,2) | t2&#xA;(2 rows)&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here we have a table &lt;code&gt;test&lt;/code&gt; with a column &lt;code&gt;value&lt;/code&gt;. We inserted two tuples into the table with values &lt;code&gt;t1&lt;/code&gt; and &lt;code&gt;t2&lt;/code&gt;. The &lt;code&gt;ctid&lt;/code&gt; column is a pseud column. The first number indicates the page the tuple is in; the second number represents the offset of that tuple in that specific page. Based on this information, we know that the two inserted tuples are in the page &lt;code&gt;0&lt;/code&gt;, and that &lt;code&gt;t1&lt;/code&gt; has the offset &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;t2&lt;/code&gt; has the offset &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

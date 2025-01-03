@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rows on frn.sh</title>
+    <link>http://localhost:1313/tags/rows/</link>
+    <description>Recent content in Rows on frn.sh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 20 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/rows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens when a row is updated?</title>
+      <link>http://localhost:1313/posts/update-tuple/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/update-tuple/</guid>
+      
+      <description>&lt;p&gt;When we update a tuple in a page, a tuple-oriented dbms does the following steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;check page directory to find location of the page;&lt;/li&gt;
+&lt;li&gt;retrieve the page from disk if it&amp;rsquo;s not in memory;&lt;/li&gt;
+&lt;li&gt;find the offset of the page;&lt;/li&gt;
+&lt;li&gt;marks existing tuple as deleted and inserts new data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s understand this better with a simple &lt;code&gt;test&lt;/code&gt; table in Postgres.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;);
+INSERT 0 1
+postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;);
+INSERT 0 1
+postgres=# select ctid, value from test;
+ ctid  | value
+-------+-------
+ (0,1) | t1
+ (0,2) | t2
+(2 rows)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here we have a table &lt;code&gt;test&lt;/code&gt; with a column &lt;code&gt;value&lt;/code&gt;. We inserted two tuples into the table with values &lt;code&gt;t1&lt;/code&gt; and &lt;code&gt;t2&lt;/code&gt;. The &lt;code&gt;ctid&lt;/code&gt; column is a pseud column. The first number indicates the page the tuple is in; the second number represents the offset of that tuple in that specific page. Based on this information, we know that the two inserted tuples are in the page &lt;code&gt;0&lt;/code&gt;, and that &lt;code&gt;t1&lt;/code&gt; has the offset &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;t2&lt;/code&gt; has the offset &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

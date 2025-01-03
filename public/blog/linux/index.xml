@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on frn.sh</title>
+    <link>//localhost:1313/blog/linux/</link>
+    <description>Recent content in Linux on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 08 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Notes on paging and other memory stuff</title>
+      <link>//localhost:1313/posts/memory-paging/</link>
+      <pubDate>Sun, 08 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/memory-paging/</guid>
+      <description>&lt;p&gt;One of the most practical things we can do on a linux box regarding memory is to use &lt;code&gt;mmap&lt;/code&gt; to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the &lt;code&gt;mmap&lt;/code&gt; documentation when I found a flag named &lt;code&gt;MAP_HUGETLB&lt;/code&gt;. I got hooked by this and couldn&amp;rsquo;t stop myself from finding out more.&lt;/p&gt;&#xA;&lt;p&gt;So here it is: A &lt;a href=&#34;https://man7.org/linux/man-pages/man2/mmap.2.html&#34;&gt;huge page&lt;/a&gt; is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Line buffering, tty and write(2)</title>
+      <link>//localhost:1313/posts/print-strace/</link>
+      <pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/print-strace/</guid>
+      <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Scheduler: notes from Remzi&#39;s lectures</title>
+      <link>//localhost:1313/posts/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/scheduler/</guid>
+      <description>&lt;p&gt;(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&lt;/p&gt;&#xA;&lt;p&gt;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&lt;/p&gt;&#xA;&lt;p&gt;The OS must, somehow, track processes that are running. And handle their states. The OS have &lt;strong&gt;mechanisms&lt;/strong&gt; for this, for example: when the OS boots, it loads &lt;code&gt;traps&lt;/code&gt;, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call. The system call interacts with the Kernel and runs the procedure there. So there an inter-communication that happens all the time between privileged space and unprivileged space. The OS also handles processes states: a process may be running, or may be ready to run, or maybe be a zombie (funny name, who had the idea?).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Debugging session: Iptables, Docker, etc.</title>
+      <link>//localhost:1313/posts/debugging-network/</link>
+      <pubDate>Tue, 19 Sep 2023 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/debugging-network/</guid>
+      <description>&lt;p&gt;I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&amp;rsquo;s make this straight and brief, so we can get to the more on point question: Docker.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

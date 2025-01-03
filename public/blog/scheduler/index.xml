@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scheduler on frn.sh</title>
+    <link>//localhost:1313/blog/scheduler/</link>
+    <description>Recent content in Scheduler on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Thu, 08 Aug 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/scheduler/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scheduler: notes from Remzi&#39;s lectures</title>
+      <link>//localhost:1313/posts/scheduler/</link>
+      <pubDate>Thu, 08 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/scheduler/</guid>
+      <description>&lt;p&gt;(This the study notes I took while watching Remzi&amp;rsquo;s lectures on operating system scheduler).&lt;/p&gt;&#xA;&lt;p&gt;One of the most interesting topics in Unix systems is the scheduler. The scheduler is a part of the CPU virtualization, and scheduler implementation solves the highly complex problem: what and how to run processes?&lt;/p&gt;&#xA;&lt;p&gt;The OS must, somehow, track processes that are running. And handle their states. The OS have &lt;strong&gt;mechanisms&lt;/strong&gt; for this, for example: when the OS boots, it loads &lt;code&gt;traps&lt;/code&gt;, or exception and interrupts handling mechanisms. So when a process needs something from the kernel &amp;ndash; privileged space &amp;ndash; it needs to make a system call. The system call interacts with the Kernel and runs the procedure there. So there an inter-communication that happens all the time between privileged space and unprivileged space. The OS also handles processes states: a process may be running, or may be ready to run, or maybe be a zombie (funny name, who had the idea?).&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

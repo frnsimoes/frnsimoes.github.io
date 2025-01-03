@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Networking on frn.sh</title>
+    <link>http://localhost:1313/tags/networking/</link>
+    <description>Recent content in Networking on frn.sh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sun, 28 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/networking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TCP acks and seqs: notes from Kurose&#39;s lectures</title>
+      <link>http://localhost:1313/posts/tcp-ack-seq/</link>
+      <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tcp-ack-seq/</guid>
+      
+      <description>&lt;p&gt;&amp;ldquo;Reliable delivery&amp;rdquo; is one of the central and most interesting subjects of the transport layer. The meaning of &amp;ldquo;reliable&amp;rdquo; was defined in &lt;a href=&#34;https://www.ietf.org/rfc/rfc793.txt&#34;&gt;RFC793&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The TCP must recover from data that is damaged, lost, duplicated, or delivered out of order by the internet communication system. This is achieved by assigning a sequence number to each octet transmitted, and requiring a positive acknowledgment (ACK) from the receiving TCP. If the ACK is not received within a timeout interval, the data is retransmitted. At the receiver, the sequence numbers are used to correctly order segments that may be received out of order and to eliminate duplicates. Damage is handled by adding a checksum to each segment transmitted, checking it at the receiver, and discarding damaged segments.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Debugging session: Iptables, Docker, etc.</title>
+      <link>http://localhost:1313/posts/debugging-network/</link>
+      <pubDate>Tue, 19 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/debugging-network/</guid>
+      
+      <description>&lt;p&gt;I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&amp;rsquo;s make this straight and brief, so we can get to the more on point question: Docker.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
