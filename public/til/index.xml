@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tils on frn.sh</title>
+    <link>frn.sh/til/</link>
+    <description>Recent content in Tils on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 05 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/til/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Difference between shell source and export</title>
+      <link>frn.sh/til/source-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/til/source-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so &lt;code&gt;bash -c &#39;declare -f&#39;&lt;/code&gt; doesn&amp;rsquo;t output anything. But we can source it: &lt;code&gt;bash -c &#39;source ~/.zshrc; hello&#39;&lt;/code&gt;. Or even: &lt;code&gt;bash -c &#39;hello() { echo &amp;quot;hi&amp;quot;; }; declare -f&#39;&lt;/code&gt;. Meaning: &lt;code&gt;export&lt;/code&gt; will make things available for the current shell / children process, while &lt;code&gt;source&lt;/code&gt; will bring variables only for the current shell. &lt;code&gt;source&lt;/code&gt; changes only affect the current shell memory. &lt;code&gt;export&lt;/code&gt; marks variables to be passed to child processes.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
