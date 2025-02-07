@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	<!-- border: 2px solid #0d6cff; -->
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: center;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name"> | frn.sh</title>
+<meta property="og:title" content=" | frn.sh" />
+<meta name="twitter:title" content=" | frn.sh" />
+<meta itemprop="name" content=" | frn.sh" />
+<meta name="application-name" content=" | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/locks/" title="" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.140.0">
+
+    
+    <meta property="og:url" content="//localhost:1313/locks/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="frn.sh">
+  <meta property="og:description" content="Exploring locks.
+#include &lt;stdio.h&gt; #include &lt;pthread.h&gt; #define EACH_COUNT 1000 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; volatile int counter = 0; void* thread_entry(void *arg) { for (int i = 1; i &lt; EACH_COUNT; i&#43;&#43;) { pthread_mutex_lock(&amp;lock); counter&#43;&#43;; pthread_mutex_unlock(&amp;lock); } return NULL; } int main() { pthread_t p1, p2; pthread_create(&amp;p1, NULL, thread_entry, NULL); pthread_create(&amp;p2, NULL, thread_entry, NULL); pthread_join(p1, NULL); pthread_join(p2, NULL); printf(&#34;Final count %d (expected %d)\n&#34;, counter, 2 * EACH_COUNT); } Scenario: Two threads: T1 and T2. T1 -&gt; Lock -&gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when unlock() is called.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="frn.sh">
+  <meta name="twitter:description" content="Exploring locks.
+#include &lt;stdio.h&gt; #include &lt;pthread.h&gt; #define EACH_COUNT 1000 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; volatile int counter = 0; void* thread_entry(void *arg) { for (int i = 1; i &lt; EACH_COUNT; i&#43;&#43;) { pthread_mutex_lock(&amp;lock); counter&#43;&#43;; pthread_mutex_unlock(&amp;lock); } return NULL; } int main() { pthread_t p1, p2; pthread_create(&amp;p1, NULL, thread_entry, NULL); pthread_create(&amp;p2, NULL, thread_entry, NULL); pthread_join(p1, NULL); pthread_join(p2, NULL); printf(&#34;Final count %d (expected %d)\n&#34;, counter, 2 * EACH_COUNT); } Scenario: Two threads: T1 and T2. T1 -&gt; Lock -&gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when unlock() is called.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/locks/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <h1 style="color: #000000;">frn.sh</h1>
+  <div class="spacer"></div>
+  <div class="right-links">
+    <a href="/" class="home">blog</a>
+    <a href="/about" class="about-me">about</a>
+  </div>
+</div>
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;"></h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>Exploring locks.</p>
+<pre tabindex="0"><code>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+#define EACH_COUNT 1000
+
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+
+volatile int counter = 0;
+
+void* thread_entry(void *arg) {
+	for (int i = 1; i &lt; EACH_COUNT; i++) {
+    pthread_mutex_lock(&amp;lock);
+        counter++;
+    pthread_mutex_unlock(&amp;lock);
+    }
+	return NULL;
+}
+
+int main() {
+	pthread_t p1, p2;
+	pthread_create(&amp;p1, NULL, thread_entry, NULL);
+	pthread_create(&amp;p2, NULL, thread_entry, NULL);
+
+	pthread_join(p1, NULL);
+	pthread_join(p2, NULL);
+
+	printf(&#34;Final count %d (expected %d)\n&#34;, counter, 2 * EACH_COUNT);
+}
+</code></pre><p>Scenario: Two threads: T1 and T2. T1 -&gt; Lock -&gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when <code>unlock()</code> is called.</p>
+<p>How to build a lock, say, a &ldquo;Spin Lock&rdquo;?</p>
+<ul>
+<li>First we need a state: lock held (acquired) or free (not acquired).</li>
+<li>We could create a <code>lock</code> variable with values <code>0</code> (true) and <code>1</code> (false): <code>int lock;</code></li>
+</ul>
+<pre tabindex="0"><code>struct mutex {
+    int lock;
+}
+
+void mutex_init (mutex *m) {
+    m-&gt;lock = 0;
+}
+
+void mutex_lock (mutx *m) {
+    while (m-&gt;lock == 1) {
+        ;
+        m-&gt;lock = 1;
+    }
+}
+
+void mutex_unlock (mutex *m) {
+    m-&gt;lock=0;
+}
+</code></pre><p>Goals:
+When local is not held (free)
+pthread_mutex_lock() -&gt; should return immediately and lock should become held
+When lock is held
+pthread_mutex_lock() -&gt; thread should get stuck here (until lock can be acquired)</p>
+<p>The problem with this implementation is that two threads with <code>0</code> can enter the loop inside <code>mutex_lock</code>, resulting in two threads acquiring the lock simultaneously. For this reason, we need a more powerful instruction from the hardware. &ldquo;Test and set instruction&rdquo; or &ldquo;atomic exchange&rdquo;.</p>
+<pre tabindex="0"><code>int TestAndSet(int *old_ptr, int new) {
+    int old = *old_ptr;
+    *old_ptr = new;
+    return old;
+}
+
+void mutex_lock (mutx *m) {
+    while (TestAndSet(&amp;mutex-&gt;lock, 1) {
+        ;
+    }
+}
+</code></pre><ol>
+<li>
+<p><strong>Thread T1 Acquires the Lock</strong>:</p>
+<pre tabindex="0"><code>lock(0,1)     old      new     unlock
+0 T&amp;S(0, 1)   0        1       ---
+</code></pre><ul>
+<li>T1 calls <code>TestAndSet(&amp;m-&gt;lock, 1)</code>.</li>
+<li><code>TestAndSet</code> returns <code>0</code> (old value), and sets <code>m-&gt;lock</code> to <code>1</code>.</li>
+<li>T1 acquires the lock.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T2 Tries to Acquire the Lock</strong>:</p>
+<pre tabindex="0"><code>lock(0,1)     old      new     unlock
+0 T&amp;S(1, 1)   1        0       ---
+</code></pre><ul>
+<li>T2 calls <code>TestAndSet(&amp;m-&gt;lock, 1)</code> while T1 is holding the lock.</li>
+<li><code>TestAndSet</code> returns <code>1</code> (old value), and <code>m-&gt;lock</code> remains <code>1</code>.</li>
+<li>Since <code>TestAndSet</code> returned <code>1</code>, T2 will spin-wait (not acquire the lock).</li>
+</ul>
+</li>
+</ol>
+<p>The major problem with spinning lock is that when T2 is trying to access the critical section that is held by T1, it will spin, and spin, and spin, it will try to access the critical section every time an interrupt occurs, only to find out that the value didn´t change, and it can&rsquo;t take hold of the lock.</p>
+<p>Even more: what happens when a context switch occurs in a critical section, and threads start to spin endlessly, waiting for the interrupted (lock-holding) thread to be run again? (Remzi)</p>
+<p>One possible solution is the ticket lock. It is a fair lock, where threads are served in the order they arrive.</p>
+<pre tabindex="0"><code>int fetch_and_add(int *addr) {
+    int old = *addr;
+    *addr = addr + 1;
+    return old;
+}
+
+typedef struct __lock_t {
+    int ticket;
+    int turn;
+} lock_t;
+
+void lock_init(lock_t *lock) {
+    lock-&gt;ticket = lock-&gt;turn = 0;
+}
+
+void acquire(lock_t *lock) {
+    int myturn = fetch_and_add(&amp;lock-&gt;ticket);
+    while (lock-&gt;turn != myturn) {
+        ;
+    }
+}
+
+void release(lock_t *lock) {
+    lock-&gt;turn = lock-&gt;turn + 1;
+}
+</code></pre><p>Ticket Lock is trying to solve the fairness/starvation problem.</p>
+<ol>
+<li>
+<p><strong>Thread T1 calls <code>acquire(lock_t *lock)</code></strong>:</p>
+<ul>
+<li><code>fetch_and_add(&amp;lock-&gt;ticket)</code> is called, which increments <code>lock-&gt;ticket</code> and returns the old value (which is <code>0</code> for T1).</li>
+<li>T1 sets <code>myturn</code> to <code>0</code>.</li>
+<li>T1 enters a <code>while</code> loop that spins until <code>lock-&gt;turn</code> equals <code>myturn</code> (which is <code>0</code>). Since <code>lock-&gt;turn</code> is initially <code>0</code>, T1 immediately exits the loop and acquires the lock.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T1 performs its critical section</strong>:</p>
+<ul>
+<li>T1 does whatever work it needs to do while holding the lock.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T1 calls <code>release(lock_t *lock)</code></strong>:</p>
+<ul>
+<li>T1 increments <code>lock-&gt;turn</code> by <code>1</code>, setting it to <code>1</code>.</li>
+<li>This action effectively releases the lock, allowing the next thread in line (T2) to acquire it.</li>
+</ul>
+</li>
+<li>
+<p><strong>Thread T2 calls <code>acquire(lock_t *lock)</code></strong>:</p>
+<ul>
+<li><code>fetch_and_add(&amp;lock-&gt;ticket)</code> is called, which increments <code>lock-&gt;ticket</code> and returns the old value (which is <code>1</code> for T2).</li>
+<li>T2 sets <code>myturn</code> to <code>1</code>.</li>
+<li>T2 enters a <code>while</code> loop that spins until <code>lock-&gt;turn</code> equals <code>myturn</code> (which is <code>1</code>). Since T1 has already incremented <code>lock-&gt;turn</code> to <code>1</code>, T2 immediately exits the loop and acquires the lock.</li>
+</ul>
+</li>
+</ol>
+<p>The advantage of the ticket lock is that it is fair. Threads are served in the order they arrive.</p>
+<p>So there are two hardware primitives that address the concurrency problem: exchange (xchg) and fetch_and_add.</p>
+<p><strong>The role of OS in this</strong></p>
+<p>The OS is interested in the concurrency problem. It might wanna know, for example, if a process is spinning mindlessly. Ex: <code>yield()</code> syscall.</p>
+
+  </content>
+
+  </main>
+  <footer></footer>
+
+    
+</body>
+
+</html>

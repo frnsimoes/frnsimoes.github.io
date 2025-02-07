@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{{- $defaultColor := .Site.Params.defaultColor | default "auto" -}}
+{{- partial "head.html" . -}}
+<body data-theme="{{ $defaultColor }}" class="notransition">
+    {{- partial "scriptsBodyStart.html" . -}}
+    <div class="wrapper">
+        {{ partial "bio" . }}
+        <!-- {{- partial "header.html" . -}} -->
+        <main aria-label="Content">
+            <!-- <h3 class="posts-item-note" aria-label="Recent Posts">{{ T "home.recent_posts" }}</h3> -->
+            {{/* Show last 300 posts in reverse date order */}}
+            {{ $pagesToShow := where .Site.RegularPages "Type" "in" site.Params.mainSections }}
+            {{ $posts := $pagesToShow.ByDate.Reverse }}
+            {{ range first 300 $posts }}
+            {{ partial "postCard" . }}
+            {{ end }}
+            {{ if gt (len $posts) 300 }}
+            <p>
+            {{ range $firstSection := (where .Site.Sections "Section" "in" (first 1 (.Site.Params.mainSections))) }}
+            <a href="{{ $firstSection.Permalink }}">{{ T "home.see_all_posts" }}</a>
+            {{ end }}
+            </p>
+            {{ end }}
+        </main>
+    </div>
+    {{- partial "footer.html" . -}}
+    {{- partial "scriptsBodyEnd.html" . -}}
+</body>
+</html>
