@@ -1,0 +1,50 @@
+{{ define "main" }}
+<content>
+	<!-- Render latest 5 posts section -->
+	<!-- <h4>Latest Posts</h4> -->
+	<ul class="blog-posts">
+		{{ $posts := where .Site.RegularPages "Section" "posts" }}
+		{{ range $posts }}
+		<li>
+			<span>
+				<i>
+					<time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+						{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+					</time>
+				</i>
+			</span>
+			<a href="{{ .Permalink }}">{{ .Title }}</a>
+		</li>
+		{{ else }}
+		<li>
+			No posts yet
+		</li>
+		{{ end }}
+	</ul>
+
+	<!-- Render posts grouped by tags -->
+	<!-- <h4>Posts by Tags</h4> -->
+	<!-- {{ $allTags := .Site.Taxonomies.tags }} -->
+	<!-- {{ range $tag, $pages := $allTags }} -->
+	<!-- <h4>{{ $tag }}</h4> -->
+	<!-- <ul class="blog-posts"> -->
+	<!--   {{ range $pages }} -->
+	<!--   <li> -->
+	<!--     <span> -->
+	<!--       <i> -->
+	<!--         <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate> -->
+	<!--           {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }} -->
+	<!--         </time> -->
+	<!--       </i> -->
+	<!--     </span> -->
+	<!--     <a href="{{ .Permalink }}">{{ .Title }}</a> -->
+	<!--   </li> -->
+	<!--   {{ else }} -->
+	<!--   <li> -->
+	<!--     No posts yet -->
+	<!--   </li> -->
+	<!--   {{ end }} -->
+	<!-- </ul> -->
+	<!-- {{ end }} -->
+</content>
+{{ end }}
