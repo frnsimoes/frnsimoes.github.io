@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>frn.sh</title>
+    <link>//localhost:1313/til/</link>
+    <description>Recent content on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 18 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/til/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writing to disk with O_SYNC</title>
+      <link>//localhost:1313/til/osync/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/osync/</guid>
+      <description>&lt;p&gt;write(2) doesn&amp;rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block.&lt;/p&gt;&#xA;&lt;p&gt;Linux exposes the actual timeframe for periodic writings:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs &#xA;500&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>Source and export diff</title>
+      <link>//localhost:1313/til/source-and-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/source-and-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so &lt;code&gt;bash -c &#39;declare -f&#39;&lt;/code&gt; doesn&amp;rsquo;t output anything. But we can source it: &lt;code&gt;bash -c &#39;source ~/.bashrc; hello&#39;&lt;/code&gt;. Or even: &lt;code&gt;bash -c &#39;hello() { echo &amp;quot;hi&amp;quot;; }; declare -f&#39;&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s all about memory share in shell modes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;source&lt;/code&gt; changes only affect current shell memory.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;export&lt;/code&gt; marks variables to be passed to child processes.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Subtile difference that can save us lots of debugging time.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Cool trick: the kernel stack of a process</title>
+      <link>//localhost:1313/til/proc-pid-stack/</link>
+      <pubDate>Mon, 15 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

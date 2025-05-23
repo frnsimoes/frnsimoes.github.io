@@ -1,0 +1,27 @@
+<div class="header-container">
+    <a href="{{ "" | relURL }}" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="{{ "/" | relURL }}">home</a> /
+      <a href="{{ "til" | relURL }}">til</a> /
+      <!-- <a href="{{ "csp" | relURL }}">csp</a> / -->
+      <a href="mailto:fernando@frn.sh">email me</a> /
+      <a href="{{ "index.xml" | relURL }}">rss</a> 
+    </div>
+</div>
+<!-- <nav>{{- partial "nav.html" . -}}</nav> -->
+
+{{ if .IsHome }}
+<div class="intro-text">
+    <p>
+    Hey there! I'm a software engineer who also happens to actually like computers. This blog page is an incentive for me to keep writing about the things I love and to procrastinate in a <a href="https://structuredprocrastination.com/" target="_blank">structured way</a>.
+    </p>
+  <!--   <p> -->
+  <!--   Some other hobbies / passions I have:  -->
+  <!-- <ul> -->
+  <!--     <li>Literature: I read everything Tolstoy and Dostoevsky published. I wrote an essay about Shakespeare editions and helped translate The Tempest into portuguese (Cia das Letras). </li> -->
+  <!--     <li> Video-games: I'm a From Software nerd, I know Elden Ring maps by heart and finished the first Dark Souls game at level 1. Also: Silent Hill and Shenmue. </li> -->
+  <!--     <li> Computer keyboards: Topre, mechanical, space invaders, you name it. Old or new, I like them all.</li> -->
+  <!-- </ul> -->
+</div>
+{{ end }}
+

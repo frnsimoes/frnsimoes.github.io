@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Networking on frn.sh</title>
+    <link>//localhost:1313/blog/computer-networking/</link>
+    <description>Recent content in Computer Networking on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Fri, 13 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/computer-networking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TCP may be tricky</title>
+      <link>//localhost:1313/posts/tricky-tcp/</link>
+      <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/tricky-tcp/</guid>
+      <description>&lt;p&gt;TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &amp;ldquo;receive window&amp;rdquo; (&lt;code&gt;rwnd&lt;/code&gt;). The receive window indicates the maximum bytes that the TCP socket&amp;rsquo;s buffer can process. Until recent years, the de facto &lt;code&gt;rwnd&lt;/code&gt; was 64KB. Nowadays, it can be up to 1 gigabyte&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;, depending on server configuration. TCP also has another variable, a private one, called &lt;code&gt;cwnd&lt;/code&gt;. The purpose of this variable is to avoid congestion. A TCP socket will control how much data it sends over the wire based on this variable. When the client and server start to exchange data, the sending socket checks the &lt;code&gt;cwnd&lt;/code&gt; variable. If it&amp;rsquo;s the first time it sends data after the three-way handshake, the &lt;code&gt;cwnd&lt;/code&gt; is set to 10&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;, indicating that the socket can send 10 segments (of ~14KB each). The TCP socket will increase the amount of data sent by doubling it after each ACK. This is called &lt;code&gt;Slow Start&lt;/code&gt;. Besides Slow Start, TCP also has &lt;code&gt;Slow Restart&lt;/code&gt;: when the connection is idle for a while, TCP can&amp;rsquo;t presume the state of the network at that moment, significantly reducing the &lt;code&gt;cwnd&lt;/code&gt; value.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

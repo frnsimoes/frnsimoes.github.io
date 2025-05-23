@@ -1,0 +1,18 @@
+{{ define "main" }}
+<content>
+  <h1>{{ .Title }}</h1>
+  <p>{{ .Content }}</p>
+  
+  <div class="til-list">
+    {{ range .Pages.ByDate.Reverse }}
+      <div class="til-item">
+        <h2>{{ .Title }}</h2>
+        <p class="til-date">{{ .Date.Format "Jan 2 2006" }}</p>
+        <div class="til-content">{{ .Content }}</div>
+      </div>
+    {{ else }}
+      <p>No TILs posted yet.</p>
+    {{ end }}
+  </div>
+</content>
+{{ end }} 
