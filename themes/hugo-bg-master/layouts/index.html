@@ -1,0 +1,54 @@
+{{ define "main" }}
+<content>
+	<!-- Profile/bio section -->
+	<div class="profile-section">
+	</div>
+
+	<h4>Posts</h4>
+	<ul class="blog-posts">
+		{{ $posts := where .Site.RegularPages "Section" "posts" }}
+		{{ range $posts }}
+		<li>
+			<span>
+				<i>
+					<time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+						{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+					</time>
+				</i>
+			</span>
+			<a href="{{ .Permalink }}">{{ .Title }}</a>
+		</li>
+		{{ else }}
+		<li>
+			No posts yet
+		</li>
+		{{ end }}
+	</ul>
+
+	<!-- Render CS Primer section --> 
+	<!-- <h2>CSP 2024</h2>
+	Things I wrote while doing Oz's course, and a bit of OSTEP and Kurose.
+	<ul class="blog-posts">
+		{{ $posts := where .Site.RegularPages "Section" "posts" }}
+		{{ $cspPosts := where $posts ".Params.csp" true }}
+		{{ range $cspPosts }}
+		<li>
+			<span>
+				<i>
+					<time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+						{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+					</time>
+				</i>
+			</span>
+			<a href="{{ .Permalink }}">{{ .Title }}</a>
+		</li>
+		{{ else }}
+		<li>
+			No CS Primer posts yet
+		</li>
+		{{ end }}
+	</ul> -->
+
+</content>
+Check out the TIL section too :).
+{{ end }}

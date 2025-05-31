@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>frn.sh</title>
+    <link>//localhost:1313/</link>
+    <description>Recent content on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 25 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>xxd(1) is a neat tool</title>
+      <link>//localhost:1313/til/xxd/</link>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/xxd/</guid>
+      <description>&lt;p&gt;Found out about a cool tool today: &lt;code&gt;xxd(1)&lt;/code&gt;. Basically, it can help you convert a hexdump file into binary or vice versa. For example:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜   head -c 100 /dev/urandom &amp;gt; out.bin&#xA;➜   cat out.bin&#xA;5O0!3&amp;lt;[N&#xA;                R4DT&amp;#39;{SC95#Rd5b62i^5u(OcD&amp;#34;/MrJBUZ%&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&amp;rsquo;s hexdump it:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  hexdump -C out.bin &amp;gt; out.hex&#xA;➜  cat out.hex&#xA;00000000  35 e2 4f 30 21 b4 33 e2  c8 af b9 3c 5b ba 4e 0b  |5.O0!.3....&amp;lt;[.N.|&#xA;00000010  09 f6 52 16 34 11 44 54  85 96 b6 00 27 a2 7b 04  |..R.4.DT....&amp;#39;.{.|&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And then use xxd(1) to convert it back:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>postgres vacuum and netbsd dir size</title>
+      <link>//localhost:1313/til/vacuum/</link>
+      <pubDate>Fri, 23 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/vacuum/</guid>
+      <description>&lt;p&gt;Running &lt;code&gt;vacuum full&lt;/code&gt; in Postgres requires as much free disk space as your database currently occupies, since it rebuilds the entire table by copying all the non-deleted rows to a new file. &lt;code&gt;vacuum&lt;/code&gt; on the other reclaims dead tuples space. Something &lt;a href=&#34;https://www.youtube.com/watch?v=gY0SE-71LZA&amp;amp;list=PL0qfF8MrJ-jxMfirAdxDs9zIiBg2Wug0z&amp;amp;index=19&#34;&gt;similar&lt;/a&gt; occurs with directories in netBSD. If you create lots of files of 255 chars in a directory, the size of the directory will increase. If you delete all files, the size won&amp;rsquo;t decrease.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Blogs I Love</title>
+      <link>//localhost:1313/links/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/links/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>writing to disk with O_SYNC</title>
+      <link>//localhost:1313/til/osync/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/osync/</guid>
+      <description>&lt;p&gt;write(2) doesn&amp;rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block.&lt;/p&gt;&#xA;&lt;p&gt;Linux exposes the actual timeframe for periodic writings:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs &#xA;500&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>Exploring socat(1) and unix sockets</title>
+      <link>//localhost:1313/posts/unix-socket/</link>
+      <pubDate>Thu, 15 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/unix-socket/</guid>
+      <description>&lt;p&gt;I was just trying to have a nice, quiet day when I opened Jan&amp;rsquo;s &lt;a href=&#34;https://www.youtube.com/playlist?list=PL0qfF8MrJ-jxMfirAdxDs9zIiBg2Wug0z&#34;&gt;Advanced Programming in Unix the Environment course&lt;/a&gt;, specifically in the lecture about stat(1). While watching the part about &lt;code&gt;st_mode&lt;/code&gt; and file sharing, I came to the realization that a socket is also a file type (or only a type in the mode field?)&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;&#xA;&lt;p&gt;So, I first created a unix connection using /tmp/test.sock file.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  /tmp stat test.sock&#xA;  File: test.sock&#xA;  Size: 0               Blocks: 0          IO Block: 4096   socket&#xA;Device: 259,3   Inode: 14155790    Links: 1&#xA;Access: (0755/srwxr-xr-x)  Uid: ( 1000/   frnsh)   Gid: ( 1000/   frnsh)&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ok. IO Block is still there, so it means that socket files still have some operation around reading / writing.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Terminal keyboards</title>
+      <link>//localhost:1313/posts/tty/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/tty/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;//localhost:1313/static/tty/dec.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;My birthday will be next month, so I bought myself something I wanted for a while: a terminal keyboard. Last year I read this &lt;a href=&#34;https://www.linusakesson.net/programming/tty/&#34;&gt;article&lt;/a&gt; about the history of the terminal, and it fascinated me. Well, I found this DEC-style Televideo terminal keyboard from the 70s or 80s (I can&amp;rsquo;t be sure of the exact date), and took advantage of the opportunity to learn a few things.&lt;/p&gt;&#xA;&lt;p&gt;These old terminal keyboards were sold alongside a &amp;ldquo;computer terminal.&amp;rdquo; A computer terminal was essentially a &amp;ldquo;dumb&amp;rdquo; display and input device. The real computing power was in the mainframe, which was typically placed in another room in the office building. The terminal would send characters to the mainframe and then display the results back to the user. It didn&amp;rsquo;t have its own operating system. The notion of keycodes, scancodes, and other abstractions that we have nowadays didn&amp;rsquo;t exist in the same way.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Grumpy dude&#39;s reflections on testing</title>
+      <link>//localhost:1313/testing-software/</link>
+      <pubDate>Sun, 02 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/testing-software/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve been working in software development for almost 4 years, and although it&amp;rsquo;s not an extensive amount of time, I don&amp;rsquo;t think I&amp;rsquo;ve ever met a developer who liked to write tests. In fact, the tooling we have seems to confirm and endorse this sentiment. It&amp;rsquo;s hard to write tests against services running on different nodes; it&amp;rsquo;s hard to write tests against integration functionality. Mocking, faking, the London school, all these things don&amp;rsquo;t bring us glory in this ungrateful field. Even worse: developers who don&amp;rsquo;t write tests deliver features faster. Product owners and stakeholders are happy, and the business is happy&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>In defense of rabbit holes</title>
+      <link>//localhost:1313/posts/rabbit-hole/</link>
+      <pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/rabbit-hole/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve been thinking about education for a while now. Some time ago, listening to Remzi&amp;rsquo;s lecture about operating systems, I heard him say something like this to his students: &amp;ldquo;Don&amp;rsquo;t just learn the general aspect of things; learn the details. Having just a notion of a subject is precisely the definition of ignorance.&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;This idea from Remzi got me thinking, and today I want to write about what I&amp;rsquo;ve been reflecting on regarding this matter.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>source and export diff</title>
+      <link>//localhost:1313/til/source-and-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/source-and-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so &lt;code&gt;bash -c &#39;declare -f&#39;&lt;/code&gt; doesn&amp;rsquo;t output anything. But we can source it: &lt;code&gt;bash -c &#39;source ~/.bashrc; hello&#39;&lt;/code&gt;. Or even: &lt;code&gt;bash -c &#39;hello() { echo &amp;quot;hi&amp;quot;; }; declare -f&#39;&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s all about memory share in shell modes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;source&lt;/code&gt; changes only affect current shell memory.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;export&lt;/code&gt; marks variables to be passed to child processes.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Subtile difference that can save us lots of debugging time.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How does the Kernel handle TCP requests?</title>
+      <link>//localhost:1313/posts/sockets/</link>
+      <pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/sockets/</guid>
+      <description>&lt;p&gt;My first encounter with sockets changed everything. It was one of those &amp;ldquo;aha!&amp;rdquo; moments where the internet&amp;rsquo;s machinery suddenly clicked into place. The internet is a beautiful, beautiful thing. There are so many things to say about how it works - from application protocols, such as HTTP - to sharks biting internet cables in the ocean.&lt;/p&gt;&#xA;&lt;p&gt;I often ask myself: how the hell did they invent something so cool as communication between processes running on different and distant machines? The design is actually tremendously simple. Let&amp;rsquo;s find out.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Notes on paging and other memory stuff</title>
+      <link>//localhost:1313/posts/memory-paging/</link>
+      <pubDate>Sun, 08 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/memory-paging/</guid>
+      <description>&lt;p&gt;One of the most practical things we can do on a linux box regarding memory is to use &lt;code&gt;mmap&lt;/code&gt; to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the &lt;code&gt;mmap&lt;/code&gt; documentation when I found a flag named &lt;code&gt;MAP_HUGETLB&lt;/code&gt;. I got hooked by this and couldn&amp;rsquo;t stop myself from finding out more.&lt;/p&gt;&#xA;&lt;p&gt;So here it is: A &lt;a href=&#34;https://man7.org/linux/man-pages/man2/mmap.2.html&#34;&gt;huge page&lt;/a&gt; is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What&#39;s the Postgres server?</title>
+      <link>//localhost:1313/posts/postgres-server/</link>
+      <pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/postgres-server/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m finding Postgres&amp;rsquo; process architecture really interesting. A great overview on the topic is Suzuki&amp;rsquo;s explanation of various types of processes, which you can find &lt;a href=&#34;https://www.interdb.jp/pg/pgsql02/01.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Postgres server process: the &amp;ldquo;parent&amp;rdquo; process that manages the database system. It&amp;rsquo;s the thing that has an IP and a port.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Backend process: It&amp;rsquo;s the entity that reads and writes queries.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Background process: a process created by the server process to perform various tasks, such as vacuuming, archiving, and replication. Background processes run independently of the client connections.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Postgres tables on disk</title>
+      <link>//localhost:1313/posts/postgres-table/</link>
+      <pubDate>Thu, 24 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/postgres-table/</guid>
+      <description>&lt;p&gt;I found a really interesting thing while watching Oz&amp;rsquo;s explanation on Postgres tables: we can actually see what&amp;rsquo;s going on inside a table.&lt;/p&gt;&#xA;&lt;p&gt;I created a simple table, &lt;code&gt;foo&lt;/code&gt;, then inserted two records into it.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;postgres=# create table foo (id int, age smallint, name varchar(100));&#xA;CREATE TABLE&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can find the location of Postgres data files by running &lt;code&gt;SHOW data_directory;&lt;/code&gt; in the psql shell. And the file related to that specific table with the command &lt;code&gt;SELECT pg_relation_filepath(&#39;table_name&#39;);&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How do we talk to the Kernel about namespaces?</title>
+      <link>//localhost:1313/posts/namespaces/</link>
+      <pubDate>Sun, 06 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/namespaces/</guid>
+      <description>&lt;p&gt;In the current Linux kernel, we have three interfaces for namespaces: &lt;code&gt;clone&lt;/code&gt;, &lt;code&gt;unshare&lt;/code&gt; and &lt;code&gt;setns&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;&lt;code&gt;clone&lt;/code&gt; is the grandfather of namespace operations&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. It&amp;rsquo;s a syscall that creates a new process, similar to &lt;code&gt;fork&lt;/code&gt;, but with superpowers. When creating a new process with &lt;code&gt;clone&lt;/code&gt;, you can specify which namespaces&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; you want the child process to inherit from its parent and which ones should be created anew. For example, if you want a process to have its own PID namespace but share everything else with its parent, you&amp;rsquo;d use &lt;code&gt;clone&lt;/code&gt; with the &lt;code&gt;CLONE_NEWPID&lt;/code&gt; flag. This is actually what happens under the hood when you run a container.&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Taking a look at Go&#39;s runtime/proc.go</title>
+      <link>//localhost:1313/posts/go-scheduler/</link>
+      <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/go-scheduler/</guid>
+      <description>&lt;p&gt;Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole. So I thought about writing the few things I understood about it to at least paint a big picture of what&amp;rsquo;s happening behind the scenes.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Shell, environment lists, processes and sourcing</title>
+      <link>//localhost:1313/posts/shell-source/</link>
+      <pubDate>Thu, 22 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/shell-source/</guid>
+      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Line buffering, tty and write(2)</title>
+      <link>//localhost:1313/posts/print-strace/</link>
+      <pubDate>Sat, 20 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/print-strace/</guid>
+      <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Forcing fork() to fail</title>
+      <link>//localhost:1313/posts/when-fork-fails/</link>
+      <pubDate>Sat, 22 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/when-fork-fails/</guid>
+      <description>&lt;p&gt;What if &lt;code&gt;fork()&lt;/code&gt; fails?&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; Well, this is really a problematic issue since you have to handle the return value manually. &lt;code&gt;fork()&lt;/code&gt; has three possible return values: If it&amp;rsquo;s &lt;code&gt;0&lt;/code&gt;, we know we are in the child&amp;rsquo;s realm. If it&amp;rsquo;s a positive integer, this represents the child&amp;rsquo;s &lt;code&gt;pid&lt;/code&gt;, and if it&amp;rsquo;s &lt;code&gt;-1&lt;/code&gt;, &lt;code&gt;fork()&lt;/code&gt; has failed.&lt;/p&gt;&#xA;&lt;p&gt;But what happens when: you forget to test &lt;code&gt;pid&lt;/code&gt; equals &lt;code&gt;-1&lt;/code&gt; and you want to send a sigkill to the child&amp;rsquo;s &lt;code&gt;pid&lt;/code&gt; in the parent&amp;rsquo;s process? I was reading &lt;a href=&#34;https://rachelbythebay.com/w/2014/08/19/fork/&#34;&gt;rachelbythebay&lt;/a&gt; post on this problem and thought: how could I make &lt;code&gt;fork()&lt;/code&gt; fail? Maybe by allocating lots of memory to the process. Perhaps by using &lt;code&gt;ulimit(3)&lt;/code&gt; to limit the allowed processes? But these felt kind of troublesome, so I found &lt;code&gt;getrlimit&lt;/code&gt;, a system call that limits a resource&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; for the user.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Studying Computer Science</title>
+      <link>//localhost:1313/posts/studying-cs/</link>
+      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/studying-cs/</guid>
+      <description>&lt;p&gt;(Checkout the &lt;a href=&#34;https://github.com/frnsimoes/computer-science-studies&#34;&gt;repo&lt;/a&gt;).&lt;/p&gt;&#xA;&lt;p&gt;As soon as I started working as a software developer, I knew that I wanted to study computer science the &amp;ldquo;right&amp;rdquo; way. I&amp;rsquo;m the kind of person who is bothered when I don&amp;rsquo;t know how something works behind the scenes.&lt;/p&gt;&#xA;&lt;p&gt;Over the past couple of years, I’ve tried a lot of different things:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Reading the books listed on &lt;a href=&#34;https://teachyourselfcs.com&#34;&gt;teachyourselfcs.com&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Applying myself to the courses on &lt;a href=&#34;https://github.com/ossu/computer-science&#34;&gt;OSSU&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;li&gt;Exploring various perspectives on computer science, like one focused on &lt;a href=&#34;https://functionalcs.github.io/curriculum/#Introduction&#34;&gt;functional programming&lt;/a&gt; (some really nice lessons on parallelism there).&lt;/li&gt;&#xA;&lt;li&gt;Completing &lt;a href=&#34;https://inst.eecs.berkeley.edu/~cs61a/fa18/&#34;&gt;CS61A&lt;/a&gt; in 2021, which I loved. This led me to try &lt;a href=&#34;https://www.youtube.com/watch?v=h59h5DoNhL4&amp;amp;list=PLgNUCz66KaWRSVzIeT_qB2yBgHocLmRWI&#34;&gt;CS61B&lt;/a&gt; (data structures and algorithms) and &lt;a href=&#34;https://www.youtube.com/watch?v=VJ6tuX5bBf4&amp;amp;list=PL0j-r-omG7i0-mnsxN5T4UcVS1Di0isqf&amp;amp;index=1&#34;&gt;CS61C&lt;/a&gt; (computer systems, C, and Assembly). I couldn’t get through CS61B at all, and CS61C was really fun until the C part.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;None of these methods worked too well for me. I would start one, get excited (I loved &lt;a href=&#34;https://www.edx.org/learn/coding/university-of-british-columbia-how-to-code-simple-data&#34;&gt;Systematic Program Design&lt;/a&gt;, for example), but then leave it behind for various reasons.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>cool trick: the kernel stack of a process</title>
+      <link>//localhost:1313/til/proc-pid-stack/</link>
+      <pubDate>Mon, 15 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What happens when a row is updated?</title>
+      <link>//localhost:1313/posts/update-tuple/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/update-tuple/</guid>
+      <description>&lt;p&gt;When we update a tuple in a page, a tuple-oriented dbms does the following steps:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;check page directory to find location of the page;&lt;/li&gt;&#xA;&lt;li&gt;retrieve the page from disk if it&amp;rsquo;s not in memory;&lt;/li&gt;&#xA;&lt;li&gt;find the offset of the page;&lt;/li&gt;&#xA;&lt;li&gt;marks existing tuple as deleted and inserts new data.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s understand this better with a simple &lt;code&gt;test&lt;/code&gt; table in Postgres.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;postgres=# insert into test (value) values (&amp;#39;t1&amp;#39;);&#xA;INSERT 0 1&#xA;postgres=# insert into test (value) values (&amp;#39;t2&amp;#39;);&#xA;INSERT 0 1&#xA;postgres=# select ctid, value from test;&#xA; ctid  | value&#xA;-------+-------&#xA; (0,1) | t1&#xA; (0,2) | t2&#xA;(2 rows)&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here we have a table &lt;code&gt;test&lt;/code&gt; with a column &lt;code&gt;value&lt;/code&gt;. We inserted two tuples into the table with values &lt;code&gt;t1&lt;/code&gt; and &lt;code&gt;t2&lt;/code&gt;. The &lt;code&gt;ctid&lt;/code&gt; column is a pseud column. The first number indicates the page the tuple is in; the second number represents the offset of that tuple in that specific page. Based on this information, we know that the two inserted tuples are in the page &lt;code&gt;0&lt;/code&gt;, and that &lt;code&gt;t1&lt;/code&gt; has the offset &lt;code&gt;1&lt;/code&gt; and &lt;code&gt;t2&lt;/code&gt; has the offset &lt;code&gt;2&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>I wrote a WSGI application</title>
+      <link>//localhost:1313/posts/wsgi-app/</link>
+      <pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/wsgi-app/</guid>
+      <description>&lt;p&gt;This Christmas, I decided to create a really simple server framework in Python, implementing a WSGI application.&lt;/p&gt;&#xA;&lt;p&gt;I was mostly interested in learning more about how different frameworks in Python handle design choices in implementation, especially regarding the abstractions of requests and responses.&lt;/p&gt;&#xA;&lt;p&gt;I had the chance to explore Flask (and Werkzeug), Bottle, Django, and some details of HTTP messages. There is still much more to learn, though!&lt;/p&gt;&#xA;&lt;p&gt;I started by trying to deal with the intricate details of sockets, but I gave up soon enough to concentrate on the WSGI application itself.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Debugging session: Iptables, Docker, etc.</title>
+      <link>//localhost:1313/posts/debugging-network/</link>
+      <pubDate>Tue, 19 Sep 2023 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/debugging-network/</guid>
+      <description>&lt;p&gt;I spent more than 30 minutes debugging a connection error while trying to access a Postgres server running locally on Docker. I was in the middle of solving another bug, trying to verify some data, and I simply couldn’t connect to the database. Then I remembered I was connected to a VPN, and that was the whole problem. This experience got me really curious (after I finished screaming at the skies in ragged clothes just like King Lear in Act IV). So, what really does happen when we send a request to a server? Let&amp;rsquo;s make this straight and brief, so we can get to the more on point question: Docker.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>//localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/about/</guid>
+      <description>&lt;h3 id=&#34;about-this-website&#34;&gt;About this website&lt;/h3&gt;&#xA;&lt;p&gt;This blog is a collection of my notes and casual experiments. It also serves as an incentive for me to keep writing about the things I love and to procrastinate in a &lt;a href=&#34;https://structuredprocrastination.com/&#34;&gt;structured way&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Blogs that inspired this blog:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://jvns.ca/&#34;&gt;https://jvns.ca/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.cyberdemon.org/&#34;&gt;https://www.cyberdemon.org/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;about-me&#34;&gt;About me&lt;/h3&gt;&#xA;&lt;p&gt;Hi! I&amp;rsquo;m Fernando, a software developer who also happens to actually like computers. I grew up in the 90s, fascinated by the magical machine &lt;em&gt;beep&lt;/em&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>//localhost:1313/locks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/locks/</guid>
+      <description>&lt;p&gt;Exploring locks.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;&#xA;#include &amp;lt;pthread.h&amp;gt;&#xA;&#xA;#define EACH_COUNT 1000&#xA;&#xA;pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;&#xA;&#xA;volatile int counter = 0;&#xA;&#xA;void* thread_entry(void *arg) {&#xA;&#x9;for (int i = 1; i &amp;lt; EACH_COUNT; i++) {&#xA;    pthread_mutex_lock(&amp;amp;lock);&#xA;        counter++;&#xA;    pthread_mutex_unlock(&amp;amp;lock);&#xA;    }&#xA;&#x9;return NULL;&#xA;}&#xA;&#xA;int main() {&#xA;&#x9;pthread_t p1, p2;&#xA;&#x9;pthread_create(&amp;amp;p1, NULL, thread_entry, NULL);&#xA;&#x9;pthread_create(&amp;amp;p2, NULL, thread_entry, NULL);&#xA;&#xA;&#x9;pthread_join(p1, NULL);&#xA;&#x9;pthread_join(p2, NULL);&#xA;&#xA;&#x9;printf(&amp;#34;Final count %d (expected %d)\n&amp;#34;, counter, 2 * EACH_COUNT);&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Scenario: Two threads: T1 and T2. T1 -&amp;gt; Lock -&amp;gt; running, but at some point, an interrupt occurs. T2 tries to get hold of the lock, but it is stuck. If another interrupt occurs in the same context, the result will be the same, no matter how many times T2 tries to get hold of the lock (because of the interrupt). T2 can only take hold when &lt;code&gt;unlock()&lt;/code&gt; is called.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

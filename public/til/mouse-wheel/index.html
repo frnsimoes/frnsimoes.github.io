@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=36949&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:36949/images/favicon.png" />
+<title>source and export | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    margin-top: 10px;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+    margin-bottom: 40px;
+    text-align: left;
+  }
+
+  .contact-links {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 10px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .til-item:last-child {
+    border-bottom: none;
+  }
+
+  .til-item h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .til-content {
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">source and export | frn.sh</title>
+<meta property="og:title" content="source and export | frn.sh" />
+<meta name="twitter:title" content="source and export | frn.sh" />
+<meta itemprop="name" content="source and export | frn.sh" />
+<meta name="application-name" content="source and export | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:36949/til/mouse-wheel/" title="" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.147.0">
+
+    
+    <meta property="og:url" content="//localhost:36949/til/mouse-wheel/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="source and export">
+  <meta property="og:description" content="Non-interactive shells don’t load initialization files, so bash -c &#39;declare -f&#39; doesn’t output anything.
+But we can source it: bash -c &#39;source ~/.zshrc; hello&#39;.
+Or even: bash -c &#39;hello() { echo &#34;hi&#34;; }; declare -f&#39;.
+It’s all about memory share in shell modes.
+source changes only affect current shell memory.
+export marks variables to be passed to child processes.
+Subtile difference that can save us lots of debugging time.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="til">
+    <meta property="article:published_time" content="2025-05-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-18T00:00:00+00:00">
+    <meta property="og:image" content="//localhost:36949/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:36949/images/share.png">
+  <meta name="twitter:title" content="source and export">
+  <meta name="twitter:description" content="Non-interactive shells don’t load initialization files, so bash -c &#39;declare -f&#39; doesn’t output anything.
+But we can source it: bash -c &#39;source ~/.zshrc; hello&#39;.
+Or even: bash -c &#39;hello() { echo &#34;hi&#34;; }; declare -f&#39;.
+It’s all about memory share in shell modes.
+source changes only affect current shell memory.
+export marks variables to be passed to child processes.
+Subtile difference that can save us lots of debugging time.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:36949/til/mouse-wheel/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:36949/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <h1 style="color: #000000;">frn.sh</h1>
+  <div class="nav-bar">
+    <a href="/" class="home">home</a>
+    <a href="/til" class="til">til</a>
+    <a href="/about" class="about-me">about</a>
+  </div>
+</div>
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">source and export</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>Non-interactive shells don&rsquo;t load initialization files, so <code>bash -c 'declare -f'</code> doesn&rsquo;t output anything.</p>
+<p>But we can source it: <code>bash -c 'source ~/.zshrc; hello'</code>.</p>
+<p>Or even: <code>bash -c 'hello() { echo &quot;hi&quot;; }; declare -f'</code>.</p>
+<p>It&rsquo;s all about memory share in shell modes.</p>
+<p><code>source</code> changes only affect current shell memory.</p>
+<p><code>export</code> marks variables to be passed to child processes.</p>
+<p>Subtile difference that can save us lots of debugging time.</p>
+
+  </content>
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="mailto:fernando@frn.sh">email me</a> / 
+  <a href="https://linkedin.com/in/frnsimoes" target="_blank">linkedin</a> / 
+  <a href="/index.xml">rss</a>
+</div>
+</footer>
+
+    
+</body>
+
+</html>
