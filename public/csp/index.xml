@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Csps on frn.sh</title>
+    <link>//localhost:1313/csp/</link>
+    <description>Recent content in Csps on frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Tue, 09 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/csp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Getting to know IO Multiplexing</title>
+      <link>//localhost:1313/csp/io-multiplexing/</link>
+      <pubDate>Tue, 09 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/csp/io-multiplexing/</guid>
+      <description>&lt;p&gt;IO multiplexing is a complex topic at first. But it&amp;rsquo;s the basis of &amp;ldquo;concurrency&amp;rdquo; without multiple threads or processors. So it&amp;rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.&lt;/p&gt;&#xA;&lt;p&gt;The secret of IO multiplexing is being able to handle multiple things at once. And by &amp;ldquo;things&amp;rdquo; I mean multiple behaviors that have an input or output in file descriptors.&lt;/p&gt;&#xA;&lt;p&gt;Multiplexing is a well-known resource to deal with the &amp;ldquo;we need to gather some things, and then deliver them to their own proprietors&amp;rdquo; scenario. It&amp;rsquo;s a way of diligently proxying receipts to their appropriate recipients.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
