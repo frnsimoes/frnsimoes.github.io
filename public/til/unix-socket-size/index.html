@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Unix socket files have zero size | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    margin-top: 10px;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+    margin-bottom: 40px;
+    text-align: left;
+  }
+
+  .contact-links {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 10px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .til-item:last-child {
+    border-bottom: none;
+  }
+
+  .til-item h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .til-content {
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Unix socket files have zero size | frn.sh</title>
+<meta property="og:title" content="Unix socket files have zero size | frn.sh" />
+<meta name="twitter:title" content="Unix socket files have zero size | frn.sh" />
+<meta itemprop="name" content="Unix socket files have zero size | frn.sh" />
+<meta name="application-name" content="Unix socket files have zero size | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/til/unix-socket-size/" title="" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.147.0">
+
+    
+    <meta property="og:url" content="//localhost:1313/til/unix-socket-size/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="Unix socket files have zero size">
+  <meta property="og:description" content="Today I learned that Unix socket files have zero size on disk despite being used to transmit data. When you check a socket file with stat, it shows:
+$ stat /tmp/my.sock File: /tmp/my.sock Size: 0 Blocks: 0 IO Block: 4096 socket This is because the socket file is just an entry point in the filesystem. The actual data exchange happens in memory buffers managed by the kernel, not in the file itself.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="til">
+    <meta property="article:published_time" content="2025-03-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-10T00:00:00+00:00">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="Unix socket files have zero size">
+  <meta name="twitter:description" content="Today I learned that Unix socket files have zero size on disk despite being used to transmit data. When you check a socket file with stat, it shows:
+$ stat /tmp/my.sock File: /tmp/my.sock Size: 0 Blocks: 0 IO Block: 4096 socket This is because the socket file is just an entry point in the filesystem. The actual data exchange happens in memory buffers managed by the kernel, not in the file itself.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/til/unix-socket-size/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <h1 style="color: #000000;">frn.sh</h1>
+  <div class="nav-bar">
+    <a href="/" class="home">home</a>
+    <a href="/til" class="til">til</a>
+    <a href="/about" class="about-me">about</a>
+  </div>
+</div>
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">Unix socket files have zero size</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>Today I learned that Unix socket files have zero size on disk despite being used to transmit data. When you check a socket file with <code>stat</code>, it shows:</p>
+<pre tabindex="0"><code>$ stat /tmp/my.sock
+File: /tmp/my.sock
+Size: 0    Blocks: 0    IO Block: 4096   socket
+</code></pre><p>This is because the socket file is just an entry point in the filesystem. The actual data exchange happens in memory buffers managed by the kernel, not in the file itself.</p>
+<p>You can&rsquo;t read a socket file with regular file I/O operations like <code>cat</code> - you&rsquo;ll get an error:</p>
+<pre tabindex="0"><code>$ cat /tmp/my.sock
+cat: /tmp/my.sock: No such device or address
+</code></pre><p>Instead, processes need to use socket API calls to communicate through them. It&rsquo;s a great example of how in Unix &ldquo;everything is a file&rdquo; is more about the interface metaphor than actual storage.</p>
+
+  </content>
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="mailto:fernando@frn.sh">email me</a> / 
+  <a href="https://linkedin.com/in/frnsimoes" target="_blank">linkedin</a> / 
+  <a href="/index.xml">rss</a>
+</div>
+</footer>
+
+    
+</body>
+
+</html>

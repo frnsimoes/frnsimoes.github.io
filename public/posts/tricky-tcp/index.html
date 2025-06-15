@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>TCP may be tricky | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+    border-top: 1px solid #eaeaea;
+    margin-top: 40px;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .footer-links p {
+    margin: 0.7em 0;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+     
+     
+    text-align: left;
+  }
+
+  .contact-links {
+     
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 0px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .intro-text {
+    margin: 0
+    color: #555;
+    font-size: 1.05em;
+    line-height: 1.6;
+    max-width: 650px;
+  }
+
+  .intro-text a {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+  }
+
+  .intro-text a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid var(--link-color);
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
+  }
+
+  .til-item h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .til-content {
+    margin-top: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .til-content p {
+    margin-bottom: 0.7rem;
+  }
+
+  .til-content code {
+    background-color: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.65em;
+    border: 1px solid #e0e0e0;
+  }
+
+  .til-content pre {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .til-content pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 0.7em;
+  }
+  
+  .til-content a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  
+  .til-content a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">TCP may be tricky | frn.sh</title>
+<meta property="og:title" content="TCP may be tricky | frn.sh" />
+<meta name="twitter:title" content="TCP may be tricky | frn.sh" />
+<meta itemprop="name" content="TCP may be tricky | frn.sh" />
+<meta name="application-name" content="TCP may be tricky | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/posts/tricky-tcp/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-09-13T00:00:00Z />
+    <meta property="article:published_time" content=2024-09-13T00:00:00Z />
+    <meta property="og:url" content="//localhost:1313/posts/tricky-tcp/" />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "TCP may be tricky",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-09-13",
+        "description": "",
+        "wordCount":  303 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-09-13",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "frn.sh"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.147.0">
+
+    
+    <meta property="og:url" content="//localhost:1313/posts/tricky-tcp/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="TCP may be tricky">
+  <meta property="og:description" content="TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the “receive window” (rwnd). The receive window indicates the maximum bytes that the TCP socket’s buffer can process. Until recent years, the de facto rwnd was 64KB. Nowadays, it can be up to 1 gigabyte1, depending on server configuration. TCP also has another variable, a private one, called cwnd. The purpose of this variable is to avoid congestion. A TCP socket will control how much data it sends over the wire based on this variable. When the client and server start to exchange data, the sending socket checks the cwnd variable. If it’s the first time it sends data after the three-way handshake, the cwnd is set to 102, indicating that the socket can send 10 segments (of ~14KB each). The TCP socket will increase the amount of data sent by doubling it after each ACK. This is called Slow Start. Besides Slow Start, TCP also has Slow Restart: when the connection is idle for a while, TCP can’t presume the state of the network at that moment, significantly reducing the cwnd value.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-09-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-09-13T00:00:00+00:00">
+    <meta property="article:tag" content="Computer Networking">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="TCP may be tricky">
+  <meta name="twitter:description" content="TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the “receive window” (rwnd). The receive window indicates the maximum bytes that the TCP socket’s buffer can process. Until recent years, the de facto rwnd was 64KB. Nowadays, it can be up to 1 gigabyte1, depending on server configuration. TCP also has another variable, a private one, called cwnd. The purpose of this variable is to avoid congestion. A TCP socket will control how much data it sends over the wire based on this variable. When the client and server start to exchange data, the sending socket checks the cwnd variable. If it’s the first time it sends data after the three-way handshake, the cwnd is set to 102, indicating that the socket can send 10 segments (of ~14KB each). The TCP socket will increase the amount of data sent by doubling it after each ACK. This is called Slow Start. Besides Slow Start, TCP also has Slow Restart: when the connection is idle for a while, TCP can’t presume the state of the network at that moment, significantly reducing the cwnd value.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/posts/tricky-tcp/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      <a href="/til">til</a> /
+      <a href="/about">about</a> /
+      
+      
+      <a href="/index.xml">rss</a> 
+    </div>
+</div>
+
+
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">TCP may be tricky</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>TCP may be tricky. Despite having the three-way handshake, TCP also has multiple mechanisms to maintain its reliability. When a client and a server establish a connection and start exchanging data, the two TCP sockets advertise a variable known as the &ldquo;receive window&rdquo; (<code>rwnd</code>). The receive window indicates the maximum bytes that the TCP socket&rsquo;s buffer can process. Until recent years, the de facto <code>rwnd</code> was 64KB. Nowadays, it can be up to 1 gigabyte<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, depending on server configuration. TCP also has another variable, a private one, called <code>cwnd</code>. The purpose of this variable is to avoid congestion. A TCP socket will control how much data it sends over the wire based on this variable. When the client and server start to exchange data, the sending socket checks the <code>cwnd</code> variable. If it&rsquo;s the first time it sends data after the three-way handshake, the <code>cwnd</code> is set to 10<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>, indicating that the socket can send 10 segments (of ~14KB each). The TCP socket will increase the amount of data sent by doubling it after each ACK. This is called <code>Slow Start</code>. Besides Slow Start, TCP also has <code>Slow Restart</code>: when the connection is idle for a while, TCP can&rsquo;t presume the state of the network at that moment, significantly reducing the <code>cwnd</code> value.</p>
+<p>I was reading Ilya&rsquo;s book<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> yesterday, and in the TCP section, he presents an excellent case study about the time to process a GET request for a 64KB file. The client is in New York, and the server is in London. With the handshake, the total roundtrip time is 264ms. When comparing this value with a request that has an already established handshake, the time drops to a staggering 96ms!</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Check out RFC 7323 for more details.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Since 2013, at least (<a href="https://datatracker.ietf.org/doc/html/rfc6928)">https://datatracker.ietf.org/doc/html/rfc6928)</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://hpbn.co/">https://hpbn.co/</a> - I can&rsquo;t recommend this book enough.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+  </content>
+
+  </main>
+  <footer>
+
+
+
+
+
+</footer>
+
+    
+</body>
+
+</html>
