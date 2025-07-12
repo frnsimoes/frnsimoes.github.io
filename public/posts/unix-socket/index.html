@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Exploring socat(1) and unix sockets | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+    border-top: 1px solid #eaeaea;
+    margin-top: 40px;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .footer-links p {
+    margin: 0.7em 0;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+     
+     
+    text-align: left;
+  }
+
+  .contact-links {
+     
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 0px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .intro-text {
+    margin: 0
+    color: #555;
+    font-size: 1.05em;
+    line-height: 1.6;
+    max-width: 650px;
+  }
+
+  .intro-text a {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+  }
+
+  .intro-text a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid var(--link-color);
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
+  }
+
+  .til-item h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .til-content {
+    margin-top: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .til-content p {
+    margin-bottom: 0.7rem;
+  }
+
+  .til-content code {
+    background-color: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.65em;
+    border: 1px solid #e0e0e0;
+  }
+
+  .til-content pre {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .til-content pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 0.7em;
+  }
+  
+  .til-content a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  
+  .til-content a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Exploring socat(1) and unix sockets | frn.sh</title>
+<meta property="og:title" content="Exploring socat(1) and unix sockets | frn.sh" />
+<meta name="twitter:title" content="Exploring socat(1) and unix sockets | frn.sh" />
+<meta itemprop="name" content="Exploring socat(1) and unix sockets | frn.sh" />
+<meta name="application-name" content="Exploring socat(1) and unix sockets | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/posts/unix-socket/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2025-05-15T00:00:00Z />
+    <meta property="article:published_time" content=2025-05-15T00:00:00Z />
+    <meta property="og:url" content="//localhost:1313/posts/unix-socket/" />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Exploring socat(1) and unix sockets",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2025-05-15",
+        "description": "",
+        "wordCount":  519 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2025-05-15",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "frn.sh"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.147.0">
+
+    
+    <meta property="og:url" content="//localhost:1313/posts/unix-socket/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="Exploring socat(1) and unix sockets">
+  <meta property="og:description" content="I was just trying to have a nice, quiet day when I opened Jan’s Advanced Programming in Unix the Environment course, specifically in the lecture about stat(1). While watching the part about st_mode and file sharing, I came to the realization that a socket is also a file type (or only a type in the mode field?)1.
+So, I first created a unix connection using /tmp/test.sock file.
+➜ /tmp stat test.sock File: test.sock Size: 0 Blocks: 0 IO Block: 4096 socket Device: 259,3 Inode: 14155790 Links: 1 Access: (0755/srwxr-xr-x) Uid: ( 1000/ frnsh) Gid: ( 1000/ frnsh) Ok. IO Block is still there, so it means that socket files still have some operation around reading / writing.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-15T00:00:00+00:00">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="Exploring socat(1) and unix sockets">
+  <meta name="twitter:description" content="I was just trying to have a nice, quiet day when I opened Jan’s Advanced Programming in Unix the Environment course, specifically in the lecture about stat(1). While watching the part about st_mode and file sharing, I came to the realization that a socket is also a file type (or only a type in the mode field?)1.
+So, I first created a unix connection using /tmp/test.sock file.
+➜ /tmp stat test.sock File: test.sock Size: 0 Blocks: 0 IO Block: 4096 socket Device: 259,3 Inode: 14155790 Links: 1 Access: (0755/srwxr-xr-x) Uid: ( 1000/ frnsh) Gid: ( 1000/ frnsh) Ok. IO Block is still there, so it means that socket files still have some operation around reading / writing.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/posts/unix-socket/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      <a href="/til">til</a> /
+      <a href="/about">about</a> /
+      
+      
+      <a href="/index.xml">rss</a> 
+    </div>
+</div>
+
+
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">Exploring socat(1) and unix sockets</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>I was just trying to have a nice, quiet day when I opened Jan&rsquo;s <a href="https://www.youtube.com/playlist?list=PL0qfF8MrJ-jxMfirAdxDs9zIiBg2Wug0z">Advanced Programming in Unix the Environment course</a>, specifically in the lecture about stat(1). While watching the part about <code>st_mode</code> and file sharing, I came to the realization that a socket is also a file type (or only a type in the mode field?)<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<p>So, I first created a unix connection using /tmp/test.sock file.</p>
+<pre tabindex="0"><code>➜  /tmp stat test.sock
+  File: test.sock
+  Size: 0               Blocks: 0          IO Block: 4096   socket
+Device: 259,3   Inode: 14155790    Links: 1
+Access: (0755/srwxr-xr-x)  Uid: ( 1000/   frnsh)   Gid: ( 1000/   frnsh)
+</code></pre><p>Ok. IO Block is still there, so it means that socket files still have some operation around reading / writing.</p>
+<p>The socket file itself doesn&rsquo;t actually store any data though. It&rsquo;s essentially an &ldquo;address&rdquo; or reference point in the filesystem that processes can use to find and connect to each other.</p>
+<p>Let&rsquo;s actually connect through a socket file to see what happens:</p>
+<pre tabindex="0"><code># Terminal 1
+➜  fun socat - UNIX-LISTEN:/tmp/test.sock
+
+# Terminal 2
+➜  fun socat - UNIX-CONNECT:/tmp/test.sock
+</code></pre><p>Can we exchange messages? Yes!</p>
+<p>From the client, I sent an agreeable and inquisitive message: <code>Hello from unix-connect?</code>. The server responded: <code>Yeah, I can see you, unix-connect. Can you see me? By: unix-listen</code>. So, yes, both terminals could see the messages they themselves sent, and the messages received. But wwhere <em>are</em> the messages? Did the size of the socket file change after sending them?</p>
+<pre tabindex="0"><code>➜  /tmp stat test.sock
+  File: test.sock
+  Size: 0               Blocks: 0          IO Block: 4096   socket
+</code></pre><p>Nope. Let&rsquo;s try to read what&rsquo;s inside the file (I sent some data, so maybe they are stored in the file?)</p>
+<pre tabindex="0"><code>➜  /tmp cat test.sock
+cat: test.sock: No such device or address
+</code></pre><p>What happened? test.sock IS a file. But it has no size. And I can&rsquo;t cat it?</p>
+<p>This actually makes sense because socket files can&rsquo;t be read directly with standard file I/O operations. The socket is meant to be accessed through socket APIs. The actual data exchange happens in memory buffers managed by the kernel, not on disk.</p>
+<p>Let&rsquo;s try to see what&rsquo;s happening when we use socat(1):</p>
+<pre tabindex="0"><code>...
+openat(AT_FDCWD, &#34;/lib/x86_64-linux-gnu/libresolv.so.2&#34;, O_RDONLY|O_CLOEXEC) = 3
+read(3, &#34;\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0&gt;\0\1\0\0\0\0\0\0\0\0\0\0\0&#34;..., 832) = 832
+read(6, &#34;hello from UNIX-CONNECT:/tmp/tes&#34;..., 8192) = 39
+write(1, &#34;hello from UNIX-CONNECT:/tmp/tes&#34;..., 39hello from UNIX-CONNECT:/tmp/test.sock
+</code></pre><p>Oh! When I send a message through the connected socat, we can see the actual <code>read</code> and <code>write</code>. This clarifies why the socket file has an IO Block. It needs to determine the size of chunks of data it will handle.</p>
+<p>So, while socket files do not interact with disks and storage, they require IO Blocks and trigger calls to read(1) and write(1) under the hood. When applications connect to the socket, they&rsquo;re establishing a communication channel through the kernel, not reading/writing to the file directly.</p>
+<p>Interestingly, you can even delete the socket file while connections are established, and the existing communication will continue uninterrupted (though new connections couldn&rsquo;t be made).</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>I found out that type and mode are two different and identifiable things:</p>
+<pre tabindex="0"><code>➜  ~ stat -c &#34;%F %f&#34; /tmp/test.sock
+socket c1ed
+</code></pre><p>%F is the type, while %f is the mode.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+  </content>
+
+  </main>
+  <footer>
+
+
+
+
+
+</footer>
+
+    
+</body>
+
+</html>
