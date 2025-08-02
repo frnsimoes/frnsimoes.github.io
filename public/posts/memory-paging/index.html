@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Notes on paging and other memory stuff | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+    border-top: 1px solid #eaeaea;
+    margin-top: 40px;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .footer-links p {
+    margin: 0.7em 0;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+     
+     
+    text-align: left;
+  }
+
+  .contact-links {
+     
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 0px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .intro-text {
+    margin: 0
+    color: #555;
+    font-size: 1.05em;
+    line-height: 1.6;
+    max-width: 650px;
+  }
+
+  .intro-text a {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+  }
+
+  .intro-text a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid var(--link-color);
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
+  }
+
+  .til-item h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .til-content {
+    margin-top: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .til-content p {
+    margin-bottom: 0.7rem;
+  }
+
+  .til-content code {
+    background-color: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.65em;
+    border: 1px solid #e0e0e0;
+  }
+
+  .til-content pre {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .til-content pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 0.7em;
+  }
+  
+  .til-content a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  
+  .til-content a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Notes on paging and other memory stuff | frn.sh</title>
+<meta property="og:title" content="Notes on paging and other memory stuff | frn.sh" />
+<meta name="twitter:title" content="Notes on paging and other memory stuff | frn.sh" />
+<meta itemprop="name" content="Notes on paging and other memory stuff | frn.sh" />
+<meta name="application-name" content="Notes on paging and other memory stuff | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write">
+<meta itemprop="description" content="Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write" />
+<meta property="og:description" content="Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write" />
+<meta name="twitter:description" content="Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/posts/memory-paging/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-12-08T00:00:00Z />
+    <meta property="article:published_time" content=2024-12-08T00:00:00Z />
+    <meta property="og:url" content="//localhost:1313/posts/memory-paging/" />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Notes on paging and other memory stuff",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-12-08",
+        "description": "Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write",
+        "wordCount":  1153 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-12-08",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "frn.sh"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.147.0">
+
+    
+    <meta property="og:url" content="//localhost:1313/posts/memory-paging/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="Notes on paging and other memory stuff">
+  <meta property="og:description" content="Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-12-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-12-08T00:00:00+00:00">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="Notes on paging and other memory stuff">
+  <meta name="twitter:description" content="Exploring memory pages on Linux, especially HUGE_TABLES, copy-on-write">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/posts/memory-paging/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      <a href="/til">til</a> /
+      <a href="/about">about</a> /
+      
+      
+      <a href="/index.xml">rss</a> 
+    </div>
+</div>
+
+
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">Notes on paging and other memory stuff</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>One of the most practical things we can do on a linux box regarding memory is to use <code>mmap</code> to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the <code>mmap</code> documentation when I found a flag named <code>MAP_HUGETLB</code>. I got hooked by this and couldn&rsquo;t stop myself from finding out more.</p>
+<p>So here it is: A <a href="https://man7.org/linux/man-pages/man2/mmap.2.html">huge page</a> is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:</p>
+<ul>
+<li><code>getconf PAGE_SIZE</code> shows the default page size in the operating system.</li>
+<li><code>cat /proc/meminfo</code> has info about the <code>Hugepagesize</code>.</li>
+</ul>
+<p>In my case, the default page size is <code>4096</code> bytes and the <code>hugepagesize</code> is <code>2048kB</code>.</p>
+<p>So, what does <code>MAP_HUGETLB</code> do? It requests pages larger than the default page size for memory mappings. This is useful for programs with a large memory footprint. For example, consider a process that uses 2 MB of memory. Using the default 4 KB pages, mapping this memory would require 512 entries in the TLB (Translation Lookaside Buffer). In more costly page table walks, this increases the likelihood of TLB misses. Instead, we can Use a huge page size (e.g., 2 MB), allowing the same memory to be mapped with a single TLB entry, significantly reducing TLB misses and improving efficiency.</p>
+<h3 id="but-what-are-these-pages-and-why-do-they-have-sizes">But what are these pages, and why do they have sizes?</h3>
+<p>The history of memory abstraction implementation in operating systems is both confusing and complex. I like how Tanenbaum mentions that early machines didn&rsquo;t have any kind of memory abstraction; all they could access was the physical memory. Imagine the horror: two programs couldn&rsquo;t run concurrently without crashing because one process could overwrite the memory locations of another. There was no notion of address space.</p>
+<p>Before paging, the implementations required memory blocks to be contiguous. The stack and heap grew in direct opposition, leading to inevitable waste of space in the middle of the memory block (I highly recommend OSTEP for studying base-and-bounds and segmentation).</p>
+<p>Nowadays, we use paging. The address space is composed of pages of <code>PAGE_SIZE</code>. These pages aren&rsquo;t contiguous but are instead mapped. We now use lookups: virtual addresses must be translated into physical addresses. The TLB is a cache that aids in this translation. If the translation is not found in the TLB (a TLB miss), the MMU performs a lookup in the page table (a page walk). This lookup can also fail if there is no available translation for the virtual address. In such cases, the OS sends a segmentation fault signal to the program, which can then handle it or crash.</p>
+<h3 id="segmentation-fault">Segmentation fault</h3>
+<p>A segment fault can be emulated with a simple C program:</p>
+<pre tabindex="0"><code>int main() {
+    int *ptr = (int *)0x12345678;  
+    printf(&#34;Value at ptr: %d\n&#34;, *ptr);
+    return 0;
+}
+</code></pre><p>Let&rsquo;s try to inspect what happened. First, let&rsquo;s compile the program with debugging information and run it to generate the core dump<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> file:</p>
+<pre tabindex="0"><code>➜  segfault git:(main) ✗ gcc -g -o main main.c
+➜  segfault git:(main) ✗ ls
+core.main.338982  main  main.c
+</code></pre><p>Now we have the core dump file. Let&rsquo;s inspect it with gdb:</p>
+<pre tabindex="0"><code>➜  segfault git:(main) ✗ gdb ./main core.main.338982
+</code></pre><p>As a result, we get:</p>
+<pre tabindex="0"><code>
+[New LWP 338982]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library &#34;/lib/x86_64-linux-gnu/libthread_db.so.1&#34;.
+Core was generated by `./main&#39;.
+Program terminated with signal SIGSEGV, Segmentation fault.
+#0  0x00005611486e514d in main () at main.c:7
+7           printf(&#34;Value at ptr: %d\n&#34;, *ptr);
+</code></pre><p>What is SIGSEGV? It is a signal that is sent to a process when it tries to access a restricted memory location. In this case, the program tried to access memory location <code>0x12345678</code>, which is not allowed. <code>SIGSEGV      P1990      Core    Invalid memory reference</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<h3 id="what-happens-when-a-program-is-loaded-into-memory">What happens when a program is loaded into memory?</h3>
+<p>When a new program starts, does the OS make available a new and clean memory space for it? If not, does it have to clean the memory space before loading the program?</p>
+<p>The answer is: it depends. The OS can make available a new and clean memory space for the program, or it can make available a memory space that was previously used by another program. In the second case, the OS needs to clean the memory space before loading the program. This is done by the OS by zeroing the memory space<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> before loading the program. This is done to avoid leaking information from the previous program to the new program.</p>
+<p>But what happens if that memory was used for some important, sensitive information? After all, we expect the operating system to respect the isolation of processes, right? If a program tries to access memory it does not have permission to access, it will cause a segmentation fault. The OS sends a SIGSEGV signal to the program, indicating an invalid memory access. This ensures that processes remain isolated and do not interfere with each other&rsquo;s memory.</p>
+<p>When a program terminates, the operating system&rsquo;s kernel reclaims the memory that was allocated to the program. This means the memory is marked as free and can be allocated to other programs. However, the contents of the memory are not immediately erased. Instead, the kernel ensures that any new program allocated this memory space cannot access the data left behind by the previous program. This is typically achieved by zeroing out the memory before it is allocated to a new program, maintaining the security and isolation between processes.</p>
+<h3 id="what-happens-when-a-child-process-tries-to-write">What happens when a child process tries to write?</h3>
+<p>Imagine a simple <code>fork()</code>: a bash process originates another bash process, which calls <code>cat</code> on a file, for example. In this case, the child process has a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
+<p>So, in physical memory (logically) there is a frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>A core dump file contains the recorded state of the program. You may need to have permissions to generate the core dump. The file may not be generated in the same directory as the program. Check the contents of <code>/proc/sys/kernel/core_pattern</code> to see where the core dump file is generated.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><code>man 7 signal</code>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://stackoverflow.com/questions/2884230/zeroing-out-memory">https://stackoverflow.com/questions/2884230/zeroing-out-memory</a>, this is a good discussion about zeroing out memory in C.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>This is a great discussion: <a href="https://stackoverflow.com/questions/4594329/difference-between-the-address-space-of-parent-process-and-its-child-process-in">https://stackoverflow.com/questions/4594329/difference-between-the-address-space-of-parent-process-and-its-child-process-in</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+  </content>
+
+  </main>
+  <footer>
+
+
+
+
+
+</footer>
+
+    
+</body>
+
+</html>
