@@ -1,0 +1,257 @@
+:root {
+    --width: 720px;
+    --font-main: "Times New Roman", Times, serif;
+    --font-secondary: "Times New Roman", Times, serif;
+    --font-mono: "Courier New", Courier, monospace;
+    --font-scale: 1em;
+    --background-color: #faf8f5;
+    --heading-color: #000;
+    --text-color: #222;
+    --link-color: #0000ee;
+    --visited-color: #551a8b;
+    --code-background-color: #e8e8e8;
+    --code-color: #000;
+    --blockquote-color: #444;
+    --border-color: #999;
+}
+
+body {
+    font-family: var(--font-main);
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+    font-weight: bold;
+    text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 1.8em;
+    margin: 0.67em 0;
+}
+h2 {
+    font-size: 1.5em;
+    margin: 0.75em 0;
+}
+h3 {
+    font-size: 1.17em;
+    margin: 0.83em 0;
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: underline;
+    background-color: #ffff99;
+}
+
+a:visited {
+    color: var(--visited-color);
+}
+
+nav a {
+    margin-right: 12px;
+    font-weight: bold;
+}
+
+strong,
+b {
+    color: var(--heading-color);
+    font-weight: bold;
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+    border: 2px outset #ddd;
+    background-color: #f0f0f0;
+    padding: 4px 8px;
+    font-family: var(--font-main);
+}
+
+button:active {
+    border: 2px inset #ddd;
+}
+
+time {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 13px;
+    color: #666;
+}
+
+main {
+    line-height: 1.5;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid var(--border-color);
+}
+
+table th,
+table td {
+    border: 1px solid var(--border-color);
+    padding: 4px 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+hr {
+    border: 0;
+    border-top: 2px solid var(--border-color);
+    margin: 20px 0;
+}
+
+img {
+    max-width: 100%;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+code {
+    font-family: var(--font-mono);
+    padding: 1px 4px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border: 1px solid #ccc;
+    font-size: 0.9em;
+}
+
+blockquote {
+    border-left: 4px solid var(--border-color);
+    color: var(--blockquote-color);
+    padding-left: 16px;
+    margin-left: 0;
+    font-style: italic;
+    background-color: #f5f5f5;
+    padding: 8px 16px;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+    border-top: 2px solid var(--border-color);
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.8em;
+    margin: 0;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight,
+.code {
+    padding: 8px 12px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border: 1px solid #ccc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+    padding: 4px 0;
+    border-bottom: 1px dotted #ccc;
+}
+
+ul.blog-posts li:last-child {
+    border-bottom: none;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: #666;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}
+
+footer span:nth-of-type(2) {
+    display: none;
+}
+
+/* Additional oldschool touches */
+::selection {
+    background-color: #0000ff;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #0000ff;
+    color: white;
+}
+
+/* Subtle retro focus styles */
+a:focus,
+button:focus {
+    outline: 2px dotted #000;
+    outline-offset: 2px;
+}
+
+/* Classic form styling */
+input,
+textarea,
+select {
+    font-family: var(--font-main);
+    border: 2px inset #ddd;
+    padding: 2px 4px;
+    background-color: white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border: 2px inset #aaa;
+    outline: none;
+}

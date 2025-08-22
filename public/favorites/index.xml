@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Favorites on Fernando Simões | frn.sh</title>
+    <link>//localhost:1313/favorites/</link>
+    <description>Recent content in Favorites on Fernando Simões | frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/favorites/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A production incident: zombie sockets</title>
+      <link>//localhost:1313/favorites/zombie-sockets/</link>
+      <pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/zombie-sockets/</guid>
+      <description>&lt;figure&gt;&lt;img src=&#34;//localhost:1313/static/zombie-sockets/body-eater.png&#34;&#xA;    alt=&#34;alt&#34;&gt;&lt;figcaption&gt;&#xA;      &lt;p&gt;The Body Eater: the magical creature you call when you need your sockets closed.&lt;/p&gt;&#xA;    &lt;/figcaption&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;Last month I just had the most fun time with zombie sockets. It was on my second day at this new job as a platform engineer. A developer approached us saying: &amp;ldquo;Look, there must be a problem in the infrastructure. Users are getting 502s. I already checked everything. It&amp;rsquo;s not the code.&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;We weren’t so sure. The service in question processed PDFs and had a pretty funky workflow: download a template from S3, load the PDF into memory, add some stuff, save it, then upload the new version back to S3. Suspicious.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Terminal keyboards</title>
+      <link>//localhost:1313/favorites/tty/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/tty/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;//localhost:1313/static/tty/dec.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;My birthday will be next month, so I bought myself something I wanted for a while: a terminal keyboard. Last year I read this &lt;a href=&#34;https://www.linusakesson.net/programming/tty/&#34;&gt;article&lt;/a&gt; about the history of the terminal, and it fascinated me. Well, I found this DEC-style Televideo terminal keyboard from the 70s or 80s (I can&amp;rsquo;t be sure of the exact date), and took advantage of the opportunity to learn a few things.&lt;/p&gt;&#xA;&lt;p&gt;These old terminal keyboards were sold alongside a &amp;ldquo;computer terminal.&amp;rdquo; A computer terminal was essentially a &amp;ldquo;dumb&amp;rdquo; display and input device. The real computing power was in the mainframe, which was typically placed in another room in the office building. The terminal would send characters to the mainframe and then display the results back to the user. It didn&amp;rsquo;t have its own operating system. The notion of keycodes, scancodes, and other abstractions that we have nowadays didn&amp;rsquo;t exist in the same way.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>In defense of rabbit holes</title>
+      <link>//localhost:1313/favorites/rabbit-hole/</link>
+      <pubDate>Sat, 01 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/rabbit-hole/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve been thinking about education for a while now. Some time ago, listening to Remzi&amp;rsquo;s lecture about operating systems, I heard him say something like this to his students: &amp;ldquo;Don&amp;rsquo;t just learn the general aspect of things; learn the details. Having just a notion of a subject is precisely the definition of ignorance.&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;This idea from Remzi got me thinking, and today I want to write about what I&amp;rsquo;ve been reflecting on regarding this matter.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How does the Kernel handle TCP requests?</title>
+      <link>//localhost:1313/favorites/sockets/</link>
+      <pubDate>Fri, 03 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/sockets/</guid>
+      <description>&lt;p&gt;My first encounter with sockets changed everything. It was one of those &amp;ldquo;aha!&amp;rdquo; moments where the internet&amp;rsquo;s machinery suddenly clicked into place. The internet is a beautiful, beautiful thing. There are so many things to say about how it works - from application protocols, such as HTTP - to sharks biting internet cables in the ocean.&lt;/p&gt;&#xA;&lt;p&gt;I often ask myself: how the hell did they invent something so cool as communication between processes running on different and distant machines? The design is actually tremendously simple. Let&amp;rsquo;s find out.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Taking a look at Go&#39;s runtime/proc.go</title>
+      <link>//localhost:1313/favorites/go-scheduler/</link>
+      <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/go-scheduler/</guid>
+      <description>&lt;p&gt;Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole. So I thought about writing the few things I understood about it to at least paint a big picture of what&amp;rsquo;s happening behind the scenes.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Shell, environment lists, processes and sourcing</title>
+      <link>//localhost:1313/favorites/shell-source/</link>
+      <pubDate>Thu, 22 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/shell-source/</guid>
+      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Line buffering, tty and write(2)</title>
+      <link>//localhost:1313/favorites/print-strace/</link>
+      <pubDate>Mon, 20 May 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/favorites/print-strace/</guid>
+      <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

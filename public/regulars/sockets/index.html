@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>How does the Kernel handle TCP requests? | Fernando Simões | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+    :root {
+    	--width: 720px;
+    	--font-main: Verdana, sans-serif;
+    	--font-secondary: Verdana, sans-serif;
+    	--font-scale: 1em;
+    	--background-color: #fff;
+    	--heading-color: #222;
+    	--text-color: #444;
+    	--link-color: #3273dc;
+    	--visited-color:  #8b6fcb;
+    	--code-background-color: #f2f2f2;
+    	--code-color: #222;
+    	--blockquote-color: #222;
+    }
+
+    body {
+    	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+    	margin: auto;
+    	margin-top: 15px;
+    	margin-bottom: 15px;
+    	padding: 20px 20px 20px 20px;  
+    	max-width: 720px;
+    	text-align: left;
+    	background-color: #fff;
+    	word-wrap: break-word;
+    	overflow-wrap: break-word;
+    	line-height: 1.5;
+    	color: #444;
+    	box-sizing: border-box;
+    }
+
+      h1, h2, h3, h4, h5, h6 {
+    	  font-family: var(--font-main);
+    	  color: var(--heading-color);
+      }
+
+      a {
+    	  color: var(--link-color);
+    	  cursor: pointer;
+    	  text-decoration: none;
+      }
+
+      a:hover {
+    	  text-decoration: underline;
+      }
+
+      nav a {
+    	  margin-right: 8px;
+      }
+
+      strong, b {
+    	  color: var(--heading-color);
+      }
+
+      button {
+    	  margin: 0;
+    	  cursor: pointer;
+      }
+
+      time {
+    	  font-family: monospace;
+    	  font-style: normal;
+    	  font-size: 15px;
+      }
+
+      main {
+    	  line-height: 1.6;
+      }
+
+      table {
+    	  width: 100%;
+      }
+
+      hr {
+    	  border: 0;
+    	  border-top: 1px dashed;
+      }
+
+      img {
+    	  max-width: 100%;
+      }
+
+      pre code {
+    	  color: #222;
+    	  display: block;
+    	  padding: 15px;
+    	  white-space: pre-wrap;
+    	  font-size: 11px;
+    	  overflow-x: auto;
+    	  overflow: auto;
+    	  background-color: #f7f7f7;
+    	   
+    	   
+    	  border: #cccccc;
+    	  border-style: solid;
+    	  border-width: 1px;
+      }
+
+      code {
+    	  display: inline-block;
+    	  white-space: no-wrap;
+    	  background-color: #f7f7f7;
+    	  font-size: 0.8em;
+    	  line-height: 1.5em;
+    	  border: 1px solid #cccccc;
+    	  padding: 0 2px;
+    	  margin: -1px 0px;
+    	   
+      }
+
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+
+
+      div.highlight pre {
+    	  background-color: #f2f2f2;
+    	  color: #222;
+      }
+
+      div.highlight code {
+    	  background-color: #f2f2f2;
+    	  color: #222;
+      }
+
+      footer {
+    	  padding: 25px 0;
+    	  text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+      }
+
+       
+      .footer-links {
+        font-size: 0.9em;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .footer-links p {
+        margin: 0.7em 0;
+      }
+
+      .footer-links a {
+        color: var(--link-color);
+        text-decoration: none;
+      }
+
+      .footer-links a:hover {
+        text-decoration: underline;
+      }
+
+      .title:hover {
+    	  text-decoration: none;
+      }
+
+      .title h1 {
+    	  font-size: 1.5em;
+      }
+
+      .inline {
+    	  width: auto !important;
+      }
+
+      .highlight, .code {
+    	  padding: 1px 15px;
+    	  background-color: var(--code-background-color);
+    	  color: var(--code-color);
+    	  border-radius: 3px;
+    	  margin-block-start: 1em;
+    	  margin-block-end: 1em;
+    	  overflow-x: auto;
+      }
+
+       
+      ul.blog-posts {
+    	  list-style-type: none;
+    	  padding: unset;
+      }
+
+      ul.blog-posts li {
+    	  display: flex;
+    	  padding: 4px 0;
+      }
+
+      ul.blog-posts li span {
+    	  flex: 0 0 130px;
+      }
+
+      ul.blog-posts li a:visited {
+    	  color: var(--visited-color);
+      }
+
+       
+      .profile-section {
+         
+         
+        text-align: left;
+      }
+
+      .contact-links {
+         
+        font-size: 1.1em;
+      }
+
+      .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+      }
+
+      .contact-links a:hover {
+        text-decoration: underline;
+      }
+
+      .bio {
+        font-style: italic;
+        color: #666;
+        margin: 0;
+        font-size: 1.1em;
+      }
+
+       
+      .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .header-container h1 {
+        margin-bottom: 0px;
+      }
+
+      .nav-bar {
+        display: flex;
+        gap: 20px;
+        margin-top: 5px;
+      }
+
+      .nav-bar a {
+        color: var(--link-color);
+        text-decoration: none;
+        font-size: 1em;
+      }
+
+      .nav-bar a:hover {
+        text-decoration: underline;
+      }
+
+       
+      .intro-text {
+        margin: 0
+        color: #555;
+        font-size: 1.05em;
+        line-height: 1.6;
+        max-width: 650px;
+      }
+
+      .intro-text a {
+        color: var(--link-color);
+        text-decoration: none;
+        border-bottom: 1px dotted #999;
+      }
+
+      .intro-text a:hover {
+        text-decoration: none;
+        border-bottom: 1px solid var(--link-color);
+      }
+
+       
+      .til-list {
+        margin-top: 2rem;
+      }
+
+      .til-item {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        border-radius: 8px;
+        background-color: #FFFFFF;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        font-size: 0.9rem;
+      }
+
+      .til-item h2 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 1.0rem;
+      }
+
+      .til-date {
+        color: #666;
+        font-style: italic;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 0.8rem;
+      }
+
+      .til-content {
+        margin-top: 0.8rem;
+        line-height: 1.5;
+      }
+
+      .til-content p {
+        margin-bottom: 0.7rem;
+      }
+
+      .til-content code {
+        background-color: #f1f1f1;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 0.65em;
+        border: 1px solid #e0e0e0;
+      }
+
+      .til-content pre {
+        background-color: #f5f5f5;
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin: 1rem 0;
+        border: 1px solid #e0e0e0;
+      }
+
+      .til-content pre code {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+        font-size: 0.7em;
+      }
+
+      .til-content a {
+        color: #0366d6;
+        text-decoration: none;
+      }
+
+      .til-content a:hover {
+        text-decoration: underline;
+      }
+</style>
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">How does the Kernel handle TCP requests? | Fernando Simões | frn.sh</title>
+<meta property="og:title" content="How does the Kernel handle TCP requests? | Fernando Simões | frn.sh" />
+<meta name="twitter:title" content="How does the Kernel handle TCP requests? | Fernando Simões | frn.sh" />
+<meta itemprop="name" content="How does the Kernel handle TCP requests? | Fernando Simões | frn.sh" />
+<meta name="application-name" content="How does the Kernel handle TCP requests? | Fernando Simões | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/regulars/sockets/" title="" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.148.1">
+
+    
+    <meta property="og:url" content="//localhost:1313/regulars/sockets/">
+  <meta property="og:site_name" content="Fernando Simões | frn.sh">
+  <meta property="og:title" content="How does the Kernel handle TCP requests?">
+  <meta property="og:description" content="My first encounter with sockets changed everything. It was one of those “aha!” moments where the internet’s machinery suddenly clicked into place. The internet is a beautiful, beautiful thing. There are so many things to say about how it works - from application protocols, such as HTTP - to sharks biting internet cables in the ocean.
+I often ask myself: how the hell did they invent something so cool as communication between processes running on different and distant machines? The design is actually tremendously simple. Let’s find out.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="regulars">
+    <meta property="article:published_time" content="2025-01-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-01-03T00:00:00+00:00">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="How does the Kernel handle TCP requests?">
+  <meta name="twitter:description" content="My first encounter with sockets changed everything. It was one of those “aha!” moments where the internet’s machinery suddenly clicked into place. The internet is a beautiful, beautiful thing. There are so many things to say about how it works - from application protocols, such as HTTP - to sharks biting internet cables in the ocean.
+I often ask myself: how the hell did they invent something so cool as communication between processes running on different and distant machines? The design is actually tremendously simple. Let’s find out.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/regulars/sockets/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a> 
+      
+      
+      
+    </div>
+</div>
+
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">How does the Kernel handle TCP requests?</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>My first encounter with sockets changed everything. It was one of those &ldquo;aha!&rdquo; moments where the internet&rsquo;s machinery suddenly clicked into place. The internet is a beautiful, beautiful thing. There are so many things to say about how it works - from application protocols, such as HTTP - to sharks biting internet cables in the ocean.</p>
+<p>I often ask myself: how the hell did they invent something so cool as communication between processes running on different and distant machines? The design is actually tremendously simple. Let&rsquo;s find out.</p>
+<p><img src="/static/sockets/computer-communication-question.jpg" alt="alt"></p>
+<p>When a request is received by the machine, the Kernel asks itself: &ldquo;Hey, do I have a socket file descriptor opened on port 80? Let me check&rdquo;. Then it checks a special table for internet connections: a socket table. We can actually see what&rsquo;s going on there:</p>
+<pre tabindex="0"><code>cat /proc/net/tcp
+➜  ~ cat /proc/net/tcp
+  sl  local_address rem_address   st tx_queue rx_queue tr tm-&gt;when retrnsmt   uid  timeout inode
+   4: DE01A8C0:0016 7401A8C0:DE24 01 00000000:00000000 02:0006FC06 00000000     0        0 1030697 2 0000000062dd485f 20 4 31 7 7
+   5: DE01A8C0:0016 7401A8C0:DE21 01 00000000:00000000 02:0006F94E 00000000     0        0 1030660 2 000000005ddb2235 20 7 31 9 7
+</code></pre><p>We don&rsquo;t need to specify the process ID in <code>/proc/net/tcp</code> because whether we specify it or not the output will be the same: a list of all tcp connections available in that namespace. It contains both listening and connected sockets, and gives us reference to remote and local addresses (<code>local_address</code> and <code>rem_address</code>).</p>
+<p>After the kernel checks the socket table, it has access to the file descriptor table, in which it tries to find which process that socket is running on. But how does it find the process by identifying the socket? Well, the last information in /proc/net/tcp is the <code>inode</code> number. The kernel then finds the process in /proc/pid/fd.</p>
+<p>Are you curious about this? Open a terminal and run a server:</p>
+<h3 id="checking-out-proc-stuff">checking out /proc stuff</h3>
+<pre tabindex="0"><code>➜  ~ python -m http.server 8080
+
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+</code></pre><p>On another terminal, find the ID of the process that is running the server:</p>
+<pre tabindex="0"><code>➜  ~ ps aux | grep &#34;python -m http.server 8080&#34; | grep -v grep
+
+frns      168674  0.2  0.0  27752 19644 pts/1    S+   23:58   0:00 python -m http.server 8080
+</code></pre><p>Now we can see what file descriptors this process has!</p>
+<pre tabindex="0"><code>➜  ~ ls -l /proc/168674/fd
+total 0
+lrwx------ 1 frns frns 64 Jan  1 23:59 0 -&gt; /dev/pts/1
+lrwx------ 1 frns frns 64 Jan  1 23:59 1 -&gt; /dev/pts/1
+lrwx------ 1 frns frns 64 Jan  1 23:59 2 -&gt; /dev/pts/1
+lrwx------ 1 frns frns 64 Jan  1 23:59 3 -&gt; &#39;socket:[1200452]&#39;
+</code></pre><p>Let&rsquo;s grep /proc/net/tcp to check the correspondence:</p>
+<pre tabindex="0"><code>➜  ~ sudo cat /proc/net/tcp | grep 1200452
+   2: 00000000:1F90 (...) 200452 1 0000000002730145 100 0 0 10 0
+</code></pre><p><img src="/static/sockets/kernel-role-in-tcp-request.jpg" alt="alt"></p>
+<p>This could be magic! Hm. But it must be complicated to run a socket by hand, right?</p>
+<h3 id="running-a-tcp-socket">running a tcp socket</h3>
+<p>It&rsquo;s not complicated at all. Let&rsquo;s use Python to do this, since Python&rsquo;s socket interface is similar to <a href="https://en.wikipedia.org/wiki/Network_socket">TCP socket standard</a>.</p>
+<p>First we create a new socket, bind it to an address and port, and start listening to it.</p>
+<pre tabindex="0"><code>import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((&#39;localhost&#39;, 8080))
+s.listen(1)
+</code></pre><p>Then we loop, like all things computer. We call <code>accept</code> to get the connection, and then <code>recv</code> to receive bytes. Let&rsquo;s find out how this works:</p>
+<pre tabindex="0"><code>while True:
+    conn, addr = s.accept()
+    print(f&#34;Connected by {addr}&#34;)
+    while True:
+        data = conn.recv(1024)
+        if not data:
+            break
+        print(f&#34;Received: {data.decode()}&#34;)
+        conn.send(b&#34;Got your message\n&#34;)
+    conn.close()
+</code></pre><p>First, let&rsquo;s run the process and find out its ID.</p>
+<pre tabindex="0"><code>➜  ~ python tcp_socket.py
+
+
+➜  ~ ps aux | grep &#34;python tcp_socket.py&#34; | grep -v grep
+
+frns      172143  0.0  0.0  15704 10264 pts/1    S+   00:37   0:00 python tcp_socket.py
+</code></pre><p>Then we <code>strace</code> it:</p>
+<pre tabindex="0"><code>➜  ~ sudo strace  -p 172143
+
+strace: Process 172143 attached
+accept4(3,
+</code></pre><p><code>accept4(2)</code> &ldquo;(&hellip;) extracts the first connection request on the queue of pending connections for the listening socket, sockfd, creates a new connected socket, and returns a new file descriptor referring to that socket. The newly created socket is not in the listening state. The original socket sockfd is unaffected by this call&rdquo;[^1].</p>
+<p>by this point (without even send a single request!) we already have two sockets on this process! The first socket was created for the handshake. By the time our process called <code>accept4</code>, a new socket was created and returned to the process. What happened is something like this:</p>
+<pre tabindex="0"><code>Process: socket() → One listening socket created
+Process: bind() + listen() → Socket starts accepting connections
+Client: SYN →
+Server: ← SYN-ACK     All using the same listening socket
+Client: ACK →
+Process: accept4() → NOW kernel creates second socket
+</code></pre><p>Now let&rsquo;s create a sending socket with <code>netcat</code>:</p>
+<pre tabindex="0"><code>➜  ~ nc localhost 8080
+</code></pre><p>By this point, our server called two syscalls: 1. <code>getsockname(2)</code> is the system call responsible for returning the current address to which the socket is bounded (in this case, 127.0.0.1:8080). 2. <code>recvfrom(2)</code> is used to receive messages. In our case, we specified that our receiving buffer has 1024 bytes (<code>recv(1024)</code>). This matters because only 1024 will be send at a time.</p>
+<p>Let&rsquo;s send something to our server using the netcat terminal:</p>
+<pre tabindex="0"><code>➜  ~ nc localhost 8080
+Hello from netcat!
+</code></pre><p>We immediately get the response:</p>
+<pre tabindex="0"><code>Got your message
+</code></pre><p>By this point the process called <code>recvfrom</code> with out message, and then <code>sendto</code> with the response body: <code>Got your message\n</code>. After this, the server is &ldquo;stuck&rdquo; in the <code>recvfrom</code> again, waiting for a new request to be processed.</p>
+<p>What happens if we send a request with more than 1024 bytes? I will copy some <a href="https://www.folger.edu/explore/shakespeares-works/hamlet/read/">Hamlet</a> to the netcat terminal.</p>
+<p>The first scene alone was enough for 56 <code>Got your message</code> responses. Nice!</p>
+<h3 id="closing-the-socket">closing the socket</h3>
+<p>By the end of our program, we call <code>conn.close()</code>. This calls <code>close(2)</code> syscall, which is responsible for cleaning up everything related to file descriptors. Let&rsquo;s see what man page has to tell us:</p>
+<blockquote>
+<p>The close() call deletes a descriptor from the per-process object reference table.</p></blockquote>
+<p>Phew. I guess this is it. Can we appreciate webservers now?</p>
+
+  </content>
+
+  </main>
+  <footer>
+
+
+
+
+
+</footer>
+
+    
+</body>
+
+</html>

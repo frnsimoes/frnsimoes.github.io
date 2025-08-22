@@ -1,0 +1,73 @@
+{{ define "main" }}
+<content>
+    <!-- Profile/bio section -->
+    <div class="profile-section"></div>
+
+    <!-- Render favorites  -->
+    {{ $favoritePosts := where .Site.RegularPages "Section" "favorites" }} {{ if
+    $favoritePosts }}
+    <h4>Favorites</h4>
+    <ul class="blog-posts">
+        {{ range $favoritePosts }}
+        <li>
+            <span>
+                <i>
+                    <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+                        {{ .Date.Format (default "02 Jan, 2006"
+                        .Site.Params.dateFormat) }}
+                    </time>
+                </i>
+            </span>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+    </ul>
+    <!-- Render other posts -->
+    {{ end }} {{ $regularPosts := where .Site.RegularPages "Section" "regulars"
+    }} {{ if $regularPosts }}
+
+    <!-- <h4>All other posts</h4> -->
+    <ul class="blog-posts">
+        {{ range $regularPosts }}
+        <li>
+            <span>
+                <i>
+                    <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+                        {{ .Date.Format (default "02 Jan, 2006"
+                        .Site.Params.dateFormat) }}
+                    </time>
+                </i>
+            </span>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ else }}
+        <li>No posts yet</li>
+        {{ end }}
+    </ul>
+    {{ end }}
+
+    <!-- Render CS Primer section -->
+    <!-- <h2>CSP 2024</h2>
+    Things I wrote while doing Oz's course, and a bit of OSTEP and Kurose.
+    <ul class="blog-posts">
+        {{ $posts := where .Site.RegularPages "Section" "posts" }}
+        {{ $cspPosts := where $posts ".Params.csp" true }}
+        {{ range $cspPosts }}
+        <li>
+            <span>
+                <i>
+                    <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+                        {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+                    </time>
+                </i>
+            </span>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ else }}
+        <li>
+            No CS Primer posts yet
+        </li>
+        {{ end }}
+    </ul> -->
+</content>
+{{ end }}

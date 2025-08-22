@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Programming Languages on Fernando Simões | frn.sh</title>
+    <link>//localhost:1313/blog/programming-languages/</link>
+    <description>Recent content in Programming Languages on Fernando Simões | frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/programming-languages/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens when you call a method in Python</title>
+      <link>//localhost:1313/regulars/python-method/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/regulars/python-method/</guid>
+      <description>&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;class C:&#xA;    def sum_numbers(self, x, y):&#xA;        return x + y&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Who is &lt;code&gt;sum_numbers&lt;/code&gt;? There is a difference in answers depending on who I ask.&lt;/p&gt;&#xA;&lt;p&gt;If I ask &lt;code&gt;class C&lt;/code&gt; if it knows &lt;code&gt;sum_numbers&lt;/code&gt;, this is what it tells me:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; C.sum_numbers&#xA;&amp;lt;function C.sum_numbers at 0x1031964d0&amp;gt;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But if I ask the same question to C&amp;rsquo;s instance, here is what I get in return:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; c = C()&#xA;&amp;gt;&amp;gt;&amp;gt; c.sum_numbers&#xA;&amp;lt;bound method C.sum_numbers of &amp;lt;t.C object at 0x102fffc70&amp;gt;&amp;gt;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This means that the instance doesn&amp;rsquo;t know &lt;code&gt;sum_numbers&lt;/code&gt;. It only knows that &lt;code&gt;sum_numbers&lt;/code&gt; is somewhere in the tree of the objects that it is an instance of.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

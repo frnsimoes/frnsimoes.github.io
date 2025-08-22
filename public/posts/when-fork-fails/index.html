@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Forcing fork() to fail | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+    border-top: 1px solid #eaeaea;
+    margin-top: 40px;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .footer-links p {
+    margin: 0.7em 0;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+     
+     
+    text-align: left;
+  }
+
+  .contact-links {
+     
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 0px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .intro-text {
+    margin: 0
+    color: #555;
+    font-size: 1.05em;
+    line-height: 1.6;
+    max-width: 650px;
+  }
+
+  .intro-text a {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+  }
+
+  .intro-text a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid var(--link-color);
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
+  }
+
+  .til-item h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .til-content {
+    margin-top: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .til-content p {
+    margin-bottom: 0.7rem;
+  }
+
+  .til-content code {
+    background-color: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.65em;
+    border: 1px solid #e0e0e0;
+  }
+
+  .til-content pre {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .til-content pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 0.7em;
+  }
+  
+  .til-content a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  
+  .til-content a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Forcing fork() to fail | frn.sh</title>
+<meta property="og:title" content="Forcing fork() to fail | frn.sh" />
+<meta name="twitter:title" content="Forcing fork() to fail | frn.sh" />
+<meta itemprop="name" content="Forcing fork() to fail | frn.sh" />
+<meta name="application-name" content="Forcing fork() to fail | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/posts/when-fork-fails/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-06-22T00:00:00Z />
+    <meta property="article:published_time" content=2024-06-22T00:00:00Z />
+    <meta property="og:url" content="//localhost:1313/posts/when-fork-fails/" />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Forcing fork() to fail",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-06-22",
+        "description": "",
+        "wordCount":  685 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-06-22",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "frn.sh"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.148.1">
+
+    
+    <meta property="og:url" content="//localhost:1313/posts/when-fork-fails/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="Forcing fork() to fail">
+  <meta property="og:description" content="What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it’s 0, we know we are in the child’s realm. If it’s a positive integer, this represents the child’s pid, and if it’s -1, fork() has failed.
+But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child’s pid in the parent’s process? I was reading rachelbythebay post on this problem and thought: how could I make fork() fail? Maybe by allocating lots of memory to the process. Perhaps by using ulimit(3) to limit the allowed processes? But these felt kind of troublesome, so I found getrlimit, a system call that limits a resource2 for the user.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-06-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-06-22T00:00:00+00:00">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="Forcing fork() to fail">
+  <meta name="twitter:description" content="What if fork() fails?1 Well, this is really a problematic issue since you have to handle the return value manually. fork() has three possible return values: If it’s 0, we know we are in the child’s realm. If it’s a positive integer, this represents the child’s pid, and if it’s -1, fork() has failed.
+But what happens when: you forget to test pid equals -1 and you want to send a sigkill to the child’s pid in the parent’s process? I was reading rachelbythebay post on this problem and thought: how could I make fork() fail? Maybe by allocating lots of memory to the process. Perhaps by using ulimit(3) to limit the allowed processes? But these felt kind of troublesome, so I found getrlimit, a system call that limits a resource2 for the user.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/posts/when-fork-fails/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a> /
+      
+      
+      
+    </div>
+</div>
+
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">Forcing fork() to fail</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>What if <code>fork()</code> fails?<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Well, this is really a problematic issue since you have to handle the return value manually. <code>fork()</code> has three possible return values: If it&rsquo;s <code>0</code>, we know we are in the child&rsquo;s realm. If it&rsquo;s a positive integer, this represents the child&rsquo;s <code>pid</code>, and if it&rsquo;s <code>-1</code>, <code>fork()</code> has failed.</p>
+<p>But what happens when: you forget to test <code>pid</code> equals <code>-1</code> and you want to send a sigkill to the child&rsquo;s <code>pid</code> in the parent&rsquo;s process? I was reading <a href="https://rachelbythebay.com/w/2014/08/19/fork/">rachelbythebay</a> post on this problem and thought: how could I make <code>fork()</code> fail? Maybe by allocating lots of memory to the process. Perhaps by using <code>ulimit(3)</code> to limit the allowed processes? But these felt kind of troublesome, so I found <code>getrlimit</code>, a system call that limits a resource<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> for the user.</p>
+<p>Combined with <code>RLIMIT_NPROC</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, <code>getrlimit</code> can set the maximum number of processes allowed for my user to <code>1</code> (I know, dumb and dangerous), forcing <code>fork()</code> to fail.</p>
+<pre tabindex="0"><code>int main() {
+    struct rlimit rl;
+    
+    getrlimit(RLIMIT_NPROC, &amp;rl);
+    
+    rl.rlim_cur = 1;
+    setrlimit(RLIMIT_NPROC, &amp;rl);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        printf(&#34;Child\n&#34;);
+    } else {
+        // If you wait, no need to send a sigkill
+        kill(pid, SIGKILL);
+        printf(&#34;Parent\n&#34;);
+
+    return 0;
+}
+</code></pre><p>In a non-buggy execution, the parent would create a child with <code>fork()</code>, the child would do its job while the parent&rsquo;s gently wait for it to finish, then the parent would do something, and the execution would be finished (or <a href="https://youtube.com/clip/UgkxuEH56Jf9LhkN-6BP6K-b1hm4xoOxmHuT">die</a>, depending on your mood). However, in this case, what&rsquo;s happening is: we forgot to check if <code>fork()</code> failed, and we are sending a <code>SIGKILL</code> (<code>9</code>) to the child&rsquo;s <code>pid</code>, which is <code>-1</code>, resulting a the termination of all processes in the process group. Think about the potential damage this could cause in a real-world scenario.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>If you don´t think it can happen, a quick search on the internet will show you otherwise. <a href="https://www.mail-archive.com/kde-bugs-dist@kde.org/msg811832.html">KDE</a> had this problem a while ago. Also, I found this heart-tugging story on HN:</p>
+<blockquote>
+<p>When I was young and really didn&rsquo;t understand Unix, my friend and were summer students at NBS (now NIST), and one fine afternoon we wondered what would happen if you ran fork() forever.</p></blockquote>
+<blockquote>
+<p>We didn&rsquo;t know, so we wrote the program and ran it.</p></blockquote>
+<blockquote>
+<p>This was on a PDP-11/45 running v6 or v7 Unix. The printing console (some DECWriter 133 something or other) started burping and spewing stuff about fork failing and other bad things, and a minute or two later one of the folks who had &lsquo;root&rsquo; ran into the machine room with a panic-stricken look because the system had mostly just locked up.</p></blockquote>
+<blockquote>
+<p>&ldquo;What were you DOING?&rdquo; he asked / yelled.</p></blockquote>
+<blockquote>
+<p>&ldquo;Uh, recursive forks, to see what would happen.&rdquo;</p></blockquote>
+<blockquote>
+<p>He grumbled. Only a late 70s hacker with a Unix-class beard can grumble like that, the classic Unix paternal geek attitude of &ldquo;I&rsquo;m happy you&rsquo;re using this and learning, but I wish you were smarter about things.&rdquo;</p></blockquote>
+<blockquote>
+<p>I think we had to hard-reset the system, and it came back with an inconsistent file system which he had to repair by hand with ncheck and icheck, because this was before the days of fsck and that&rsquo;s what real programmers did with slightly corrupted Unix file systems back then. Uphill both ways, in the snow, on a breakfast of gravel and no documentation.</p></blockquote>
+<blockquote>
+<p>Total downtime, maybe half an hour. We were told nicely not to do that again. I think I was handed one of the illicit copies of Lions Notes a few days later. &ldquo;Read that,&rdquo; and that&rsquo;s how my introduction to the guts of operating systems began.</p></blockquote>
+<p>Thanks, kabdib.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>From the man page: The getrlimit() and setrlimit() system calls get and set resource limits.  Each resource has an associated soft and hard limit, as defined by the rlimit structure&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>RLIMIT_NPROC
+This is a limit on the number of extant process (or, more precisely on Linux, threads) for the real user ID of the calling process.  So long as the current number of processes belonging to this process&rsquo;s real user ID is greater than or  equal  to  this
+limit, fork(2) fails with the error EAGAIN.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+  </content>
+
+  </main>
+  <footer>
+
+
+
+
+
+</footer>
+
+    
+</body>
+
+</html>

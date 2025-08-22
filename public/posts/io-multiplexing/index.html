@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Sockets, select and IO Multiplexing | frn.sh</title>
+
+  
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+:root {
+	--width: 720px;
+	--font-main: Verdana, sans-serif;
+	--font-secondary: Verdana, sans-serif;
+	--font-scale: 1em;
+	--background-color: #fff;
+	--heading-color: #222;
+	--text-color: #444;
+	--link-color: #3273dc;
+	--visited-color:  #8b6fcb;
+	--code-background-color: #f2f2f2;
+	--code-color: #222;
+	--blockquote-color: #222;
+}
+
+body {
+	font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	padding: 20px 20px 20px 20px;  
+	max-width: 720px;
+	text-align: left;
+	background-color: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	line-height: 1.5;
+	color: #444;
+	box-sizing: border-box;
+}
+
+  h1, h2, h3, h4, h5, h6 {
+	  font-family: var(--font-main);
+	  color: var(--heading-color);
+  }
+
+  a {
+	  color: var(--link-color);
+	  cursor: pointer;
+	  text-decoration: none;
+  }
+
+  a:hover {
+	  text-decoration: underline; 
+  }
+
+  nav a {
+	  margin-right: 8px;
+  }
+
+  strong, b {
+	  color: var(--heading-color);
+  }
+
+  button {
+	  margin: 0;
+	  cursor: pointer;
+  }
+
+  time {
+	  font-family: monospace;
+	  font-style: normal;
+	  font-size: 15px;
+  }
+
+  main {
+	  line-height: 1.6;
+  }
+
+  table {
+	  width: 100%;
+  }
+
+  hr {
+	  border: 0;
+	  border-top: 1px dashed;
+  }
+
+  img {
+	  max-width: 100%;
+  }
+
+  pre code { 
+	  color: #222;
+	  display: block;
+	  padding: 15px;
+	  white-space: pre-wrap;
+	  font-size: 11px;
+	  overflow-x: auto;
+	  overflow: auto;
+	  background-color: #f7f7f7;
+	   
+	   
+	  border: #cccccc;
+	  border-style: solid;
+	  border-width: 1px;
+  } 
+
+  code {
+	  display: inline-block;
+	  white-space: no-wrap;
+	  background-color: #f7f7f7;
+	  font-size: 0.8em;
+	  line-height: 1.5em;
+	  border: 1px solid #cccccc;
+	  padding: 0 2px;
+	  margin: -1px 0px;
+	   
+  }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+  div.highlight pre {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  div.highlight code {
+	  background-color: #f2f2f2;
+	  color: #222; 
+  } 
+
+  footer {
+	  padding: 25px 0;
+	  text-align: left;
+    border-top: 1px solid #eaeaea;
+    margin-top: 40px;
+  }
+
+   
+  .footer-links {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .footer-links p {
+    margin: 0.7em 0;
+  }
+
+  .footer-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  .title:hover {
+	  text-decoration: none;
+  }
+
+  .title h1 {
+	  font-size: 1.5em;
+  }
+
+  .inline {
+	  width: auto !important;
+  }
+
+  .highlight, .code {
+	  padding: 1px 15px;
+	  background-color: var(--code-background-color);
+	  color: var(--code-color);
+	  border-radius: 3px;
+	  margin-block-start: 1em;
+	  margin-block-end: 1em;
+	  overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+	  list-style-type: none;
+	  padding: unset;
+  }
+
+  ul.blog-posts li {
+	  display: flex;
+  }
+
+  ul.blog-posts li span {
+	  flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+	  color: var(--visited-color);
+  }
+
+   
+  .profile-section {
+     
+     
+    text-align: left;
+  }
+
+  .contact-links {
+     
+    font-size: 1.1em;
+  }
+
+  .contact-links a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .bio {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+    font-size: 1.1em;
+  }
+
+   
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-container h1 {
+    margin-bottom: 0px;
+  }
+
+  .nav-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+  }
+
+  .nav-bar a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 1em;
+  }
+
+  .nav-bar a:hover {
+    text-decoration: underline;
+  }
+
+   
+  .intro-text {
+    margin: 0
+    color: #555;
+    font-size: 1.05em;
+    line-height: 1.6;
+    max-width: 650px;
+  }
+
+  .intro-text a {
+    color: var(--link-color);
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+  }
+
+  .intro-text a:hover {
+    text-decoration: none;
+    border-bottom: 1px solid var(--link-color);
+  }
+
+   
+  .til-list {
+    margin-top: 2rem;
+  }
+
+  .til-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
+  }
+
+  .til-item h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+  }
+
+  .til-date {
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .til-content {
+    margin-top: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .til-content p {
+    margin-bottom: 0.7rem;
+  }
+
+  .til-content code {
+    background-color: #f1f1f1;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.65em;
+    border: 1px solid #e0e0e0;
+  }
+
+  .til-content pre {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .til-content pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    font-size: 0.7em;
+  }
+  
+  .til-content a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  
+  .til-content a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Sockets, select and IO Multiplexing | frn.sh</title>
+<meta property="og:title" content="Sockets, select and IO Multiplexing | frn.sh" />
+<meta name="twitter:title" content="Sockets, select and IO Multiplexing | frn.sh" />
+<meta itemprop="name" content="Sockets, select and IO Multiplexing | frn.sh" />
+<meta name="application-name" content="Sockets, select and IO Multiplexing | frn.sh" />
+<meta property="og:site_name" content="" />
+
+<meta name="description" content="A tech blog for people who like computers">
+<meta itemprop="description" content="A tech blog for people who like computers" />
+<meta property="og:description" content="A tech blog for people who like computers" />
+<meta name="twitter:description" content="A tech blog for people who like computers" />
+
+<meta property="og:locale" content="en-US" />
+<meta name="language" content="en-US" />
+
+  <link rel="alternate" hreflang="en" href="//localhost:1313/posts/io-multiplexing/" title="" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-12-30T00:00:00Z />
+    <meta property="article:published_time" content=2023-12-30T00:00:00Z />
+    <meta property="og:url" content="//localhost:1313/posts/io-multiplexing/" />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Sockets, select and IO Multiplexing",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-12-30",
+        "description": "",
+        "wordCount":  730 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-12-30",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "frn.sh"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.148.1">
+
+    
+    <meta property="og:url" content="//localhost:1313/posts/io-multiplexing/">
+  <meta property="og:site_name" content="frn.sh">
+  <meta property="og:title" content="Sockets, select and IO Multiplexing">
+  <meta property="og:description" content="IO multiplexing is a complex topic at first. But it’s the basis of “concurrency” without multiple threads or processors. So it’s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.
+The secret of IO multiplexing is being able to handle multiple things at once. And by “things” I mean multiple behaviors that have an input or output in file descriptors.
+Multiplexing is a well-known resource to deal with the “we need to gather some things, and then deliver them to their own proprietors” scenario. It’s a way of diligently proxying receipts to their appropriate recipients.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-12-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-12-30T00:00:00+00:00">
+    <meta property="article:tag" content="OS Theory and Fun">
+    <meta property="og:image" content="//localhost:1313/images/share.png">
+
+
+    
+    
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="//localhost:1313/images/share.png">
+  <meta name="twitter:title" content="Sockets, select and IO Multiplexing">
+  <meta name="twitter:description" content="IO multiplexing is a complex topic at first. But it’s the basis of “concurrency” without multiple threads or processors. So it’s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.
+The secret of IO multiplexing is being able to handle multiple things at once. And by “things” I mean multiple behaviors that have an input or output in file descriptors.
+Multiplexing is a well-known resource to deal with the “we need to gather some things, and then deliver them to their own proprietors” scenario. It’s a way of diligently proxying receipts to their appropriate recipients.">
+
+
+    
+
+    <link rel="canonical" href="//localhost:1313/posts/io-multiplexing/">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="//localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    
+    
+</head>
+</head>
+<body>
+  <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a> /
+      
+      
+      
+    </div>
+</div>
+
+
+
+</header>
+  <main>
+  <h4 style="text-align: center;">Sockets, select and IO Multiplexing</h4>
+  <p>
+    
+    
+    
+    
+    
+  </p>
+  <content>
+    <p>IO multiplexing is a complex topic at first. But it&rsquo;s the basis of &ldquo;concurrency&rdquo; without multiple threads or processors. So it&rsquo;s pretty handy. One example of a nice use of IO multiplexing is Redis; another is Nginx.</p>
+<p>The secret of IO multiplexing is being able to handle multiple things at once. And by &ldquo;things&rdquo; I mean multiple behaviors that have an input or output in file descriptors.</p>
+<p>Multiplexing is a well-known resource to deal with the &ldquo;we need to gather some things, and then deliver them to their own proprietors&rdquo; scenario. It&rsquo;s a way of diligently proxying receipts to their appropriate recipients.</p>
+<p>Multiplexing and demultiplexing are largely used in network protocols at the transport layer. When you use your computer, you don&rsquo;t only connect to one network at a time. Usually, you are listening to music, sending emails, chatting, and downloading files. UDP and TCP know how to handle this and how to deliver the appropriate datagram/segment to the correct socket.</p>
+<p>But what if you have only one process, and you want to create this same functionality? Suppose you are a server and want to be able to respond to multiple requests from different origins. What could you do? Well, you could run on multiple threads, or maybe multiple processors. But in many cases, that nor a good option or a possibility.</p>
+<p>One way of handling multiple requests in the scope of a single-threaded process is to use IO Multiplexing. In Unix systems, we have the following models of IO:</p>
+<ul>
+<li>Blocking IO model</li>
+<li>Nonblocking IO model</li>
+<li>IO Multiplexing model</li>
+</ul>
+<p><strong>Blocking IO</strong> means that the process will stop its execution until the IO operation completes. <strong>Nonblocking IO</strong>, on the other hand, does not wait for the IO execution to complete; instead, the process continues to run, and, if the IO execution was not completed, it returns an error.</p>
+<p>The IO Multiplexing model is hors-concours, in its turn. It makes use of systems calls like <code>select</code>, <code>poll</code>, <code>epoll</code> (depending on the OS, on my machine with OSX I use <code>select</code>, but if you are a linux nerd you can prefer <code>poll</code> &ndash; i wish i could) to keep track of file descriptors and handle their readiness of being IOed.</p>
+<p>But what does it really mean? How does it really happen?</p>
+<p>Imagine you are a server. Someone sends you a request with <code>curl</code>, yet someone else sends you a request with the browser. At first, you don&rsquo;t know what to do. Well, you do, but things are looking good: your socket will process the <code>curl</code> request, and the browser request will be blocking potentially by as long as the curl request takes to be executed.</p>
+<p>You don&rsquo;t want that. You are not that kind of server. Are you? You would rather be able to <em>listen</em> to the <code>curl</code> request, and then, while blocked by it (say it needs some database querying), you want to address the web browser request.</p>
+<p>That&rsquo;s what IO Multiplexing allows you to do.</p>
+<pre tabindex="0"><code>import select
+import socket
+
+
+listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+listener.setblocking(False)
+
+listener.bind((&#39;0.0.0.0&#39;, 10000))
+listener.listen(10)
+
+inputs = [listener]
+outputs = []
+
+to_send = set()
+
+while True:
+    readable, writable, excepcional = select.select(inputs, outputs, inputs)
+    print(&#39;readables&#39;)
+    print(readable)
+
+    print(&#39;writables&#39;)
+    print(writable)
+
+    for s in readable:
+        if s is listener:
+            client_sock, client_addr = s.accept()
+            client_sock.setblocking(False)
+            inputs.append(client_sock)
+
+        else:
+            data = s.recv(4096)
+            if data:
+                print(data)
+                outputs.append(s)
+                to_send.add(s)
+            else:
+                s.close()
+            inputs.remove(s)
+
+    for s in writable:
+        if s in to_send:
+            to_send.remove(s)
+            outputs.remove(s)
+            s.send(b&#39;HTTP/1.0 200 ok \r\n\r\nbody text&#39;)
+            s.close()
+</code></pre><p>Here is what&rsquo;s happening in this ugly code:</p>
+<p>This is a TCP connection (identified by socket.SOCK_STREAM). Instead of immediately making the handshake as soon as a client server&rsquo;s request arrive, you call select. What select is going to do is monitor the inputs for you. When the <code>curl</code> request arrives, you will receive its message; the same thing goes for the web browser request. They become &ldquo;readable&rdquo; because socket (the file descriptor) may wanna read what&rsquo;s been sent by them.</p>
+<p>Note that both <code>curl</code> and the web browser request are two different sockets, so they are identified by two different file descriptors.</p>
+<p>When you process the message from the one client, you wanna answer it, that&rsquo;s what the <code>to_send()</code> is doing. <code>writable</code> is a way of saying: &ldquo;here is a thing that I want to write to this file descriptor&rdquo;.</p>
+<p>And there you go. While being only one socket, you just created a way of dealing with multiple requests concurrently.</p>
+
+  </content>
+
+  </main>
+  <footer>
+
+
+
+
+
+</footer>
+
+    
+</body>
+
+</html>

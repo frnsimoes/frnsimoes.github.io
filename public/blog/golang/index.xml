@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on Fernando Simões | frn.sh</title>
+    <link>//localhost:1313/blog/golang/</link>
+    <description>Recent content in Golang on Fernando Simões | frn.sh</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sat, 28 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/blog/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Taking a look at Go&#39;s runtime/proc.go</title>
+      <link>//localhost:1313/regulars/go-scheduler/</link>
+      <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/regulars/go-scheduler/</guid>
+      <description>&lt;p&gt;Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole. So I thought about writing the few things I understood about it to at least paint a big picture of what&amp;rsquo;s happening behind the scenes.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
