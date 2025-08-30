@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Notes on paging and other memory stuff | Fernando Simões | frn.sh
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: underline;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    .contact-links a:hover {
+        text-decoration: underline;
+    }
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a>
+      
+      
+      
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Notes on paging and other memory stuff</h4>
+<content> <p>One of the most practical things we can do on a linux box regarding memory is to use <code>mmap</code> to create a new mapping (in the userland!) in the address space of a process. The other day I was playing around and reading the <code>mmap</code> documentation when I found a flag named <code>MAP_HUGETLB</code>. I got hooked by this and couldn&rsquo;t stop myself from finding out more.</p>
+<p>So here it is: A <a href="https://man7.org/linux/man-pages/man2/mmap.2.html">huge page</a> is a page that is bigger than the default page size of a system. We can actually see these values in a linux machine:</p>
+<ul>
+<li><code>getconf PAGE_SIZE</code> shows the default page size in the operating system.</li>
+<li><code>cat /proc/meminfo</code> has info about the <code>Hugepagesize</code>.</li>
+</ul>
+<p>In my case, the default page size is <code>4096</code> bytes and the <code>hugepagesize</code> is <code>2048kB</code>.</p>
+<p>So, what does <code>MAP_HUGETLB</code> do? It requests pages larger than the default page size for memory mappings. This is useful for programs with a large memory footprint. For example, consider a process that uses 2 MB of memory. Using the default 4 KB pages, mapping this memory would require 512 entries in the TLB (Translation Lookaside Buffer). In more costly page table walks, this increases the likelihood of TLB misses. Instead, we can Use a huge page size (e.g., 2 MB), allowing the same memory to be mapped with a single TLB entry, significantly reducing TLB misses and improving efficiency.</p>
+<h3 id="but-what-are-these-pages-and-why-do-they-have-sizes">But what are these pages, and why do they have sizes?</h3>
+<p>The history of memory abstraction implementation in operating systems is both confusing and complex. I like how Tanenbaum mentions that early machines didn&rsquo;t have any kind of memory abstraction; all they could access was the physical memory. Imagine the horror: two programs couldn&rsquo;t run concurrently without crashing because one process could overwrite the memory locations of another. There was no notion of address space.</p>
+<p>Before paging, the implementations required memory blocks to be contiguous. The stack and heap grew in direct opposition, leading to inevitable waste of space in the middle of the memory block (I highly recommend OSTEP for studying base-and-bounds and segmentation).</p>
+<p>Nowadays, we use paging. The address space is composed of pages of <code>PAGE_SIZE</code>. These pages aren&rsquo;t contiguous but are instead mapped. We now use lookups: virtual addresses must be translated into physical addresses. The TLB is a cache that aids in this translation. If the translation is not found in the TLB (a TLB miss), the MMU performs a lookup in the page table (a page walk). This lookup can also fail if there is no available translation for the virtual address. In such cases, the OS sends a segmentation fault signal to the program, which can then handle it or crash.</p>
+<h3 id="what-happens-when-a-program-is-loaded-into-memory">What happens when a program is loaded into memory?</h3>
+<p>When a new program starts, does the OS make available a new and clean memory space for it? If not, does it have to clean the memory space before loading the program?</p>
+<p>The answer is: it depends. The OS can make available a new and clean memory space for the program, or it can make available a memory space that was previously used by another program. In the second case, the OS needs to clean the memory space before loading the program. This is done by the OS by zeroing the memory space<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> before loading the program. This is done to avoid leaking information from the previous program to the new program.</p>
+<p>But what happens if that memory was used for some important, sensitive information? After all, we expect the operating system to respect the isolation of processes, right? If a program tries to access memory it does not have permission to access, it will cause a segmentation fault. The OS sends a SIGSEGV signal to the program, indicating an invalid memory access. This ensures that processes remain isolated and do not interfere with each other&rsquo;s memory.</p>
+<p>When a program terminates, the operating system&rsquo;s kernel reclaims the memory that was allocated to the program. This means the memory is marked as free and can be allocated to other programs. However, the contents of the memory are not immediately erased. Instead, the kernel ensures that any new program allocated this memory space cannot access the data left behind by the previous program. This is typically achieved by zeroing out the memory before it is allocated to a new program, maintaining the security and isolation between processes.</p>
+<h3 id="what-happens-when-a-child-process-tries-to-write">What happens when a child process tries to write?</h3>
+<p>Imagine a simple <code>fork()</code>: a bash process originates another bash process, which calls <code>cat</code> on a file, for example. In this case, the child process has a copy of the parent process, but both of them are isolated (after all, we are talking about processes); both have their own memory address space in pages<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>So, in physical memory (logically) there is a frame that is shared between parent and child. When the child tries to write to this frame, the OS will copy the frame to another location in physical memory, and then the child will write to this new location. To help with some visualization: Imagine physical memory as a box A, and the shared memory between parent and child as a small box X inside the big box A, the OS will copy the content of box X to another box Y, and then the child will write to box Y. This is done to ensure that the parent and child processes remain isolated from each other.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://stackoverflow.com/questions/2884230/zeroing-out-memory">https://stackoverflow.com/questions/2884230/zeroing-out-memory</a>, this is a good discussion about zeroing out memory in C.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>This is a great discussion: <a href="https://stackoverflow.com/questions/4594329/difference-between-the-address-space-of-parent-process-and-its-child-process-in">https://stackoverflow.com/questions/4594329/difference-between-the-address-space-of-parent-process-and-its-child-process-in</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
