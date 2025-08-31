@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>Forcing fork() to fail | Fernando Simões | frn.sh
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a>
+      
+      
+      
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Forcing fork() to fail</h4>
+<content> <p>What if <code>fork()</code> fails?<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Well, this is really a problematic issue since you have to handle the return value manually. <code>fork()</code> has three possible return values: If it&rsquo;s <code>0</code>, we know we are in the child&rsquo;s realm. If it&rsquo;s a positive integer, this represents the child&rsquo;s <code>pid</code>, and if it&rsquo;s <code>-1</code>, <code>fork()</code> has failed.</p>
+<p>But what happens when: you forget to test <code>pid</code> equals <code>-1</code> and you want to send a sigkill to the child&rsquo;s <code>pid</code> in the parent&rsquo;s process? I was reading <a href="https://rachelbythebay.com/w/2014/08/19/fork/">rachelbythebay</a> post on this problem and thought: how could I make <code>fork()</code> fail? Maybe by allocating lots of memory to the process. Perhaps by using <code>ulimit(3)</code> to limit the allowed processes? But these felt kind of troublesome, so I found <code>getrlimit</code>, a system call that limits a resource<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> for the user.</p>
+<p>Combined with <code>RLIMIT_NPROC</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, <code>getrlimit</code> can set the maximum number of processes allowed for my user to <code>1</code> (I know, dumb and dangerous), forcing <code>fork()</code> to fail.</p>
+<pre tabindex="0"><code>int main() {
+    struct rlimit rl;
+    
+    getrlimit(RLIMIT_NPROC, &amp;rl);
+    
+    rl.rlim_cur = 1;
+    setrlimit(RLIMIT_NPROC, &amp;rl);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        printf(&#34;Child\n&#34;);
+    } else {
+        // If you wait, no need to send a sigkill
+        kill(pid, SIGKILL);
+        printf(&#34;Parent\n&#34;);
+
+    return 0;
+}
+</code></pre><p>In a non-buggy execution, the parent would create a child with <code>fork()</code>, the child would do its job while the parent&rsquo;s gently wait for it to finish, then the parent would do something, and the execution would be finished (or <a href="https://youtube.com/clip/UgkxuEH56Jf9LhkN-6BP6K-b1hm4xoOxmHuT">die</a>, depending on your mood). However, in this case, what&rsquo;s happening is: we forgot to check if <code>fork()</code> failed, and we are sending a <code>SIGKILL</code> (<code>9</code>) to the child&rsquo;s <code>pid</code>, which is <code>-1</code>, resulting a the termination of all processes in the process group. Think about the potential damage this could cause in a real-world scenario.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>If you don´t think it can happen, a quick search on the internet will show you otherwise. <a href="https://www.mail-archive.com/kde-bugs-dist@kde.org/msg811832.html">KDE</a> had this problem a while ago. Also, I found this heart-tugging story on HN:</p>
+<blockquote>
+<p>When I was young and really didn&rsquo;t understand Unix, my friend and were summer students at NBS (now NIST), and one fine afternoon we wondered what would happen if you ran fork() forever.</p></blockquote>
+<blockquote>
+<p>We didn&rsquo;t know, so we wrote the program and ran it.</p></blockquote>
+<blockquote>
+<p>This was on a PDP-11/45 running v6 or v7 Unix. The printing console (some DECWriter 133 something or other) started burping and spewing stuff about fork failing and other bad things, and a minute or two later one of the folks who had &lsquo;root&rsquo; ran into the machine room with a panic-stricken look because the system had mostly just locked up.</p></blockquote>
+<blockquote>
+<p>&ldquo;What were you DOING?&rdquo; he asked / yelled.</p></blockquote>
+<blockquote>
+<p>&ldquo;Uh, recursive forks, to see what would happen.&rdquo;</p></blockquote>
+<blockquote>
+<p>He grumbled. Only a late 70s hacker with a Unix-class beard can grumble like that, the classic Unix paternal geek attitude of &ldquo;I&rsquo;m happy you&rsquo;re using this and learning, but I wish you were smarter about things.&rdquo;</p></blockquote>
+<blockquote>
+<p>I think we had to hard-reset the system, and it came back with an inconsistent file system which he had to repair by hand with ncheck and icheck, because this was before the days of fsck and that&rsquo;s what real programmers did with slightly corrupted Unix file systems back then. Uphill both ways, in the snow, on a breakfast of gravel and no documentation.</p></blockquote>
+<blockquote>
+<p>Total downtime, maybe half an hour. We were told nicely not to do that again. I think I was handed one of the illicit copies of Lions Notes a few days later. &ldquo;Read that,&rdquo; and that&rsquo;s how my introduction to the guts of operating systems began.</p></blockquote>
+<p>Thanks, kabdib.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>From the man page: The getrlimit() and setrlimit() system calls get and set resource limits.  Each resource has an associated soft and hard limit, as defined by the rlimit structure&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>RLIMIT_NPROC
+This is a limit on the number of extant process (or, more precisely on Linux, threads) for the real user ID of the calling process.  So long as the current number of processes belonging to this process&rsquo;s real user ID is greater than or  equal  to  this
+limit, fork(2) fails with the error EAGAIN.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

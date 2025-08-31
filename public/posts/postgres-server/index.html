@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>What&#39;s the Postgres server? | Fernando Simões | frn.sh
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a>
+      
+      
+      
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">What&#39;s the Postgres server?</h4>
+<content> <p>I&rsquo;m finding Postgres&rsquo; process architecture really interesting. A great overview on the topic is Suzuki&rsquo;s explanation of various types of processes, which you can find <a href="https://www.interdb.jp/pg/pgsql02/01.html">here</a>.</p>
+<ul>
+<li>
+<p>Postgres server process: the &ldquo;parent&rdquo; process that manages the database system. It&rsquo;s the thing that has an IP and a port.</p>
+</li>
+<li>
+<p>Backend process: It&rsquo;s the entity that reads and writes queries.</p>
+</li>
+<li>
+<p>Background process: a process created by the server process to perform various tasks, such as vacuuming, archiving, and replication. Background processes run independently of the client connections.</p>
+</li>
+</ul>
+<p>What I want to understand more today is the Postgres server process. Suzuki once again has an excellent explanation on the topic:</p>
+<blockquote>
+<p>When you execute the pg_ctl utility with the ‘start’ option, a postgres server process starts up. It then allocates a shared memory area in memory, starts various background processes, starts replication-associated processes and background worker processes if necessary, and waits for connection requests from clients. Whenever it receives a connection request from a client, it starts a backend process. (The started backend process then handles all queries issued by the connected client.)</p></blockquote>
+<blockquote>
+<p>A postgres server process listens to one network port, the default port is 5432. Although more than one PostgreSQL server can be run on the same host, each server must be set to listen to a different port number, such as 5432, 5433, and so on.</p></blockquote>
+<p>Let&rsquo;s understand better the key points of this explanation.</p>
+<h3 id="shared-buffers">Shared buffers</h3>
+<p>Postgres utilizes two types of shared memory, one of which is the classic <code>fork()</code> mechanism without <code>exec()</code>. When a child process is created in this manner, it shares the memory space of the parent process, but it operates independently from the parent and other child processes. After the <code>fork()</code>, any actions performed by the child process, such as handling queries or executing transactions, remain unknown to the parent process. Likewise, the parent (the Postgres server process) can continue executing its tasks, like managing connections or monitoring system health, without the child processes being aware of these actions. This separation creates a level of isolation between the processes, ensuring that each backend process works independently on its respective client connection, while still sharing certain memory resources for efficient data handling.</p>
+<p>Because of this isolation, Postgres also utilizes POSIX shared memory<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. This is a memory sharing mechanism that allows processes to share memory without the need for a parent-child relationship. This is useful for sharing data between processes that are not directly related, such as the Postgres server process and the background processes that perform tasks like vacuuming, archiving, and replication. By using POSIX shared memory, Postgres can allocate a shared buffer to each process&rsquo;s address space, allowing them to communicate and share data efficiently<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<p>It is important to note that Postgres does not utilize <code>mmap</code>, like other databases<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>But where is it?</p>
+<p>Postgres is actually straightforward with this. The shared buffer can be configured in the postgres.conf.</p>
+<pre tabindex="0"><code>sudo -iu postgres
+postgres@frn:~$ psql
+
+psql (15.8 (Debian 15.8-0+deb12u1))
+Type &#34;help&#34; for help.
+
+postgres=# SHOW config_file;
+               config_file
+-----------------------------------------
+ /etc/postgresql/15/main/postgresql.conf
+(1 row)
+
+postgres@frn:~$ cat /etc/postgresql/15/main/postgresql.conf | grep &#34;shared_buffers&#34;
+shared_buffers = 128MB                  # min 128kB
+</code></pre><p>So Postgres allocates 128MB to the shared_buffer. If you are curious, you can query <code>pg_stat_bgwriter</code> to check some things about the background processes.</p>
+<h3 id="background-processes">Background processes</h3>
+<p>Suzuki also says that the Postgres server &ldquo;starts various background processes&rdquo;, but what are these processes?</p>
+<p>There are multiple background processes in Postgres. The most interesting that I found are the <code>autovacuum</code>, which cleans up dead rows in tables, and the <code>checkpoint</code>, which writes dirty pages to disk.</p>
+<p>The <code>WAL writer</code> is a really interesting one: it writes the WAL (Write-Ahead Logging) to disk. The WAL is a log of all changes made to the database and is used for crash recovery. One interesting thing about WAL is that it also has a buffer:</p>
+<pre tabindex="0"><code>postgres@frn:~$ cat /etc/postgresql/15/main/postgresql.conf | grep &#34;wal_buffers&#34;
+#wal_buffers = -1                       # min 32kB, -1 sets based on shared_buffers
+</code></pre><p>The WAL records every change made to the database, including inserts, updates, etc., before those changes are permanently written to the actual database files. So, if the database crashes unexpectedly, all recent changes can be replayed (I keep reading this word, but what does it mean in this context?) from the buffer to restore the database to its last consistent state.</p>
+<h3 id="replication-associated-processes">Replication-associated processes</h3>
+<p>Suzuki says that the server process starts replication-associated processes. What are these processes?</p>
+<p>They are responsible for handling data replication between databases in a cluster. They ensure consistency between them. Postgres servers mainly manage WAL files for streaming replication and logical replication. A WAL sender process is responsible for sending WAL files to the standby server. A WAL receiver process is responsible for receiving the WAL files from the primary server. A WAL writer process is responsible for writing the WAL files to disk.</p>
+<h3 id="waiting-for-connection-requests-from-clients">Waiting for connection requests from clients</h3>
+<p>Besides the process creation topic, this is, for me, the most interesting one. I want to write an isolated text about it. But let&rsquo;s try to understand a little bit more about it.</p>
+<p>The Postgres server has an IP and a port. The Postgres server manages a cluster of databases. Databases are identified by their &ldquo;name&rdquo;, and it&rsquo;s only the Postgres server that has a socket address.</p>
+<p>Whenever a client opens a socket and sends a TCP request to the Postgres server socket, it spawns a backend process to handle the request. The backend process parses SQL queries, plans query execution strategies, executes the query, and fetches results; it also handles transaction management and returns the results to the client.</p>
+<p>We can query backend processes:</p>
+<pre tabindex="0"><code>postgres=# SELECT pid, datname, application_name, backend_start, state
+FROM pg_stat_activity;
+  pid   | datname  | application_name |         backend_start         | state
+--------+----------+------------------+-------------------------------+--------
+   1002 |          |                  | 2024-12-04 01:34:20.401326-03 |
+   1003 |          |                  | 2024-12-04 01:34:20.401672-03 |
+ 120192 | postgres | psql             | 2024-12-05 04:34:26.146744-03 | active
+    996 |          |                  | 2024-12-04 01:34:20.304368-03 |
+    995 |          |                  | 2024-12-04 01:34:20.303737-03 |
+   1001 |          |                  | 2024-12-04 01:34:20.400988-03 |
+(6 rows)
+</code></pre><p>One interesting thing is the data transmission between the client and the server. You can monitor a TCP request/response with something like Wireshark, for example, and see how lazily a backend process handles the request. The backend process streams the data, sending the result data as soon as it&rsquo;s ready, without waiting to complete the entire query. In this way, the client can start processing the data as soon as it arrives, without waiting for the entire query to complete.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>checkout <code>man shm_open</code>: shm_open() creates and opens a new, or opens an existing, POSIX shared memory object. A POSIX shared memory object is in effect a handle which can be used by unrelated processes to mmap(2) the same region of shared memory. The shm_unlink() function performs the converse operation, removing an object previously created by shm_open().&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://stackoverflow.com/questions/32930787/understanding-postgresql-shared-memory">https://stackoverflow.com/questions/32930787/understanding-postgresql-shared-memory</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Andy Pavlo has an interesting take on this: <a href="https://db.cs.cmu.edu/mmap-cidr2022/">https://db.cs.cmu.edu/mmap-cidr2022/</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
