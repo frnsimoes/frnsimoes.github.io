@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>The fundamentals of a Unix process | Fernando Simões | frn.sh
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: underline;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    .contact-links a:hover {
+        text-decoration: underline;
+    }
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+      <a href="/">home</a> /
+      
+      <a href="/about">about</a>
+      
+      
+      
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">The fundamentals of a Unix process</h4>
+<content> <p>Tomorrow I&rsquo;m going to give a tech talk at my company about what a process <em>actually</em> is in the context of Unix systems. I&rsquo;ve been thinking about processes for a while, but I never outlined exactly what a process is. So here is my thought process:</p>
+<h2 id="a-process-is-an-instance-of-a-running-program">A process is an instance of a running program</h2>
+<p>Great. What&rsquo;s a program? And what is this execution of the program? These are the two basic questions we must answer here. The first question may seem obvious, but is it really? There are so many layers to what a &ldquo;program&rdquo; is, and so many layers to its execution, that I think it&rsquo;s worth exploring this whole picture in depth.</p>
+<h2 id="what-is-a-program">What is a program?</h2>
+<p>A program is a bunch of bytes sitting somewhere on disk, storage, whatever. It&rsquo;s there, in a persistent layer, waiting for something to happen.</p>
+<p>Alright. Is <code>ls</code> a program? Hmm. We can execute it, right? So it probably is. Let&rsquo;s try to understand this in more detail:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ file /bin/ls
+/bin/ls: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=87a7eadc711cd002f7b00ba923179e5713498159, for GNU/Linux 3.7.0, stripped
+</code></pre><p><code>ls</code> is an <em>executable</em> file, compiled for ARM aarch64, version 1, and it&rsquo;s dynamically linked. Since it&rsquo;s dynamically linked, it needs an interpreter (the dynamic linker/loader ld.so) to resolve library dependencies at runtime. What else can we know about <code>/bin/ls</code>? It says it&rsquo;s an ELF PIE executable. What is this? Let&rsquo;s search in the manual page:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ man elf
+DESCRIPTION
+       The header file &lt;elf.h&gt; defines the format of ELF executable binary files.  Amongst these files are normal executable files, relocatable object files, core files, and shared objects.
+</code></pre><p>What can we do with ELF files? Can we discover any more details about this file given that it&rsquo;s an ELF file? Yes! We can use <code>readelf</code> to inspect it:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ readelf -h /bin/ls
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2&#39;s complement, little endian
+  OS/ABI:                            UNIX - System V
+  Machine:                           AArch64
+  Entry point address:               0x65c0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          197720 (bytes into file)
+</code></pre><p>And so on. A binary, then, has lots of information about how to execute it, what architecture it&rsquo;s for, what&rsquo;s the entry point of the program, and other details. The information about the entry point of the program is really interesting, but let&rsquo;s leave it for another time (if you are really curious about this, check the <code>e_entry</code> field in the ELF header in man 5 elf).</p>
+<h2 id="but-what-about-scripts-like-python-scripts">But what about scripts, like Python scripts?</h2>
+<p>Are they programs too? Let&rsquo;s create a simple Python script that has a <code>#!/usr/bin/python3</code> shebang at the top, and prints &ldquo;hello&rdquo;. And then let&rsquo;s find out how the OS classifies this program:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ file sh.py
+sh.py: Python script, ASCII text executable
+</code></pre><p>So, is this a program? What happens when we execute it? The kernel sees the shebang (<code>#!</code>) at the top of the file, and it knows that it has to execute <code>/usr/bin/python3</code> with <code>sh.py</code> as an argument. So, in this case, the actual program is <code>/usr/bin/python3</code>, and <code>sh.py</code> is just a file that contains instructions for the Python interpreter.</p>
+<p>The kernel actually reads the file before executing it, calls the <code>search_binary_handler</code> function, and decides what to do with the information it&rsquo;s given: in our example, it reads the file, sees it&rsquo;s not an ELF (no ELF magic number), but finds a shebang (<code>#!</code>) at the beginning, so it knows to use the script execution handler. The OS then reads the first line, understands the binary it needs to call to handle this program (in our case, <code>/usr/bin/python3</code>), and finally calls it: <code>/usr/bin/python3 sh.py</code>.</p>
+<h2 id="but-back-to-the-binary-program-what-exactly-is-inside-binls">But back to the binary program: what exactly is inside /bin/ls?</h2>
+<p>If we try to <code>cat</code> /bin/ls, we will see something like this:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ cat /bin/ls | head
+LFe@X@8
+        @@@$$$c,yK!cr
+Uj&lt;{D+W              p9:V$d%&gt;~G Xk&#34;UcQltcwba3j*
+</code></pre><p>What&rsquo;s happening behind the scenes is this: our terminal attempts to decode the output as UTF-8. A binary is an arbitrary sequence of bytes that the terminal attempts to interpret as characters, but most bytes don&rsquo;t represent printable characters - they represent machine instructions, addresses, binary data, etc. Character decoders are like agreements, though. For example: a certain sequence of bytes can mean something in UTF-8 and something entirely different as a signed 16-bit integer.</p>
+<p>The shell has a small utility called <code>strings</code>, which can read a binary and print to stdout the parts of the binary that can be interpreted as printable ASCII/UTF-8 text.</p>
+<p>For example:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ strings /bin/ls | head
+Y/lib/ld-linux-aarch64.so.1
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+</code></pre><p>Now that we have an idea of what a program is, let&rsquo;s make the jump.</p>
+<h2 id="what-is-the-execution-of-a-program">What is the execution of a program?</h2>
+<p>The operating system must start somehow to run programs, right? Programs are not meant to be dead things; they are meant to be useful. For them to be useful, we must run them. How does this happen?</p>
+<p>Let&rsquo;s run a program and check how it&rsquo;s laid out in the process structure:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ sleep 100 &amp;
+frnsh@debian:~$ pstree
+systemd─┬─2*[agetty]
+        ├─dbus-daemon
+        ├─sshd─┬─sshd-session───sshd-session───bash
+        │      └─sshd-session───sshd-session───bash─┬─pstree
+        │                                           └─sleep
+</code></pre><p>Processes depend on other processes, with <code>systemd</code> being the root process on my machine. We can see this relationship by accessing the <code>ppid</code> (parent process ID) attribute of a process:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ ps -o pid,ppid,cmd
+    PID    PPID CMD
+   6666    6665 -bash
+   6875    6666 sleep 100
+</code></pre><p>The 6665 process is the ssh-session we saw in the tree:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ ps -o pid,ppid,cmd -p 6665
+    PID    PPID CMD
+   6665    6658 sshd-session: frnsh@pts/1
+</code></pre><p>OK, so far we understood that we have a first process, and all the other processes depend on it. But how does Linux create new processes? Is the act of creation something that we can see, or is it something that happens in forgotten and dark places? Fortunately, we can see it all. Linux has a clear, old, and debatable API for creating new processes: the fork/exec model.</p>
+<p>The tl;dr of this model is the following: a parent process calls <code>fork</code>, which duplicates the parent. This dup is called a &ldquo;child process&rdquo;, which, since it&rsquo;s a dupe, is a copy of the memory space of its parent. <code>exec</code> &ldquo;replaces the current process image with a new process image&rdquo;, says the manual page. What is this &ldquo;process image&rdquo;, you ask? Well, guess what? It&rsquo;s the program!</p>
+<p>In words (and it&rsquo;s really confusing), <code>fork</code> creates a child, which is a copy of its parent (in our case, a shell). This copy has a PID (say, 2000), while the shell has another PID (say, 1000). This copy is the copy of the virtual memory address space, for example. So, even before the exec, the child is a process (it has things in memory), but it&rsquo;s the same process as the parent. After exec, there&rsquo;s a substitution of the process: the child process, which was a shell process, is now a <code>/bin/ls</code> process.</p>
+<pre tabindex="0"><code>Shell Process (PID 1000)
+│
+├── fork() creates child
+│
+├── Parent: Shell (PID 1000)          Child: Copy of Shell (PID 2000)
+│   waits for child to finish         │
+│                                     └── exec(&#34;/bin/ls&#34;)
+│                                         │
+│                                         └── Child becomes ls (PID 2000)
+</code></pre><p>Alright, alright, words, words, words, as Hamlet once said. But can we SEE this happening? Of course! Modern systems don&rsquo;t use <code>fork</code> directly, they often use <code>clone</code>. But let&rsquo;s check how this happens by calling &ldquo;ls; echo done&rdquo;, and tracing clone, execve while following the child processes:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ strace -f -e trace=clone,execve bash -c &#34;ls; echo done&#34;
+execve(&#34;/usr/bin/bash&#34;, [&#34;bash&#34;, &#34;-c&#34;, &#34;ls; echo done&#34;], 0xffffcb02b088 /* 22 vars */) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstrace: Process 9608 attached
+, child_tidptr=0xffff8074a0f0) = 9608
+[pid  9608] execve(&#34;/usr/bin/ls&#34;, [&#34;ls&#34;], 0xaaab019e6380 /* 22 vars */) = 0
+sh.py
+[pid  9608] +++ exited with 0 +++
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=9608, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+done
++++ exited with 0 +++
+</code></pre><p>Note that when Linux calls <code>clone</code>, it sets the child_stack to NULL. Then it execs with <code>/usr/bin/ls</code>, and a signal comes into play: SIGCHLD, which we can check out with man 7 signal, which says: &ldquo;SIGCHLD P1990 Ign Child stopped or terminated&rdquo;. The child process (PID 9608) exits after ls completes. The kernel destroys the child&rsquo;s process image and sends SIGCHLD to notify the parent that the child has terminated. The parent then continues execution with echo done.</p>
+<h2 id="so-what-is-a-process">So, what IS a process?</h2>
+<p>After all this exploration, we can now answer our original question more completely:</p>
+<p>A process is an instance of a running program - but it&rsquo;s much more than that. It&rsquo;s:</p>
+<ul>
+<li>A program loaded into memory with its own address space</li>
+<li>An execution context with its own PID and relationship to other processes</li>
+<li>A living thing that communicates with the kernel and other processes through signals</li>
+<li>A temporary entity that gets created (fork/clone), transformed (exec), and destroyed</li>
+</ul>
+<p>The beauty of Unix is how simple primitives like fork/exec create this rich ecosystem of cooperating processes.</p>
+<h2 id="but-wait---how-do-multiple-processes-run-on-one-cpu">But wait - how do multiple processes run on one CPU?</h2>
+<p>You might wonder: if I only have 4 CPU cores, how can I have hundreds of processes? The answer is <em>time-sharing</em>. The kernel rapidly switches between processes (context switching), giving each a tiny slice of CPU time. It happens so fast (often every few milliseconds) that it appears all processes run simultaneously.</p>
+<p>You can see this in action:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ top -d 1
+# This will show you how often processes are getting CPU time
+# Watch the %CPU column change as the kernel switches between processes
+</code></pre><h2 id="try-it-yourself">Try it yourself</h2>
+<p>Want to see this in action? Try these commands:</p>
+<pre tabindex="0"><code># See your current shell&#39;s PID
+frnsh@debian:~$ echo $$
+6666
+
+# Run a command and see the new process
+frnsh@debian:~$ sleep 10 &amp;
+[1] 7234
+frnsh@debian:~$ ps -o pid,ppid,cmd | grep sleep
+   7234    6666 sleep 10
+
+# Watch processes being created in real-time
+# (in another terminal)
+frnsh@debian:~$ watch &#39;ps aux | tail -10&#39;
+</code></pre><h2 id="whats-next">What&rsquo;s next?</h2>
+<p>Understanding processes opened up a whole new world for me. Suddenly, commands like <code>ps</code>, <code>top</code>, <code>kill</code>, and <code>jobs</code> made perfect sense. Debugging became easier when I understood that my Python script isn&rsquo;t just &ldquo;running&rdquo; - it&rsquo;s a process with a PID, parent, memory space, and place in the process tree.</p>
+<p>There are many things I didn&rsquo;t cover here - like the memory layout of a process (heap, stack, text segments), file descriptors, environment variables, and how signals work in detail. Each of these topics could be its own deep dive.</p>
+<p>If this sparked your curiosity, I&rsquo;d recommend playing around with <code>strace</code>, <code>ltrace</code>, and exploring <code>/proc/[pid]/</code> to peek even deeper into what processes are doing. The <code>/proc</code> filesystem is like a window into the soul of every running process.</p>
+<p>Got questions or want to share what you discovered? Feel free to reach out - I love talking about this stuff!</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

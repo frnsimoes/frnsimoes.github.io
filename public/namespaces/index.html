@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/images/favicon.png" />
+<title>How do we talk to the Kernel about namespaces? | 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a> /
+        <a href="mailto:frn@frn.sh">email me</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">How do we talk to the Kernel about namespaces?</h4>
+<content> <p>In the current Linux kernel, we have three interfaces for namespaces: <code>clone</code>, <code>unshare</code> and <code>setns</code>.</p>
+<p><code>clone</code> is the grandfather of namespace operations<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. It&rsquo;s a syscall that creates a new process, similar to <code>fork</code>, but with superpowers. When creating a new process with <code>clone</code>, you can specify which namespaces<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> you want the child process to inherit from its parent and which ones should be created anew. For example, if you want a process to have its own PID namespace but share everything else with its parent, you&rsquo;d use <code>clone</code> with the <code>CLONE_NEWPID</code> flag. This is actually what happens under the hood when you run a container.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+<p><code>setns</code> is like a passport control for processes - it lets a process enter an existing namespace. Unlike <code>clone</code>, which creates new namespaces, <code>setns</code> allows a process to join namespaces that already exist. This is super useful when you want a process to &ldquo;enter&rdquo; a container that&rsquo;s already running. In fact, this is exactly what happens when you run <code>docker exec</code> - the new process uses <code>setns</code> to join the namespaces of an existing container.</p>
+<p>Here&rsquo;s a cool example: when you start a debugging session in a container, the debugger process needs to see exactly what the container sees. This is where <code>setns</code> comes in - it allows the debugger to join all the container&rsquo;s namespaces, making it feel like it&rsquo;s running inside the container itself.</p>
+<p><code>unshare</code> is the last piece of the API. The fun part of <code>unshare</code> is that we can manipulate with within the shell. Let&rsquo;s explore a little bit more about namespaces by playing around with <code>unshare</code>:</p>
+<pre tabindex="0"><code>root@frn:~# unshare --pid --mount-proc --fork /bin/bash
+root@frn:~# ps aux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0   7196  3928 pts/1    S    00:31   0:00 /bin/bash
+root           2  0.0  0.0  11084  4388 pts/1    R+   00:31   0:00 ps aux
+</code></pre><p>With this command, we are doing the follow: we create a child process with <code>--fork</code>, and this child process has two namespaces: <code>pid</code> and <code>proc</code>. This means that the <code>/proc</code> virtual file system, in the perspective of this process, is new, untainted. And its vision on processes IDs is also clean (begins at 1).</p>
+<p>In two different shells, if we check the namespace ids for both the parent and the child processes, we can see what&rsquo;s happening. For this exercise, I will display only 4 namespaces: <code>mnt</code>, <code>net</code>, <code>pid</code> and <code>pid_for_children</code>. Remember that we passed the mount (<code>--mount-proc</code>) and pid flags to unshare:</p>
+<pre tabindex="0"><code># sudo ls l /proc/pid/ns
+
+# Parent process
+lrwxrwxrwx 1 root root 0 Dec 28 00:37 mnt -&gt; &#39;mnt:[4026532895]&#39; #
+lrwxrwxrwx 1 root root 0 Dec 28 00:37 net -&gt; &#39;net:[4026531840]&#39; 
+lrwxrwxrwx 1 root root 0 Dec 28 00:37 pid -&gt; &#39;pid:[4026532897]&#39; # 
+lrwxrwxrwx 1 root root 0 Dec 28 00:37 pid_for_children -&gt; &#39;pid:[4026532897]&#39; #
+
+# Child process
+lrwxrwxrwx 1 frns frns 0 Dec 28 00:37 mnt -&gt; &#39;mnt:[4026531841]&#39; # 
+lrwxrwxrwx 1 frns frns 0 Dec 28 00:37 net -&gt; &#39;net:[4026531840]&#39;
+lrwxrwxrwx 1 frns frns 0 Dec 28 00:37 pid -&gt; &#39;pid:[4026531836]&#39; # 
+lrwxrwxrwx 1 frns frns 0 Dec 28 00:37 pid_for_children -&gt; &#39;pid:[4026531836]&#39; #
+</code></pre><p>We can see that the only namespace that has the same ID between parent and child is the <code>net</code> namespace. This is cool, huh? The only thing they share is the network namespace. This isolation is particularly powerful for containerization. When a container runs in its own network namespace, it can have its own IP address, routing tables, and network configuration without interfering with the host system or other containers. This means you can run multiple web servers on port 80 in different containers without conflict, or create complex networking setups where containers communicate through their own virtual networks.</p>
+<h3 id="lets-run-a-server-on-a-net-namespace-to-see-what-happens">Let&rsquo;s run a server on a net namespace to see what happens</h3>
+<p>This feels kind of magic so I want to try this out in a practical way. First, let&rsquo;s create a new network namespace with <code>ip netns</code>.</p>
+<pre tabindex="0"><code>root@frn:~# ip netns add fakens
+root@frn:~# ip netns exec fakens bash
+</code></pre><p>We are now within the process with a namespaced network. Let&rsquo;s find out our net interfaces:</p>
+<pre tabindex="0"><code>root@frn:~# ip link show
+1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+</code></pre><p>Only the loopback is available. Let&rsquo;s fire up a server:</p>
+<pre tabindex="0"><code>root@frn:~# ip link set lo up
+root@frn:~# nc -l 80
+</code></pre><p>Now, on the host, let&rsquo;s try to netcat port 80:</p>
+<pre tabindex="0"><code>➜  ~ nc localhost 80
+localhost [127.0.0.1] 80 (http) : Connection refused
+</code></pre><p>The connection is refused because host&rsquo;s and namespace&rsquo;s networks are completely separated. This means that each has its own protocol stack, including routing tables, iptables, and socket listing. So net namespace not only limited what network interfaces a process could see, but it also created a new network stack for the namespaced process.</p>
+<p>I&rsquo;m really impressed by this. This example is really interesting, because we can actually test against it. In contrast, creating a namespace with <code>unshare --pid</code> is almost dull; we can see that the process tree is not accessible by the child process, but so what? It doesn&rsquo;t mean that behind the scenes there is isolation. With this experiment on net namespaces, though, it became clear what really happens: the process is almost secluded by its own namespaces.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>From The Linux Programming Interface: Like fork() and vfork(), the Linux-specific clone() system call creates a new process. It differs from the other two calls in allowing finer control over the steps that occur during process creation.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://man7.org/linux/man-pages/man2/clone.2.html">https://man7.org/linux/man-pages/man2/clone.2.html</a> (Check out the flag masks.)&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>When working with PID namespaces using <code>clone</code> in languages like C or Go, there&rsquo;s an important detail to consider: you need to manually mount a new <code>/proc</code> file system inside the new namespace. This is because the PID namespace creates a new process numbering system (starting from PID 1), but the original <code>/proc</code> still shows PIDs from the parent namespace. Without mounting a new <code>/proc</code>, tools like <code>ps</code> would show incorrect information. This is why container runtimes always ensure a fresh <code>/proc</code> mount when creating new PID namespaces. The mount typically looks something like <code>mount(&quot;proc&quot;, &quot;/proc&quot;, &quot;proc&quot;, MS_NOSUID|MS_NODEV|MS_NOEXEC, NULL)</code>.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
