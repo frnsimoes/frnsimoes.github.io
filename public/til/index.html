@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>TIL - Today I Learned 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        
+        <link rel="alternate" type="application/rss+xml" href="//localhost:1313/til/index.xml" title="" />
+         <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a> 
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<content>
+    <h1>TIL - Today I Learned</h1>
+    <p><p>Some small things I&rsquo;ve learned:</p>
+</p>
+
+    <div class="til-posts">
+        
+        <article class="til-post">
+            <header>
+                <h2>xxd(1) is a neat tool</h2>
+            </header>
+            <div class="til-content"><p>Found out about a cool tool today: <code>xxd(1)</code>. Basically, it can help you convert a hexdump file into binary or vice versa. For example:</p>
+<pre tabindex="0"><code>➜   head -c 100 /dev/urandom &gt; out.bin
+➜   cat out.bin
+5O0!3&lt;[N
+                R4DT&#39;{SC95#Rd5b62i^5u(OcD&#34;/MrJBUZ%
+</code></pre><p>Now let&rsquo;s hexdump it:</p>
+<pre tabindex="0"><code>➜  hexdump -C out.bin &gt; out.hex
+➜  cat out.hex
+00000000  35 e2 4f 30 21 b4 33 e2  c8 af b9 3c 5b ba 4e 0b  |5.O0!.3....&lt;[.N.|
+00000010  09 f6 52 16 34 11 44 54  85 96 b6 00 27 a2 7b 04  |..R.4.DT....&#39;.{.|
+...
+</code></pre><p>And then use xxd(1) to convert it back:</p>
+<pre tabindex="0"><code>➜   xxd -r out.hex out2.bin
+➜   cat out2.bin
+5O0!3   R4DTSd5b65u(Մ/MZ%
+</code></pre><p>When we inquiry the OS to know what are those files, we get:</p>
+<pre tabindex="0"><code>➜   file out.bin out.hex out2.bin
+out.bin:  data
+out.hex:   ASCII text
+out2.bin: data
+</code></pre></div>
+            <hr
+                style="margin: 2em 0; border: none; border-top: 1px solid #eee"
+            />
+        </article>
+        
+        <article class="til-post">
+            <header>
+                <h2>postgres vacuum and netbsd dir size</h2>
+            </header>
+            <div class="til-content"><p>Running <code>vacuum full</code> in Postgres requires as much free disk space as your database currently occupies, since it rebuilds the entire table by copying all the non-deleted rows to a new file. <code>vacuum</code> on the other reclaims dead tuples space. Something <a href="https://www.youtube.com/watch?v=gY0SE-71LZA&amp;list=PL0qfF8MrJ-jxMfirAdxDs9zIiBg2Wug0z&amp;index=19">similar</a> occurs with directories in netBSD. If you create lots of files of 255 chars in a directory, the size of the directory will increase. If you delete all files, the size won&rsquo;t decrease.</p>
+<p>Suppose you run <code>touch $( yes a | head -255 | tr -d '\n' )</code> three times, only replacing the letter. You would have a directory with something like this:</p>
+<p>aaa&hellip;
+bbb&hellip;
+ccc&hellip;</p>
+<p>Then, you delete &ldquo;b&rdquo; and create another file with the &ldquo;d&rdquo; letter. Since they both share the same size, the OS would understand that the new file can be placed between &ldquo;a&rdquo; and &ldquo;c&rdquo; (there&rsquo;s a padding there now, since &ldquo;b&rdquo; was deleted):</p>
+<p>aaa&hellip;
+ddd&hellip;
+ccc&hellip;</p>
+</div>
+            <hr
+                style="margin: 2em 0; border: none; border-top: 1px solid #eee"
+            />
+        </article>
+        
+        <article class="til-post">
+            <header>
+                <h2>writing to disk with O_SYNC</h2>
+            </header>
+            <div class="til-content"><p>write(2) doesn&rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block.</p>
+<p>Linux exposes the actual timeframe for periodic writings:</p>
+<pre tabindex="0"><code>➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs 
+500
+</code></pre></div>
+            <hr
+                style="margin: 2em 0; border: none; border-top: 1px solid #eee"
+            />
+        </article>
+        
+        <article class="til-post">
+            <header>
+                <h2>source and export diff</h2>
+            </header>
+            <div class="til-content"><p>Non-interactive shells don&rsquo;t load initialization files, so <code>bash -c 'declare -f'</code> doesn&rsquo;t output anything. But we can source it: <code>bash -c 'source ~/.bashrc; hello'</code>. Or even: <code>bash -c 'hello() { echo &quot;hi&quot;; }; declare -f'</code>.</p>
+<p>It&rsquo;s all about memory share in shell modes:</p>
+<ul>
+<li>
+<p><code>source</code> changes only affect current shell memory.</p>
+</li>
+<li>
+<p><code>export</code> marks variables to be passed to child processes.</p>
+</li>
+</ul>
+<p>Subtile difference that can save us lots of debugging time.</p>
+</div>
+            <hr
+                style="margin: 2em 0; border: none; border-top: 1px solid #eee"
+            />
+        </article>
+        
+        <article class="til-post">
+            <header>
+                <h2>cool trick: the kernel stack of a process</h2>
+            </header>
+            <div class="til-content"><p>I found a cool trick to see what&rsquo;s happening to a blocked (<code>sleeping</code>) process: <code>cat /proc/pid/stack</code>. Yep, you can peek at the trace of kernel functions related to a process!</p>
+<pre tabindex="0"><code>➜  pexpl git:(main) ✗ ps aux | grep p.py
+frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py
+
+➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack
+[&lt;0&gt;] do_epoll_wait+0x698/0x7d0
+[&lt;0&gt;] do_compat_epoll_pwait.part.0+0xb/0x70
+[&lt;0&gt;] __x64_sys_epoll_pwait+0x91/0x140
+[&lt;0&gt;] do_syscall_64+0x55/0xb0
+[&lt;0&gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+</code></pre><p>The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like <code>strace</code>, <code>&lt;pid&gt;/stack</code> can give an specific perspective of what&rsquo;s wrong with a process. How cool is that?</p>
+<p><strong>about procfs</strong></p>
+<p><code>proc</code> (procfs) is a pseudo-filesystem; it dynamically generate directories for processes. The files within <code>/proc</code> doesn&rsquo;t like on disk, similarly to the <code>/dev</code> directory. <a href="https://en.wikipedia.org/wiki/Procfs#History">Wikipedia</a> lists the history of procfs implementation, which goes back to 1984.</p>
+</div>
+            <hr
+                style="margin: 2em 0; border: none; border-top: 1px solid #eee"
+            />
+        </article>
+        
+    </div>
+</content>
+
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

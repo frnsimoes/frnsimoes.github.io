@@ -1,0 +1,27 @@
+{{ define "main" }}
+<content>
+    <!-- Profile/bio section -->
+    <div class="profile-section"></div>
+
+    <!-- Render posts -->
+    {{ $posts := where .Site.RegularPages "Section" "posts" }} {{ if $posts }}
+    <ul class="blog-posts">
+        {{ range $posts }}
+        <li>
+            <span>
+                <i>
+                    <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+                        {{ .Date.Format (default "02 Jan, 2006"
+                        .Site.Params.dateFormat) }}
+                    </time>
+                </i>
+            </span>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ else }}
+        <li>No posts yet</li>
+        {{ end }}
+    </ul>
+    {{ end }}
+</content>
+{{ end }}

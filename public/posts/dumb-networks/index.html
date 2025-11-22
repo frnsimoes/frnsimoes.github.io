@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>Why don&#39;t routers guarantee packet delivery? 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 20px;
+        max-width: 720px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a> 
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Why don&#39;t routers guarantee packet delivery?</h4>
+<content> <p>I was reading Stevens and something finally clicked in my brain about the history of networks. We begin with circuit switching, an inheritance from telephone network architecture.</p>
+<p>Network devices, at this stage, had a lot of work to do: imagine that host A connects to host B. A dedicated path with reserved bandwidth was established through multiple network devices. Their job was to maintain the state of this connection, calculating things like how much time was spent on that connection (for future billing), and who is talking to whom (host identification).</p>
+<p>If bandwidth was reserved for a connection, no other connection could use that capacity - even during silence periods. This was wasteful and created scalability problems.</p>
+<p>To solve this, we moved to packet switching with stateless forwarding devices. What we now call a &ldquo;packet&rdquo; was an entity that had, within itself, the full identification about the source, destination, and other communication details. Forwarding devices use this information to forward packets using best-effort delivery - no guarantees about delivery, ordering, or timing.</p>
+<p>This shift moved complexity to the endpoints: TCP (forced adoption in the 80s) at the hosts now handles reliability, flow control, and error recovery - things the circuit-switched network used to guarantee.</p>
+<p>We began forcing network devices to know too much. Then we migrated to a &ldquo;dumb network&rdquo; model. Also, whenever a packet arrives at a forwarding device and is consumed by the device&rsquo;s buffer, the &ldquo;wire&rdquo; that delivered it is freed, eliminating the problem of consumed/occupied bandwidth.</p>
+<p>For example, I tracerouted a request to google.com, and my request passed through 21 network devices (21 hops total) to reach its destination. No reserved bandwidth. No waste. Make dumb what needs to be dumb.</p>
+<h2 id="okay-but-what-are-the-responsibilities-of-the-end-host">Okay, but what are the responsibilities of the end host?</h2>
+<p>Let&rsquo;s investigate a few of TCP&rsquo;s main responsibilities: reliable delivery, ordering, and flow control. The way I&rsquo;m going to see these concepts in action is really simple: First I&rsquo;m going to change something on my network using the <a href="https://man7.org/linux/man-pages/man8/tc.8.html"><code>tc</code></a> utility. Then I&rsquo;m going to use <code>curl</code> to make requests to httpbin.org, and I&rsquo;m going to use <code>tcpdump</code> to capture the packets. Then I&rsquo;ll read the pcap file using <code>tcpdump -r file.pcap</code>. You can follow allong.</p>
+<h3 id="reliable-delivery">Reliable delivery</h3>
+<p>In circuit switching, the dedicated path guaranteed delivery. With packet switching, TCP must detect and fix losses.</p>
+<p>How TCP Detects Loss:</p>
+<ul>
+<li>Timeout-based: If no ACK arrives within RTO (Retransmission Timeout)</li>
+<li>Fast Retransmit: If sender receives 3 duplicate ACKs (same sequence number)</li>
+</ul>
+<p>Let&rsquo;s first add some errors to our network using <code>tc</code>:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ sudo /sbin/tc qdisc add dev enp0s1 root netem loss 10%
+</code></pre><p>Here is what I&rsquo;m doing with this command:</p>
+<ul>
+<li><strong><a href="https://tldp.org/HOWTO/Traffic-Control-HOWTO/components.html">qdisc</a></strong> is a scheduler. It&rsquo;s responsible for queueing.</li>
+<li><strong>add</strong> means we are installing the new qdisc</li>
+<li><strong>dev enp0s1</strong> - to the device enp0s1, which is my network interface.</li>
+<li><strong>root</strong> replace the default root qdisc</li>
+<li><strong><a href="https://man7.org/linux/man-pages/man8/tc-netem.8.html">netem</a></strong> is the emulation network qdisc</li>
+<li><strong>loss 10%</strong> means we will randomly drop 10% of outgoing packages.</li>
+</ul>
+<p>After this, let&rsquo;s call tcpdump to watch for httpbin.org requests:</p>
+<pre tabindex="0"><code>tcpdump -i any -n -S host httpbin.org -w reliable_delivery.pcap
+</code></pre><p>After a few curls, I spotted this on the logs:</p>
+<pre tabindex="0"><code>5 14:28:22.457982 enp0s1 In  IP 34.233.137.169.443 &gt; 10.0.2.15.47688: Flags [.], seq 2101023746:2101026626, ack 4131958569, win 65535, length 2880 [:path: /bytes/10000]
+6 14:28:24.065455 enp0s1 In  IP 34.233.137.169.443 &gt; 10.0.2.15.47688: Flags [.], seq 2101023746:2101025186, ack 4131958569, win 65535, length 1440 [user-agent: curl/8.14.1]
+7 14:28:27.083498 enp0s1 In  IP 34.233.137.169.443 &gt; 10.0.2.15.47688: Flags [.], seq 2101023746:2101025186, ack 4131958569, win 65535, length 1440
+</code></pre><p>The same sequence is being sent again because of our dirty trick with tc qdisc. Also, I noticed something really interesting: the first packet (line 5) has a length of 2880 bytes: the server initially tried to send 2880 bytes, but after the retransmission timeout, it reduced the segment size to 1440 bytes. This is TCP&rsquo;s congestion window shrinking - it assumes network congestion caused the loss and becomes more conservative.</p>
+<p>Let&rsquo;s also watch the request with nstat:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ watch -n 0.5 &#39;nstat | grep -E &#34;(Retrans|InSegs|OutSegs)&#34;&#39;
+</code></pre><p>The result (couldn&rsquo;t get the full result because it keeps changing):</p>
+<pre tabindex="0"><code>Every 0.5s: nstat | grep -E &#34;(Retrans|InSegs|OutSegs)&#34;                                 debian: Thu Sep 25 14:32:35 2025
+
+TcpInSegs                       24                 0.0
+TcpOutSegs                      12                 0.0
+TcpRetransSegs                  1                  0.0
+</code></pre><p>I gotta say that the change in <code>qdisc</code> made my virtual machine REALLY SLOW.</p>
+<h3 id="ordering">Ordering</h3>
+<p>In circuit switching, the dedicated path naturally preserved packet order. With packet switching, packets can take different routes and arrive out of order. TCP must reassemble them correctly.</p>
+<p>How TCP Handles Ordering:</p>
+<ul>
+<li>Sequence numbers: Every byte gets a unique sequence number</li>
+<li>Buffering: Receiver holds out-of-order packets until gaps are filled</li>
+<li>Reassembly: Delivers data to application only when contiguous</li>
+</ul>
+<p>First, let&rsquo;s do the <code>tc</code> trick:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ sudo tc qdisc add dev enp0s1 root netem delay 10ms reorder 25% 50%
+</code></pre><p>This command creates qdisc that will reorder packets. This is insane, by the way.</p>
+<p>Let&rsquo;s find out what tcpdump captured for us:</p>
+<pre tabindex="0"><code>15:25:37.891709 seq 2049541540:2049541666 (length 126)  # Packet A
+15:25:38.033126 seq 2049541806:2049541844 (length 38)   # Packet C 
+15:25:38.134826 seq 2049541666:2049541806 (length 140)  # Packet B 
+</code></pre><p>The segments sequences are unordered.</p>
+<p>What happened?</p>
+<ul>
+<li>Packet B (seq 1666:1806) got delayed by ~100ms</li>
+<li>Packet C (seq 1806:1844) overtook it</li>
+<li>TCP stack sent them out of order due to the network emulation</li>
+</ul>
+<p>TCP&rsquo;s Response (on receiving end):</p>
+<p>The server would have received packets in order A → C → B, creating a gap. It would buffer packet C and wait for packet B to fill the sequence gap before delivering the complete data stream to the application.</p>
+<p>Well, well, well. Looks like the dumb network delivered packets out of sequence, and TCP had to manage the reordering.</p>
+<h3 id="flow-control">Flow Control</h3>
+<p>In circuit switching, bandwidth was pre-allocated so sender couldn&rsquo;t overwhelm receiver. With packet switching, TCP must prevent fast senders from flooding slow receivers.</p>
+<p>How TCP Flow Control Works:</p>
+<ul>
+<li>Receive Window (rwnd): Receiver advertises available buffer space</li>
+<li>Sliding Window: Sender can only send data up to the advertised window</li>
+<li>Window Updates: Receiver dynamically adjusts window based on buffer availability</li>
+</ul>
+<p>To detect flow control, let&rsquo;s just check how our system has interacted with flow control flags until now:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ ss -i | grep -E &#34;(rwnd|cwnd)&#34;
+         cubic rto:268 rtt:58.889/48.551 ato:44 mss:1460 pmtu:1500 rcvmss:1460 advmss:1460 cwnd:10 ssthresh:9 bytes_sent:275497 bytes_retrans:19396 bytes_acked:256101 bytes_received:181409 segs_out:4893 segs_in:9003 data_segs_out:4290 data_segs_in:4903 send 1.98Mbps lastsnd:1032 lastrcv:1032 lastack:1032 pacing_rate 2.38Mbps delivery_rate 81.7Mbps delivered:4029 app_limited busy:73332ms retrans:0/142 rcv_rtt:204929 rcv_space:64273 rcv_ssthresh:47104 minrtt:0.26 snd_wnd:65535 rcv_wnd:46719 rehash:141
+</code></pre><p><code>rwnd</code> is the receiving window; while <code>cwnd</code> is the congestion window.</p>
+<p>Let&rsquo;s check what&rsquo;s happening in this connection:</p>
+<ul>
+<li>snd_wnd:65535 = Send window (how much sender can transmit)</li>
+<li>rcv_wnd:46719 = Receive window (receiver&rsquo;s advertised buffer space)</li>
+<li>rcv_space:64273 = Receiver&rsquo;s total buffer space</li>
+<li>rcv_ssthresh:47104 = Receiver&rsquo;s slow start threshold</li>
+</ul>
+<p>A TCP buffer has a buffer size of, normally, 8kb. In this case, the host advertised a receive window of 46719 bytes.</p>
+<p>Kurose explains how this works:</p>
+<blockquote>
+<p>TCP provides flow control by having the sender maintain a variable called the receive window. Informally, the receive window is used to give the sender an idea of how much free buffer space is available at the receiver. Because TCP is full-duplex, the sender at each side of the connection maintains a distinct receive window. Let&rsquo;s investigate the receive window in the context of a file transfer. Suppose that Host A is sending a large file to Host B over a TCP connection. Host B allocates a receive buffer to this connection; denote its size by RcvBuffer. From time to time, the application process in Host B reads from the buffer. Define the following variables:</p></blockquote>
+<blockquote>
+<ul>
+<li>LastByteRead: the number of the last byte in the data stream read from the buffer by the application process in B</li>
+<li>LastByteRcvd: the number of the last byte in the data stream that has arrived from the network and has been placed in the receive buffer at B</li>
+</ul></blockquote>
+<blockquote>
+<p>Because TCP is not permitted to overflow the allocated buffer, we must have:</p></blockquote>
+<blockquote>
+<p>LastByteRcvd - LastByteRead &lt;= RcvBuffer</p></blockquote>
+<blockquote>
+<p>The receive window, denoted as <code>rwnd</code> is set to the amount of spare room in the buffer:</p></blockquote>
+<blockquote>
+<p><code>rwnd = RcvBuffer - [LastByteRcvd - LastByteRead]</code></p></blockquote>
+<blockquote>
+<p>Because the spare room changes with time, <code>rwnd</code> is dynamic.</p></blockquote>
+<p>Well, that&rsquo;s a lot. What makes the flow control possible is the buffer implementation in TCP. The send buffer holds data until ACK received. The receive buffer holds out-of-order packets until gaps are filled.</p>
+<p>I said before that 8kb was the default buffer size. But let&rsquo;s check this out:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ cat /proc/sys/net/core/rmem_default
+212992
+</code></pre><p>The receive buffer on this VM is very large.</p>
+<p>The same applies to the send buffer:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ cat /proc/sys/net/core/wmem_default
+212992
+</code></pre><h2 id="final-thoughts">Final thoughts</h2>
+<p>The dumb network delivered packets out of sequence, with losses, and without guarantees. TCP at the endpoints handled all the complexity: reliability, ordering, and flow control. This design scales beautifully because network devices stay simple and fast, complexity is handled where it&rsquo;s needed, and the network core remains stateless and efficient.</p>
+<p>&ldquo;Best-effort&rdquo; delivery actually makes a lot of sense when you think about the evolution of networks. Packets are sent, and they can be sent again, but we, the network people working on lower layers, won&rsquo;t force you, developer of the protocol layer, to do what we want. You can solve your own problems, we only guarantee a few dumb things.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
