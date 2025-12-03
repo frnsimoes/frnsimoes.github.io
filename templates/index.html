@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}">
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    {% block extra_head %}
+    <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
+    {% endblock extra_head %}
+    {% block feed_link %}
+        {% if config.generate_feeds %}
+            {% if config.feed_filenames %}
+                {% for feed in config.feed_filenames %}
+                    {% if feed == "atom.xml" %}
+                        <link rel="alternate" type="application/atom+xml" title="{{ config.title | safe }} - Atom Feed" href="{{ get_url(path=feed, trailing_slash=false) | safe }}">
+                    {% elif feed == "rss.xml" %}
+                        <link rel="alternate" type="application/rss+xml" title="{{ config.title | safe }} - RSS Feed" href="{{ get_url(path=feed, trailing_slash=false) | safe }}">
+                    {% else %}
+                        <link rel="alternate" href="{{ get_url(path=feed, trailing_slash=false) | safe }}">
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <link rel="alternate" type="application/atom+xml" title="{{ config.title | safe }}" href="{{ get_url(path='atom.xml', trailing_slash=false) | safe }}">
+            {% endif %}
+        {% endif %}
+    {% endblock %}
+</head>
+<body>
+    {% block header %}
+    <header class="space">
+        <h1>{{ config.title }}</h1>
+        {% set linked_pages = section.pages | filter(attribute="extra.in_header") %}
+        {% if config.extra.links or linked_pages %}
+        <nav class="header-links">
+            {% for link in config.extra.links %}
+            <a href="{{ link.href }}">{{ link.title }}</a>
+            {% endfor %}
+            {% for page in linked_pages %}
+            <a href="{{ page.permalink }}">{{ page.title }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+    </header>
+    {% endblock header %}
+    {% block content %}
+    {% set blog = get_section(path="posts/_index.md") %}
+    {% if section.content or blog.pages %}
+    <main>
+        {% if section.content %}
+        <div {% if blog.pages %}class="space"{% endif %}>
+            {{ section.content | safe }}
+        </div>
+        {% endif %}
+        {% if blog.pages %}
+        <ul>
+            {% for post in blog.pages %}
+            <li><span class="post-date">{{ post.date | date(format="%y-%m") }}</span> <a href="{{ post.permalink }}">{{ post.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </main>
+    {% endif %}
+    {% endblock content %}
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="{{ get_url(path='dark_mode.svg') }}" width="24" height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="{{ get_url(path='light_mode.svg') }}" width="24" height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.querySelector("html").classList;
+        const sessionTheme = sessionStorage.getItem("theme");
+
+        function setDark() {
+            cls.add("dark-mode");
+            cls.remove("light-mode");
+            sessionStorage.setItem("theme", "dark");
+        }
+        function setLight() {
+            cls.add("light-mode");
+            cls.remove("dark-mode");
+            sessionStorage.setItem("theme", "light");
+        }
+
+        if (sessionTheme === "dark") {
+            setDark();
+        } else if (sessionTheme === "light") {
+            setLight();
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            setDark();
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function(e) {
+            setDark();
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function(e) {
+            setLight();
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+</body>
+</html>
