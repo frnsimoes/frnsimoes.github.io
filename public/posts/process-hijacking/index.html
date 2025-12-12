@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>Just checking the CPU usage 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Just checking the CPU usage</h4>
+<content> <p>Today I finally encountered the infamous process hijacking. It wasn&rsquo;t on purpose. A colleague was showing me around our Grafana dashboards - just routine monitoring of our baremetal machines. One caught my eye: 32GB RAM, top-of-the-line processor, 90% CPU usage. Only a few containers running. That didn&rsquo;t make sense. Nobody had reported issues. No alerts fired. But something was clearly eating resources.</p>
+<p>Maybe someone just ran a big loop and forgot about it. Let me check.</p>
+<p>I started with a simple <code>ps aux --sort=-%cpu | head -n 10</code>. Found a process with cmd <code>bash startup.sh</code>. Interesting, right? Checked Grafana to see for how long this was running. 28 minutes. Oh, ok. This is recent. Process uptime matched.</p>
+<h2 id="checking-syscalls">Checking syscalls</h2>
+<p>So I decided to forensic the hell out of this process. I checked what were the system calls:</p>
+<pre tabindex="0"><code>^Cstrace: Process 3668040 detached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 75.36   52.698676         390    134819     26094 wait4
+ 12.27    8.583416          78    108725           fork
+  7.42    5.190671           5    926332           rt_sigprocmask
+  2.69    1.881557           5    330523    165262 close
+  1.17    0.817651           9     82631           pipe
+  0.64    0.449359           5     78280           rt_sigaction
+  0.24    0.164395           6     26094           rt_sigreturn
+  0.21    0.147095           5     26094     26094 ioctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   69.932820          40   1713498    217450 total
+</code></pre><p>This is what I found for a few minutes of stracing this process. 108k forks! Something was spawning child processes like crazy. Let&rsquo;s find this big boy:</p>
+<pre tabindex="0"><code>find . -type f -name &#34;startup.sh&#34;
+</code></pre><p>Nothing. So <code>startup.sh</code> is executing, but the actual file is not on disk. Tha attacker deleted it. It doesn&rsquo;t matter, because we know that if it&rsquo;s a process, it&rsquo;s on memory. Since we know the PID, let&rsquo;s find out what the Kernel has to say about this</p>
+<pre tabindex="0"><code>readlink /proc/3668040/cwd
+/tmp
+</code></pre><h2 id="the-culprit">The culprit</h2>
+<p>No trace of the file in <code>/tmp</code>. No worries, again: it&rsquo;s on memory. I found out that we can check the copy of what&rsquo;s running. Bash creates a special file descriptor for this: fd/255. The attacker had deleted the file after execution, but the Kernel keeps the inode alive while the process is running.</p>
+<p>So I cat&rsquo;ed the fd (<code>cat /proc/3668040/fd/255</code>) and saw this monstrous, malicious script. I won&rsquo;t paste it here for security and obvious reasons, but here is what it did:</p>
+<ol>
+<li>ensured <code>redisserver</code> is always running</li>
+<li>if it detects an interactive session, it kills redisserver</li>
+<li>kills wget/curl/import</li>
+<li>kills processes with &gt;90% CPU usage and other well-known malwares (kinsing, c3pool)</li>
+</ol>
+<p>This thing was orchestrating against other malware while securing its own existence. I checked for its parent process and found postgres. That&rsquo;s when things clicked - the database was compromised. I opened htop to confirm, and sure enough, three &lsquo;postgres - background writer&rsquo; processes began consuming all available CPU. Something was happening.</p>
+<p>At this point, there were two other engineers in the room with me, and the CTO, who was already losing hope in humanity. I exec&rsquo;ed into the Postgres container. <code>\l</code> showed me a new database: <code>readme_to_restore</code>.</p>
+<h2 id="old-images-and-rce">Old images and RCE</h2>
+<p>I didn&rsquo;t even read. Everyone understood what was happening. We just restored the database from a snapshot, killed everything, and called it a day. But I stayed curious. We are using PostgreSQL 11 (I know&hellip;), so I checked with a friend, who is a security engineer, if he knew a vulnerability that would remotely execute code. He did: <a href="https://cybersrcc.com/2025/02/18/postgresql-flaw-exploited-as-zero-day-in-beyondtrust-breach/">https://cybersrcc.com/2025/02/18/postgresql-flaw-exploited-as-zero-day-in-beyondtrust-breach/</a>. The attack likely started with the PostgreSQL exposed to the internet (port 5432, 0.0.0.0) with weak credentials, allowing the attacker to connect and exploit this CVE.</p>
+<blockquote>
+<p>The root cause lies in how PostgreSQL handles invalid UTF-8 characters. An attacker can introduce malformed UTF-8 sequences that, when processed by psql, lead to premature termination of a SQL command. This manipulation allows the injection of additional SQL statements or the execution of shell commands via psql’s meta-commands, notably the exclamation mark (!) command, which facilitates operating system shell command execution.</p></blockquote>
+<p>Well, mystery solved. Someone hijacked the Postgres server, remotely executed code, created a script in /tmp, executed a Redis server, and was probably wal logging our pg instance.</p>
+<p>Thankfully, this machine had nothing to offer, actually. It was running some internal apps, Kong for routing, and Postgres. The whole investigation took around two hours. I started alone, people joined along the way. We sleep better now knowing a complete server compromise was caught simply because someone was curious about high CPU usage.</p>
+<h2 id="or-maybe-not">Or maybe not</h2>
+<p>Remember the strace output?</p>
+<pre tabindex="0"><code> 75.36   52.698676         390    134819     26094 wait4
+ 12.27    8.583416          78    108725           fork
+</code></pre><p>108 thousands forks, 134k wait4. This tells me the script was killing other processes. I tried to check Postgres logs: <code>ls -lth /var/log/postgresql/</code>, but somehow /var/log/postgresql was also deleted. It&rsquo;s been a few hours since the incident, and Grafana is behaving well. I hope it keeps this way.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
