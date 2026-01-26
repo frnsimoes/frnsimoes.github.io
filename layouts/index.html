@@ -1,0 +1,68 @@
+{{ define "main" }}
+<content>
+    <!-- Profile/bio section -->
+    <div class="profile-section"></div>
+
+    {{ $allPosts := where .Site.RegularPages "Section" "posts" }}
+    
+    <!-- Favorite technical posts (with "favorite" tag) -->
+    {{ $favoritePosts := slice }}
+    {{ range $allPosts }}
+        {{ if .Params.tags }}
+            {{ if in .Params.tags "favorite" }}
+                {{ $favoritePosts = $favoritePosts | append . }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+    
+    {{ if $favoritePosts }}
+    <h2>Here are some of my favorite technical posts.</h2>
+    <ul class="blog-posts">
+        {{ range $favoritePosts }}
+        <li>
+            <span>
+                <i>
+                    <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+                        {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+                    </time>
+                </i>
+            </span>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+    </ul>
+    {{ end }}
+
+    <!-- Other posts (without "favorite" tag) -->
+    {{ $otherPosts := slice }}
+    {{ range $allPosts }}
+        {{ $hasFavoriteTag := false }}
+        {{ if .Params.tags }}
+            {{ if in .Params.tags "favorite" }}
+                {{ $hasFavoriteTag = true }}
+            {{ end }}
+        {{ end }}
+        {{ if not $hasFavoriteTag }}
+            {{ $otherPosts = $otherPosts | append . }}
+        {{ end }}
+    {{ end }}
+    
+    {{ if $otherPosts }}
+    <!-- <h2>And here are some other posts that I like.</h2> -->
+    <ul class="blog-posts">
+        {{ range $otherPosts }}
+        <li>
+            <span>
+                <i>
+                    <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>
+                        {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+                    </time>
+                </i>
+            </span>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+    </ul>
+    {{ end }}
+</content>
+{{ end }}

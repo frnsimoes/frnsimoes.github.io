@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>A production incident: zombie sockets 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">A production incident: zombie sockets</h4>
+<content> <figure><img src="/static/zombie-sockets/body-eater.png"
+    alt="alt"><figcaption>
+      <p>The Body Eater: the magical creature you call when you need your sockets closed.</p>
+    </figcaption>
+</figure>
+
+<p>Last month I just had the most fun time with zombie sockets. It was on my second day at this new job as a platform engineer. A developer approached us saying: &ldquo;Look, there must be a problem in the infrastructure. Users are getting 502s. I already checked everything. It&rsquo;s not the code.&rdquo;</p>
+<p>We weren’t so sure. The service in question processed PDFs and had a pretty funky workflow: download a template from S3, load the PDF into memory, add some stuff, save it, then upload the new version back to S3. Suspicious.</p>
+<p>So we bumped the timeout from 1 to 5 minutes. Still timing out. We then proceeded to check the logs, but the exact function that was probably causing the problem (the one that added things to the pdf) had zeros logs. So we added logs, created a PR, triggered the CD pipeline, which in turn created a new revision — a new deploy. Magically, the server came back up. No timeouts. What happened?</p>
+<p>For the rest of the day, requests looked perfect. Crisis averted, or so we thought. The very next afternoon the same developer appeared: “Hey, 502s again.” Damn it. After a few painful hours reading the code and the logs, our lead noticed a warning: &ldquo;Max sockets… 50… 75 sockets in queue.&rdquo;</p>
+<p>Immediately, I thought: something is opening a socket but is never closing it. And there it was: the S3 implementation was not consuming the body (meaning: socket.close() was never called), so we had a bunch of open sockets floating around.</p>
+<p>The fix was really, really simple: let the client consume the body. A simple request.body.string() is often enough. A simple implementation a body consumption at the socket level may look like this:</p>
+<pre tabindex="0"><code>while True:
+    resp_chunk = client_sock.recv(1024)
+    if not resp_chunk:
+        break
+
+    response += resp_chunk
+</code></pre><p>Computers often employ this mechanism for inter-process communication: they use a buffer, and the buffer delivers chunks of data so the client can consume them (think of a big file being delivered over the wire). If chunks are not consumed, the buffer keeps filling up - even worse, imagine the server sent the first 1024 bytes: if the client doesn’t consume this first chunk, the server can’t send the next one because the buffer is full.</p>
+<p>Once these chunks are consumed, they cease to exist (this is why you can’t consume a request body more than once). Problem solved. Stream of data fully consumed. With the buffer drained, the server is finally able to close its side of the connection and send a FIN packet.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

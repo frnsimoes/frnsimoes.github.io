@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>Shell internals: builtins and source 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Shell internals: builtins and source</h4>
+<content> <p>There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.</p>
+<h2 id="types-builtins">Types, builtins</h2>
+<p>There is a magical <code>type</code> in the shell called <code>builtin</code>. Some commands are builtin:</p>
+<pre tabindex="0"><code>➜  ~ type cd
+cd is a shell builtin
+➜  ~ type echo
+echo is a shell builtin
+</code></pre><p>But some are not:</p>
+<pre tabindex="0"><code>➜  ~ type mkdir
+mkdir is /usr/bin/mkdir
+</code></pre><p>When a shell runs a command, it essentially can do one of these two things: 1. execute something that is available in its own memory space (hence the builtin); 2. execute something that is external to its memory space (surprise, surprise, hence the need for <code>exceve</code>).</p>
+<p>Let&rsquo;s try to strace <code>echo</code> and see what happens:</p>
+<pre tabindex="0"><code>➜  ~ strace echo hello | head
+execve(&#34;/usr/bin/echo&#34;, [&#34;echo&#34;, &#34;hello&#34;], 0x7ffd741cb2d8 /* 36 vars */) = 0
+</code></pre><p>What? I&rsquo;m surprised too. Wasn&rsquo;t <code>echo</code> a builtin? Why did it <code>execve</code> something <code>/usr/bin/echo</code>? Apparently, <code>strace</code> forced the shell to call another <code>echo</code>, and not the builtin one. Let&rsquo;s try to force the builtin:</p>
+<pre tabindex="0"><code>➜  ~ strace builtin echo hello
+strace: Can&#39;t stat &#39;builtin&#39;: No such file or directory
+➜  ~ builtin echo hello
+hello
+</code></pre><p>We can&rsquo;t strace the builtin echo because it lives in the same address space as the shell process itself, so it doesn&rsquo;t interact the the system resources, and there are no system calls. From the GNU docs:</p>
+<blockquote>
+<p>Builtin commands are contained within the shell itself. When the name of a builtin command is used as the first word of a simple command (see Simple Commands), the shell executes the command directly, without invoking another program. Builtin commands are necessary to implement functionality impossible or inconvenient to obtain with separate utilities.</p></blockquote>
+<p>In any case, I&rsquo;m surprised that there is also the coreutils <code>echo</code> command:</p>
+<pre tabindex="0"><code>➜  ~ type /usr/bin/echo
+/usr/bin/echo is /usr/bin/echo
+</code></pre><p>But we can clearly say that the builtin commands are within the shell process itself, otherwise exporting a variable would be a messy thing, right?</p>
+<h2 id="shell-sessions-and-process-groups">Shell sessions and process groups</h2>
+<p>Something that always bugged me was the <code>source</code> command. Every time we make a change in .zshrc or .bashrc we source the file to see the new effects. Why? How does it work? Unix uses two types of control over processes: processes group and session ids.</p>
+<p>A process group is kind of a collection of related processes. You can signal them all at once.</p>
+<pre tabindex="0"><code>➜ ps -o pid,pgid,comm | grep bash
+22851 22851 bash
+22852 22851 bash
+48233 48233 bash
+48234 48233 bash
+</code></pre><p>In this example, we have two process groups of bash processes: <code>22851</code> and <code>48233</code>. Each of them have two processes running. We can also check all processes related to a group (by name) with <code>pgrep</code>. A session, on the other hand, is a collection of process groups; sessions are used for job control (signaling, for example). We can get the <code>sid</code> a processes is in with the <code>getsid(2)</code>.</p>
+<p>Each process has an enrivonment list. For example, if you want to know every variable available in the current process, you can check it with <code>declare -x</code>.</p>
+<p>It is important to note that whenever a process creates a child (by executing <code>./script</code>, for example, and calling <code>clone()</code>), it may share its environment list with the child. But we can also set environment variables exclusively to a child&rsquo;s proces. This can be achieved by execution, for example, <code>HELLO='hello' ./script'</code></p>
+<p>We can also check what are the child processes of a process, if you are interested. Try this: <code>pstree -aps &lt;PID&gt;</code>, to see how your the children of <code>&lt;PID&gt;</code>. To check the environment list of the process, try <code>sudo cat /proc/&lt;PID&gt;/environ</code>. These are cool experiments to know how the environment works.</p>
+<h2 id="sourcing-files">Sourcing files</h2>
+<p>What really happens when we <code>source</code> a file? I always had the impression that sourcing a file is telling the terminal to &ldquo;take this thing that is in this file and load it into your process address space so you can have direct access to it.&rdquo; But is it really the case?</p>
+<p>When we source a file (or use the <code>.</code> command, which is equivalent), we&rsquo;re telling the shell to read and execute commands from that file in the current shell environment, not in a new process.</p>
+<p>Let&rsquo;s compare this with running a script normally:</p>
+<pre tabindex="0"><code>➜  ~ ./script.sh
+# This creates a child process.
+➜  ~ source script.sh  # or . script.sh
+# This runs in the current shell process.
+</code></pre><p>This explains why we need to source our .zshrc or .bashrc files when we make changes. If we just executed them as regular scripts, they would:</p>
+<ol>
+<li>Run in a new process</li>
+<li>Set up all the environment variables and functions in that new process</li>
+<li>Exit, taking all those changes with them</li>
+</ol>
+<p>Suppose now that <code>script.sh</code> has a function named <code>hello</code>. We can actually see the function with <code>declare -f hello</code>. We can also <code>type hello</code> now:</p>
+<pre tabindex="0"><code>hello is a shell function from /user/script.sh
+</code></pre><p>By sourcing, we&rsquo;re essentially saying &ldquo;read these commands and execute them right here, in this shell process.&rdquo; That&rsquo;s why all the changes stick around - they&rsquo;re modifying the current process&rsquo; environment, not creating a new one.
+This ties back to our earlier discussion about builtins and process groups: source itself is a builtin command (try type source), because it needs to operate within the shell&rsquo;s memory space to modify its environment. If it were an external command, it wouldn&rsquo;t be able to modify the parent shell&rsquo;s environment due to Unix&rsquo;s process isolation.</p>
+<h2 id="zshrc-what">.zshrc what?</h2>
+<p>Whenever we start a new shell, it automatically &ldquo;sources&rdquo; configuration files, like .zshrc or .bashrc. This has to do with how POSIX understands &ldquo;interactive shells&rdquo;. From the Unix Reference book:</p>
+<blockquote>
+<p>When you start a non-login shell, it does not read your .profile, .bash_profile, or .login file (or your .logout file), but it will still read the second shell configuration file (such as .bashrc). This means that you can test changes to your .bashrc by starting another instance of the shell, but if you are testing changes to your .profile or .login, you must log out and then back in to see the results.</p></blockquote>
+<p>Zsh does the same thing. From the manual page (<code>man zsh</code>), on the startup/shutdown section:</p>
+<blockquote>
+<p>Then, if the shell is interactive, commands are read from /etc/zsh/zshrc and then $ZDOTDIR/.zshrc.</p></blockquote>
+<p>I found it disappointing that there are no fun stuff about how the shell handle configuration files, but at least I understand that there is an order to read configuration files depending on the type of the shell: login, non-interactive and interactive shell<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Also, this process is a Unix heritage, and zsh / bash / etc are only being compliant to the POSIX standard.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>interactive shells are the one that read commands from the user. You can read more about the differences here: <a href="https://unix.stackexchange.com/questions/50665/what-are-the-differences-between-interactive-non-interactive-login-and-non-lo">https://unix.stackexchange.com/questions/50665/what-are-the-differences-between-interactive-non-interactive-login-and-non-lo</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

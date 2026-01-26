@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>What is a program? 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">What is a program?</h4>
+<content> <p>This is <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-intro.pdf">Remzi Arpaci</a> being a cool teacher:</p>
+<blockquote>
+<p>The definition of a process, informally, is quite simple: it is a running program.</p></blockquote>
+<p>The first time I read this I thought: Okay, Remzi, but what the heck is a program? Months go by and I explore filesystems, inodes, syscalls, etc., etc., and still don&rsquo;t truly understand what a program is. &ldquo;A bunch of bytes&rdquo;. &ldquo;Something on disk&rdquo;. I don&rsquo;t know! Don&rsquo;t ask me! It&rsquo;s a thing you run!</p>
+<p>I got angry and decided to start from the absolute basics and work my way up.</p>
+<h2 id="what-is-a-program">What is a program?</h2>
+<p>A program is a bunch of bytes sitting somewhere on disk, storage, whatever. It&rsquo;s there, in a persistent layer, waiting for something to happen. The important part in the definition is the &ldquo;waiting for something to happen&rdquo;. The program exist so something else can happen. So the first thing we can be sure is: a program is what can be run by the machine.</p>
+<p>Alright. Is <code>ls</code> a program? Hmm. We can execute it, right? So it probably is. Let&rsquo;s try to understand this in more detail:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ file /bin/ls
+/bin/ls: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=87a7eadc711cd002f7b00ba923179e5713498159, for GNU/Linux 3.7.0, stripped
+</code></pre><p><code>/bin/ls</code> is an ELF executable. What is this? Let&rsquo;s search in the manual page:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ man elf
+DESCRIPTION
+       The header file &lt;elf.h&gt; defines the format of ELF executable binary files.  Amongst these files are normal executable files, relocatable object files, core files, and shared objects.
+</code></pre><p>Ok, so we know that there is a format called &ldquo;ELF&rdquo; that the operating system knows about. What can we do with ELF files? Can we discover any more details about this file given that it&rsquo;s an ELF file? Yes! We can use <code>readelf</code> to inspect it:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ readelf -h /bin/ls
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2&#39;s complement, little endian
+  OS/ABI:                            UNIX - System V
+  Machine:                           AArch64
+  Entry point address:               0x65c0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          197720 (bytes into file)
+</code></pre><p>This is actually pretty interesting. We have information about the OS, the machine, and even the entry point address of that program. A binary, then, has lots of information about how to execute it, what architecture it&rsquo;s for, what&rsquo;s the entry point of the program, and other details. The information about the entry point of the program is really interesting, but let&rsquo;s leave it for another time.</p>
+<h2 id="but-what-about-scripts-like-python-scripts">But what about scripts, like Python scripts?</h2>
+<p>Are they programs too? Let&rsquo;s create a simple Python script that has a <code>#!/usr/bin/python3</code> shebang at the top, and prints &ldquo;hello&rdquo;. And then let&rsquo;s find out how the OS classifies this program:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ file sh.py
+sh.py: Python script, ASCII text executable
+</code></pre><p>So, is this a program? What happens when we execute it? Here&rsquo;s what I found fascinating: the kernel is basically doing pattern matching. It reads the first few bytes of the file, sees the shebang (<code>#!</code>) at the top, and thinks &ldquo;ah, this isn&rsquo;t a binary I can execute directly - it&rsquo;s instructions for another program.&rdquo;</p>
+<p>So the kernel becomes a middleman. It sees <code>#!/usr/bin/python3</code>, extracts that path, and essentially transforms our <code>./sh.py</code> command into <code>/usr/bin/python3 sh.py</code>. The actual program that gets executed is the Python interpreter; our script is just data fed to it.</p>
+<p>This happens inside the kernel through something called <code>search_binary_handler</code> - a function that tries different &ldquo;handlers&rdquo; for different file types until it finds one that knows what to do with our file.</p>
+<h2 id="but-back-to-the-binary-program-what-exactly-is-inside-binls">But back to the binary program: what exactly is inside /bin/ls?</h2>
+<p>If we try to <code>cat</code> /bin/ls, we will see something like this:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ cat /bin/ls | head
+LFe@X@8
+        @@@$$$c,yK!cr
+Uj&lt;{D+W              p9:V$d%&gt;~G Xk&#34;UcQltcwba3j*
+</code></pre><p>What&rsquo;s happening behind the scenes is this: our terminal is trying to be helpful and decode the output as UTF-8 text. But the truth is that terminals are kind of dumb. They&rsquo;ll try to interpret any sequence of bytes as text, even when those bytes represent machine instructions, memory addresses, or other binary data.</p>
+<p>Something similar is trying to read a JPEG file as if it were a text document - you&rsquo;ll get garbage because you&rsquo;re using the wrong decoder. The same sequence of bytes can mean completely different things depending on how you interpret them: UTF-8 text, a 32-bit integer, ARM assembly instructions, or something else entirely.</p>
+<p>Fortunately, the shell has a small utility called <code>strings</code>, which can read a binary and print to stdout the parts of the binary that can be interpreted as printable ASCII/UTF-8 text. We can also translate the program&rsquo;s bytes to hexadecimal using <code>hexdump -c</code> or even read the actual assembly instructions using <code>objdump -d</code>.</p>
+<h2 id="can-we-create-a-fake-elf-executable">Can we create a fake ELF executable?</h2>
+<p>But right now I&rsquo;m more interested in another question: what if I create a fake ELF file by adding by hand the ELF magic number, will it become a ELF executable? Remember that the <code>search_binary_handler</code> reads the ELF magic numbers to check if the file is an ELF file. Well, let&rsquo;s try it.</p>
+<pre tabindex="0"><code># create file with ELF &#34;header&#34;
+frnsh@debian:~$ printf &#39;\x7fELF&#39; &gt; fake_elf
+frnsh@debian:~$ file fake_elf
+fake_elf: ELF
+</code></pre><p>Interesting. This confirms that <code>file</code> actually only reads the header and outputs a summary of what&rsquo;s there. <code>readelf</code> checks deeper into the structure to see what it can extract from the file:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ readelf -a fake_elf
+readelf: Error: fake_elf: Failed to read file&#39;s magic number
+</code></pre><p>If we echo a magic number to fake_elf, we get the subsequent error (now it finds the magic number, but not the file header).</p>
+<pre tabindex="0"><code>frnsh@debian:~$ echo -e &#39;\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3e\x00&#39; &gt; fake_elf
+frnsh@debian:~$ readelf -a fake_elf
+readelf: Error: fake_elf: Failed to read file header
+</code></pre><p>Now comes the fun part: will the kernel actually try to execute our fake ELF? Let&rsquo;s make it executable and see what happens:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ ./fake_elf
+-bash: ./fake_elf: cannot execute binary file: Exec format error
+</code></pre><p>Perfect! This is exactly what I expected. The <code>file</code> command was fooled by our magic number, but the kernel is much more thorough. When we try to execute it, the kernel&rsquo;s loader does deeper validation and realizes our file is garbage.</p>
+<p>We can see this happening with <code>strace</code>:</p>
+<pre tabindex="0"><code>frnsh@debian:~$ strace -e execve ./fake_elf
+execve(&#34;./fake_elf&#34;, [&#34;./fake_elf&#34;], 0xffffd3072180 /* 22 vars */) = -1 ENOEXEC (Exec format error)
+strace: exec: Exec format error
+</code></pre><p>The <code>ENOEXEC</code> error tells us the kernel tried to execute our file but gave up when it realized the format was invalid. This shows an important distinction: having the correct magic number makes a file <em>identifiable</em> as an ELF format, but creating a <em>functional</em> executable requires much more - proper headers, sections, program segments, and valid machine code.</p>
+<p>Conceptually, we could create a legitimate ELF executable by hand, but it would require writing assembly code and carefully constructing all the required ELF structures. The kernel doesn&rsquo;t mess around when it comes to execution.</p>
+<h2 id="now-i-get-you-remzi">Now I get you, Remzi</h2>
+<p>A program isn&rsquo;t just &ldquo;bytes on disk&rdquo;, it&rsquo;s <em>structured data</em> with very specific formats and protocols. It&rsquo;s an agreement with the kernel. The kernel also has multiple layers of validation, and it&rsquo;s surprisingly picky about what it will and won&rsquo;t execute. The difference between <code>file</code> being fooled by our fake ELF and the kernel rejecting it shows just how thorough these checks are.</p>
+<p>I also learned that the boundary between &ldquo;program&rdquo; and &ldquo;data&rdquo; is blurrier than I thought. A Python script is just text data until the kernel sees that shebang and decides to feed it to an interpreter. A binary is just bytes until the ELF loader validates its structure and maps it into memory.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

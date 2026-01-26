@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="frn.sh/favicon.ico" />
+<title>Making sense of CPU utilization 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 15px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/frn.sh/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/frn.sh/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Making sense of CPU utilization</h4>
+<content> <figure><img src="/static/loadavg/loadavg.png">
+</figure>
+
+<p>A few days back I had the following situation at work: we run a bunch of websockets in containers. These containers store users&rsquo; sessions. When something unexpected happens to the websocket, the program makes a select in a database, fetches a few info, and tries to connect again - reviving the websocket. The container runs two programs: a node program and an engine. The two of them connects through a unix socket.</p>
+<p>I got an alert that the CPU utilization was spiking. Users were being disconnect. Customer service was fighting the storm. We had a few spikes of load average. This made me think in a lot of things, but one of them was: ok, 80% CPU spike, load average reaching 255? TCP sockets went from 1280 to 913 and to 2678. What is loadavg measuring?</p>
+<p>Does it mean that 255 processes were forked and tried to run at the same time? What did the scheduler do at this point? Did the kernel load everything into memory? What&rsquo;s the connection between the physical level, the scheduler decisions, and the userland metric tools?</p>
+<h2 id="cpu-utilization">CPU utilization</h2>
+<p>In other words, what is CPU utilization, really? Processes have multiple possible states: sleeping, runnable, running. Which count as CPU load? Which of them actually switch transistors and force the CPU to act the physical level?</p>
+<p>There are three layers embedded in this questions: at the physical level, we have transistors making noise, and the only thing that matters there are the running instructions. At the software level, we have the kernel scheduler making decisions - his own algorithm, his view of what should be run and what should be idle, limitations from blocking actions. At the userland, we have metric tools to understand what&rsquo;s happening.</p>
+<p>Each of these layers represent a different question. But for the final user - you and me - the userland metrics is what matters, especially if we are facing problems that affect people.</p>
+<h2 id="the-scheduler">The scheduler</h2>
+<p>You can have a fine and detailed explanation of the scheduler in Robert Love&rsquo;s book. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> also has a great explanation of schedulers. What I want is to understand how the CFS (The completely fair scheduler, Linux&rsquo;s current scheduler implementation) handle context switching between runnable tasks (remember: a task in linux is either a process or a thread). This is how the Kernel documentation describes how the scheduler decides between tasks:</p>
+<pre tabindex="0"><code>In CFS the virtual runtime is expressed and tracked via the per-task p-&gt;se.vruntime (nanosec-unit) value.  This way, it&#39;s possible to accurately timestamp and measure the &#34;expected CPU time&#34; a task should have gotten.
+</code></pre><p>Two important concepts here: <code>vruntime</code> and the struct <code>cfs_rq</code> (sched/sched.h). <code>vruntime</code> is a property that shows how much time that task has had of CPU time. <code>cfs_rq</code> is a struct that tracks runnable tasks.</p>
+<p>So suppose you have two tasks right now: one doing heavy processor-bound computation, and the other one a simple TCP socket listening for something. The first one consumes a lot of CPU time. The other one can be sleeping for a long time, until something enters the network stack and poke it. The scheduler is &ldquo;fair&rdquo;, meaning that, if there&rsquo;s room to run, the next runnable task is the one with less <code>vruntime</code> - the TCP socket will likely be chosen, because it&rsquo;s almost always in a blocking (interruptible sleeping) state.</p>
+<p>Tasks that are not in a runnable state are not computed in the <code>cfs_rq</code> struct. If it&rsquo;s sleeping (our TCP socket process waiting for something), the kernel pops it out of the <code>cfs_rq</code> and puts it in a wait queue.</p>
+<h2 id="the-userland-tools">The userland tools</h2>
+<p>We have a few tools in the userland, the most interesting one is the loadavg<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> in <code>/proc/loadavg</code>. It shows how&rsquo;s the pressure in the last 1-, 5- and 15 last minutes. loadavg considers running tasks + sleeping uninterruptible tasks when computing CPU load:</p>
+<pre tabindex="0"><code> * The global load average is an exponentially decaying average of nr_running +
+ * nr_uninterruptible.
+</code></pre><p><code>nr_uninterruptible</code> accounts for uninterruptible sleeping tasks (I kind of got excited about this and played a little bit with uninterruptible tasks, see at the end of the article).</p>
+<p>Another thing that caught my eye while reading sched/fair.c:</p>
+<pre tabindex="0"><code> * CPU utilization is the sum of running time of runnable tasks plus the
+ * recent utilization of currently non-runnable tasks on that CPU.
+ * It represents the amount of CPU capacity currently used by CFS tasks in
+ * the range [0..max CPU capacity] with max CPU capacity being the CPU
+ * capacity at f_max.
+ *
+ * The estimated CPU utilization is defined as the maximum between CPU
+ * utilization and sum of the estimated utilization of the currently
+ * runnable tasks on that CPU. It preserves a utilization &#34;snapshot&#34; of
+ * previously-executed tasks, which helps better deduce how busy a CPU will
+ * be when a long-sleeping task wakes up. The contribution to CPU utilization
+ * of such a task would be significantly decayed at this point of time.
+</code></pre><p>This explains why scheduler utilization can remain high even when few instructions are actually executing. The CPY may be mostly idle at the physical level, while the scheduler still carries memory of recent pressure. One interesting detail about this is the <code>util_avg</code> in the <code>sched_avg</code> instruct (util_avg = running% * SCHED_CAPACITY_SCALE).</p>
+<p>Tools that measure CPU utilization as a whole must account for multiple realities at once: what&rsquo;s now, what was a few time back, and the actual forecast of what&rsquo;s going to run. It&rsquo;s much more complicated thing than the actual running tasks at physical level. It&rsquo;s actually a way to handle the scheduler&rsquo;s abstraction limitations.</p>
+<p>The Kernel dev even jokes about it (kernel/sched/loadavg.c):</p>
+<pre tabindex="0"><code> * This file contains the magic bits required to compute the global loadavg
+ * figure. Its a silly number but people think its important. We go through
+ * great pains to make it work on big machines and tickless kernels.
+</code></pre><h2 id="what-is-actually-running">What is actually running</h2>
+<p>At this point, it should be clear that each layer has a different opinion of what is actually running. From physical cycles in a loop to accounting to past, present and future in the userland tools. At the heart of all of this, two questions are being asked:</p>
+<ol>
+<li>which tasks are executing instructions right now?</li>
+<li>how busy does the scheduler believe the CPU is?</li>
+</ol>
+<p>The first question has a physical answer while the second does not. From the scheduler’s point of view, utilization is an estimate. It mixess what is happening now with what happened recently, and with what is likely to happen soon.</p>
+<p>This is why scheduler utilization can remain high even when few instructions are actually executing. The CPU may be mostly idle at the physical level, while the scheduler still carries memory of recent pressure.</p>
+<p>The CPU is almost simple: it executes one thing after the other. The scheduler is a complex software construct, it&rsquo;s an abstraction, and, like all abstractions, it creates new limitations.</p>
+<h3 id="a-detour-into-uninterruptible-sleeping-tasks">A detour into uninterruptible sleeping tasks</h3>
+<p>This is quite interesting. Uninterruptible tasks are tasks that called some syscall (I/O) which cannot be interrupted. The operation must be completed.</p>
+<p>I tried to create a <code>write</code> C program to emulate D (uninterruptible) task, but I failed. So I appealed to kernel modules:</p>
+<pre tabindex="0"><code>#include &lt;linux/module.h&gt;
+#include &lt;linux/sched.h&gt;
+#include &lt;linux/delay.h&gt;
+
+static int __init dstate_init(void) {
+    set_current_state(TASK_UNINTERRUPTIBLE);
+    schedule_timeout(60 * HZ);
+    return 0;
+}
+
+static void __exit dstate_exit(void) {}
+
+module_init(dstate_init);
+module_exit(dstate_exit);
+MODULE_LICENSE(&#34;GPL&#34;);
+</code></pre><p>And then used make + insmod:</p>
+<pre tabindex="0"><code>obj-m += dstate.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+</code></pre><p>Executed:</p>
+<pre tabindex="0"><code>make
+insmod dstate.ko &amp;
+[1] 1506781
+</code></pre><p>I&rsquo;m forcing this C program to be compiled as a kernel module. <code>insmod</code> loads the .ko file into the running Kernel.</p>
+<p>Let&rsquo;s find a few things about this process:</p>
+<pre tabindex="0"><code>dstate_initroot@debian:/proc/1506781# cat sched
+insmod (1506781, #threads: 1)
+-------------------------------------------------------------------
+nr_switches                                  :                    1
+nr_voluntary_switches                        :                    1
+nr_involuntary_switches                      :                    0
+</code></pre><p>The scheduler gave in the CPU one time. No forced preemption.</p>
+<pre tabindex="0"><code>root@debian:/proc/1506781# cat schedstat
+4285857 0 1
+</code></pre><p>~4ms of execution time. 0ns waiting in runqueue, 1 switch.</p>
+<pre tabindex="0"><code>
+root@debian:/proc/1506781# cat status
+Name:   insmod
+Umask:  0022
+State:  D (disk sleep)
+SigPnd: 0000000000000000
+</code></pre><p>SigPnd (signals pending)<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> is represend in hexadecimal, it shows 0 pending signals. So I sent a sigkill:</p>
+<pre tabindex="0"><code>root@debian:/proc/1506781# kill -9 1506781
+root@debian:/proc/1506781# cat status | grep -i SigPnd
+SigPnd: 0000000000000100
+</code></pre><p>Still <code>D</code>. The signal is pending, but the task won&rsquo;t die until it wakes up. That&rsquo;s the whole point of uninterruptible sleep: the kernel is protecting an operation that cannot be safely aborted. Not even kill -9 can force it.</p>
+<h3 id="bonus-traces-of-despair">Bonus: traces of despair</h3>
+<pre tabindex="0"><code>root@debian:~# strace -c -p 1506781
+strace: Process 1506781 attached
+^C^C
+^C^C^C^C
+^C
+^C^C^C^C^C^C^C
+</code></pre><div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf">https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched.pdf</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>If you are interested in loadavg, I loved reading this article by Brendan Gregg: <a href="https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html">https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://man7.org/linux/man-pages/man5/proc_pid_status.5.html">https://man7.org/linux/man-pages/man5/proc_pid_status.5.html</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
