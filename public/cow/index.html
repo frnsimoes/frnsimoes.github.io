@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=51161&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:51161/favicon.ico" />
+<title>What happens when copy-on-write? 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+        font-size: 14px;
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">What happens when copy-on-write?</h4>
+<content> <p>Today I took some time to actually find out what was happening to one of our containers. Zenduty kept buzzing me that a certain app was failing because of memory issues. The log:</p>
+<blockquote>
+<p>WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition.</p></blockquote>
+<p>Fine. Let&rsquo;s figure out what this actually means.</p>
+<p>Redis <a href="https://redis.io/docs/latest/develop/get-started/faq/#background-saving-fails-with-a-fork-error-on-linux">documentation</a> is pretty clear about this issue. Here is the important part: the kernel can&rsquo;t predict how many pages will be written during the child&rsquo;s lifetime. In the worst case, all pages might need copying, so it needs to ensure enough memory exists for full duplication.</p>
+<p>While reading the documentation, I made some (slightly bad) assumptions, because I thought that I knew what was going on. I didn&rsquo;t:</p>
+<ul>
+<li>This is similar to Postgres full vacuum: it copies things. The only difference is that Postgres copies bytes on disk and Redis on memory.</li>
+<li>Fork gives the child a copy of the parent&rsquo;s address space</li>
+</ul>
+<p>I was in the right direction, but missing the mechanism.</p>
+<h2 id="how-does-forkingcloning-affect-virtual-memory">How does forking/cloning affect virtual memory?</h2>
+<p>When forking/cloning, the kernel says: hey, kid, before you exec, you can share the same physical pages in memory as your parent. I won&rsquo;t give you a full virtual memory yet.</p>
+<p>It&rsquo;s something like this:</p>
+<pre tabindex="0"><code>Parent virtual addr -&gt; [MMU uses Parent&#39;s page table] -&gt; physical page X
+Child virtual addr  -&gt; [MMU uses Child&#39;s page table]  -&gt; physical page X (same!)
+</code></pre><p>When the child is created, it can do a few different things. One of them, that&rsquo;s really interesting to our case, is when the child tries to write to that shared virtual memory. Imagine this:</p>
+<pre tabindex="0"><code>int main() {
+    char *data = malloc(4096);
+    memset(data, &#39;A&#39;, 4096);
+    
+    pid_t pid = fork();
+    
+    if (pid == 0) {
+        data[0] = &#39;B&#39;;  // child writes
+        exit();
+    
+    } else { // parent&#39;s 
+        ... data[0];
+    }
+}
+</code></pre><p><code>data</code> is allocated to the heap of the parent&rsquo;s process, then the child tries to write to it. What should the kernel do?</p>
+<p>Let&rsquo;s think this through:</p>
+<p>If <code>data</code> was <code>ALLOW</code>, and then the child replaces <code>A</code> with <code>B</code>, the parent&rsquo;s process will fetch this value from memory and get <code>BLLOW</code>. From the top of my head, I can see three possible ways of dealing with this:</p>
+<ul>
+<li><code>BLLOW</code> is now the value of data (parent sees child&rsquo;s writes).</li>
+<li>The kernel says &ldquo;nope, kiddo&rdquo; to the child&rsquo;s attempt at writing and terminates the child process.</li>
+<li>The kernel handles it behind the scenes so both processes have their own copies.</li>
+</ul>
+<p>Hopefully you&rsquo;ll agree that the last one is what we want.</p>
+<p>This mechanism is called copy-on-write. When the child tries to write to a shared page, the kernel allocates a new physical page, copies the content, and updates the child&rsquo;s page table to point to the new page. The write happens there, isolated from the parent.</p>
+<p>What happens is something like this:</p>
+<pre tabindex="0"><code>Initially:
+Parent virtual addr -&gt; [MMU uses Parent&#39;s page table] -&gt; physical page X (ALLOW)
+Child virtual addr  -&gt; [MMU uses Child&#39;s page table]  -&gt; physical page X (ALLOW)
+
+After child writes:
+Parent virtual addr -&gt; [MMU uses Parent&#39;s page table] -&gt; physical page X (ALLOW)
+Child virtual addr  -&gt; [MMU uses Child&#39;s page table]  -&gt; physical page Y (BLLOW)
+</code></pre><p>The kernel has a few functions and structures that handle these cases. Let&rsquo;s explore them.</p>
+<h2 id="when-the-kernel-actually-handles-this">When the kernel actually handles this</h2>
+<p>The function that handles copy-on-write is <code>__handle_mm_fault</code> (mm/memory.c). Here&rsquo;s the important part:</p>
+<pre tabindex="0"><code>if (vmf-&gt;flags &amp; (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) {
+    if (!pte_write(entry))
+        return do_wp_page(vmf);
+    else if (likely(vmf-&gt;flags &amp; FAULT_FLAG_WRITE))
+        entry = pte_mkdirty(entry);
+}
+</code></pre><p>How does it work? <code>vmf</code> is a <a href="https://lwn.net/Articles/242625/">struct</a>, <code>vm_fault</code>. The kernel is checking if this virtual memory fault has one of these two flags: FAULT_FLAG_WRITE or FAULT_FLAG_UNSHARE.</p>
+<p>The first one is what we&rsquo;re looking for: it &ldquo;indicates that the page fault happened on a write access&rdquo;. In <code>do_wp_page</code>, the kernel handles shared memory, private memory, etc. The kernel delays copying until absolutely necessary because it&rsquo;s expensive - why duplicate a page if it might never be written to?</p>
+<p>After all checks and validations, it finally grants:</p>
+<pre tabindex="0"><code>/*
+ * Ok, we need to copy. Oh, well..
+ */
+if (folio)
+    folio_get(folio);
+    pte_unmap_unlock(vmf-&gt;pte, vmf-&gt;ptl);
+
+#ifdef CONFIG_KSM
+	if (folio &amp;&amp; folio_test_ksm(folio))
+		count_vm_event(COW_KSM);
+#endif
+	return wp_page_copy(vmf);
+}
+</code></pre><p>It finally calls <code>wp_page_copy</code> (mm/memory.c), receiving the virtual memory fault struct. This function does multiple things. Let&rsquo;s check out a few of them:</p>
+<ul>
+<li>It tries to allocate a new memory page. OOM if it fails.</li>
+</ul>
+<pre tabindex="0"><code>new_folio = folio_prealloc(mm, vma, vmf-&gt;address, pfn_is_zero);
+if (!new_folio)
+    goto oom;
+</code></pre><ul>
+<li>Copies the content of old page to the new one. (Here&rsquo;s the problem for Redis)</li>
+</ul>
+<pre tabindex="0"><code>err = __wp_page_copy_user(&amp;new_folio-&gt;page, vmf-&gt;page, vmf);
+</code></pre><ul>
+<li>Marks the page table as writable (maybe_mkwrite; should be writable, but depends on other things)</li>
+</ul>
+<pre tabindex="0"><code>entry = folio_mk_pte(new_folio, vma-&gt;vm_page_prot);
+entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+</code></pre><ul>
+<li>Cleans old TLB entry</li>
+</ul>
+<pre tabindex="0"><code>ptep_clear_flush(vma, vmf-&gt;address, vmf-&gt;pte);
+</code></pre><ul>
+<li>Adds new TLB entry</li>
+</ul>
+<pre tabindex="0"><code>set_pte_at(mm, vmf-&gt;address, vmf-&gt;pte, entry);
+</code></pre><p>But what does this have to do with Redis, overcommit, etc? Actually, what&rsquo;s even overcommit?</p>
+<h2 id="why-this-breaks-redis">Why this breaks Redis</h2>
+<p>Redis&rsquo;s background saving (<a href="https://redis.io/docs/latest/commands/bgsave/">BGSAVE/RDB</a> persistence) forks a child process. This child walks through Redis&rsquo;s entire dataset to write it to disk. During this walk, the child reads from memory pages shared with the parent.</p>
+<p>Meanwhile, the parent keeps serving requests. When clients write to Redis, the parent modifies pages. Each modified page triggers copy-on-write - the kernel allocates a new physical page, copies the old content, and updates the child&rsquo;s page table to point to the new copy.</p>
+<p>Worst case? Every page gets written during the save. If Redis is using 3GB, the kernel might need to allocate another 3GB for all those COW copies.</p>
+<p>But here&rsquo;s the problem: the kernel can&rsquo;t know in advance which pages will be written. It only knows the theoretical maximum - the full dataset size.</p>
+<p>Redis documentation recommends <code>vm.overcommit_memory=1</code>. This basically means: always say yes to memory allocations, even if there&rsquo;s not enough RAM to back them all.</p>
+<p>Is it safe? Will it break everything? If we think about it, Redis won&rsquo;t probably write to <em>every</em> page during the background save, right? It will probably write to a <em>few</em> pages. And considering a page is 4kb, it&rsquo;s safe enough in practice. The kernel will only allocate what&rsquo;s actually needed through COW, not the theoretical maximum.</p>
+<h2 id="why-is-this-a-problem">Why is this a problem</h2>
+<p>I finally understood Andrew Baumann takes about the fork/exec model in the <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2019/04/fork-hotos19.pdf">a fork() in the road</a> paper. Requiring overcommit is a problem, no one can deny. Even if the chances are too low, they still exist, and applications can simply fail because of this. This is the perfect example of the <code>worst-case allocation</code> Baumman mentions.</p>
+<p>Copy-on-write exists to avoid wasteful page copies. The &ldquo;* Ok, we need to copy. Oh, well&hellip;&rdquo; commentary in memory.c is quite revealing. But overcommiting memory is like the Kernel is saying: &ldquo;I can compromise resources I don&rsquo;t have because I don&rsquo;t know what to do with this&rdquo;.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

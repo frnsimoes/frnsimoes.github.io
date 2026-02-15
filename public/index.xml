@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <link>//localhost:1313/</link>
+    <description>Recent content on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Fri, 13 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens inside Postgres when IOPS runs out</title>
+      <link>//localhost:1313/bio/</link>
+      <pubDate>Fri, 13 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/bio/</guid>
+      <description>&lt;p&gt;In the &lt;a href=&#34;//localhost:1313/iops&#34;&gt;previous post&lt;/a&gt; I wrote about the three cache layers between a SELECT and disk. That post came from a production incident - queries hanging for 35+ minutes, Heroku timeouts, IOPS pinned at 3000. We fixed it. The root cause was bad indexes forcing Postgres to fetch tens of thousands of rows from disk only to discard them. Better indexes, problem solved.&lt;/p&gt;&#xA;&lt;p&gt;During the incident, the system hit 3000 IOPS and stayed there. It didn&amp;rsquo;t recover on its oown. We had to kill connections manually. But why? What was actually happening inside Postgres that made the situation self-sustaining? I had a wrong mental model for days. This post is about fixing that.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Cache layers between select and disk</title>
+      <link>//localhost:1313/iops/</link>
+      <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/iops/</guid>
+      <description>&lt;p&gt;Saturday, 2 AM. We had a Postgres incident earlier that week - Heroku timeouts, queries running for 35+ minutes, IOPS hitting the provisioned limit. I should have been sleeping. Instead I was staring at EXPLAIN ANALYZE output, asking myself a question I couldn&amp;rsquo;t let go: what actually happens when Postgres reads from disk?&lt;/p&gt;&#xA;&lt;p&gt;I knew I needed a better index. But before fixing anything, I wanted to understand what &amp;ldquo;reading from disk&amp;rdquo; actually means. How many layers of caching exist between a &lt;code&gt;SELECT&lt;/code&gt; and the actual storage device? And what happens when they all fail?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What happens when copy-on-write?</title>
+      <link>//localhost:1313/cow/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/cow/</guid>
+      <description>&lt;p&gt;Today I took some time to actually find out what was happening to one of our containers. Zenduty kept buzzing me that a certain app was failing because of memory issues. The log:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition.&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;Fine. Let&amp;rsquo;s figure out what this actually means.&lt;/p&gt;&#xA;&lt;p&gt;Redis &lt;a href=&#34;https://redis.io/docs/latest/develop/get-started/faq/#background-saving-fails-with-a-fork-error-on-linux&#34;&gt;documentation&lt;/a&gt; is pretty clear about this issue. Here is the important part: the kernel can&amp;rsquo;t predict how many pages will be written during the child&amp;rsquo;s lifetime. In the worst case, all pages might need copying, so it needs to ensure enough memory exists for full duplication.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How packet switching won</title>
+      <link>//localhost:1313/packet-switching/</link>
+      <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/packet-switching/</guid>
+      <description>&lt;figure&gt;&lt;img src=&#34;//localhost:1313/static/packet-switching/telephone.png&#34;&#xA;    alt=&#34;A very bad attempt to draw a telephone&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;I don&amp;rsquo;t know why, bt since I discovered about circuit switching, I&amp;rsquo;ve been kinda obsessed with what they represented in the history of telecommunications and computer networking. Telecom engineers had to solve a hard problem. In the analog age, carbon microphones converted voice into electrical signals that traveled over copper wires, with amplifiers boosting the signal to maintain quality across distances. In the digital age, the same copper wires remained, but the approach changed: analog signal was sampled at intervals, quantized into bits, and transmited. Both eras needed circuit switching - the strategy to keep two people talking over a dedicated path.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>A production incident: zombie sockets</title>
+      <link>//localhost:1313/zombie-sockets/</link>
+      <pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/zombie-sockets/</guid>
+      <description>&lt;figure&gt;&lt;img src=&#34;//localhost:1313/static/zombie-sockets/body-eater.png&#34;&#xA;    alt=&#34;alt&#34;&gt;&lt;figcaption&gt;&#xA;      &lt;p&gt;The Body Eater: the magical creature you call when you need your sockets closed.&lt;/p&gt;&#xA;    &lt;/figcaption&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;Last month I just had the most fun time with zombie sockets. It was on my second day at this new job as a platform engineer. A developer approached us saying: &amp;ldquo;Look, there must be a problem in the infrastructure. Users are getting 502s. I already checked everything. It&amp;rsquo;s not the code.&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;We weren’t so sure. The service in question processed PDFs and had a pretty funky workflow: download a template from S3, load the PDF into memory, add some stuff, save it, then upload the new version back to S3. Suspicious.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What is a program?</title>
+      <link>//localhost:1313/programs/</link>
+      <pubDate>Mon, 30 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/programs/</guid>
+      <description>&lt;p&gt;This is &lt;a href=&#34;https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-intro.pdf&#34;&gt;Remzi Arpaci&lt;/a&gt; being a cool teacher:&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The definition of a process, informally, is quite simple: it is a running program.&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;The first time I read this I thought: Okay, Remzi, but what the heck is a program? Months go by and I explore filesystems, inodes, syscalls, etc., etc., and still don&amp;rsquo;t truly understand what a program is. &amp;ldquo;A bunch of bytes&amp;rdquo;. &amp;ldquo;Something on disk&amp;rdquo;. I don&amp;rsquo;t know! Don&amp;rsquo;t ask me! It&amp;rsquo;s a thing you run!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>xxd(1) is a neat tool</title>
+      <link>//localhost:1313/til/xxd/</link>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/xxd/</guid>
+      <description>&lt;p&gt;Found out about a cool tool today: &lt;code&gt;xxd(1)&lt;/code&gt;. Basically, it can help you convert a hexdump file into binary or vice versa. For example:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜   head -c 100 /dev/urandom &amp;gt; out.bin&#xA;➜   cat out.bin&#xA;5O0!3&amp;lt;[N&#xA;                R4DT&amp;#39;{SC95#Rd5b62i^5u(OcD&amp;#34;/MrJBUZ%&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&amp;rsquo;s hexdump it:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  hexdump -C out.bin &amp;gt; out.hex&#xA;➜  cat out.hex&#xA;00000000  35 e2 4f 30 21 b4 33 e2  c8 af b9 3c 5b ba 4e 0b  |5.O0!.3....&amp;lt;[.N.|&#xA;00000010  09 f6 52 16 34 11 44 54  85 96 b6 00 27 a2 7b 04  |..R.4.DT....&amp;#39;.{.|&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And then use xxd(1) to convert it back:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>postgres vacuum and netbsd dir size</title>
+      <link>//localhost:1313/til/vacuum/</link>
+      <pubDate>Fri, 23 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/vacuum/</guid>
+      <description>&lt;p&gt;Running &lt;code&gt;vacuum full&lt;/code&gt; in Postgres requires as much free disk space as your database currently occupies, since it rebuilds the entire table by copying all the non-deleted rows to a new file. &lt;code&gt;vacuum&lt;/code&gt; on the other reclaims dead tuples space. Something &lt;a href=&#34;https://www.youtube.com/watch?v=gY0SE-71LZA&amp;amp;list=PL0qfF8MrJ-jxMfirAdxDs9zIiBg2Wug0z&amp;amp;index=19&#34;&gt;similar&lt;/a&gt; occurs with directories in netBSD. If you create lots of files of 255 chars in a directory, the size of the directory will increase. If you delete all files, the size won&amp;rsquo;t decrease.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>writing to disk with O_SYNC</title>
+      <link>//localhost:1313/til/osync/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/osync/</guid>
+      <description>&lt;p&gt;write(2) doesn&amp;rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block.&lt;/p&gt;&#xA;&lt;p&gt;Linux exposes the actual timeframe for periodic writings:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs &#xA;500&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>Terminal keyboards</title>
+      <link>//localhost:1313/tty/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/tty/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;//localhost:1313/static/tty/dec.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;My birthday will be next month, so I bought myself something I wanted for a while: a terminal keyboard. Last year I read this &lt;a href=&#34;https://www.linusakesson.net/programming/tty/&#34;&gt;article&lt;/a&gt; about the history of the terminal, and it fascinated me. Well, I found this DEC-style Televideo terminal keyboard from the 70s or 80s (I can&amp;rsquo;t be sure of the exact date), and took advantage of the opportunity to learn a few things.&lt;/p&gt;&#xA;&lt;p&gt;These old terminal keyboards were sold alongside a &amp;ldquo;computer terminal.&amp;rdquo; A computer terminal was essentially a &amp;ldquo;dumb&amp;rdquo; display and input device. The real computing power was in the mainframe, which was typically placed in another room in the office building. The terminal would send characters to the mainframe and then display the results back to the user. It didn&amp;rsquo;t have its own operating system. The notion of keycodes, scancodes, and other abstractions that we have nowadays didn&amp;rsquo;t exist in the same way.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>source and export diff</title>
+      <link>//localhost:1313/til/source-and-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/source-and-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so &lt;code&gt;bash -c &#39;declare -f&#39;&lt;/code&gt; doesn&amp;rsquo;t output anything. But we can source it: &lt;code&gt;bash -c &#39;source ~/.bashrc; hello&#39;&lt;/code&gt;. Or even: &lt;code&gt;bash -c &#39;hello() { echo &amp;quot;hi&amp;quot;; }; declare -f&#39;&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s all about memory share in shell modes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;source&lt;/code&gt; changes only affect current shell memory.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;export&lt;/code&gt; marks variables to be passed to child processes.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Subtile difference that can save us lots of debugging time.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Taking a look at runtime/proc.go</title>
+      <link>//localhost:1313/go-scheduler/</link>
+      <pubDate>Sat, 28 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/go-scheduler/</guid>
+      <description>&lt;p&gt;Concurrency and scheduling are hard topics. There are a few resources if you want to understand more about it. The OS implementation is a hard thing to understand, at least if you want to go deep into the details&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. Go&amp;rsquo;s scheduler is an abstraction over the OS scheduler. So Go scheduler has its own rules, and, at the same time, makes use of POSIX threads. The scheduler can rapidly become a rabbit hole. So I thought about writing the few things I understood about it to at least paint a big picture of what&amp;rsquo;s happening behind the scenes.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Shell internals: builtins and source</title>
+      <link>//localhost:1313/shell-source/</link>
+      <pubDate>Thu, 22 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/shell-source/</guid>
+      <description>&lt;p&gt;There are many aspects of how the shell works that seem magical to me, particularly when it comes to variables, loading things into memory, forking processes, executing commands, and so on. For example, understanding how the shell manages environment variables and modifies the current session’s state requires understanding concepts like process groups, session ids, and memory space. I will dedicate this lazy sunday afternoon to explore more about the shell.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Line buffering, tty and write(2)</title>
+      <link>//localhost:1313/print-strace/</link>
+      <pubDate>Mon, 20 May 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/print-strace/</guid>
+      <description>&lt;p&gt;A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&amp;rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>cool trick: the kernel stack of a process</title>
+      <link>//localhost:1313/til/proc-pid-stack/</link>
+      <pubDate>Mon, 15 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/til/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>//localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/about/</guid>
+      <description>&lt;h3 id=&#34;about-me&#34;&gt;About me&lt;/h3&gt;&#xA;&lt;p&gt;Hi! I&amp;rsquo;m Fernando, currently SRE at a startup. I grew up in the 90s, fascinated by the magical machine &lt;em&gt;beep&lt;/em&gt;.&lt;/p&gt;&#xA;&lt;h3 id=&#34;about-this-website&#34;&gt;About this website&lt;/h3&gt;&#xA;&lt;p&gt;This blog is a collection of my notes and casual experiments, but it also serves as an incentive for me to keep writing about the things I love and to procrastinate in a &lt;a href=&#34;https://structuredprocrastination.com/&#34;&gt;structured way&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h3 id=&#34;contact&#34;&gt;Contact&lt;/h3&gt;&#xA;&lt;p&gt;You can find me on &lt;a href=&#34;https://linkedin.com/in/frnsimoes&#34;&gt;LinkedIn&lt;/a&gt; or send me an email at &lt;a href=&#34;mailto:frn@frn.sh&#34;&gt;frn@frn.sh&lt;/a&gt;. I would love to chat about systems or simply hear your thoughts on my posts!&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

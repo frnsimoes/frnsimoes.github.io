@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TIL - Today I Learned on </title>
+    <link>//localhost:51161/til/</link>
+    <description>Recent content in TIL - Today I Learned on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 25 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:51161/til/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>xxd(1) is a neat tool</title>
+      <link>//localhost:51161/til/xxd/</link>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51161/til/xxd/</guid>
+      <description>&lt;p&gt;Found out about a cool tool today: &lt;code&gt;xxd(1)&lt;/code&gt;. Basically, it can help you convert a hexdump file into binary or vice versa. For example:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜   head -c 100 /dev/urandom &amp;gt; out.bin&#xA;➜   cat out.bin&#xA;5O0!3&amp;lt;[N&#xA;                R4DT&amp;#39;{SC95#Rd5b62i^5u(OcD&amp;#34;/MrJBUZ%&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&amp;rsquo;s hexdump it:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  hexdump -C out.bin &amp;gt; out.hex&#xA;➜  cat out.hex&#xA;00000000  35 e2 4f 30 21 b4 33 e2  c8 af b9 3c 5b ba 4e 0b  |5.O0!.3....&amp;lt;[.N.|&#xA;00000010  09 f6 52 16 34 11 44 54  85 96 b6 00 27 a2 7b 04  |..R.4.DT....&amp;#39;.{.|&#xA;...&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And then use xxd(1) to convert it back:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>postgres vacuum and netbsd dir size</title>
+      <link>//localhost:51161/til/vacuum/</link>
+      <pubDate>Fri, 23 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51161/til/vacuum/</guid>
+      <description>&lt;p&gt;Running &lt;code&gt;vacuum full&lt;/code&gt; in Postgres requires as much free disk space as your database currently occupies, since it rebuilds the entire table by copying all the non-deleted rows to a new file. &lt;code&gt;vacuum&lt;/code&gt; on the other reclaims dead tuples space. Something &lt;a href=&#34;https://www.youtube.com/watch?v=gY0SE-71LZA&amp;amp;list=PL0qfF8MrJ-jxMfirAdxDs9zIiBg2Wug0z&amp;amp;index=19&#34;&gt;similar&lt;/a&gt; occurs with directories in netBSD. If you create lots of files of 255 chars in a directory, the size of the directory will increase. If you delete all files, the size won&amp;rsquo;t decrease.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>writing to disk with O_SYNC</title>
+      <link>//localhost:51161/til/osync/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51161/til/osync/</guid>
+      <description>&lt;p&gt;write(2) doesn&amp;rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block.&lt;/p&gt;&#xA;&lt;p&gt;Linux exposes the actual timeframe for periodic writings:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs &#xA;500&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>source and export diff</title>
+      <link>//localhost:51161/til/source-and-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:51161/til/source-and-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so &lt;code&gt;bash -c &#39;declare -f&#39;&lt;/code&gt; doesn&amp;rsquo;t output anything. But we can source it: &lt;code&gt;bash -c &#39;source ~/.bashrc; hello&#39;&lt;/code&gt;. Or even: &lt;code&gt;bash -c &#39;hello() { echo &amp;quot;hi&amp;quot;; }; declare -f&#39;&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It&amp;rsquo;s all about memory share in shell modes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;source&lt;/code&gt; changes only affect current shell memory.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;code&gt;export&lt;/code&gt; marks variables to be passed to child processes.&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Subtile difference that can save us lots of debugging time.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>cool trick: the kernel stack of a process</title>
+      <link>//localhost:51161/til/proc-pid-stack/</link>
+      <pubDate>Mon, 15 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:51161/til/proc-pid-stack/</guid>
+      <description>&lt;p&gt;I found a cool trick to see what&amp;rsquo;s happening to a blocked (&lt;code&gt;sleeping&lt;/code&gt;) process: &lt;code&gt;cat /proc/pid/stack&lt;/code&gt;. Yep, you can peek at the trace of kernel functions related to a process!&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  pexpl git:(main) ✗ ps aux | grep p.py&#xA;frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py&#xA;&#xA;➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack&#xA;[&amp;lt;0&amp;gt;] do_epoll_wait+0x698/0x7d0&#xA;[&amp;lt;0&amp;gt;] do_compat_epoll_pwait.part.0+0xb/0x70&#xA;[&amp;lt;0&amp;gt;] __x64_sys_epoll_pwait+0x91/0x140&#xA;[&amp;lt;0&amp;gt;] do_syscall_64+0x55/0xb0&#xA;[&amp;lt;0&amp;gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like &lt;code&gt;strace&lt;/code&gt;, &lt;code&gt;&amp;lt;pid&amp;gt;/stack&lt;/code&gt; can give an specific perspective of what&amp;rsquo;s wrong with a process. How cool is that?&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

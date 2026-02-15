@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:1313/favicon.ico" />
+<title>What happens inside Postgres when IOPS runs out 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+        font-size: 14px;
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">What happens inside Postgres when IOPS runs out</h4>
+<content> <p>In the <a href="/iops">previous post</a> I wrote about the three cache layers between a SELECT and disk. That post came from a production incident - queries hanging for 35+ minutes, Heroku timeouts, IOPS pinned at 3000. We fixed it. The root cause was bad indexes forcing Postgres to fetch tens of thousands of rows from disk only to discard them. Better indexes, problem solved.</p>
+<p>During the incident, the system hit 3000 IOPS and stayed there. It didn&rsquo;t recover on its oown. We had to kill connections manually. But why? What was actually happening inside Postgres that made the situation self-sustaining? I had a wrong mental model for days. This post is about fixing that.</p>
+<h2 id="when-read2-has-to-wait">When read(2) has to wait</h2>
+<p>When Postgres needs a page that&rsquo;s not in shared buffers and not in the OS page cache, the kernel has to go to disk. But <code>read(2)</code> doesn&rsquo;t talk to the disk directly. Between the syscall and the hardware there&rsquo;s the block layer - the kernel subsystem that manages I/O requests.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<p>The purpose of a scheduler like <code>mq-deadline</code> is to reorder requests. It sorts them by logical block address, batches reads and writes separately, and makes sure writes don&rsquo;t get starved. With <code>none</code>, there&rsquo;s no reordering - requests go straight through. On NVMe there&rsquo;s no seek penalty, so reordering is pointless overhead.</p>
+<p>When a page cache miss happens, the kernel creates a <code>bio</code> structure (block I/O request) and submits it via <code>submit_bio()</code>. What happens then depends on the block layer&rsquo;s multi-queue architecture (<code>blk-mq</code>). There are two levels of queues: software queues and hardware queues. The software queues are per-CPU - each CPU has its own entry point, so there&rsquo;s no single lock bottleneck. If there&rsquo;s an I/O scheduler, requests sit in the software queue for reordering and merging (adjacent block requests can be combined into one). If the scheduler is <code>none</code> and there&rsquo;s nothing to merge, requests try to go straight to the hardware dispatch queue.</p>
+<p>The hardware queue is the last step before the IO request. But if the device can&rsquo;t accept more requests - because it&rsquo;s at capacity - the block layer puts the overflow in a dispatch list (<code>hctx-&gt;dispatch</code>) to be sent later. This is where requests pile up under saturation.</p>
+<pre tabindex="0"><code>/*
+ * Any items that need requeuing? Stuff them into hctx-&gt;dispatch,
+ * that is where we will continue on next queue run.
+ */
+</code></pre><p>Our disk has a provisioned ceiling of 3000 IOPS. So what happens to request number 3001?</p>
+<p>It waits. The hardware dispatch overflow grows. And as it grows, each request takes longer, because there are more requests ahead of yours. What was 1ms per read becomes 10ms. Then 50ms. The point is: the disk didn&rsquo;t get slower, but there are more requests in the queue.</p>
+<h2 id="the-death-spiral">The death spiral</h2>
+<p>Say a query triggers a burst of page cache misses. A scan touching cold pages across a 49GB table, or vacuum walking 28GB of indexes. The kernel starts submitting hundreds of <code>bio</code> requests per second. The block layer queue grows. I/O latency spikes. Queries that finished in 50ms now take 5 seconds. That part is straightforward.</p>
+<p>Lock amplification is the less obvious part. Postgres uses locks <a href="https://postgrespro.com/blog/pgsql/5967999">everywhere</a>. Row locks, relation locks, buffer mapping locks. Under normal conditions they&rsquo;re held for microseconds. But when a process acquires a lock and then hits a disk read that takes 200ms instead of 1ms, it holds that lock for 200ms longer. Another process needs the same lock, can&rsquo;t get it, and then waits. This second process shows up in <code>pg_stat_activity</code> with a <code>Lock</code> wait event, not an <code>IO</code> event. From the outside it looks like two separate problems. But the locking is a side effect of the I/O latency.</p>
+<p>The other non-obvious part: the queue sustains itself after the trigger stops. Let&rsquo;s say vacuum was the trigger. Vacuum finishes. The trigger is gone. But by now you have 77 backend processes that accumulated during the storm. Each one has a query in progress. Each query still needs disk reads to complete. New queries keep arriving from the application. The arrival rate of I/O requests is still higher than what the disk can serve. The queue doesn&rsquo;t drain, and now the system is stuck: the only way to reduce I/O demand is to complete the queries, but completing the queries requires the I/O that&rsquo;s already saturated.</p>
+<p>Postgres has no mechanism to deal with any of this. It doesn&rsquo;t know about the IOPS ceiling. It doesn&rsquo;t know the block layer queue is deep. There&rsquo;s no backpressure, no admission control. Each new connection is accepted, a plan is made, execution starts, and the backend goes to sleep in the I/O queue like everyone else.</p>
+<h2 id="a-few-words-about-vacuum">A few words about vacuum</h2>
+<p>Autovacuum runs as a background process. Its job is to clean up dead tuples - the old row versions that updates and deletes leave behind. On our problem table there are 28GB of indexes. When vacuum runs, it doesn&rsquo;t just scan the heap for dead tuples. It has to walk every single index on the table to remove the pointers that reference those dead tuples. Every index page it reads is a potential <code>read(2)</code>. And on a table where the indexes don&rsquo;t fit in RAM, most of those reads miss the page cache and go to disk. A single vacuum run on this table can generate thousands of IOPS just from index maintenance.</p>
+<p>Vacuum has a cost-based throttling system to deal with this. It does some work, counts the pages it touched, and sleeps for a configured delay (<code>autovacuum_vacuum_cost_delay</code>). The idea is that vacuum does a bit of I/O, pauses, lets real queries use the disk, does a bit more, pauses again.</p>
+<p>But there&rsquo;s a problem: the throttling doesn&rsquo;t know anything about the actual I/O situation. Vacuum counts pages. It doesn&rsquo;t check the queue depth. It doesn&rsquo;t check the latency. If vacuum generates 500 IOPS and the disk has plenty of headroom, the throttling works fine - vacuum pauses, queries run, and everyone is happy. But if queries are already pushing 2500 IOPS and vacuum adds 500, you blow past the 3000 ceiling. Same vacuum configuration, same cost delay, but a completely different outcome depending on what else is happening on the disk.</p>
+<p>And vacuum can be both the trigger and the victim. It starts a run, generates enough reads to saturate the disk, and then its own reads get stuck in the queue behind everything else. A vacuum run that finishes in 30 seconds under normal conditions can take 20 minutes under saturation. And the entire time it&rsquo;s generating more I/O and holding cleanup resources, feeding the same saturation that&rsquo;s slowing it down.</p>
+<h2 id="the-queries-that-lit-the-match">The queries that lit the match</h2>
+<p>Both of our worst query patterns do the same thing: scan an index on <code>account_id</code>, fetch thousands of rows from the heap, apply JSONB filters after the fetch, and discard almost everything.</p>
+<p>Let me show you what this looks like:</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on core_lead
+  Index Cond: (account_id = 4939)
+  Rows Removed by Filter: 39811
+  Buffers: shared hit=10871 read=27841
+  I/O Timings: shared/local read=13838.335
+</code></pre><p>Look at those numbers. 39,811 rows fetched from disk. All of them discarded by the filter. Zero rows returned. 27,841 block reads at 8KB each - that&rsquo;s 217MB read from disk. Over 14 seconds of execution, that&rsquo;s ~1,989 IOPS. From a single query. That returned nothing.</p>
+<p>Why does this happen? The index only knows about <code>account_id</code>. It tells Postgres &ldquo;account 4939 has 39,811 rows, and here&rsquo;s where they are on disk.&rdquo; But the JSONB conditions and the NULL checks in the WHERE clause - that information only exists in the heap, in the actual row data stored on disk. So Postgres has to follow the index to every single row location, read the page, check the filter, and throw the row away. It does this 39,811 times.</p>
+<p>Two of these queries running at the same time generate almost 4,000 IOPS between them. On a 3,000 IOPS disk. That&rsquo;s already past the ceiling before vacuum, before checkpoints, before WAL writes, before anything else gets a turn.</p>
+<p>This is how a query returning zero rows takes down a database.</p>
+<h2 id="the-wrong-model">The wrong model</h2>
+<p>One thing that kept bugging me the whole time: load average. During incidents it was hitting 8 to 12 on a machine with 2 vCPUs. That&rsquo;s 4 to 6 times the number of cores. At first I thought: maybe the CPUs are the bottleneck, maybe processes are fighting for time on the cores.</p>
+<p>But they weren&rsquo;t. Most of the backends were sitting in <code>IO:DataFileRead</code> - waiting on disk, not burning CPU. The bottleneck was the disk. That much was clear.</p>
+<p>A quick note on <code>IO:DataFileRead</code>: this is a Postgres wait event, not an OS process state. Postgres has its own instrumentation that tracks what each backend is doing. When a backend shows <code>IO:DataFileRead</code>, it means Postgres called <code>read(2)</code> to fetch a data file page and is waiting for the call to return. It doesn&rsquo;t tell you what the kernel is doing with the process - the process could be in <code>D</code> state, <code>S</code> state, or something else. Postgres doesn&rsquo;t know. It just knows it called <code>read(2)</code> and hasn&rsquo;t gotten an answer yet.</p>
+<p>What wasn&rsquo;t clear was the load average itself. I wrote about this a while back - Linux counts three things in load average: processes running on a CPU, processes in the run queue, and processes in uninterruptible sleep (<code>D</code> state). From the kernel source:</p>
+<pre tabindex="0"><code> * The global load average is an exponentially decaying average of nr_running +
+ * nr_uninterruptible.
+</code></pre><p>Processes in regular sleep (<code>S</code> state) don&rsquo;t count. So if load average was 12, those 12 processes were either running, runnable, or in <code>D</code> state.</p>
+<p>During an incident, we killed backends that were in <code>IO:DataFileRead</code> using <code>pg_terminate_backend()</code>. And they died. <code>pg_terminate_backend</code> sends <code>SIGTERM</code>. If those processes were in <code>D</code> state, the signal would have been queued - they wouldn&rsquo;t have died immediately. I know this because I tested it<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. I once created a kernel module that forced a process into <code>D</code> state and tried to kill it:</p>
+<pre tabindex="0"><code>root@debian:/proc/1506781# kill -9 1506781
+root@debian:/proc/1506781# cat status | grep -i SigPnd
+SigPnd: 0000000000000100
+</code></pre><p>The signal sat there, pending. The process didn&rsquo;t die. That&rsquo;s the whole point of uninterruptible sleep.</p>
+<p>But during the Postgres incident, the processes died. Which means they were probably in <code>S</code> state, interruptible. And if they were in <code>S</code> state, they wouldn&rsquo;t count toward load average. And load average was 12. So where was the load coming from?</p>
+<p>Maybe some processes were in <code>D</code> and others in <code>S</code> - the ones we killed happened to be in <code>S</code> at that moment. Maybe they were transitioning between states and load average caught them in <code>D</code> at sampling time. Maybe the load was from the run queue - 77 processes context-switching on 2 cores generates its own pressure.</p>
+<p>I don&rsquo;t have a clean answer. I know the processes died on <code>SIGTERM</code>. I know load average was 12. I don&rsquo;t fully understand what was happening between those two facts yet.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>On my personal machine, for example, the I/O scheduler is set to <code>none</code>, with <code>mq-deadline</code> as the other option:</p>
+<pre tabindex="0"><code>root@debian:~# cat /sys/block/nvme0n1/queue/scheduler
+[none] mq-deadline
+</code></pre><p>Linux kernel docs has a great overview of IO schedulers: <a href="https://docs.kernel.org/block/blk-mq.html">https://docs.kernel.org/block/blk-mq.html</a>. I also found a nice article comparing different types of IO schedulers: <a href="https://www.admin-magazine.com/HPC/Articles/Linux-I-O-Schedulers">https://www.admin-magazine.com/HPC/Articles/Linux-I-O-Schedulers</a>. One thing to note, though, is how the docs mention the importance of hard drives for the Kernel. There are a lot of differences between hard drives and SSDs. One of the most interesting ones is the random read penalties in the two worlds. When I began to troubleshoot the IOPS problem, I had this in mind: what if we are doing random reads without noticing? Only after a few hours of study I understood: oh damn, random reads penalty is not the same in SSDs. <a href="https://www.youtube.com/watch?v=Ujq-5Smtf0c&amp;list=LL&amp;index=1">The fun is over.</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>I tried to create a <code>write</code> C program to emulate D (uninterruptible) task, but I failed. So I appealed to kernel modules:</p>
+<pre tabindex="0"><code>#include &lt;linux/module.h&gt;
+#include &lt;linux/sched.h&gt;
+#include &lt;linux/delay.h&gt;
+
+static int __init dstate_init(void) {
+    set_current_state(TASK_UNINTERRUPTIBLE);
+    schedule_timeout(60 * HZ);
+    return 0;
+}
+
+static void __exit dstate_exit(void) {}
+
+module_init(dstate_init);
+module_exit(dstate_exit);
+MODULE_LICENSE(&#34;GPL&#34;);
+</code></pre><p>And then used make + insmod:</p>
+<pre tabindex="0"><code>obj-m += dstate.o
+
+all:
+    make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+</code></pre><p>Executed:</p>
+<pre tabindex="0"><code>make
+insmod dstate.ko &amp;
+[1] 1506781
+</code></pre><p>I&rsquo;m forcing this C program to be compiled as a kernel module. <code>insmod</code> loads the .ko file into the running Kernel.</p>
+<p>Let&rsquo;s find a few things about this process:</p>
+<pre tabindex="0"><code>dstate_initroot@debian:/proc/1506781# cat sched
+insmod (1506781, #threads: 1)
+-------------------------------------------------------------------
+nr_switches                                  :                    1
+nr_voluntary_switches                        :                    1
+nr_involuntary_switches                      :                    0
+</code></pre><p>The scheduler gave in the CPU one time. No forced preemption.</p>
+<pre tabindex="0"><code>root@debian:/proc/1506781# cat schedstat
+4285857 0 1
+</code></pre><p>~4ms of execution time. 0ns waiting in runqueue, 1 switch.</p>
+<pre tabindex="0"><code>
+root@debian:/proc/1506781# cat status
+Name:   insmod
+Umask:  0022
+State:  D (disk sleep)
+SigPnd: 0000000000000000
+</code></pre><p>SigPnd (signals pending) is represend in hexadecimal, it shows 0 pending signals. So I sent a sigkill:</p>
+<pre tabindex="0"><code>root@debian:/proc/1506781# kill -9 1506781
+root@debian:/proc/1506781# cat status | grep -i SigPnd
+SigPnd: 0000000000000100
+</code></pre><p>Still <code>D</code>. The signal is pending, but the task won&rsquo;t die until it wakes up. That&rsquo;s the whole point of uninterruptible sleep: the kernel is protecting an operation that cannot be safely aborted. Not even kill -9 can force it.</p>
+<p><em>!!! traces of despair</em></p>
+<pre tabindex="0"><code>root@debian:~# strace -c -p 1506781
+strace: Process 1506781 attached
+^C^C
+^C^C^C^C
+^C
+^C^C^C^C^C^C^C
+</code></pre>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

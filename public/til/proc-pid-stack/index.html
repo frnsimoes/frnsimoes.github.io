@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=51161&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:51161/favicon.ico" />
+<title>cool trick: the kernel stack of a process 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+        font-size: 14px;
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">cool trick: the kernel stack of a process</h4>
+<content> <p>I found a cool trick to see what&rsquo;s happening to a blocked (<code>sleeping</code>) process: <code>cat /proc/pid/stack</code>. Yep, you can peek at the trace of kernel functions related to a process!</p>
+<pre tabindex="0"><code>➜  pexpl git:(main) ✗ ps aux | grep p.py
+frns       23703  0.0  0.0  13888  7948 pts/3    Sl+  02:48   0:00 nvim p.py
+
+➜  pexpl git:(main) ✗ sudo cat /proc/23703/stack
+[&lt;0&gt;] do_epoll_wait+0x698/0x7d0
+[&lt;0&gt;] do_compat_epoll_pwait.part.0+0xb/0x70
+[&lt;0&gt;] __x64_sys_epoll_pwait+0x91/0x140
+[&lt;0&gt;] do_syscall_64+0x55/0xb0
+[&lt;0&gt;] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+</code></pre><p>The information I get from this trace is that epoll was called, so the kernel is doing IO multiplexing, probably waiting for a event, and then called a syscall that blocked the process. Combined with other tools, like <code>strace</code>, <code>&lt;pid&gt;/stack</code> can give an specific perspective of what&rsquo;s wrong with a process. How cool is that?</p>
+<p><strong>about procfs</strong></p>
+<p><code>proc</code> (procfs) is a pseudo-filesystem; it dynamically generate directories for processes. The files within <code>/proc</code> doesn&rsquo;t like on disk, similarly to the <code>/dev</code> directory. <a href="https://en.wikipedia.org/wiki/Procfs#History">Wikipedia</a> lists the history of procfs implementation, which goes back to 1984.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

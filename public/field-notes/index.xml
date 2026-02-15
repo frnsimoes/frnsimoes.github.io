@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <link>//localhost:1313/field-notes/</link>
+    <description>Recent content on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/field-notes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title> wait4 &gt; fork</title>
+      <link>//localhost:1313/field-notes/wait-fork/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/field-notes/wait-fork/</guid>
+      <description>&lt;p&gt;Machine hitting 90% CPU for no apparent reason. Found a &lt;code&gt;bash script.sh&lt;/code&gt; process running for 30 minutes. Strace:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;^Cstrace: Process 3668040 detached&#xA;% time     seconds  usecs/call     calls    errors syscall&#xA;------ ----------- ----------- --------- --------- ----------------&#xA; 75.36   52.698676         390    134819     26094 wait4&#xA; 12.27    8.583416          78    108725           fork&#xA;  7.42    5.190671           5    926332           rt_sigprocmask&#xA;  2.69    1.881557           5    330523    165262 close&#xA;  1.17    0.817651           9     82631           pipe&#xA;  0.64    0.449359           5     78280           rt_sigaction&#xA;  0.24    0.164395           6     26094           rt_sigreturn&#xA;  0.21    0.147095           5     26094     26094 ioctl&#xA;------ ----------- ----------- --------- --------- ----------------&#xA;100.00   69.932820          40   1713498    217450 total&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;108k forks, 134k waits. That&amp;rsquo;s odd.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>fd/255</title>
+      <link>//localhost:1313/field-notes/fd255/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/field-notes/fd255/</guid>
+      <description>&lt;p&gt;Shoot, another attack. Attacker deleted the script after execution. &lt;code&gt;find&lt;/code&gt; found nothing. But if bash is running, the script is in memory.&lt;/p&gt;&#xA;&lt;p&gt;When you open a file in Linux, the kernel creates a file descriptor pointing to an inode. The inode holds the actual data and metadata. &lt;code&gt;rm&lt;/code&gt; removes the directory entry - the name - but the inode stays alive as long as something holds a reference.&lt;/p&gt;&#xA;&lt;p&gt;Bash keeps &lt;code&gt;fd/255&lt;/code&gt; open for the script it&amp;rsquo;s executing. That&amp;rsquo;s one reference.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

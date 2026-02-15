@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Favorite on </title>
+    <link>frn.sh/tags/favorite/</link>
+    <description>Recent content in Favorite on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Mon, 19 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/tags/favorite/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Making sense of CPU utilization</title>
+      <link>frn.sh/posts/cpu/</link>
+      <pubDate>Mon, 19 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/posts/cpu/</guid>
+      <description>&lt;figure&gt;&lt;img src=&#34;frn.sh/static/loadavg/loadavg.png&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;A few days back I had the following situation at work: we run a bunch of websockets in containers. These containers store users&amp;rsquo; sessions. When something unexpected happens to the websocket, the program makes a select in a database, fetches a few info, and tries to connect again - reviving the websocket. The container runs two programs: a node program and an engine. The two of them connects through a unix socket.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

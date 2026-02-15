@@ -1,0 +1,15 @@
+{{ define "main" }}
+<content>
+    {{ if .Pages }}
+    <ul class="blog-posts">
+        {{ range .Pages.ByDate.Reverse }}
+        <li>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+        {{ end }}
+    </ul>
+    {{ else }}
+    <p>No TILs posted yet.</p>
+    {{ end }}
+</content>
+{{ end }}

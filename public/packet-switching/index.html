@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=51161&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:51161/favicon.ico" />
+<title>How packet switching won 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+        font-size: 14px;
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">How packet switching won</h4>
+<content> <figure><img src="/static/packet-switching/telephone.png"
+    alt="A very bad attempt to draw a telephone">
+</figure>
+
+<p>I don&rsquo;t know why, bt since I discovered about circuit switching, I&rsquo;ve been kinda obsessed with what they represented in the history of telecommunications and computer networking. Telecom engineers had to solve a hard problem. In the analog age, carbon microphones converted voice into electrical signals that traveled over copper wires, with amplifiers boosting the signal to maintain quality across distances. In the digital age, the same copper wires remained, but the approach changed: analog signal was sampled at intervals, quantized into bits, and transmited. Both eras needed circuit switching - the strategy to keep two people talking over a dedicated path.</p>
+<p>In circuit switching, when host A calls host B, a dedicated path is established through the network: A → switch1 → switch2 → switch3 → B. That path reserves bandwidth - typically 64 kbps for a voice channel<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. The switches maintain hard state: which ports are connected, how long the connection has been active, billing information.</p>
+<p>Here&rsquo;s the problem: during a 10-minute call, person A talks for 3 minutes, person B talks for 2 minutes, and there&rsquo;s 5 minutes of silence. The circuit stays reserved for the entire 10 minutes. Those 64 kbps sit there, unusable by anyone else, even during silence. The switches keep tracking the connection, the bandwidth stays allocated, the path remains dedicated.</p>
+<p>This worked for voice because we have predictable, continuous streams. The problem is: data is bursty.</p>
+<p>You request a webpage and suddenly there is a massive spike of packets. Then nothing while you read for 2 minutes. You send an email - quick burst of a few kilobytes. Then silence. With circuit switching, you&rsquo;d reserve 64 kbps (or more) for these brief bursts, leaving the circuit idle 95% of the time.</p>
+<p>The economic part of this model don&rsquo;t scale. A 1 Mbps link supports exactly 15.625 simultaneous 64 kbps circuits (1000kbps / 64kbps). Want more? Install more infrastructure.</p>
+<p>Packet switching redefined this model: it was not dependent on bandwitch reservation. No dedicated paths and no hard state in routers. Instead of having a complicated setup of wires and boxes that needed to keep consuming data without interruption, we now have network devices / interfaces that only needs to know source and destination address, and a few algorithms to calculate routing based on IP prefix. Simple. Beautiful.</p>
+<p>When host A sends data to B, it breaks the data into packets. Each packet has source and destination addresses. Packet 1 might go A → R1 → R2 → B. Packet 2 might take a different path: A → R1 → R3 → B. Between packets, the link is free for anyone else to use, because each node is independent.</p>
+<p>Routers don&rsquo;t maintain connection hard state. They just: read packet header, check destination address, forward out the correct interface. There is no billing timers, no &ldquo;port 5 connected to port 12&rdquo; tracking. Just forward bits.</p>
+<p>Intelligence moved to the edges. Hosts handle reliability, retransmission, ordering, congestion control - TCP built at Kernel level is the perfect example of this. The network itself became dumb (or almost, the link layer still have decisions to make).</p>
+<p>The infrastructure was already there: copper wires, central offices, physical links. Packet switching won because it used that infrastructure far more efficiently. No need to provision dedicated circuits for every potential connection. Just let everyone share, statistically.</p>
+<h2 id="it-took-a-while">It took a while</h2>
+<p>But the transition wasn&rsquo;t instant. For years, packet switching ran <em>on top of</em> circuit switching infrastructure.</p>
+<p>Remember how, in the 1990s, connecting to the internet meant using a dial-up modem? You&rsquo;d hear the familiar sequence: dial tone, <a href="https://en.wikipedia.org/wiki/DTMF_signaling">DTMF</a> tones, handshake negotiation (that beautiful, sober sequence of beeps), then connection<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. What was happening?</p>
+<p>Your modem was calling the ISP&rsquo;s modem pool - literally making a phone call. The telephone network established a circuit: your house → local exchange → ISP. A dedicated 64 kbps path, just like a voice call. The phone company&rsquo;s switches tracked this as a connection, running billing timers.</p>
+<p>But <em>inside</em> that circuit, packet switching was happening. Your computer sent IP packets to the modem. The modem modulated those digital packets into <a href="https://www.eetimes.com/an-introduction-to-the-v-90-56k-modem/">analog signals</a> and transmitted them over the phone line. The ISP&rsquo;s modem demodulated back to digital packets and forwarded them to the internet.</p>
+<p>The fun stuff: you were using packet-switched data (bursty web requests, email), but paying circuit-switched rates (billed by connection time) - here in Brazil we would use the dial-up internet on weeks or after midnight so we could pay for only one &ldquo;tick&rdquo; -. Even if you weren&rsquo;t transmitting anything - just reading a webpage for 5 minutes - the circuit stayed active and the meter kept running.</p>
+<p>The phone company&rsquo;s billing system had no idea you were transmitting data. It just saw: circuit established, duration = 6 hours, charge accordingly. Meanwhile, your actual data usage might have been 10 MB over those 6 hours - mostly idle time.</p>
+<p>This hybrid model existed because the infrastructure was telephone lines. The &ldquo;last mile&rdquo; to homes was copper twisted pair, owned by telcos, designed for voice circuits. ISPs had to use what existed.</p>
+<p>Cable modems did something similar with coaxial cable (TV infrastructure). Fiber eventually replaced both, but the pattern was the same: reuse existing physical infrastructure, gradually shift from circuit-switched billing to packet-switched reality.</p>
+<p>The economic model took longer to change than the technology. Packet switching won technically in the 1970s (ARPANET). But consumers didn&rsquo;t get &ldquo;always-on, flat-rate, packet-switched&rdquo; internet until the late 1990s/early 2000s - because the business model and physical infrastructure were still tied to circuits.</p>
+<p>I remember being amazed when DSL arrived in 2002 - no more waiting for the dial tone, no more fear of the phone bill. The clicks and hisses of the modem disappeared, but in a way, so did a piece of that era.</p>
+<p>That’s when I finally understood the beep boop on my dial-up modem, and why packet switching truly won.</p>
+<hr>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Voice digitization: 8-bit samples at 8 kHz = 64 kbps
+<a href="https://dsp.stackexchange.com/questions/22107/why-is-telephone-audio-sampled-at-8-khz">https://dsp.stackexchange.com/questions/22107/why-is-telephone-audio-sampled-at-8-khz</a></p>
+<p>&ldquo;Before Bell Telephone started multiplexing voice lines they did a lot of research on the frequency content of the human voice. They developed a band pass characteristic that peaked around 2.1 KHz and rolled off below 300 and over 3000 Hz. That gave a good human sounding voice when done correctly. All that was analog.&rdquo;&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>If you are feeling technical, I highly recommend this blog post: <a href="https://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html">https://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html</a>.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>

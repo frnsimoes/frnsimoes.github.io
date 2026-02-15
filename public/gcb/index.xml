@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GCB Incidents root-cause analysis on </title>
+    <link>//localhost:51161/gcb/</link>
+    <description>Recent content in GCB Incidents root-cause analysis on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate></lastBuildDate>
+    <atom:link href="//localhost:51161/gcb/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

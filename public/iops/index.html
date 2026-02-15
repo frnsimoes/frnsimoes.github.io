@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en-US">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=51161&amp;path=livereload" data-no-instant defer></script>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="//localhost:51161/favicon.ico" />
+<title>Cache layers between select and disk 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    :root {
+        --font-main: Verdana, sans-serif;
+        --heading-color: #222;
+        --link-color: #0000ee;
+        --visited-color: #551a8b;
+        --code-background-color: #f2f2f2;
+        --code-color: #222;
+    }
+
+    body {
+        font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        max-width: 800px;
+        text-align: left;
+        background-color: #fff;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: #444;
+        box-sizing: border-box;
+    }
+
+    h1,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #cc0000;
+        text-decoration: none;
+    }
+
+    strong,
+    b {
+        color: var(--heading-color);
+        font-size: 14px;
+    }
+
+    button {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    time {
+        font-family: monospace;
+        font-style: normal;
+        font-size: 15px;
+    }
+
+    main {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    hr {
+        border: 0;
+        border-top: 2px dashed #999;
+        margin: 20px 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    pre code {
+        color: #222;
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        font-size: 11px;
+        overflow-x: auto;
+        overflow: auto;
+        background-color: #f7f7f7;
+
+        border: #cccccc;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    code {
+        display: inline-block;
+        white-space: no-wrap;
+        background-color: #f7f7f7;
+        font-size: 0.8em;
+        line-height: 1.5em;
+        border: 1px solid #cccccc;
+        padding: 0 2px;
+        margin: -1px 0px;
+    }
+
+    div.highlight pre {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    div.highlight code {
+        background-color: #f2f2f2;
+        color: #222;
+    }
+
+    footer {
+        padding: 25px 0;
+        text-align: left;
+        border-top: 1px solid #eaeaea;
+        margin-top: 40px;
+    }
+
+    .title:hover {
+        text-decoration: none;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .title {
+        text-decoration: none;
+    }
+
+    .inline {
+        width: auto !important;
+    }
+
+    .highlight,
+    .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+    }
+
+     
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    ul.blog-posts li {
+        display: list-item;
+        padding: 1px 0;
+        margin-bottom: 4px;
+    }
+
+    ul.blog-posts li span {
+        flex: 0 0 130px;
+    }
+
+    ul.blog-posts li a:visited {
+        color: var(--visited-color);
+    }
+
+    .contact-links {
+        font-size: 1.1em;
+    }
+
+    .contact-links a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+
+    <!-- .contact-links a:hover { -->
+    <!--     text-decoration: none; -->
+    <!-- } -->
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+    }
+
+    .header-container h1 {
+        margin-bottom: 0;
+    }
+</style>
+
+</head>
+    <body>
+        <header><div class="header-container">
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <a href="/" class="title"><h1 style="color: #000000;">frn.sh</h1></a>
+    <div class="contact-links">
+        <a href="/">home</a> /
+        
+        <a href="/about">about</a>
+        
+        
+        
+    </div>
+</div>
+</header>
+        <main>
+<h4 style="text-align: center">Cache layers between select and disk</h4>
+<content> <p>Saturday, 2 AM. We had a Postgres incident earlier that week - Heroku timeouts, queries running for 35+ minutes, IOPS hitting the provisioned limit. I should have been sleeping. Instead I was staring at EXPLAIN ANALYZE output, asking myself a question I couldn&rsquo;t let go: what actually happens when Postgres reads from disk?</p>
+<p>I knew I needed a better index. But before fixing anything, I wanted to understand what &ldquo;reading from disk&rdquo; actually means. How many layers of caching exist between a <code>SELECT</code> and the actual storage device? And what happens when they all fail?</p>
+<h2 id="three-layers-between-postgres-and-disk">Three layers between Postgres and disk</h2>
+<p>When Postgres decides it needs a page (8KB, the default), the data can come from three different places. Each one is a cache layer, and each one has a different cost.</p>
+<h3 id="layer-1-shared-buffers">Layer 1: shared buffers</h3>
+<p>Shared buffers is Postgres&rsquo; own cache. It lives in the Postgres process memory. When Postgres needs a page, it checks here first. If the page is in shared buffers, great - no system call, no kernel involvement. Just a memory read within the process.</p>
+<p>Ours was set to 4GB, which is the default recommendation. The <a href="https://www.postgresql.org/docs/current/runtime-config-resource.html">Postgres docs</a> suggest 25% of total RAM, and there&rsquo;s a reason for that - we&rsquo;ll get to it.</p>
+<h3 id="layer-2-os-page-cache">Layer 2: OS page cache</h3>
+<figure><img src="/static/iops/brendan_gregg_filesystem_cache.png"
+    alt="alt"><figcaption>
+      <p>Image from Brendan Gregg&rsquo;s book - System Performance</p>
+    </figcaption>
+</figure>
+
+<p>If the page is not in shared buffers, Postgres calls <code>read(2)</code>, and now we&rsquo;re in kernel territory.</p>
+<p>The kernel maintains its own cache of disk blocks: the page cache. When Postgres asks the OS for a page, the kernel checks if that block is already cached in memory. If it is, the kernel returns it immediately. No disk I/O happened - from Postgres&rsquo; perspective it was a &ldquo;shared buffer miss&rdquo;, but from the OS perspective it was still a memory read.</p>
+<p>This is why <code>free -h</code> on a Linux box can look alarming. You see almost no &ldquo;free&rdquo; memory, but most of it is &ldquo;available&rdquo; - and the page cache is using it. Linux fills free memory with page cache on purpose. It&rsquo;s a bet: if someone reads this block again, I already have it. And if the OS needs that memory for an actual process, it just drops the cached pages. They can always be re-read from disk.</p>
+<p>The interesting part: shared buffers and page cache compete for the same physical RAM. If you increase shared buffers from 4GB to 16GB, that&rsquo;s 12GB less for page cache. Postgres might cache more pages internally, but the OS caches fewer disk blocks - and the OS page cache benefits <em>everything</em>, not just the pages Postgres explicitly requested. There&rsquo;s a point where increasing shared buffers actually hurts performance because you&rsquo;re starving the page cache.</p>
+<h3 id="layer-3-disk">Layer 3: disk</h3>
+<p>If the page is not in shared buffers, and not in page cache either, the kernel sends an I/O request to the device driver. In Heroku&rsquo;s case, that device is AWS EBS - a network-attached block storage. This is the expensive path, and this is what counts as one IOPS.</p>
+<p>And here&rsquo;s where I hit a wall. I wanted to understand more about the physical storage - do EBS volumes have their own DRAM cache? What&rsquo;s the actual latency profile? But Heroku is managed. I can&rsquo;t see the hardware. I can&rsquo;t run <code>hdparm</code>, can&rsquo;t check the drive specs, can&rsquo;t see if there&rsquo;s a controller cache between EBS and the actual storage medium. The abstraction hides exactly the layer I wanted to understand.</p>
+<p>What I <em>can</em> see is the IOPS limit: 3000 provisioned, with EBS <a href="https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html">burst credits</a> allowing temporary spikes above that. Our logs showed reads hitting 3668 IOPS - the burst credits were keeping us alive, but once they&rsquo;re gone, you&rsquo;re hard-capped.</p>
+<h2 id="but-what-is-postgres-actually-reading">But what is Postgres actually reading?</h2>
+<p>All this talk about pages and disk reads - but what does a page actually look like? I explored this a while ago with a simple table, while doing some exercises with <a href="https://csprimer.com/">Oz Nova</a>:</p>
+<pre tabindex="0"><code>postgres=# create table foo (id int, age smallint, name varchar(100));
+CREATE TABLE
+</code></pre><p>We can find the file Postgres stores the table in with <code>SELECT pg_relation_filepath('foo');</code>, and then hexdump it:</p>
+<pre tabindex="0"><code>root@frn:# hexdump -C 16388
+00000000  00 00 00 00 60 7e 55 01  00 00 00 00 1c 00 d8 1f  |....`~U.........|
+00000010  00 20 04 20 00 00 00 00  d8 9f 4a 00 00 00 00 00  |. . ......J.....|
+00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001fd0  00 00 00 00 00 00 00 00  e0 02 00 00 00 00 00 00  |................|
+00001fe0  00 00 00 00 00 00 00 00  01 00 03 00 02 08 18 00  |................|
+00001ff0  01 00 00 00 13 00 0f 4d  69 63 6b 65 79 00 00 00  |.......Mickey...|
+00002000
+</code></pre><p>There it is. &ldquo;Mickey&rdquo; sitting at the bottom of the page. The file is 8192 bytes - one Postgres page - even though we only inserted one row. Each page has three things: header data at the top, line pointers (which point to each tuple), and the actual heap tuples stacked at the bottom. New tuples grow from the bottom up.</p>
+<p>One detail that surprised me: the data wasn&rsquo;t in the file until I ran <code>CHECKPOINT</code>. Before that, it only existed in memory. <code>CHECKPOINT</code> flushes everything to disk.</p>
+<h2 id="work_mem-and-the-spill-problem">work_mem and the spill problem</h2>
+<p>There&rsquo;s one more piece of the memory puzzle: <code>work_mem</code>. This is the memory Postgres allocates per operation for things like sorts, hash joins, and hash aggregations.</p>
+<p>Ours was set to 8MB. If a sort result doesn&rsquo;t fit in 8MB, Postgres creates temporary files on disk. That&rsquo;s additional I/O - and those temp file reads and writes also go through the same path: kernel, page cache, maybe disk.</p>
+<p>A small <code>work_mem</code> means more sorts spill to disk. A large <code>work_mem</code> means each query operation eats more memory - and if you have many concurrent queries, the total memory consumed can push out shared buffers or page cache. It&rsquo;s all the same RAM.</p>
+<h2 id="the-cache-hit-ratio">The cache hit ratio</h2>
+<p>Our overall cache hit ratio was ~78%, measured at the shared buffers level:</p>
+<pre tabindex="0"><code>SELECT
+  sum(heap_blks_read) as heap_read,
+  sum(heap_blks_hit) as heap_hit,
+  sum(heap_blks_hit)::float / nullif(sum(heap_blks_hit) + sum(heap_blks_read), 0) as ratio
+FROM pg_statio_user_tables;
+
+- 0.784
+</code></pre><p>But this number is misleading if you don&rsquo;t understand the layers. <code>pg_statio_user_tables</code> counts shared buffer hits vs shared buffer misses. A &ldquo;miss&rdquo; here means Postgres asked the OS for the page - but the OS might still serve it from page cache. So the 78% is the Postgres-level hit ratio, not the actual &ldquo;went to disk&rdquo; ratio.</p>
+<p>The real disk read ratio is lower - some of those 22% &ldquo;misses&rdquo; were served from page cache without any I/O. But during the overnight schedulers, when the working set exceeded both caches, the actual disk reads spiked hard.</p>
+<h2 id="what-was-actually-killing-us">What was actually killing us</h2>
+<p>The table at the center of this is a large one. 46.7GB heap + TOAST, 28.1GB in indexes. Peaks of 4000 updates per minute. It stores lead data with large JSONB columns.</p>
+<p>I found two query patterns doing most of the IOPS damage. Both follow the exact same pathology: filter by <code>account_id</code> using an index, then apply JSONB filters and other conditions <em>after</em> fetching the rows from disk.</p>
+<h3 id="the-explain-analyze">The EXPLAIN ANALYZE</h3>
+<p>Here&rsquo;s a representative sample:</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on leads
+  Filter: ((some_column IS NULL) AND (jsonb_condition))
+  Index Cond: (account_id = 4939)
+  Rows Removed by Filter: 39811
+  Buffers: shared hit=10871 read=27841 dirtied=3
+  I/O Timings: shared/local read=13838.335
+</code></pre><p>39,811 rows fetched from disk. All discarded by the filter. Zero rows returned.</p>
+<p>Let&rsquo;s do the math. 27,841 block reads × 8KB per block = ~217MB read from disk. In 14 seconds of execution. That&rsquo;s <strong>~1,989 IOPS</strong> from a single query that returned nothing.</p>
+<p>The second pattern was similar: 12,071 rows fetched and discarded, ~107MB from disk, <strong>~1,944 IOPS</strong>. Also zero rows returned.</p>
+<h3 id="two-layers-of-disk-access">Two layers of disk access</h3>
+<p>Reading from an index is <em>also</em> a disk read. The B-tree index itself lives on disk (or in cache, if you&rsquo;re lucky). Postgres first traverses the index pages to find the row pointers, and then follows those pointers to the heap to fetch the actual rows.</p>
+<p>So the access pattern is: read index pages → get a list of row locations → read heap pages at those locations. Two rounds of I/O. And the heap fetches are essentially random - the rows for a given <code>account_id</code> are scattered across the table, especially in a table with thousands of updates per minute where MVCC keeps creating new tuples in different pages. The index tells Postgres <em>where</em> the rows are, but &ldquo;where&rdquo; can mean thousands of different pages spread across a 46GB table.</p>
+<h3 id="the-root-cause">The root cause</h3>
+<p>Both queries used a plain B-tree index on <code>account_id</code>. Nothing else.</p>
+<p>This index says: &ldquo;account 4939 has 39,811 rows, here&rsquo;s where they are on disk.&rdquo; But it knows nothing about the JSONB columns or other filtered fields. That information only exists in the heap.</p>
+<p>So Postgres fetches all 39,811 rows from disk, reads them, checks the filters, and throws away everything. Hundreds of megabytes of reads for zero results. Two of these running at the same time is enough to blow past 3000 IOPS.</p>
+<hr>
+<p>The fix is probably a <a href="https://www.postgresql.org/docs/current/gin.html">GIN index</a> on the JSONB column, so Postgres can evaluate those filters inside the index scan without fetching rows from the heap. A partial index for the NULL condition would also help. We haven&rsquo;t deployed it yet - I wrote this on a Sunday, and the devs will look at it on Monday.</p>
+<p>But what I actually took from this weekend is not the fix. I went into this wanting to understand how disks work, and I ended up learning more about how Postgres uses memory - the three cache layers, how they compete for RAM, and how a bad index can force Postgres through all of them for rows it&rsquo;s going to throw away anyway. In a managed environment like Heroku, you can&rsquo;t even see the bottom of the stack, which is frustrating. But at least now I understand the layers above it a bit better.</p>
+<hr>
+<h2 id="postgres-updates-and-rows-scattering">Postgres updates and rows scattering</h2>
+<p>Postgres doesn&rsquo;t update tuples in place. When you update a row, it marks the old tuple as deleted and inserts a new one at the bottom of the page. We can see this with <code>ctid</code>, a pseudo-column that shows (page, offset):</p>
+<pre tabindex="0"><code>postgres=# select ctid, value from test;
+ ctid  | value
+-------+-------
+ (0,1) | t1
+ (0,2) | t2
+
+postgres=# update test set value = &#39;t2n&#39; where value = &#39;t2&#39;;
+UPDATE 1
+
+postgres=# select ctid, value from test;
+ ctid  | value
+-------+-------
+ (0,1) | t1
+ (0,3) | t2n
+</code></pre><p>The updated row didn&rsquo;t stay at offset 2. Postgres deleted the old tuple and inserted a new one at offset 3. This is MVCC - Multi-Version Concurrency Control. The old version is kept around so that other transactions that started before the update can still see the original data. Postgres tracks this with <code>xmin</code> and <code>xmax</code> transaction IDs:</p>
+<pre tabindex="0"><code>postgres=# SELECT lp as tuple, t_xmin, t_xmax, t_ctid
+                FROM heap_page_items(get_raw_page(&#39;test&#39;, 0));
+ tuple | t_xmin | t_xmax | t_ctid
+-------+--------+--------+--------
+     1 |    907 |    912 | (0,3)
+     2 |    910 |    911 | (0,2)
+     3 |    912 |      0 | (0,3)
+</code></pre><p>Dead tuples stay in the page until <code>VACUUM</code> cleans them up.</p>
+<p>This matters because it explains why a table with 4000 updates per minute has its rows scattered all over the place. Every update creates a new tuple somewhere in the table. Over time, rows that logically belong together (same <code>account_id</code>) end up physically spread across thousands of pages. And when Postgres follows an index to fetch those rows, each one can be in a completely different page - meaning a completely different disk read.</p>
+ </content>
+</main>
+        <footer></footer>
+
+          
+</body>
+</html>
