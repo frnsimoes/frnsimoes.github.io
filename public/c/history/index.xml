@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>History on </title>
+    <link>frn.sh/c/history/</link>
+    <description>Recent content in History on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/c/history/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>I bought a DEC-style terminal keyboard</title>
+      <link>frn.sh/tty/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/tty/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;frn.sh/static/tty/dec.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;My birthday is next month, so I bought myself something I&amp;rsquo;d wanted for a while: a terminal keyboard. Last year I read this &lt;a href=&#34;https://www.linusakesson.net/programming/tty/&#34;&gt;article&lt;/a&gt; about the history of the terminal and it fascinated me. I found a DEC-style Televideo terminal keyboard from the 70s or 80s (I can&amp;rsquo;t be sure of the exact date) and took advantage of the opportunity to learn a few things.&lt;/p&gt;&#xA;&lt;p&gt;These old terminal keyboards were sold alongside a &amp;ldquo;computer terminal,&amp;rdquo; which was essentially a dumb display and input device. The real computing power lived in the mainframe, typically in another room of the office building. The terminal would send characters to the mainframe and display the results back to the user - it didn&amp;rsquo;t have its own operating system, and the notion of keycodes, scancodes, and other abstractions that we have nowadays didn&amp;rsquo;t exist in the same way.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

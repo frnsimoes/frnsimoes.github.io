@@ -1,0 +1,42 @@
++++
+date = 2024-10-30
+title = "How packet switching won"
+labels = ["post"]
+subjects = ["history"]
++++ 
+
+{{< figure src="/static/packet-switching/telephone.png" alt="A very bad attempt to draw a telephone" caption="" >}}
+
+I got obsessed with circuit switching a few months ago and couldn't stop thinking about it. Telecom engineers had to solve a hard problem: in the analog age, carbon microphones converted voice into electrical signals that traveled over copper wires, with amplifiers boosting the signal across distances. In the digital age the same copper wires remained, but the approach changed - the analog signal was sampled at intervals, quantized into bits, and transmitted. Both eras needed circuit switching, the strategy to keep two people talking over a dedicated path.
+
+In circuit switching, when host A calls host B, the network builds a dedicated path - A → switch1 → switch2 → switch3 → B - and that path reserves 64 kbps for a voice channel[^1]. The switches maintain hard state about which ports are connected, how long the connection has been active, and billing information. The path stays reserved for the entire call.
+
+But here's the problem: in a 10-minute phone call, person A talks for 3 minutes, person B talks for 2, and 5 minutes are silence. The circuit sits there the whole time with 64 kbps reserved, unusable by anyone else, even during silence.
+
+This works for voice because voice is continuous and predictable, but data is not. You request a webpage and there's a burst of packets, then nothing while you read for 2 minutes. An email is a few kilobytes, and then silence. With circuit switching you'd reserve bandwidth for these brief spikes and leave the circuit idle 95% of the time. A 1 Mbps link supports exactly 15 simultaneous 64 kbps circuits, and if you want more you build more infrastructure.
+
+Packet switching killed this model because it doesn't require dedicated paths or hard state in routers. It breaks data into packets, stamps source and destination on each one, and lets the network figure it out. Packet 1 goes A → R1 → R2 → B, packet 2 might go A → R1 → R3 → B, and between packets the link is free for everyone else.
+
+Routers just read the header, check the destination, and forward. There are no billing timers or "port 5 connected to port 12". Intelligence moved to the edges, where hosts handle reliability, retransmission, ordering, and congestion. TCP at the kernel level. The network itself became dumb.
+
+The infrastructure was already there - copper wires, central offices, physical links. Packet switching won because it used all of it more efficiently, with no dedicated circuits for every connection. Its philosophy is simple: just let everyone share.
+
+But the transition took decades, and for years packet switching ran on top of circuit switching infrastructure.
+
+In the 1990s, connecting to the internet meant making a phone call[^2]. Your modem called the ISP's modem pool, and the telephone network established a circuit - your house → local exchange → ISP. A dedicated 64 kbps path, just like a voice call, with the phone company's switches tracking it as a connection and billing timers running.
+
+Your computer sent IP packets to the modem, the modem modulated them into [analog signals](https://www.eetimes.com/an-introduction-to-the-v-90-56k-modem/) over the phone line, and the ISP's modem demodulated back to digital and forwarded to the internet.
+
+Here in Brazil we'd connect after midnight or on weekends so we'd only pay for one tick. You'd plan your internet time.
+
+This hybrid existed because the last mile was telephone lines - copper twisted pair, owned by telcos, built for voice. ISPs had to use what was there. Cable modems did something similar with coaxial cable, and fiber eventually replaced both, but the pattern was always the same: reuse existing physical infrastructure, gradually shift from circuit-switched billing to packet-switched reality.
+
+Packet switching won technically in the 1970s with ARPANET, but the economic model took longer to change than the technology. Consumers didn't get always-on flat-rate internet until the early 2000s, because the business model and physical infrastructure were still tied to circuits.
+
+I remember when DSL arrived in 2002 - no dial tone, no phone bill fear. The modem sounds disappeared. I didn't understand what I'd lost until I understood what those sounds were doing.
+
+---
+
+[^1]: Voice digitization: 8-bit samples at 8 kHz = 64 kbps. https://dsp.stackexchange.com/questions/22107/why-is-telephone-audio-sampled-at-8-khz
+
+[^2]: If you're feeling technical, I recommend this blog post about the sound of dial-up: https://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html

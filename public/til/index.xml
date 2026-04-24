@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>til on </title>
+    <link>frn.sh/til/</link>
+    <description>Recent content in til on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 18 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/til/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>writing to disk with O_SYNC</title>
+      <link>frn.sh/til/osync/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/til/osync/</guid>
+      <description>&lt;p&gt;write(2) doesn&amp;rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block. Linux exposes the actual timeframe for periodic writings:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs &#xA;500&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>source and export diff</title>
+      <link>frn.sh/til/source-and-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/til/source-and-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so bash -c &amp;lsquo;declare -f&amp;rsquo; doesn&amp;rsquo;t output anything. But we can source it: bash -c &amp;lsquo;source ~/.bashrc; hello&amp;rsquo;. Or even: bash -c &amp;lsquo;hello() { echo &amp;ldquo;hi&amp;rdquo;; }; declare -f&amp;rsquo;. It&amp;rsquo;s all about memory share in shell modes: source changes only affect current shell memory. export marks variables to be passed to child processes. Subtile difference that can save us a lof of debugging time.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

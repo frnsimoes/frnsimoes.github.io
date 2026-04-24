@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="frn.sh/favicon.ico" />
+<title>Where did 400 MiB go? 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 1em 0;
+    }
+
+    main, footer {
+        max-width: 50em;
+        margin: 0 auto;
+        padding: 0 1em;
+    }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre code {
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        background-color: #f2f2f2;
+
+    }
+
+    code {
+        font-size: 0.9em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1em; margin-top: 0; margin-bottom: 0.2em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.2em;
+    }
+
+    ul.blog-posts li { margin-bottom: 2px; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+</style>
+
+</head>
+    <body>
+        <header><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+<div class="header-container">
+    <nav class="breadcrumb">
+        
+            <a href="/">frn.sh</a>
+            
+                
+                    
+                    &raquo; <a href="/c/memory/">memory</a>
+                    &raquo; where-did-400-mib-go
+                
+            
+        
+    </nav>
+</div>
+</header>
+        <main>
+<h4>Where did 400 MiB go?</h4>
+
+<time datetime='2026-03-21'>March 21, 2026</time>
+
+<p>I restarted all 60+ pods of a Node.js websocket app earlier today. Every single pod sitting at ~330 MiB of memory. Except one, which was double the rest - at 640 MiB.</p>
+<p><img src="/static/pmem/spike.png" alt="alt"></p>
+<p>This is a statefulset. When I built the cluster, I estimated each pod&rsquo;s footprint: ~198 MiB base, plus ~25 MiB per websocket. With 30 websockets per pod, that&rsquo;s roughly 900 MiB. I was wrong about the per-websocket cost - it&rsquo;s lower than 25 MiB in practice. But I still had to set memory requests to nearly 1.5 GiB per pod to match the limit and avoid OOMKills because I knew our automation tool would hammer the pods and consume more than 1GiB of RAM<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. On 8 GB nodes with 5 pods each, that&rsquo;s almost the entire node consumed.</p>
+<p>The Grafana panel told an interesting story: the memory didn&rsquo;t grow gradually. It jumped: ~230 MiB baseline, then a step to ~400 around 18:30, stabilized around 310, then another jump to ~640 at 20:00 and flatlined there. Discrete jumps, not a slow climb. Something was allocating memory in bursts and never releasing it.</p>
+<p>I had been watching this pattern for weeks. Some pods would spike during fetch bursts and come back down. Others would spike and stay there permanently.</p>
+<p>I had a perfect isolation scenario: one sick pod, sixty healthy ones. All with the same image, configuration, and roughly same number of websockets. The only difference was that an automation tool had been hammering this specific pod with message fetch requests. I SSH&rsquo;d into the node to check what was going on.</p>
+<h2 id="finding-the-right-process">Finding the right process</h2>
+<p>First question: which process inside the container is actually eating memory? Three processes were running on this container:</p>
+<pre tabindex="0"><code>--- PID 2043462 ---
+/usr/bin/tini -- /entrypoint.sh
+VmRSS:      1152 kB
+--- PID 2043476 ---
+node dist/main
+VmRSS:    679936 kB
+--- PID 2043573 ---
+/app/gows --socket /tmp/gows.sock
+VmRSS:     90884 kB
+</code></pre><p>tini is PID 1 - a tiny init that just forwards signals. 1 MiB. gows is the websocket proxy, sitting at 89 MiB. And node dist/main - the actual Node.js application - at 680 MiB.</p>
+<p>I ran the same commands on a healthy pod. Node at 268 MiB, gows at 82 MiB. The gows difference was negligible. The entire delta - all 412 MiB (!!) of it - was in the Node.js process.</p>
+<h2 id="where-inside-nodejs">Where inside Node.js?</h2>
+<p>I pulled smaps_rollup from both processes. This is a per-process file in /proc that breaks down memory by type - private vs shared, clean vs dirty, anonymous vs file-backed<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>sick</th>
+          <th>healthy</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Pss_Anon</td>
+          <td>615 MiB</td>
+          <td>209 MiB</td>
+      </tr>
+      <tr>
+          <td>Pss_File</td>
+          <td>11.7 MiB</td>
+          <td>11.7 MiB</td>
+      </tr>
+      <tr>
+          <td>Shared_Clean</td>
+          <td>65.5 MiB</td>
+          <td>65.5 MiB</td>
+      </tr>
+  </tbody>
+</table>
+<p>All the growth was in private dirty anonymous memory. We had no file-backed growth and no shared memory changes. The shared libraries were identical - same binary and .so files loaded.</p>
+<p>Private dirty anonymous memory is the most &ldquo;real&rdquo; measure of what a process is using. It means: the process allocated this via malloc() or mmap(), wrote to it, and it belongs exclusively to this process. The kernel can&rsquo;t drop, share, or reclaim it without killing the process. And there were 406 extra MiB of it on the sick pod.</p>
+<p>At this point I was fairly sure it was V8 heap. JavaScript objects piling up from all those message fetches, never getting garbage collected. Made sense with the step-change pattern too - each burst of fetches creates a bunch of objects, V8 expands its old generation<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, and it never gives those pages back to the OS.</p>
+<p>Well, I was wrong. Or at least, not entirely right.</p>
+<h2 id="looking-inside-the-running-process">Looking inside the running process</h2>
+<p>I needed to see what V8 actually thought about its own memory. Node.js has a useful trick for this: if you send SIGUSR1 to the process, it activates the V8 Inspector<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
+<pre tabindex="0"><code>kill -USR1 2043476
+</code></pre><p>The inspector opened on port 9229 inside the container&rsquo;s network namespace. I couldn&rsquo;t reach it from the host directly - the container has its own network namespace. But with nsenter -t <pid> -n, I could enter that namespace and connect. Claude helped me write a one-liner that opened a websocket to the inspector, sent a Runtime.evaluate command with process.memoryUsage(), and printed the result. This is essentially running JavaScript inside the live process without restarting it.</p>
+<p>The sick pod:</p>
+<pre tabindex="0"><code>{
+  &#34;rss&#34;: 697303040,
+  &#34;heapTotal&#34;: 135147520,
+  &#34;heapUsed&#34;: 126842024,
+  &#34;external&#34;: 25004037,
+  &#34;arrayBuffers&#34;: 33762595
+}
+</code></pre><p>The healthy pod:</p>
+<pre tabindex="0"><code>{
+  &#34;rss&#34;: 281395200,
+  &#34;heapTotal&#34;: 113913856,
+  &#34;heapUsed&#34;: 104892656,
+  &#34;external&#34;: 23737321,
+  &#34;arrayBuffers&#34;: 32256735
+}
+</code></pre><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>sick</th>
+          <th>healthy</th>
+          <th>delta</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>RSS</td>
+          <td>665 MiB</td>
+          <td>268 MiB</td>
+          <td>+397 MiB</td>
+      </tr>
+      <tr>
+          <td>heapTotal</td>
+          <td>129 MiB</td>
+          <td>109 MiB</td>
+          <td>+20 MiB</td>
+      </tr>
+      <tr>
+          <td>heapUsed</td>
+          <td>121 MiB</td>
+          <td>100 MiB</td>
+          <td>+21 MiB</td>
+      </tr>
+      <tr>
+          <td>external</td>
+          <td>24 MiB</td>
+          <td>23 MiB</td>
+          <td>+1 MiB</td>
+      </tr>
+  </tbody>
+</table>
+<p>V8 heap difference: 20 MiB. RSS difference: 397 MiB. The V8 heap was fine. JavaScript had no idea there was a problem. But the kernel saw 665 MiB of resident memory, and V8 could only account for ~180 MiB of it (heap + external + array buffers). <strong>377 MiB existed outside of V8 entirely</strong>.</p>
+<h2 id="the-native-layer">The native layer</h2>
+<p>If it&rsquo;s not V8 heap, not external buffers, not array buffers, then where is it?</p>
+<p>When Node.js makes an HTTPS request, the actual work doesn&rsquo;t happen in JavaScript. OpenSSL handles the TLS encryption, zlib decompresses the response if it&rsquo;s gzipped, llhttp parses the HTTP headers - and they are all in C. Each of these allocates memory through malloc(), which goes to glibc.</p>
+<p>So the flow for a single fetch is something like: TCP bytes arrive → OpenSSL (decrypt) → llhttp (parse) → zlib (decompress) → V8 heap (JavaScript objects). Each step is a different C library calling malloc(). Only the last step lands on V8&rsquo;s managed heap. Everything before it is native memory that JavaScript can&rsquo;t see.</p>
+<p>But I still didn&rsquo;t understand why this memory wasn&rsquo;t being freed. In theory, the fetches complete, then the response is parsed, then the data moves to JavaScript. The native buffers should be freed. And they probably <em>were</em> freed - from the application&rsquo;s perspective. The question was whether glibc was actually returning that memory to the OS.</p>
+<p>I counted anonymous memory mappings in /proc/pid/smaps from both pods:</p>
+<pre tabindex="0"><code>Sick:    1803 mappings
+Healthy:  580 mappings
+</code></pre><p>1803 vs 580. That looked like glibc <a href="https://sourceware.org/glibc/wiki/MallocInternals#Arenas_and_Heaps">arena</a> fragmentation<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. I shipped MALLOC_ARENA_MAX=2 to limit glibc to 2 arenas.</p>
+<p>It didn&rsquo;t work. A pod got hammered, spiked to 576 MiB, and stayed there. I was missing something.</p>
+<h2 id="the-256-kb-clue">The 256 KB clue</h2>
+<p>I went back in. This time I checked the size distribution of those anonymous mappings on the stuck pod:</p>
+<pre tabindex="0"><code>&lt;64KB:   13
+64KB-1MB: 1461
+&gt;1MB:    25
+</code></pre><p>Almost all in the 64KB-1MB range. I listed the actual regions:</p>
+<pre tabindex="0"><code>256KB 1e20080000-1e200c0000 rw-p 00000000 00:00 0
+256KB 2efb440000-2efb480000 rw-p 00000000 00:00 0
+256KB 3c708c0000-3c70900000 rw-p 00000000 00:00 0
+256KB 48d9340000-48d9380000 rw-p 00000000 00:00 0
+256KB 5a3a3c0000-5a3a400000 rw-p 00000000 00:00 0
+...
+</code></pre><p>All 256 KB. Every single one. 1461 separate memory regions, all exactly the same size.</p>
+<p>This couldn&rsquo;t be glibc. With MALLOC_ARENA_MAX=2, there were only 2 arenas, and glibc grabs memory in much larger chunks anyway. So what allocates thousands of identically-sized 256 KB regions via mmap()? The only component in this process that manages its own memory like this, bypassing malloc() entirely, is V8. 1461 × 256 KB ≈ 365 MiB of heap pages sitting in memory.</p>
+<p>But process.memoryUsage() had reported heapTotal at only 129 MiB. How does V8 have 365 MiB of mmap&rsquo;d pages but only report 129 MiB?</p>
+<h2 id="what-tricked-me">What tricked me</h2>
+<p>process.memoryUsage() reports heapUsed: live objects, what V8 currently knows is in use. On the sick pod, 121 MiB. On the healthy one, 100 MiB. Almost the same. So I concluded V8 was fine and the problem was somewhere else.</p>
+<p>But heapUsed doesn&rsquo;t tell you how much memory V8 has really grabbed from the OS. V8 requests pages during fetch bursts, fills them with objects, and those objects eventually become unreachable. Garbage. The pages stay mapped, the garbage is still there, sitting in real physical memory. V8 just hasn&rsquo;t collected it yet.</p>
+<p>And why would it? V8&rsquo;s default heap limit is in the gigabytes, and it was using ~129 MiB. Plenty of room. No reason to waste CPU on garbage collection.</p>
+<p>I used the Chrome DevTools Protocol to force a full garbage collection on the stuck pod, then checked memory:</p>
+<pre tabindex="0"><code>Before GC: RSS = 568 MiB, heapTotal = 129 MiB
+After GC:  RSS = 316 MiB, heapTotal = 107 MiB
+</code></pre><p>252 MiB gone. V8 was holding 252 MiB of collectible garbage and just wasn&rsquo;t collecting it.</p>
+<h2 id="two-problems">Two problems</h2>
+<p>So the V8 theory was right all along. But was glibc arena fragmentation also real, or had I been chasing the wrong thing entirely?</p>
+<p>I tested both, properly this time. Same pod, same load.</p>
+<p>First: &ndash;max-old-space-size=256 only, no MALLOC_ARENA_MAX. This caps V8&rsquo;s old generation heap at 256 MiB, forcing it to actually collect garbage instead of sitting on it forever. I hammered the pod. Memory spiked to 619 MiB during the burst, then dropped to 350 MiB. Better. But 350 is still above the ~250 MiB baseline.</p>
+<p>Second: added MALLOC_ARENA_MAX=2 back. This time it dropped to 280 MiB.</p>
+<p>Both problems were real. V8 was the bigger one - about 270 MiB of garbage it wasn&rsquo;t collecting. And glibc arenas were contributing another ~70 MiB of native memory fragmentation from the OpenSSL, zlib, and llhttp allocations that happen below JavaScript.</p>
+<h2 id="the-fix">The fix</h2>
+<p><img src="/static/pmem/gc.png" alt="alt"></p>
+<pre tabindex="0"><code>env:
+  - name: MALLOC_ARENA_MAX
+    value: &#34;2&#34;
+  - name: NODE_OPTIONS
+    value: &#34;--max-old-space-size=256&#34;
+</code></pre><p>&ndash;max-old-space-size=256 puts pressure on V8&rsquo;s garbage collector. Instead of waiting until it hits a multi-gigabyte limit, V8 starts collecting as it approaches 256 MiB. Dead objects from fetch bursts get collected, and V8 releases those pages back to the OS.</p>
+<p>MALLOC_ARENA_MAX=2 limits glibc to 2 memory arenas. Native allocations from OpenSSL, zlib, and llhttp get concentrated in fewer pools, and glibc has a better chance of returning freed memory to the kernel<sup id="fnref1:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>.</p>
+<p>I wouldn&rsquo;t use these settings on every app. If your threads are CPU-bound and allocating constantly, &ndash;max-old-space-size=256 means frequent GC pauses, and MALLOC_ARENA_MAX=2 means lock contention on malloc(). But this app barely touches the CPU. Peak usage across all 60+ pods is 0.12 cores, with most sitting near zero. The threads spend their time waiting for API responses. GC pauses and malloc contention are both invisible here.</p>
+<p>On 8 GB nodes with 5 pods each, every MiB of phantom memory is capacity I&rsquo;m paying for but not using.</p>
+<hr>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>/u/gordonmessmer suggested an excellent resource on memory allocation for those who are new to these concepts: <a href="https://samwho.dev/memory-allocation/">https://samwho.dev/memory-allocation/</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>smaps_rollup vs /proc/meminfo: they answer different questions at different scopes. meminfo is system-wide - total RAM, free, cached. smaps_rollup is per-process - exactly how much memory a specific process is using, broken down by type. Private vs shared: is this page exclusive to this process, or shared with others via copy-on-write? Clean vs dirty: does this page match what&rsquo;s on disk, or has it been modified in RAM? Anonymous vs file-backed: was this page allocated from scratch (heap, mmap), or is it backed by a file on disk (shared libraries, memory-mapped files)? File-backed clean pages are cheap - the kernel can drop them and reload from disk. Anonymous dirty pages are the most expensive: they can only go to swap or stay in RAM.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>V8 divides its heap into generations. New objects go into the young generation, a small space that gets collected frequently. Objects that survive multiple collections get promoted to the old generation, which is larger and collected less often. &ndash;max-old-space-size caps the old generation. <a href="https://nodejs.org/en/learn/diagnostics/memory/understanding-and-tuning-memory">https://nodejs.org/en/learn/diagnostics/memory/understanding-and-tuning-memory</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>SIGUSR1 and SIGUSR2 are user-defined signals with no default kernel meaning - applications install their own handlers. Node.js uses SIGUSR1 to activate the V8 Inspector, which speaks the Chrome DevTools Protocol (CDP) over websocket. This is the same protocol Chrome uses when you open developer tools. I connected from the host by entering the container&rsquo;s network namespace with nsenter, opened a websocket to 127.0.0.1:9229, and sent a Runtime.evaluate command. The inspector evaluated the JavaScript expression inside the live running process and returned the result. No restart needed.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>glibc&rsquo;s allocator uses <a href="https://sourceware.org/glibc/wiki/MallocInternals#Arenas_and_Heaps">arenas</a> - separate memory pools for different threads to reduce lock contention on malloc(). The default cap is 8 × the number of CPU cores. Each arena grabs memory from the OS in large chunks via mmap(). When the application calls free(), glibc doesn&rsquo;t necessarily return the memory to the OS. It keeps it mapped for reuse. If there&rsquo;s even one live allocation in a mapped region, the whole region stays pinned. With many arenas, freed memory gets scattered across all of them. With 2 arenas, allocations are concentrated, and glibc has a better chance of returning freed memory to the kernel. Also: illustrated representation of arenas malloc I found interesting: <a href="https://codeberg.org/gordonmessmer/dev-blog/src/branch/main/malloc-arenas-illustrated.md">https://codeberg.org/gordonmessmer/dev-blog/src/branch/main/malloc-arenas-illustrated.md</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</main>
+        <footer><hr>
+<a href="/frn.sh/about/">about</a> · <a href="/frn.sh/index.xml">rss</a>
+</footer>
+
+          
+
+</body>
+</html>

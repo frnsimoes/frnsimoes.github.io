@@ -1,0 +1,10 @@
+{{ define "main" }}
+{{ range .Pages.ByDate.Reverse }}
+<article>
+    <h3>{{ .Title }}</h3>
+    <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format "02 Jan, 2006" }}</time>
+    {{ .Content }}
+</article>
+<hr>
+{{ end }}
+{{ end }}

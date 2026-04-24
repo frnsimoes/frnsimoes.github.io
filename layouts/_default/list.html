@@ -1,0 +1,15 @@
+{{ define "main" }}
+{{ if .Data.Singular }}
+<h2>{{ .Title | lower }}</h2>
+{{ end }}
+<ul class="blog-posts">
+    {{ range .Pages }}
+    <li>
+        <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ else }}
+    <li>No posts yet</li>
+    {{ end }}
+</ul>
+{{ end }}

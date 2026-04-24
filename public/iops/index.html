@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="frn.sh/favicon.ico" />
+<title>Between select and disk 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 1em 0;
+    }
+
+    main, footer {
+        max-width: 50em;
+        margin: 0 auto;
+        padding: 0 1em;
+    }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre code {
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        background-color: #f2f2f2;
+
+    }
+
+    code {
+        font-size: 0.9em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1em; margin-top: 0; margin-bottom: 0.2em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.2em;
+    }
+
+    ul.blog-posts li { margin-bottom: 2px; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+</style>
+
+</head>
+    <body>
+        <header><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+<div class="header-container">
+    <nav class="breadcrumb">
+        
+            <a href="/">frn.sh</a>
+            
+                
+                    
+                    &raquo; <a href="/c/database/">database</a>
+                    &raquo; between-select-and-disk
+                
+            
+        
+    </nav>
+</div>
+</header>
+        <main>
+<h4>Between select and disk</h4>
+
+<time datetime='2026-02-08'>February 8, 2026</time>
+
+<p>We had a Postgres incident this week. Heroku timeouts, multiple queries running for 30+ minutes, and the IOPS pinned at the provisioned limit.</p>
+<p>I knew I needed a better index, but I wanted to understand what &ldquo;reading from disk&rdquo; actually means first. How many layers of caching sit between a SELECT and the storage device?</p>
+<p>Three.</p>
+<p>First: shared buffers, Postgres&rsquo; own cache living in the process memory. If the page is there, we need no system call - just a memory read. Ours was set to 4GB.</p>
+<p>Second: the OS page cache. If Postgres doesn&rsquo;t have the page, it calls read(2), and now we&rsquo;re in the kernel. The kernel keeps its own cache of disk blocks, and if the block is there it returns it immediately. No I/O happened - from Postgres&rsquo; perspective it was a miss, but from the OS perspective it was still a memory read.</p>
+<p>These two compete for the same physical RAM. When you bump shared buffers from 4GB to 16GB you take 12GB from the page cache. The page cache benefits everything, not just what Postgres explicitly requested, so there&rsquo;s a point where growing shared buffers actually makes things worse.</p>
+<p>Third: disk. If neither cache has the page, the kernel sends an I/O request to the device. On Heroku, that&rsquo;s AWS EBS. This is what counts as one IOPS.</p>
+<p>Our limit was 3000 provisioned, with burst credits for temporary spikes. Logs showed reads hitting 3668 - the burst credits were keeping us alive, but when they run out you&rsquo;re hard-capped.</p>
+<p>Our shared buffer hit ratio was 78%, but that number lies if you don&rsquo;t understand the layers. <code>pg_statio_user_tables</code> counts shared buffer hits vs shared buffer misses, and a &ldquo;miss&rdquo; just means Postgres asked the OS - the OS might still serve it from page cache without touching disk. So 78% is the Postgres-level hit ratio, not the actual &ldquo;went to disk&rdquo; ratio. The real disk read ratio is lower, except during overnight schedulers when the working set blew past both caches and actual disk reads spiked hard.</p>
+<p>The table at the center of this was a big one: 46.7GB heap plus TOAST, 28.1GB in indexes, peaks of 4000 updates per minute, and large JSONB columns.</p>
+<p>Two query patterns were doing most of the damage, and both followed the same pathology: filter by account_id using an index, then apply JSONB filters after fetching the rows from disk.</p>
+<p>Here&rsquo;s one:</p>
+<pre><code>Index Scan using idx_account_id on leads
+  Filter: ((some_column IS NULL) AND (jsonb_condition))
+  Index Cond: (account_id = 4939)
+  Rows Removed by Filter: 39811
+  Buffers: shared hit=10871 read=27841 dirtied=3
+  I/O Timings: shared/local read=13838.335
+</code></pre>
+<p>39,811 rows fetched from disk, all discarded by the filter. Zero rows returned.</p>
+<p>27,841 block reads x 8KB = 217MB of disk reads in 14 seconds. That&rsquo;s roughly 1,989 IOPS from a single query that returned nothing.</p>
+<p>The second pattern was similar: 12,071 rows fetched and discarded, 107MB from disk, around 1,944 IOPS. Also zero rows returned. Two of these running at the same time is enough to blow past 3000 IOPS.</p>
+<p>The index was a plain B-tree on account_id and nothing else. It says &ldquo;account 4939 has 39,811 rows, here&rsquo;s where they are on disk,&rdquo; but it knows nothing about the JSONB columns. That information only exists in the heap.</p>
+<p>So Postgres fetches all 39,811 rows, reads them, checks the filters, and throws away everything. And those heap fetches are essentially random - the rows for a given account_id are scattered across the table because Postgres doesn&rsquo;t update tuples in place. It marks the old one dead and inserts a new version somewhere else. 4000 updates per minute means rows that logically belong together end up physically spread across thousands of pages in a 46GB table. Every fetch is a different page, and every page is a potential disk read.</p>
+<p>The index tells Postgres where the rows are. &ldquo;Where&rdquo; just happens to be everywhere.</p>
+<p>Reading the index is also I/O, by the way - the B-tree lives on disk too. So the access pattern is: read index pages, get a list of row locations, then read heap pages at those locations. Two rounds.</p>
+<p>The fix is a GIN index on the JSONB column so Postgres can evaluate those filters inside the index scan without touching the heap. A partial index for the NULL condition would help too.</p>
+
+</main>
+        <footer><hr>
+<a href="/frn.sh/about/">about</a> · <a href="/frn.sh/index.xml">rss</a>
+</footer>
+
+          
+
+</body>
+</html>

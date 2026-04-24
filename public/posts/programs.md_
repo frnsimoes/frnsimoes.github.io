@@ -1,0 +1,69 @@
++++
+date = 2025-06-30
+title = "Four bytes is not a program"
+labels = ["hide"]
+
++++
+
+The boundary between "program" and "data" is blurrier than it seems, and I wanted to find out where exactly the kernel draws the line.
+
+Let's start with `ls`:
+
+```
+frn@debian:~$ file /bin/ls
+/bin/ls: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=87a7eadc711cd002f7b00ba923179e5713498159, for GNU/Linux 3.7.0, stripped
+```
+
+An ELF executable. The binary carries metadata about how to execute it - target OS, architecture, entry point address, header locations - and the entry point is where the kernel will jump to after loading the binary into memory.
+
+Now a Python script with `#!/usr/bin/python3`:
+
+```
+frn@debian:~$ file sh.py
+sh.py: Python script, ASCII text executable
+```
+
+When we execute it, the kernel reads the first bytes, sees `#!`, extracts the interpreter path, and our `./sh.py` becomes `/usr/bin/python3 sh.py`. The actual program being executed is the Python interpreter - our script is just data fed to it. This happens inside the kernel through `search_binary_handler`, a function that tries different handlers for different file types until one matches.
+
+An ELF binary is executable because the kernel can load it directly; a script is executable only because the kernel delegates it to an interpreter. In both cases the kernel decides what counts as executable. But how strict is it?
+
+
+What happens if we create a file with just the ELF magic number?
+
+```
+frn@debian:~$ printf '\x7fELF' > fake_elf
+frn@debian:~$ file fake_elf
+fake_elf: ELF
+```
+
+`file` is fooled because it only checks the first bytes. `readelf` looks deeper:
+
+```
+frn@debian:~$ readelf -a fake_elf
+readelf: Error: fake_elf: Failed to read file's magic number
+```
+
+Adding more header bytes gets us past the magic number check but hits the next validation layer:
+
+```
+frn@debian:~$ echo -e '\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3e\x00' > fake_elf
+frn@debian:~$ readelf -a fake_elf
+readelf: Error: fake_elf: Failed to read file header
+```
+
+Now the real test - will the kernel execute it?
+
+```
+frn@debian:~$ chmod +x fake_elf
+frn@debian:~$ ./fake_elf
+-bash: ./fake_elf: cannot execute binary file: Exec format error
+
+frn@debian:~$ strace -e execve ./fake_elf
+execve("./fake_elf", ["./fake_elf"], 0xffffd3072180 /* 22 vars */) = -1 ENOEXEC (Exec format error)
+strace: exec: Exec format error
+```
+
+`ENOEXEC`. The kernel tried to load it and rejected it. The magic number makes a file identifiable as ELF, but execution requires valid headers, sections, program segments, and machine code. `
+
+
+file` was fooled by four bytes, but the kernel validates all of it - and each layer you get past just reveals the next one.

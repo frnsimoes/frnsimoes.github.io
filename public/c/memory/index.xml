@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Memory on </title>
+    <link>frn.sh/c/memory/</link>
+    <description>Recent content in Memory on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/c/memory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What /proc sees in 19 MiB</title>
+      <link>frn.sh/smaps/</link>
+      <pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/smaps/</guid>
+      <description>&lt;p&gt;A few weeks ago &lt;a href=&#34;frn.sh/pmem/&#34;&gt;I profiled a Node.js server&lt;/a&gt; with recurring memory spikes. I found out dirty pages, allocator behavior and memory that never came back. To build a cleaner mental model, I stripped the problem down to something smaller: python3 -m http.server.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@debian:/# ps aux | grep http.server | grep -v grep&#xA;root       479226  0.0  0.1  32104 19324 pts/1    T    16:10   0:00 python3 -m http.server&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;19 MiB of resident memory. Where is every byte?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Where did 400 MiB go?</title>
+      <link>frn.sh/pmem/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/pmem/</guid>
+      <description>&lt;p&gt;I restarted all 60+ pods of a Node.js websocket app earlier today. Every single pod sitting at ~330 MiB of memory. Except one, which was double the rest - at 640 MiB.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;frn.sh/static/pmem/spike.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;This is a statefulset. When I built the cluster, I estimated each pod&amp;rsquo;s footprint: ~198 MiB base, plus ~25 MiB per websocket. With 30 websockets per pod, that&amp;rsquo;s roughly 900 MiB. I was wrong about the per-websocket cost - it&amp;rsquo;s lower than 25 MiB in practice. But I still had to set memory requests to nearly 1.5 GiB per pod to match the limit and avoid OOMKills because I knew our automation tool would hammer the pods and consume more than 1GiB of RAM&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. On 8 GB nodes with 5 pods each, that&amp;rsquo;s almost the entire node consumed.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

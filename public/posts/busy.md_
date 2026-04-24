@@ -1,0 +1,39 @@
++++
+date = 2024-04-02
+title = "Non-running processes and utilization"
+labels = ["hide"]
++++ 
+
+What does "CPU utilization" actually measure? There are three layers: the physical CPU executing instructions, the kernel scheduler estimation, and the metric tools that summarize both numbers.
+
+At the physical level, transistors switch and instructions execute one after another. This is the only layer where something is actually happening.
+
+At the scheduler level, CFS tracks a per-task `vruntime` in nanoseconds - how much time a task has consumed - and picks the one with the lowest value from `cfs_rq`. But a task that isn't running can still matter. The kernel source says it directly:
+
+    CPU utilization is the sum of running time of runnable tasks plus the
+    recent utilization of currently non-runnable tasks on that CPU.
+
+    The estimated CPU utilization is defined as the maximum between CPU
+    utilization and sum of the estimated utilization of the currently
+    runnable tasks on that CPU. It preserves a utilization "snapshot" of
+    previously-executed tasks, which helps better deduce how busy a CPU will
+    be when a long-sleeping task wakes up.
+
+A sleeping task doesn't execute instructions and isn't in the runqueue, but its recent CPU history still lives in `util_avg`. That history doesnt fade immediately, so the scheduler carries memory of recent pressure.
+
+Process states make this concrete. Running means executing on a core - the only state with a physical manifestation. Runnable means sitting in the runqueue, it's ready but waiting. When a task sleeps, the kernel calls `dequeue_task`, pulls it from `cfs_rq`, and puts it on a wait queue - gone from the Kernel's perspective. 
+
+But uninterruptible sleeping tasks are different. Nothing executes on their behalf, but the kernel tracks them through `nr_uninterruptible`. This is why load average counts them:
+
+    The global load average is an exponentially decaying average of
+    nr_running + nr_uninterruptible.
+
+The interesting part is wake-up. When a bunch of sleeping tasks wake at once, they all reenter as runnable, and that transition alone can blow up the runqueue and the utilization numbers.
+
+So we have a physical question: which tasks are executing instructions right now? And estimate: how busy does the scheduler think the CPU is? Two different questions, structures and answers.
+
+This is sadly inconclusive. There's a [classical article about loadavg](https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html) written by Brendan Gregg. In the article, he concludes that the "good" number for loadavg depends on the intuition you have of your systems:
+
+> Some people have found values that seem to work for their systems and workloads: they know that when load goes over X, application latency is high and customers start complaining. But there aren't really rules for this.
+
+This is far from practical: unlike memory, CPU utilization can't be measured as water filling a bucket. CPU utilization is a transient physical reality. What we have are tools that measure movement. If load is high, something is piling up.

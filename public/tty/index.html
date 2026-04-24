@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="frn.sh/favicon.ico" />
+<title>I bought a DEC-style terminal keyboard 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 1em 0;
+    }
+
+    main, footer {
+        max-width: 50em;
+        margin: 0 auto;
+        padding: 0 1em;
+    }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre code {
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        background-color: #f2f2f2;
+
+    }
+
+    code {
+        font-size: 0.9em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1em; margin-top: 0; margin-bottom: 0.2em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.2em;
+    }
+
+    ul.blog-posts li { margin-bottom: 2px; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+</style>
+
+</head>
+    <body>
+        <header><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+<div class="header-container">
+    <nav class="breadcrumb">
+        
+            <a href="/">frn.sh</a>
+            
+                
+                    
+                    &raquo; <a href="/c/history/">history</a>
+                    &raquo; i-bought-a-dec-style-terminal-keyboard
+                
+            
+        
+    </nav>
+</div>
+</header>
+        <main>
+<h4>I bought a DEC-style terminal keyboard</h4>
+
+<time datetime='2025-04-26'>April 26, 2025</time>
+
+<p><img src="/static/tty/dec.png" alt="alt"></p>
+<p>My birthday is next month, so I bought myself something I&rsquo;d wanted for a while: a terminal keyboard. Last year I read this <a href="https://www.linusakesson.net/programming/tty/">article</a> about the history of the terminal and it fascinated me. I found a DEC-style Televideo terminal keyboard from the 70s or 80s (I can&rsquo;t be sure of the exact date) and took advantage of the opportunity to learn a few things.</p>
+<p>These old terminal keyboards were sold alongside a &ldquo;computer terminal,&rdquo; which was essentially a dumb display and input device. The real computing power lived in the mainframe, typically in another room of the office building. The terminal would send characters to the mainframe and display the results back to the user - it didn&rsquo;t have its own operating system, and the notion of keycodes, scancodes, and other abstractions that we have nowadays didn&rsquo;t exist in the same way.</p>
+<p>When you pressed a key, let&rsquo;s say &ldquo;A&rdquo;, the keyboard generated a specific electrical signal. The terminal would interpret this signal, convert it to ASCII or another character encoding, and transmit it to the mainframe using a protocol like RS-232. The mainframe would process the input according to whatever program was running and send results back to the terminal for display.</p>
+<pre tabindex="0"><code>[KEYBOARD/TERMINAL] &lt;--wire--&gt; [MAINFRAME]
+        ASCII                       ASCII
+     (01000001)                 &#34;This is &#39;A&#39;&#34;
+</code></pre><p><img src="/static/tty/term-diagram.png" alt="alt"></p>
+<p>Modern keyboards don&rsquo;t work like this - they don&rsquo;t deal with bytes and ASCII directly. Instead they send a <a href="https://en.wikipedia.org/wiki/Scancode">scancode</a>, which is just a code identifying which key was pressed, and your computer&rsquo;s OS figures out what to do with it using the USB HID protocol.</p>
+<p>Another thing about these old keyboards is how wildly different their connections were. It wasn&rsquo;t like today where everything is USB - every company was doing their own thing with serial connections. DEC had their modified RS-232 with custom connectors, IBM did their own proprietary stuff, and Wyse, Televideo, and others all had their own setups. Even when they used the same-looking connectors like DB-25 or DB-9, they&rsquo;d wire them up differently.</p>
+<p>The way they encoded text varied too: regular <a href="https://www.ascii-code.com/ASCII">7-bit ASCII</a> with 128 characters, various <a href="https://en.wikipedia.org/wiki/Extended_ASCII">8-bit extended ASCII versions</a> (IBM had CP437, DEC had their Multinational character set), and IBM even made their own entirely separate system called <a href="https://en.wikipedia.org/wiki/EBCDIC">EBCDIC</a>. That&rsquo;s why companies like Televideo started making keyboards with DIP switches you could flip to emulate different terminals.</p>
+<p>What I find fascinating is how modern terminals inherited from all of this. When you open a terminal on Mac or Linux, you&rsquo;re using a terminal emulator - software pretending to be those old physical terminals. The &ldquo;Terminal&rdquo; part of the name isn&rsquo;t there without reason, it&rsquo;s literally emulating what <a href="https://en.wikipedia.org/wiki/VT100">DEC VT100s</a> and Televideo terminals used to do in hardware.</p>
+<p>The legacy shows up everywhere once you know what to look for. The TERM environment variable often defaults to &ldquo;xterm&rdquo; or &ldquo;xterm-256color,&rdquo; where &ldquo;xterm&rdquo; refers to the X Window System Terminal, which itself was emulating the capabilities of hardware terminals - the terminal emulating the emulator. Classic terminals were limited to <a href="https://softwareengineering.stackexchange.com/questions/148677/why-is-80-characters-the-standard-limit-for-code-width">80 columns</a> by 24 or 25 rows, and many modern terminal defaults still reflect this. It&rsquo;s why text still wraps at 80 characters in many configurations.</p>
+<p>And then there&rsquo;s <code>tty</code> and <code>isatty()</code> - programs use these to check if their input/output is connected to a &ldquo;real terminal&rdquo; instead of a pipe or a file. The modern notion of a terminal still has ties to the old computer terminals, and we carry all of it around without even noticing.</p>
+
+</main>
+        <footer><hr>
+<a href="/frn.sh/about/">about</a> · <a href="/frn.sh/index.xml">rss</a>
+</footer>
+
+          
+
+</body>
+</html>

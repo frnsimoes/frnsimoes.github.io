@@ -1,0 +1,12 @@
+{{ define "main" }}
+{{- $allPosts := where .Site.RegularPages "Section" "posts" -}}
+<ul class="blog-posts">
+    {{ range $allPosts.ByDate.Reverse }}
+    {{ if in .Params.labels "hide" }}{{ continue }}{{ end }}
+    <li>
+        <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>{{ if in .Params.labels "favorite" }} <span class="favorite" title="favorite">*</span>{{ end }}
+    </li>
+    {{ end }}
+</ul>
+{{ end }}

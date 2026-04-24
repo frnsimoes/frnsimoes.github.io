@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fernando Simoes - Homepage on </title>
+    <link>frn.sh/</link>
+    <description>Recent content in Fernando Simoes - Homepage on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Wed, 15 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The cost of not measuring</title>
+      <link>frn.sh/measuring/</link>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/measuring/</guid>
+      <description>&lt;p&gt;Probability theory has a precise model for what happens when you act without measuring: the multi-armed bandit problem.&lt;/p&gt;&#xA;&lt;p&gt;You&amp;rsquo;re in a casino with k slot machines, each paying out at a different rate, and n rounds to play. The question is how you split those rounds between &lt;em&gt;finding out&lt;/em&gt; and &lt;em&gt;cashing in&lt;/em&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The dumbest viable strategy is called &lt;a href=&#34;https://en.wikipedia.org/wiki/Explore-then-commit_algorithm&#34;&gt;Explore-Then-Commit&lt;/a&gt;: try each machine m times, average the payouts, then go with the winner. It works, but it&amp;rsquo;s not optimal. Measurement isn&amp;rsquo;t free. Too few rounds &lt;em&gt;exploring&lt;/em&gt;, and you commit with bad data. But if you explore too much, you burn rounds you could have spent on the best machine.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What /proc sees in 19 MiB</title>
+      <link>frn.sh/smaps/</link>
+      <pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/smaps/</guid>
+      <description>&lt;p&gt;A few weeks ago &lt;a href=&#34;frn.sh/pmem/&#34;&gt;I profiled a Node.js server&lt;/a&gt; with recurring memory spikes. I found out dirty pages, allocator behavior and memory that never came back. To build a cleaner mental model, I stripped the problem down to something smaller: python3 -m http.server.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@debian:/# ps aux | grep http.server | grep -v grep&#xA;root       479226  0.0  0.1  32104 19324 pts/1    T    16:10   0:00 python3 -m http.server&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;19 MiB of resident memory. Where is every byte?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Where did 400 MiB go?</title>
+      <link>frn.sh/pmem/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/pmem/</guid>
+      <description>&lt;p&gt;I restarted all 60+ pods of a Node.js websocket app earlier today. Every single pod sitting at ~330 MiB of memory. Except one, which was double the rest - at 640 MiB.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;frn.sh/static/pmem/spike.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;This is a statefulset. When I built the cluster, I estimated each pod&amp;rsquo;s footprint: ~198 MiB base, plus ~25 MiB per websocket. With 30 websockets per pod, that&amp;rsquo;s roughly 900 MiB. I was wrong about the per-websocket cost - it&amp;rsquo;s lower than 25 MiB in practice. But I still had to set memory requests to nearly 1.5 GiB per pod to match the limit and avoid OOMKills because I knew our automation tool would hammer the pods and consume more than 1GiB of RAM&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. On 8 GB nodes with 5 pods each, that&amp;rsquo;s almost the entire node consumed.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Between select and disk</title>
+      <link>frn.sh/iops/</link>
+      <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/iops/</guid>
+      <description>&lt;p&gt;We had a Postgres incident this week. Heroku timeouts, multiple queries running for 30+ minutes, and the IOPS pinned at the provisioned limit.&lt;/p&gt;&#xA;&lt;p&gt;I knew I needed a better index, but I wanted to understand what &amp;ldquo;reading from disk&amp;rdquo; actually means first. How many layers of caching sit between a SELECT and the storage device?&lt;/p&gt;&#xA;&lt;p&gt;Three.&lt;/p&gt;&#xA;&lt;p&gt;First: shared buffers, Postgres&amp;rsquo; own cache living in the process memory. If the page is there, we need no system call - just a memory read. Ours was set to 4GB.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>108,725 forks</title>
+      <link>frn.sh/tforks/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/tforks/</guid>
+      <description>&lt;p&gt;First week at a new job. A colleague was showing me around our Grafana dashboards, just routine monitoring of the baremetal machines. One caught my eye: a machine with 32GB RAM and a top-of-the-line processor was hitting 90% CPU. A few containers running, no alerts, and nobody had reported anything.&lt;/p&gt;&#xA;&lt;p&gt;I found a process with cmd &lt;code&gt;bash startup.sh&lt;/code&gt; that had been running for 28 minutes.&lt;/p&gt;&#xA;&lt;p&gt;I straced it for a few minutes:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sigterm a D state process</title>
+      <link>frn.sh/sigterm/</link>
+      <pubDate>Sun, 08 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/sigterm/</guid>
+      <description>&lt;p&gt;Load average hit 12 on a 2 vCPU machine during a production incident.&lt;/p&gt;&#xA;&lt;p&gt;Linux load average counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;The global load average is an exponentially decaying average of&#xA;nr_running + nr_uninterruptible.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Regular sleep doesn&amp;rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>writing to disk with O_SYNC</title>
+      <link>frn.sh/til/osync/</link>
+      <pubDate>Sun, 18 May 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/til/osync/</guid>
+      <description>&lt;p&gt;write(2) doesn&amp;rsquo;t actually write to disk imediatelly. Instead, it writes to a page cache and the OS periodically handles writes to disk. Using O_SYNC, though, write(2) returns only when it fully wrote the data to a data block. Linux exposes the actual timeframe for periodic writings:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ cat /proc/sys/vm/dirty_writeback_centisecs &#xA;500&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    <item>
+      <title>I bought a DEC-style terminal keyboard</title>
+      <link>frn.sh/tty/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/tty/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;frn.sh/static/tty/dec.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;My birthday is next month, so I bought myself something I&amp;rsquo;d wanted for a while: a terminal keyboard. Last year I read this &lt;a href=&#34;https://www.linusakesson.net/programming/tty/&#34;&gt;article&lt;/a&gt; about the history of the terminal and it fascinated me. I found a DEC-style Televideo terminal keyboard from the 70s or 80s (I can&amp;rsquo;t be sure of the exact date) and took advantage of the opportunity to learn a few things.&lt;/p&gt;&#xA;&lt;p&gt;These old terminal keyboards were sold alongside a &amp;ldquo;computer terminal,&amp;rdquo; which was essentially a dumb display and input device. The real computing power lived in the mainframe, typically in another room of the office building. The terminal would send characters to the mainframe and display the results back to the user - it didn&amp;rsquo;t have its own operating system, and the notion of keycodes, scancodes, and other abstractions that we have nowadays didn&amp;rsquo;t exist in the same way.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>source and export diff</title>
+      <link>frn.sh/til/source-and-export/</link>
+      <pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/til/source-and-export/</guid>
+      <description>&lt;p&gt;Non-interactive shells don&amp;rsquo;t load initialization files, so bash -c &amp;lsquo;declare -f&amp;rsquo; doesn&amp;rsquo;t output anything. But we can source it: bash -c &amp;lsquo;source ~/.bashrc; hello&amp;rsquo;. Or even: bash -c &amp;lsquo;hello() { echo &amp;ldquo;hi&amp;rdquo;; }; declare -f&amp;rsquo;. It&amp;rsquo;s all about memory share in shell modes: source changes only affect current shell memory. export marks variables to be passed to child processes. Subtile difference that can save us a lof of debugging time.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Builtins and source</title>
+      <link>frn.sh/shell-source/</link>
+      <pubDate>Wed, 22 May 2024 00:00:00 +0000</pubDate>
+      <guid>frn.sh/shell-source/</guid>
+      <description>&lt;p&gt;Understanding how the shell manages environment variables and session state requires understanding builtins, process groups, and memory space. This post traces how these pieces connect.&lt;/p&gt;&#xA;&lt;h2 id=&#34;types-builtins&#34;&gt;Types, builtins&lt;/h2&gt;&#xA;&lt;p&gt;There is a classification in the shell called &lt;code&gt;builtin&lt;/code&gt;. Some commands are builtin:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ type cd&#xA;cd is a shell builtin&#xA;➜  ~ type echo&#xA;echo is a shell builtin&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But some are not:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ type mkdir&#xA;mkdir is /usr/bin/mkdir&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When a shell runs a command, it does one of two things: execute something available in its own memory space (a builtin), or execute something external (via &lt;code&gt;execve&lt;/code&gt;).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>frn.sh/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>frn.sh/about/</guid>
+      <description>&lt;p&gt;Hello! I&amp;rsquo;m Fernando Simões. I enjoy sharing debugging stories and other computer-kernel-database-runtime-performance explorations. Also, &lt;a href=&#34;https://structuredprocrastination.com/&#34;&gt;structured procrastination&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;You can reach me at &lt;a href=&#34;mailto:frn@frn.sh&#34;&gt;frn@frn.sh&lt;/a&gt; or &lt;a href=&#34;https://linkedin.com/in/frnsimoes&#34;&gt;the only social account I have&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

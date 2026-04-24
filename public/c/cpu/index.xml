@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cpu on </title>
+    <link>frn.sh/c/cpu/</link>
+    <description>Recent content in Cpu on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/c/cpu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>108,725 forks</title>
+      <link>frn.sh/tforks/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/tforks/</guid>
+      <description>&lt;p&gt;First week at a new job. A colleague was showing me around our Grafana dashboards, just routine monitoring of the baremetal machines. One caught my eye: a machine with 32GB RAM and a top-of-the-line processor was hitting 90% CPU. A few containers running, no alerts, and nobody had reported anything.&lt;/p&gt;&#xA;&lt;p&gt;I found a process with cmd &lt;code&gt;bash startup.sh&lt;/code&gt; that had been running for 28 minutes.&lt;/p&gt;&#xA;&lt;p&gt;I straced it for a few minutes:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sigterm a D state process</title>
+      <link>frn.sh/sigterm/</link>
+      <pubDate>Sun, 08 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>frn.sh/sigterm/</guid>
+      <description>&lt;p&gt;Load average hit 12 on a 2 vCPU machine during a production incident.&lt;/p&gt;&#xA;&lt;p&gt;Linux load average counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;The global load average is an exponentially decaying average of&#xA;nr_running + nr_uninterruptible.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Regular sleep doesn&amp;rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

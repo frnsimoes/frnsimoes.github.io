@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Database on </title>
+    <link>frn.sh/c/database/</link>
+    <description>Recent content in Database on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 08 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="frn.sh/c/database/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Between select and disk</title>
+      <link>frn.sh/iops/</link>
+      <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>frn.sh/iops/</guid>
+      <description>&lt;p&gt;We had a Postgres incident this week. Heroku timeouts, multiple queries running for 30+ minutes, and the IOPS pinned at the provisioned limit.&lt;/p&gt;&#xA;&lt;p&gt;I knew I needed a better index, but I wanted to understand what &amp;ldquo;reading from disk&amp;rdquo; actually means first. How many layers of caching sit between a SELECT and the storage device?&lt;/p&gt;&#xA;&lt;p&gt;Three.&lt;/p&gt;&#xA;&lt;p&gt;First: shared buffers, Postgres&amp;rsquo; own cache living in the process memory. If the page is there, we need no system call - just a memory read. Ours was set to 4GB.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

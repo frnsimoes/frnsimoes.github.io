@@ -1,0 +1,56 @@
++++
+date = 2025-11-22
+title = "Ok, we need to copy"
+labels = ["post"]
+subjects = ["memory"]
+
++++ 
+
+Zenduty kept paging me about a Redis container. Memory issues. The log:
+
+    WARNING Memory overcommit must be enabled! Without it, a background
+    save or replication may fail under low memory condition.
+
+I thought I understood this. Redis forks to do background saves, fork copies memory, and if there's not enough memory for the copy it fails. Set overcommit to 1 and move on.
+
+But I was wrong about the mechanism.
+
+Fork doesn't copy memory. When the kernel creates the child process, both parent and child point to the same physical pages. The child gets its own page table, but every entry points to the same physical frames as the parent. No copying yet.
+
+    Parent virtual addr -> page table -> physical page X
+    Child virtual addr  -> page table -> physical page X (same page)
+
+Both page table entries are marked read-only, even if the page was writable before the fork. This is the trap: the kernel needs to know when someone writes, so it sets up the page tables to fault on the first write.
+
+When either process writes to a shared page, the CPU faults. The write hits a read-only PTE - page table entry, the mapping between a virtual address and a physical frame - the MMU raises a page fault, and the kernel handles it in `__handle_mm_fault`:
+
+    if (vmf->flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) {
+        if (!pte_write(entry))
+            return do_wp_page(vmf);
+
+`do_wp_page` runs the checks, and eventually:
+
+    /*
+     * Ok, we need to copy. Oh, well..
+     */
+    return wp_page_copy(vmf);
+
+`wp_page_copy` allocates a new physical page, copies the old content into it, updates the faulting process's page table to point to the new page, marks it writable, and flushes the old TLB entry so the CPU picks up the new mapping. The other process still points to the original.
+
+This is copy-on-write. The kernel delays the copy until someone actually writes, and a page that's only read is never duplicated.
+
+Now back to Redis.
+
+BGSAVE forks a child that walks the entire dataset and writes it to disk. It's only reading, so no COW faults from the child side. Meanwhile the parent keeps serving requests - clients write to Redis, each write modifies a page, and each modified page triggers a COW fault. The kernel allocates a new page, copies, and updates the page table.
+
+Worst case: every page gets written during the save. 3GB of Redis data means the kernel might need another 3GB for COW copies.
+
+The kernel can't know in advance which pages will be written - it only knows the theoretical maximum. And by default, when fork asks the kernel to set up the child's address space, the kernel checks whether it could back all that memory if every page got copied. If the answer is no, fork fails.
+
+`vm.overcommit_memory=1` says: don't check, always say yes, allocate on demand.
+
+In practice Redis won't write to every page during a save, but it'll write to some. The COW copies will be a fraction of the total dataset. So overcommit works. Probably.
+
+The "Ok, we need to copy. Oh, well.." comment in memory.c is honest. COW exists to avoid wasteful copies, and overcommit exists because the kernel painted itself into a corner - it can't predict the future, so it either refuses work it could probably handle or promises resources it might not have.
+
+Redis chose "promise and hope." That's what the pager was telling me.

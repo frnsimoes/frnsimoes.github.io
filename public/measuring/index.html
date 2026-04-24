@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="frn.sh/favicon.ico" />
+<title>The cost of not measuring 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 1em 0;
+    }
+
+    main, footer {
+        max-width: 50em;
+        margin: 0 auto;
+        padding: 0 1em;
+    }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre code {
+        display: block;
+        padding: 15px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        background-color: #f2f2f2;
+
+    }
+
+    code {
+        font-size: 0.9em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1em; margin-top: 0; margin-bottom: 0.2em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.2em;
+    }
+
+    ul.blog-posts li { margin-bottom: 2px; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+</style>
+
+</head>
+    <body>
+        <header><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+<div class="header-container">
+    <nav class="breadcrumb">
+        
+            <a href="/">frn.sh</a>
+            
+                
+                    &raquo; the-cost-of-not-measuring
+                
+            
+        
+    </nav>
+</div>
+</header>
+        <main>
+<h4>The cost of not measuring</h4>
+
+<time datetime='2026-04-15'>April 15, 2026</time>
+
+<p>Probability theory has a precise model for what happens when you act without measuring: the multi-armed bandit problem.</p>
+<p>You&rsquo;re in a casino with k slot machines, each paying out at a different rate, and n rounds to play. The question is how you split those rounds between <em>finding out</em> and <em>cashing in</em>.</p>
+<p>The dumbest viable strategy is called <a href="https://en.wikipedia.org/wiki/Explore-then-commit_algorithm">Explore-Then-Commit</a>: try each machine m times, average the payouts, then go with the winner. It works, but it&rsquo;s not optimal. Measurement isn&rsquo;t free. Too few rounds <em>exploring</em>, and you commit with bad data. But if you explore too much, you burn rounds you could have spent on the best machine.</p>
+<p>Now look at the degenerate case of ETC: <strong>m = 0</strong>. You walk in, you like the blue slot machine, so you decide to pull the blue machine forever. Every round you might be on the wrong machine, but you will never know because you have no way to tell that&rsquo;s the case. Your regret grows linearly with time, which is the formal way of saying you bleed value on every single pull and die ignorant.</p>
+<p>Try it:</p>
+<div class="bandit-sim">
+<style>
+  .bandit-sim {
+    font-family: ui-monospace, 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #111;
+    margin: 2em 0;
+    border-top: 1px solid #ddd;
+    padding-top: 1.25em;
+  }
+
+  .bandit-sim * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .bandit-strat {
+    text-align: center;
+    margin-bottom: 0.75em;
+  }
+
+  .bandit-strat-label { margin-right: 0.5em; }
+
+  .bandit-strat a {
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0 0.4em;
+  }
+
+  .bandit-strat a:hover { text-decoration: underline; }
+  .bandit-strat a.active { text-decoration: underline; font-weight: 600; }
+
+  .bandit-phase {
+    font-size: 12px;
+    color: #111;
+    text-align: center;
+    margin-bottom: 1em;
+    min-height: 1.6em;
+    font-style: italic;
+  }
+
+   
+  .bandit-arms-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1em;
+  }
+
+  .bandit-arm-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 6px;
+  }
+
+  .bandit-arm-col.b-selected .b-arm-letter { font-weight: 700; }
+  .bandit-arm-col.b-selected .b-arm-bar-fill { background: #111; }
+
+  .b-arm-letter {
+    font-size: 11px;
+    margin-bottom: 5px;
+    color: #111;
+  }
+
+  .b-arm-bar-wrap {
+    width: 28px;
+    height: 64px;
+    background: #fff;
+    border: 1px solid #ccc;
+    position: relative;
+    border-radius: 1px;
+  }
+
+  .b-arm-bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #888;
+    transition: height 0.2s;
+    height: 0%;
+    border-radius: 0 0 1px 1px;
+  }
+
+  .b-arm-avg {
+    font-size: 11px;
+    color: #111;
+    margin-top: 5px;
+  }
+
+  .b-arm-bonus {
+    font-size: 10px;
+    color: #555;
+    margin-top: 1px;
+  }
+
+  .b-arm-score {
+    font-size: 10px;
+    font-weight: 600;
+    color: #111;
+    margin-top: 1px;
+  }
+
+   
+  .bandit-sim canvas {
+    width: 100%;
+    display: block;
+    margin-bottom: 0.6em;
+  }
+
+   
+  .bandit-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75em;
+  }
+
+  .bandit-controls a {
+    color: #00e;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 1em;
+  }
+
+  .bandit-controls a:hover { text-decoration: underline; }
+  .bandit-controls a.b-dim { color: #aaa; }
+
+  .b-status {
+    color: #111;
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .b-regret-num { color: #993333; }
+
+  .bandit-foot {
+    font-size: 11px;
+    color: #111;
+    font-style: italic;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding-top: 0.75em;
+  }
+</style>
+
+<div class="bandit-strat">
+  <span class="bandit-strat-label">strategy:</span>
+  <a class="active" data-bstrat="instinct" onclick="bSetStrategy('instinct')">m = 0</a>
+  <a data-bstrat="etc" onclick="bSetStrategy('etc')">ETC</a>
+</div>
+
+<div class="bandit-phase" id="bPhase">&nbsp;</div>
+
+<div class="bandit-arms-row" id="bArmsRow"></div>
+
+<canvas id="bChart" height="130"></canvas>
+
+<div class="bandit-bottom">
+  <div class="bandit-controls">
+    <a id="bPlayBtn" onclick="bTogglePlay()">&#9654; play</a>
+    <a onclick="bStepOnce()">step</a>
+    <a onclick="bReset()">reset</a>
+    <a onclick="bReset(true)" class="b-dim">clear all</a>
+  </div>
+  <div class="b-status">
+    round <span id="bRound">0</span>/100 &nbsp;&middot;&nbsp;
+    regret <span class="b-regret-num" id="bRegret">0.0</span><span id="bRegretRate"></span>
+  </div>
+</div>
+
+<div class="bandit-foot" id="bFoot">true payout rates are hidden.</div>
+
+<script>
+(function() {
+  const B_ARMS = [
+    { name: 'A', trueRate: 0.30 },
+    { name: 'B', trueRate: 0.70 },
+    { name: 'C', trueRate: 0.45 },
+    { name: 'D', trueRate: 0.55 },
+  ];
+  const B_MAX = 100;
+  const B_ETC_M = 10;
+
+  let bStrategy = 'instinct';
+  let bInstinctArm = null;
+  let bRound = 0;
+  let bTotalReward = 0;
+  let bOptimalReward = 0;
+  let bRegretVal = 0;
+  let bHistory = [];
+  let bPlaying = false;
+  let bInterval = null;
+  let bArmState = [];
+  let bCommitRound = null;
+  let bStoredRuns = {};
+
+  function bInitArms() {
+    bArmState = B_ARMS.map(a => ({
+      ...a, pulls: 0, totalReward: 0, avgReward: 0,
+      ucbScore: Infinity, bonus: Infinity, lastSelected: false,
+    }));
+    bInstinctArm = Math.floor(Math.random() * B_ARMS.length);
+    bCommitRound = null;
+  }
+
+  window.bReset = function(clearStored) {
+    bStopPlay();
+    if (bHistory.length > 0) bStoredRuns[bStrategy] = bHistory.slice();
+    if (clearStored) bStoredRuns = {};
+    bRound = 0; bTotalReward = 0; bOptimalReward = 0; bRegretVal = 0; bHistory = [];
+    bInitArms();
+    bRender();
+  };
+
+  window.bSetStrategy = function(s) {
+    if (bHistory.length > 0) bStoredRuns[bStrategy] = bHistory.slice();
+    bStrategy = s;
+    document.querySelectorAll('.bandit-strat a').forEach(a => {
+      a.classList.toggle('active', a.dataset.bstrat === s);
+    });
+    bReset();
+  };
+
+  function bPickArm() {
+    if (bStrategy === 'instinct') return bInstinctArm;
+    if (bStrategy === 'etc') {
+      const exploreTotal = B_ETC_M * B_ARMS.length;
+      if (bRound < exploreTotal) return bRound % B_ARMS.length;
+      if (bCommitRound === null) bCommitRound = bRound;
+      let best = 0;
+      for (let i = 1; i < bArmState.length; i++)
+        if (bArmState[i].avgReward > bArmState[best].avgReward) best = i;
+      return best;
+    }
+  }
+
+  function bPullArm(idx) {
+    const arm = bArmState[idx];
+    const reward = Math.random() < arm.trueRate ? 1 : 0;
+    arm.pulls++; arm.totalReward += reward; arm.avgReward = arm.totalReward / arm.pulls;
+    const bestRate = Math.max(...B_ARMS.map(a => a.trueRate));
+    bTotalReward += reward; bOptimalReward += bestRate;
+    bRegretVal = bOptimalReward - bTotalReward;
+    bHistory.push(bRegretVal);
+    bArmState.forEach((a, i) => a.lastSelected = (i === idx));
+    bRound++;
+  }
+
+  window.bStepOnce = function() {
+    if (bRound >= B_MAX) return;
+    bPullArm(bPickArm());
+    bRender();
+  };
+
+  window.bTogglePlay = function() {
+    if (bPlaying) { bStopPlay(); return; }
+    if (bRound >= B_MAX) bReset();
+    bPlaying = true;
+    document.getElementById('bPlayBtn').innerHTML = '&#9646;&#9646; pause';
+    bInterval = setInterval(() => {
+      if (bRound >= B_MAX) { bStopPlay(); return; }
+      bStepOnce();
+    }, 80);
+  };
+
+  function bStopPlay() {
+    bPlaying = false;
+    document.getElementById('bPlayBtn').innerHTML = '&#9654; play';
+    if (bInterval) clearInterval(bInterval);
+    bInterval = null;
+  }
+
+  function bRenderPhase() {
+    const el = document.getElementById('bPhase');
+    const done = bRound >= B_MAX;
+    if (bStrategy === 'instinct') {
+      const name = B_ARMS[bInstinctArm].name;
+      el.textContent = bRound === 0
+        ? 'picked arm ' + name + ' on instinct. pulling forever.'
+        : 'still pulling arm ' + name + '. no mechanism to discover a better one.';
+    } else if (bStrategy === 'etc') {
+      const exploreTotal = B_ETC_M * B_ARMS.length;
+      if (bRound < exploreTotal) {
+        el.textContent = 'exploring — ' + bRound + ' of ' + exploreTotal + ' rounds.';
+      } else {
+        let best = 0;
+        for (let i = 1; i < bArmState.length; i++)
+          if (bArmState[i].avgReward > bArmState[best].avgReward) best = i;
+        const isActualBest = B_ARMS[best].trueRate === Math.max(...B_ARMS.map(a => a.trueRate));
+        el.textContent = 'committed to arm ' + bArmState[best].name + '.'
+          + (done ? (isActualBest ? ' correct choice.' : ' wrong choice. regret is linear from here.') : '');
+      }
+    }
+  }
+
+  function bRenderArms() {
+    const maxPulls = Math.max(1, ...bArmState.map(a => a.pulls));
+    const done = bRound >= B_MAX;
+    const bestTrueIdx = B_ARMS.reduce((b, a, i) => a.trueRate > B_ARMS[b].trueRate ? i : b, 0);
+    const showBonus = bStrategy === 'ucb';
+    const container = document.getElementById('bArmsRow');
+    container.innerHTML = bArmState.map((arm, i) => {
+      const heightPct = (arm.pulls / maxPulls) * 100;
+      const avgStr = arm.pulls > 0 ? arm.avgReward.toFixed(2) : '—';
+      const bonusHtml = showBonus && arm.pulls > 0
+        ? `<div class="b-arm-bonus">+${arm.bonus.toFixed(2)}</div>
+           <div class="b-arm-score">${arm.ucbScore.toFixed(2)}</div>`
+        : '';
+      const trueHtml = done
+        ? `<div class="b-arm-avg" style="${i === bestTrueIdx ? 'color:#336633;font-weight:600' : 'color:#aaa'}">${arm.trueRate.toFixed(2)}</div>`
+        : '';
+
+      return `<div class="bandit-arm-col ${arm.lastSelected ? 'b-selected' : ''}">
+        <div class="b-arm-letter">${arm.name}</div>
+        <div class="b-arm-bar-wrap">
+          <div class="b-arm-bar-fill" style="height:${heightPct}%"></div>
+        </div>
+        <div class="b-arm-avg">${avgStr}</div>
+        ${bonusHtml}
+        ${trueHtml}
+      </div>`;
+    }).join('');
+  }
+
+  function bRender() {
+    bRenderPhase();
+    bRenderArms();
+
+    document.getElementById('bRound').textContent = bRound;
+    document.getElementById('bRegret').textContent = bRegretVal.toFixed(1);
+    document.getElementById('bRegretRate').textContent =
+      bRound > 0 ? ' (' + (bRegretVal / bRound).toFixed(2) + '/round)' : '';
+
+    if (bRound >= B_MAX) {
+      document.getElementById('bFoot').textContent = 'true payout rates revealed. B was the best arm.';
+    }
+
+    bRenderChart();
+  }
+
+  function bRenderChart() {
+    const canvas = document.getElementById('bChart');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    ctx.scale(dpr, dpr);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const pad = { top: 6, right: 20, bottom: 18, left: 28 };
+    const pw = w - pad.left - pad.right, ph = h - pad.top - pad.bottom;
+    ctx.clearRect(0, 0, w, h);
+
+    const bestRate = Math.max(...B_ARMS.map(a => a.trueRate));
+    const worstRate = Math.min(...B_ARMS.map(a => a.trueRate));
+    const maxLinear = (bestRate - worstRate) * B_MAX;
+    const yMax = Math.max(maxLinear, 10);
+
+    
+    ctx.lineWidth = 1;
+    [0, 0.5, 1].forEach(t => {
+      const y = pad.top + ph * t;
+      ctx.strokeStyle = '#e8e8e8';
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+      ctx.fillStyle = '#111'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'right';
+      ctx.fillText(Math.round(yMax * (1 - t)), pad.left - 3, y + 3);
+    });
+
+    
+    ctx.fillStyle = '#111'; ctx.font = '9px ui-monospace, monospace';
+    [[0, 'left'], [0.5, 'center'], [1, 'right']].forEach(([t, align]) => {
+      ctx.textAlign = align;
+      ctx.fillText(Math.round(B_MAX * t), pad.left + pw * t, h - 2);
+    });
+
+    
+    if (bStrategy === 'etc' && bCommitRound !== null) {
+      const cx = pad.left + (bCommitRound / B_MAX) * pw;
+      ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+      ctx.beginPath(); ctx.moveTo(cx, pad.top); ctx.lineTo(cx, pad.top + ph); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#888'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'center';
+      ctx.fillText('commit', cx, pad.top + 8);
+    }
+
+    
+    ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top + ph);
+    ctx.lineTo(pad.left + pw, pad.top + ph - (maxLinear / yMax) * ph);
+    ctx.stroke(); ctx.setLineDash([]);
+
+    
+    const bLabels = { instinct: 'm=0', etc: 'ETC' };
+    Object.entries(bStoredRuns).forEach(([strat, hist]) => {
+      if (!hist || hist.length < 2 || strat === bStrategy) return;
+      ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < hist.length; i++) {
+        const x = pad.left + (i / B_MAX) * pw;
+        const y = pad.top + ph - (hist[i] / yMax) * ph;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      const lastY = pad.top + ph - (hist[hist.length - 1] / yMax) * ph;
+      const lastX = pad.left + ((hist.length - 1) / B_MAX) * pw;
+      ctx.fillStyle = '#888'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'left';
+      ctx.fillText(bLabels[strat], lastX + 3, lastY + 3);
+    });
+
+    
+    if (bHistory.length > 1) {
+      ctx.strokeStyle = '#993333'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < bHistory.length; i++) {
+        const x = pad.left + (i / B_MAX) * pw;
+        const y = pad.top + ph - (bHistory[i] / yMax) * ph;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      if (bHistory.length >= B_MAX) {
+        const lastY = pad.top + ph - (bHistory[bHistory.length - 1] / yMax) * ph;
+        ctx.fillStyle = '#993333'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'left';
+        ctx.fillText(bLabels[bStrategy], pad.left + pw + 3, lastY + 3);
+      }
+    }
+  }
+
+  bInitArms(); bRender();
+  window.addEventListener('resize', bRenderChart);
+})();
+</script>
+</div>
+
+<p>Run it a few times. m = 0 doesn&rsquo;t always lose - sometimes instinct picks the right machine and you look like a genius over 100 rounds. Instinct can be right, sometimes, the problem is you have no way to find out when it isn&rsquo;t, and regrets accumulates invisibly. Measurement, on the other hand, doesn&rsquo;t guarantee you&rsquo;re right, but it guarantees you can be shown wrong.</p>
+<p>ETC treats measurement as a phase to get through. In the <a href="https://en.wikipedia.org/wiki/Upper_Confidence_Bound">Upper Confidence Bound</a>  algorithm, you never fully stop exploring. But you explore less as confidence grows. The difference is that the cost gets logarithmic instead of linear. And because UCB has to keep betting on uncertain arms, exploration means taking risks.</p>
+<p>Try it:</p>
+<div class="bandit-sim">
+<style>
+  .bandit-sim {
+    font-family: ui-monospace, 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #111;
+    margin: 2em 0;
+    border-top: 1px solid #ddd;
+    padding-top: 1.25em;
+  }
+
+  .bandit-sim * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .bandit-phase {
+    font-size: 12px;
+    color: #111;
+    text-align: center;
+    margin-bottom: 1em;
+    min-height: 1.6em;
+    font-style: italic;
+  }
+
+  .bandit-arms-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1em;
+  }
+
+  .bandit-arm-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 6px;
+  }
+
+  .bandit-arm-col.b-selected .b-arm-letter { font-weight: 700; }
+  .bandit-arm-col.b-selected .b-arm-bar-fill { background: #111; }
+
+  .b-arm-letter {
+    font-size: 11px;
+    margin-bottom: 5px;
+    color: #111;
+  }
+
+  .b-arm-bar-wrap {
+    width: 28px;
+    height: 64px;
+    background: #fff;
+    border: 1px solid #ccc;
+    position: relative;
+    border-radius: 1px;
+  }
+
+  .b-arm-bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #888;
+    transition: height 0.2s;
+    height: 0%;
+    border-radius: 0 0 1px 1px;
+  }
+
+  .b-arm-avg {
+    font-size: 11px;
+    color: #111;
+    margin-top: 5px;
+  }
+
+  .b-arm-bonus {
+    font-size: 10px;
+    color: #555;
+    margin-top: 1px;
+  }
+
+  .b-arm-score {
+    font-size: 10px;
+    font-weight: 600;
+    color: #111;
+    margin-top: 1px;
+  }
+
+  .bandit-sim canvas {
+    width: 100%;
+    display: block;
+    margin-bottom: 0.6em;
+  }
+
+  .bandit-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75em;
+  }
+
+  .bandit-controls a {
+    color: #00e;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 1em;
+  }
+
+  .bandit-controls a:hover { text-decoration: underline; }
+  .bandit-controls a.b-dim { color: #aaa; }
+
+  .b-status {
+    color: #111;
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .b-regret-num { color: #993333; }
+
+  .bandit-foot {
+    font-size: 11px;
+    color: #111;
+    font-style: italic;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding-top: 0.75em;
+  }
+</style>
+
+<div class="bandit-phase" id="buPhase">&nbsp;</div>
+
+<div class="bandit-arms-row" id="buArmsRow"></div>
+
+<canvas id="buChart" height="130"></canvas>
+
+<div class="bandit-bottom">
+  <div class="bandit-controls">
+    <a id="buPlayBtn" onclick="buTogglePlay()">&#9654; play</a>
+    <a onclick="buStepOnce()">step</a>
+    <a onclick="buReset()">reset</a>
+    <a onclick="buReset(true)" class="b-dim">clear all</a>
+  </div>
+  <div class="b-status">
+    round <span id="buRound">0</span>/100 &nbsp;&middot;&nbsp;
+    regret <span class="b-regret-num" id="buRegret">0.0</span><span id="buRegretRate"></span>
+  </div>
+</div>
+
+<div class="bandit-foot" id="buFoot">true payout rates are hidden.</div>
+
+<script>
+(function() {
+  const BU_ARMS = [
+    { name: 'A', trueRate: 0.30 },
+    { name: 'B', trueRate: 0.70 },
+    { name: 'C', trueRate: 0.45 },
+    { name: 'D', trueRate: 0.55 },
+  ];
+  const BU_MAX = 100;
+
+  let buRound = 0;
+  let buTotalReward = 0;
+  let buOptimalReward = 0;
+  let buRegretVal = 0;
+  let buHistory = [];
+  let buPlaying = false;
+  let buInterval = null;
+  let buArmState = [];
+  let buRegretAtSettle = null;
+  let buStoredRuns = [];
+
+  function buInitArms() {
+    buArmState = BU_ARMS.map(a => ({
+      ...a, pulls: 0, totalReward: 0, avgReward: 0,
+      ucbScore: Infinity, bonus: Infinity, lastSelected: false,
+    }));
+    buRegretAtSettle = null;
+  }
+
+  window.buReset = function(clearStored) {
+    buStopPlay();
+    if (buHistory.length > 0) buStoredRuns.push(buHistory.slice());
+    if (clearStored) buStoredRuns = [];
+    buRound = 0; buTotalReward = 0; buOptimalReward = 0; buRegretVal = 0; buHistory = [];
+    buInitArms();
+    buRender();
+  };
+
+  function buPickArm() {
+    for (let i = 0; i < buArmState.length; i++)
+      if (buArmState[i].pulls === 0) return i;
+    let best = 0, bestScore = -Infinity;
+    const total = buArmState.reduce((s, a) => s + a.pulls, 0);
+    for (let i = 0; i < buArmState.length; i++) {
+      const bonus = Math.sqrt((2 * Math.log(total)) / buArmState[i].pulls);
+      const score = buArmState[i].avgReward + bonus;
+      buArmState[i].bonus = bonus; buArmState[i].ucbScore = score;
+      if (score > bestScore) { bestScore = score; best = i; }
+    }
+    return best;
+  }
+
+  function buPullArm(idx) {
+    const arm = buArmState[idx];
+    const reward = Math.random() < arm.trueRate ? 1 : 0;
+    arm.pulls++; arm.totalReward += reward; arm.avgReward = arm.totalReward / arm.pulls;
+    const bestRate = Math.max(...BU_ARMS.map(a => a.trueRate));
+    buTotalReward += reward; buOptimalReward += bestRate;
+    buRegretVal = buOptimalReward - buTotalReward;
+    buHistory.push(buRegretVal);
+    const total = buArmState.reduce((s, a) => s + a.pulls, 0);
+    for (let i = 0; i < buArmState.length; i++) {
+      if (buArmState[i].pulls > 0) {
+        buArmState[i].bonus = Math.sqrt((2 * Math.log(total)) / buArmState[i].pulls);
+        buArmState[i].ucbScore = buArmState[i].avgReward + buArmState[i].bonus;
+      }
+    }
+    buArmState.forEach((a, i) => a.lastSelected = (i === idx));
+    buRound++;
+  }
+
+  window.buStepOnce = function() {
+    if (buRound >= BU_MAX) return;
+    buPullArm(buPickArm());
+    buRender();
+  };
+
+  window.buTogglePlay = function() {
+    if (buPlaying) { buStopPlay(); return; }
+    if (buRound >= BU_MAX) buReset();
+    buPlaying = true;
+    document.getElementById('buPlayBtn').innerHTML = '&#9646;&#9646; pause';
+    buInterval = setInterval(() => {
+      if (buRound >= BU_MAX) { buStopPlay(); return; }
+      buStepOnce();
+    }, 80);
+  };
+
+  function buStopPlay() {
+    buPlaying = false;
+    document.getElementById('buPlayBtn').innerHTML = '&#9654; play';
+    if (buInterval) clearInterval(buInterval);
+    buInterval = null;
+  }
+
+  function buRenderPhase() {
+    const el = document.getElementById('buPhase');
+
+    if (buRound === 0) {
+      el.textContent = 'every round: pick the arm with highest avg + bonus.';
+      return;
+    }
+
+    const sel = buArmState.find(a => a.lastSelected);
+    if (!sel) return;
+
+    const allPulled = buArmState.every(a => a.pulls > 0);
+
+    if (!allPulled) {
+      el.textContent = 'arm ' + sel.name + ': first pass - each arm needs one pull before scoring. exploration cost so far: ' + buRegretVal.toFixed(1) + '.';
+      return;
+    }
+
+    if (buRegretAtSettle === null) buRegretAtSettle = buRegretVal;
+
+    const topAvgIdx = buArmState.reduce((best, _, i) =>
+      buArmState[i].avgReward > buArmState[best].avgReward ? i : best, 0);
+    const selIdx = buArmState.indexOf(sel);
+    const isRisk = selIdx !== topAvgIdx;
+
+    if (isRisk) {
+      el.textContent = 'arm ' + sel.name + ': avg ' + sel.avgReward.toFixed(2)
+        + ' lower than best, but bonus ' + sel.bonus.toFixed(2) + ' wins - taking a risk.';
+    } else {
+      el.textContent = 'arm ' + sel.name + ': best known avg (' + sel.avgReward.toFixed(2)
+        + ') + bonus. exploiting.';
+    }
+  }
+
+  function buRenderArms() {
+    const maxPulls = Math.max(1, ...buArmState.map(a => a.pulls));
+    const done = buRound >= BU_MAX;
+    const bestTrueIdx = BU_ARMS.reduce((b, a, i) => a.trueRate > BU_ARMS[b].trueRate ? i : b, 0);
+    const container = document.getElementById('buArmsRow');
+    container.innerHTML = buArmState.map((arm, i) => {
+      const heightPct = (arm.pulls / maxPulls) * 100;
+      const avgStr = arm.pulls > 0 ? arm.avgReward.toFixed(2) : '-';
+      const bonusHtml = arm.pulls > 0
+        ? `<div class="b-arm-bonus">+${arm.bonus.toFixed(2)}</div>
+           <div class="b-arm-score">${arm.ucbScore.toFixed(2)}</div>`
+        : '';
+      const trueHtml = done
+        ? `<div class="b-arm-avg" style="${i === bestTrueIdx ? 'color:#336633;font-weight:600' : 'color:#aaa'}">${arm.trueRate.toFixed(2)}</div>`
+        : '';
+
+      return `<div class="bandit-arm-col ${arm.lastSelected ? 'b-selected' : ''}">
+        <div class="b-arm-letter">${arm.name}</div>
+        <div class="b-arm-bar-wrap">
+          <div class="b-arm-bar-fill" style="height:${heightPct}%"></div>
+        </div>
+        <div class="b-arm-avg">${avgStr}</div>
+        ${bonusHtml}
+        ${trueHtml}
+      </div>`;
+    }).join('');
+  }
+
+  function buRender() {
+    buRenderPhase();
+    buRenderArms();
+
+    document.getElementById('buRound').textContent = buRound;
+    document.getElementById('buRegret').textContent = buRegretVal.toFixed(1);
+    document.getElementById('buRegretRate').textContent =
+      buRound > 0 ? ' (' + (buRegretVal / buRound).toFixed(2) + '/round)' : '';
+
+    if (buRound >= BU_MAX) {
+      document.getElementById('buFoot').textContent = 'true payout rates revealed. B was the best arm.';
+    }
+
+    buRenderChart();
+  }
+
+  function buRenderChart() {
+    const canvas = document.getElementById('buChart');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    ctx.scale(dpr, dpr);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const pad = { top: 6, right: 20, bottom: 18, left: 28 };
+    const pw = w - pad.left - pad.right, ph = h - pad.top - pad.bottom;
+    ctx.clearRect(0, 0, w, h);
+
+    const bestRate = Math.max(...BU_ARMS.map(a => a.trueRate));
+    const worstRate = Math.min(...BU_ARMS.map(a => a.trueRate));
+    const maxLinear = (bestRate - worstRate) * BU_MAX;
+    const yMax = Math.max(maxLinear, 10);
+
+    [0, 0.5, 1].forEach(t => {
+      const y = pad.top + ph * t;
+      ctx.strokeStyle = '#e8e8e8'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+      ctx.fillStyle = '#111'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'right';
+      ctx.fillText(Math.round(yMax * (1 - t)), pad.left - 3, y + 3);
+    });
+
+    ctx.fillStyle = '#111'; ctx.font = '9px ui-monospace, monospace';
+    [[0, 'left'], [0.5, 'center'], [1, 'right']].forEach(([t, align]) => {
+      ctx.textAlign = align;
+      ctx.fillText(Math.round(BU_MAX * t), pad.left + pw * t, h - 2);
+    });
+
+    
+    ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top + ph);
+    ctx.lineTo(pad.left + pw, pad.top + ph - (maxLinear / yMax) * ph);
+    ctx.stroke(); ctx.setLineDash([]);
+
+    
+    buStoredRuns.forEach(hist => {
+      if (!hist || hist.length < 2) return;
+      ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < hist.length; i++) {
+        const x = pad.left + (i / BU_MAX) * pw;
+        const y = pad.top + ph - (hist[i] / yMax) * ph;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    });
+
+    
+    if (buHistory.length > 1) {
+      ctx.strokeStyle = '#993333'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < buHistory.length; i++) {
+        const x = pad.left + (i / BU_MAX) * pw;
+        const y = pad.top + ph - (buHistory[i] / yMax) * ph;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      if (buHistory.length >= BU_MAX) {
+        const lastY = pad.top + ph - (buHistory[buHistory.length - 1] / yMax) * ph;
+        ctx.fillStyle = '#993333'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'left';
+        ctx.fillText('UCB', pad.left + pw + 3, lastY + 3);
+      }
+    }
+  }
+
+  buInitArms(); buRender();
+  window.addEventListener('resize', buRenderChart);
+})();
+</script>
+</div>
+
+<p>UCB works because there&rsquo;s a <em>bonus</em> for exploring the less known options. The bonus is knowledge.</p>
+<p>A team that measures can still be wrong. But at least in this case they are wrong about something real.</p>
+
+</main>
+        <footer><hr>
+<a href="/frn.sh/about/">about</a> · <a href="/frn.sh/index.xml">rss</a>
+</footer>
+
+          
+
+</body>
+</html>

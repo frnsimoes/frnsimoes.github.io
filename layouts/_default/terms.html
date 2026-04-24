@@ -1,0 +1,16 @@
+{{ define "main" }}
+{{ range .Data.Terms.Alphabetical }}
+<h2><a href="{{ .Page.Permalink }}">{{ .Page.Title | lower }}</a></h2>
+{{ with .Page.Description }}<small>{{ . }}</small>{{ end }}
+<ul class="blog-posts">
+    {{ range .Pages }}
+    <li>
+        <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+</ul>
+{{ else }}
+<p>No subjects yet</p>
+{{ end }}
+{{ end }}
