@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>108,725 forks Fernando Simões
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 2rem 0;
+    }
+
+    main {
+        max-width: 50em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer { display: none; }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre {
+        background-color: #f6f6f6;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-size: 0.7em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1.2em; margin-top: 1.6em; margin-bottom: 0.3em; }
+
+    main h2 + ul, main h2 + p { margin-top: 0.3em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        margin-top: 0.3em;
+        list-style: disc;
+        padding-left: 1em;
+    }
+
+    ul.blog-posts li { margin-bottom: 0.3rem; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+
+     
+    .home-wrap {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+        margin-right: -14em;
+    }
+
+    .home-main { flex: 1; min-width: 0; }
+
+    .collage-right {
+        flex: 0 0 210px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .collage-right img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+     
+    @media (max-width: 1280px) {
+        .home-wrap { margin-right: 0; display: block; }
+        .collage-right { display: none; }
+    }
+
+    .bio-columns {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .bio-col {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    h3 { margin-top: 0em; }
+
+    .see-all { margin-top: 1.8em; }
+    .see-all a { font-weight: 600; text-decoration: none; }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; 108,725 forks
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>108,725 forks</h4>
+
+<time datetime='2025-12-11'>December 11, 2025</time>
+
+<p>First week at a new job. A colleague was showing me around our Grafana dashboards, just routine monitoring of the baremetal machines. One caught my eye: a machine with 32GB RAM and a top-of-the-line processor was hitting 90% CPU. A few containers running, no alerts, and nobody had reported anything.</p>
+<p>I ssh&rsquo;ed and found a process with cmd <code>bash startup.sh</code> that had been running for 28 minutes.</p>
+<p>I straced it for a few minutes:</p>
+<pre><code>% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 75.36   52.698676         390    134819     26094 wait4
+ 12.27    8.583416          78    108725           fork
+  7.42    5.190671           5    926332           rt_sigprocmask
+  2.69    1.881557           5    330523    165262 close
+  1.17    0.817651           9     82631           pipe
+  0.64    0.449359           5     78280           rt_sigaction
+  0.24    0.164395           6     26094           rt_sigreturn
+  0.21    0.147095           5     26094     26094 ioctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   69.932820          40   1713498    217450 total
+</code></pre>
+<p>108,725 forks and 134,819 wait4 calls. The delta is 26,094 - exactly the number of wait4 errors. Also the same exact number for ioctl and rt_sigreturn! The script was forking children and waiting on processes it didn&rsquo;t create.</p>
+<p>I looked for the file:</p>
+<pre><code>find . -type f -name &quot;startup.sh&quot;
+</code></pre>
+<p>Nothing. The process was deleted after execution. But the kernel keeps the inode alive while the process holds it open, and bash opens the script on fd 255.</p>
+<pre><code>cat /proc/3668040/fd/255
+</code></pre>
+<p>It was a cryptominer wrapper. It kept a fake <code>redisserver</code> running, and if it detected an interactive session it tried to kill the miner to hide itself. It killed wget, curl, and import so nobody could easily download tools. It killed processes above 90% CPU and known malware names - kinsing, c3pool - so it wouldn&rsquo;t have to share the machine.</p>
+<p>The strace told the whole story before I ever read the script. 108k forks to keep its own children alive, and 26k extra wait4s to reap competing processes it was killing. The numbers didn&rsquo;t add up because the script was actually hunting.</p>
+<p>I checked for Postgres logs, but /var/log/postgresql was deleted.</p>
+<p>We burned the machine.</p>
+
+</main>
+        <footer>
+</footer>
+
+          
+
+</body>
+</html>

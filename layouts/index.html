@@ -1,0 +1,63 @@
+{{ define "main" }}
+
+<div class="home-wrap">
+<div class="home-main">
+
+<section class="intro">
+    <h1> Fernando Simões </h1>
+    <p>Welcome to my personal website! This is where I share debugging stories and other explorations into kernels, databases, runtimes, and performance. Feel free to reach me at frn@frn.sh.</p>
+    <!-- {{.Content}} -->
+
+    <div class="bio-columns">
+        <div class="bio-col">
+            <h3>Things I'm doing</h3>
+            <ul class="blog-posts">
+                <li> Working on performance, infrastructure, reliability. I enjoy measuring things</li>
+                <li> Reading a bunch of computer science <a href=https://github.com/frnsimoes/cs-papers>papers</a> </li>
+                <li> Linux kernel and postgres internals take up most of my time these days </li>
+                <li> Moving to Portugal in December 2026 </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<h3>Posts</h3>
+<p>Most of these are me trying to understand something that caught my interest, or to reproduce a production incident in a more controlled environment.</p>
+<ul class="blog-posts">
+    {{ range (where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "post")).ByDate.Reverse }}
+    <li>
+        <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+</ul>
+
+<!-- <h3>Notes</h3> -->
+<!-- <p>Notes on a method, on how I think, or whatever else.</p> -->
+<!-- <ul class="blog-posts"> -->
+<!--     {{ range (where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "note")).ByDate.Reverse }} -->
+<!--     <li> -->
+<!--         <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time> -->
+<!--         <a href="{{ .RelPermalink }}">{{ .Title }}</a> -->
+<!--     </li> -->
+<!--     {{ end }} -->
+<!-- </ul> -->
+
+</div>
+
+{{/* Right-side image strip: every image in static/collage/ stacked vertically. */}}
+{{ $exts := slice ".jpg" ".jpeg" ".png" ".gif" ".webp" }}
+{{ if os.FileExists "static/collage" }}
+<aside class="collage-right" aria-hidden="true">
+    {{ range $f := os.ReadDir "static/collage" }}
+        {{ if and (not $f.IsDir) (in $exts (lower (path.Ext $f.Name))) }}
+    <img src="/collage/{{ $f.Name }}" alt="" loading="lazy">
+        {{ end }}
+    {{ end }}
+</aside>
+{{ end }}
+
+</div>
+
+{{ end }}

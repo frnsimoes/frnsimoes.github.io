@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>Tracing an 8kb Postgres read Fernando Simões
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 2rem 0;
+    }
+
+    main {
+        max-width: 50em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer { display: none; }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre {
+        background-color: #f6f6f6;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-size: 0.7em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1.2em; margin-top: 1.6em; margin-bottom: 0.3em; }
+
+    main h2 + ul, main h2 + p { margin-top: 0.3em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        margin-top: 0.3em;
+        list-style: disc;
+        padding-left: 1em;
+    }
+
+    ul.blog-posts li { margin-bottom: 0.3rem; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+
+     
+    .home-wrap {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+        margin-right: -14em;
+    }
+
+    .home-main { flex: 1; min-width: 0; }
+
+    .collage-right {
+        flex: 0 0 210px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .collage-right img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+     
+    @media (max-width: 1280px) {
+        .home-wrap { margin-right: 0; display: block; }
+        .collage-right { display: none; }
+    }
+
+    .bio-columns {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .bio-col {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    h3 { margin-top: 0em; }
+
+    .see-all { margin-top: 1.8em; }
+    .see-all a { font-weight: 600; text-decoration: none; }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; Tracing an 8kb Postgres read
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>Tracing an 8kb Postgres read</h4>
+
+<time datetime='2026-06-12'>June 12, 2026</time>
+
+<p>A while ago I had an IOPS production incident, which I wrote about <a href="/iops">here</a>. What I want to do in this post, though, is measure what happened. To do this, I need to isolate the problem and place it in a context I fully control. You don&rsquo;t need to read the incident report text to follow this one. Ok. Here is the plan: run the same query three times and measure each run: first with the pages in shared buffers, then with the pages only in the OS page cache, and finally reading everything from disk. After that, I compare the numbers with two disks hidden behind cloud abstractions: the EBS volume from the incident, and a Hetzner server I benchmarked a while ago.</p>
+<p>The setup is pretty simple: a debian box I keep at home. I&rsquo;m running Postgres 17 in Docker, <code>shared_buffers = 16MB</code>, <code>track_io_timing = on</code>. The storage is a local NVMe SSD, ext4. I built a table deliberately bigger than the cache:</p>
+<pre tabindex="0"><code>postgres=# SELECT pg_size_pretty(pg_relation_size(&#39;leads&#39;)), pg_relation_size(&#39;leads&#39;)/8192;
+ pg_size_pretty | ?column?
+----------------+----------
+ 115 MB         |    14706
+</code></pre><p>The point of creating a table way bigger than shared_buffers is to guarantee that a full read cannot fit in Postgres&rsquo;s own cache.</p>
+<p>The table is modeled on the one that broke in production: there&rsquo;s an <code>id</code>, an <code>account_id</code>, and a fat jsonb payload. There is only a plain B-tree index on <code>account_id</code>. The two worst queries in the incident did the same thing: filter by <code>account_id</code> with the index, then apply a second filter on a non-indexed column after fetching the rows. This is what I&rsquo;m reproducing here. For account 42:</p>
+<pre tabindex="0"><code>postgres=# SELECT count(*), count(DISTINCT (ctid::text::point)[0]) AS heap_pages
+postgres-#   FROM leads WHERE account_id = 42;
+ count | heap_pages
+-------+------------
+   500 |        500
+</code></pre><p>Ok, so we have 500 rows scattered accross 500 distinct heap pages. To read account 42, Postgres reads the index to learn the row locations, then fetches 500 separate pages from the heap. The query I run adds a filter on <code>payload</code>, which the index cannot evaluate, so all 500 rows are fetched and then discarded.</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on leads
+  Index Cond: (account_id = 42)
+  Filter: (payload ~~ &#39;%zzzz%&#39;::text)
+  Rows Removed by Filter: 500
+</code></pre><p>Yes, we got 4 MB of I/O for absolutely nothing (<code>rows removed by filter</code>). This is the setup, now the plan is to run the same query in three cache states and read the <code>Buffers</code> line each time and see what happens.</p>
+<p><strong>Shared Buffers</strong></p>
+<p>Let&rsquo;s run the query a second time, while the pages are still warm:</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on leads (actual time=0.534..0.534 rows=0)
+  Buffers: shared hit=504
+Execution Time: 0.569 ms
+</code></pre><p><code>shared hit=504</code> - every page was already in the process memory, so there was no system call at all. <code>pg_buffercache</code> confirms they are resident:</p>
+<pre tabindex="0"><code>postgres=# SELECT c.relname, count(*) FROM pg_buffercache b
+postgres-#   JOIN pg_class c ON b.relfilenode = pg_relation_filenode(c.oid)
+postgres-#   WHERE c.relname IN (&#39;leads&#39;,&#39;idx_account_id&#39;) GROUP BY 1;
+    relname     | count
+----------------+-------
+ leads          |   500
+ idx_account_id |     5
+</code></pre><p>0.57 ms. Good.</p>
+<p><strong>OS page cache</strong></p>
+<p>Now let&rsquo;s drop the pages from shared buffers - restarting wipes it because shared buffers is process memory. This will not wipe the OS page cache, for obvious reasons. With cold shared buffers and warm OS cache:</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on leads (actual time=2.292..2.293 rows=0)
+  Buffers: shared read=504
+  I/O Timings: shared read=2.024
+Execution Time: 2.316 ms
+</code></pre><p>Instead of the <code>shared hit</code> we got in the first try, we now get a <code>shared read</code>, meaning we had to issue a <code>read(2)</code> syscall. Postgres doesn&rsquo;t know the behavior of the syscall. From Postgres&rsquo;s point of view, these were 504 misses: 504 <code>read(2)</code> calls. But look at the timing - 2.024 ms for all 504 reads, about 4 microseconds per read.</p>
+<p>We can assume that no disk was touched because <a href="https://gist.github.com/jboner/2841832">latency numbers are well known</a>. But we can also compare the numbers with the next run&rsquo;s numbers.</p>
+<p><strong>Disk</strong></p>
+<p>Now we drop the OS page cache as well, so the read has nowhere to go but the SSD - of course, it could go to the SSD DRAM, but I can confirm my local model doesn&rsquo;t have a DRAM. Two steps: restart Postgres to clear its own memory, then <code>echo 3 &gt; /proc/sys/vm/drop_caches</code> to clear the OS page cache, and run the same query again.</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on leads (actual time=39.991..39.991 rows=0)
+  Buffers: shared read=504
+  I/O Timings: shared read=39.502
+Execution Time: 40.276 ms
+</code></pre><p>39.5 ms - about 78 microseconds per read, 20 times slower than the page cache.</p>
+<p>Let&rsquo;s compare that number against the bare metal device with <code>fio</code>, random 8kb reads with <code>--direct=1</code> to bypass the page cache.</p>
+<pre tabindex="0"><code>frn@debian:~$ fio --name=randread --filename=/home/frn/.fio_test --size=1G \
+              --bs=8k --rw=randread --direct=1 --ioengine=psync --iodepth=1 \
+              --runtime=8 --time_based
+...
+read: IOPS=13.2k
+clat (usec): min=61, avg=75.70, 99.00th=[84]
+</code></pre><p>76 microseconds per read, Postgres measured 78, so they practically agree. This confirms the cost is the SSD itself.</p>
+<p>In addition, I also experimented reading the same 500 cold pages in sorted order instead of index order. The cost was 2.8ms. This surprised me a lot, but <a href="https://kernel-internals.org/io/readahead/">the kernel sees the sequential pattern and loads the next pages into the page cache</a> before Postgres asks for them. If pages come in random order, the kernel cannot guess what comes next, so readahead does nothing and every read waits for the NVMe.</p>
+<p>And there is still one layer below this. In production the disk was not a local SSD, it was AWS EBS, network-attached. This was the plan that pinned our IOPS:</p>
+<pre tabindex="0"><code>Index Scan using idx_account_id on leads
+  Filter: ((some_column IS NULL) AND (jsonb_condition))
+  Rows Removed by Filter: 39811
+  Buffers: shared hit=10871 read=27841 dirtied=3
+  I/O Timings: shared/local read=13838.335
+</code></pre><p>There were 27,841 reads the OS could not serve from cache. 13,838 ms of I/O time, about 497 microseconds per read. Lined up, the cost of reading that same 8 KB page is a clean descent. A page in the shared buffers costs a memory read. From the kernel&rsquo;s page cache, the cost climbs to about 4 microseconds. Reads cold from the local NVMe, about 78 microseconds. And in production, fetched from EBS across the network, about 497. Every step down is roughly an order of magnitude: EBS is about 6x slower than the local SSD and 124x slower than the page cache (<a href="https://news.ycombinator.com/item?id=40456780">at least in the example</a>).</p>
+<hr>
+<h2 id="another-cloud-disk">Another cloud disk</h2>
+<p>Finally, I want to confirm if this is an EBS problem or a network-attached problem. While writing this post I remembered that a couple of months before, I was choosing a server for a Postgres cluster - a Hetzner CCX33: 8 vCPUs, 32 GB of RAM, 240 GB of NVMe - and I had run <code>fio</code> on it. The numbers are worth putting next to the EBS ones.</p>
+<p>Random 8 KB reads first, with more pressure than the home test (<code>--iodepth=32 --numjobs=4</code>, still <code>--direct=1</code>):</p>
+<pre tabindex="0"><code>read: IOPS=325k
+clat: p1=668ns, p50=123us, p99=1.3ms
+</code></pre><p>325,000 IOPS and a p50 of 123 microseconds - on paper, faster than my NVMe at home. But the p1 is 668 nanoseconds, and the NVMe at home never answered below 61 microseconds: that is the time the flash itself takes. Sub-microsecond is RAM. <code>--direct=1</code> skips the VM&rsquo;s page cache, but on a cloud server there is a hypervisor between the VM and the storage, and the hypervisor has a cache of its own. Part of these reads never left the host&rsquo;s RAM, so this test measures caches as much as it measures the disk - the same lesson as the Postgres layers, one level down.</p>
+<p>Writes with fsync don&rsquo;t have this problem, because fsync only returns when the data is persisted:</p>
+<pre tabindex="0"><code>root@ubuntu-32gb-hil-1:~$ fio --name=randwrite-fsync --rw=randwrite --bs=8k --fsync=1 \
+              --iodepth=32 --numjobs=4 --runtime=120 --ioengine=libaio \
+              --direct=1 --group_reporting --time_based --ramp_time=10 \
+              --size=20G --filename=/mnt/bench/test.bin
+...
+write: IOPS=10.2k
+clat: p50=12.1ms, p99=16.2ms
+</code></pre><p>12 milliseconds for an 8 KB write to become durable. A write is not a read, so the comparison with the numbers above is loose, but the point is the scale. The NVMe at home answers in tens of microseconds. The EBS read took about 500. A durable write here takes 12,000. Whatever runs under that VM, it behaves like the EBS volume, not like my local NVMe.</p>
+
+</main>
+        <footer>
+</footer>
+
+          
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>Breaking what a program is Fernando Simões
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 2rem 0;
+    }
+
+    main {
+        max-width: 50em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer { display: none; }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre {
+        background-color: #f6f6f6;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-size: 0.7em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1.2em; margin-top: 1.6em; margin-bottom: 0.3em; }
+
+    main h2 + ul, main h2 + p { margin-top: 0.3em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        margin-top: 0.3em;
+        list-style: disc;
+        padding-left: 1em;
+    }
+
+    ul.blog-posts li { margin-bottom: 0.3rem; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+
+     
+    .home-wrap {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+        margin-right: -14em;
+    }
+
+    .home-main { flex: 1; min-width: 0; }
+
+    .collage-right {
+        flex: 0 0 210px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .collage-right img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+     
+    @media (max-width: 1280px) {
+        .home-wrap { margin-right: 0; display: block; }
+        .collage-right { display: none; }
+    }
+
+    .bio-columns {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .bio-col {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    h3 { margin-top: 0em; }
+
+    .see-all { margin-top: 1.8em; }
+    .see-all a { font-weight: 600; text-decoration: none; }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; Breaking what a program is
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>Breaking what a program is</h4>
+
+<time datetime='2025-10-30'>October 30, 2025</time>
+
+<p>Where does the kernel draw the line between &ldquo;program&rdquo; and &ldquo;data&rdquo;? Most of this post is me trying to break what a program is, from the kernel&rsquo;s point of view - taking real programs apart, and handing the kernel things it should not accept - until the rule it is enforcing becomes clear.</p>
+<p>If you wanna follow along, you should probably take a look at these: the ELF format is laid out in <code>man 5 elf</code>, and the kernel side - who is allowed to run what - lives in <code>fs/exec.c</code> and the <code>fs/binfmt_*.c</code> files in the kernel source.</p>
+<p>Take <code>ls</code>, for example: 155kb of machine code. The kernel reads almost none of that to decide <em>whether</em> to run it - only the ELF header at the very front. What happens when we copy <code>ls</code> and start removing fields from the header?</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls myls
+frn@debian:~$ readelf -h myls | grep -E &#39;Entry point|Number of program headers&#39;
+  Entry point address:               0x6760
+  Number of program headers:         14
+</code></pre><p>The program headers tell the kernel what to map into memory; the entry point tells it where to start once it has. Their offsets in the file: the header is a fixed-layout struct, and <code>man 5 elf</code> gives the order of its fields. The important thing for this experiment is that the program-header count is at byte 56.</p>
+<p>Let&rsquo;s start with the program headers. Our first task is to open the copy, seek to 56, write two zero bytes over the count, then ask <code>readelf</code> whether it really went to zero:</p>
+<pre tabindex="0"><code>frn@debian:~$ python3 -c &#39;f = open(&#34;myls&#34;, &#34;r+b&#34;); f.seek(56); f.write(b&#34;\x00\x00&#34;)&#39;
+frn@debian:~$ readelf -h myls | grep &#39;Number of program headers&#39;
+  Number of program headers:         0
+</code></pre><p>All 155kb of <code>ls</code> is still sitting in the file. But:</p>
+<pre tabindex="0"><code>frn@debian:~$ ./myls
+bash: ./myls: cannot execute binary file: Exec format error
+</code></pre><p><code>ENOEXEC</code>. With no program headers the kernel cannot tell which bytes are code or where they go in memory, so there is nothing for it to load. Now let&rsquo;s put <code>ls</code> back and break the other field instead - the entry point, an eight-byte field 24 bytes into the file:</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls myls
+frn@debian:~$ python3 -c &#39;f = open(&#34;myls&#34;, &#34;r+b&#34;); f.seek(24); f.write(b&#34;\x00&#34; * 8)&#39;
+frn@debian:~$ readelf -h myls | grep &#39;Entry point&#39;
+  Entry point address:               0x0
+</code></pre><p>This time the program headers are intact, so the kernel loads the file happily - and then jumps to the entry point to start running, which is now zero, where there is no code:</p>
+<pre tabindex="0"><code>frn@debian:~$ ./myls
+Segmentation fault
+</code></pre><p>It loaded and then died. So the rule looks like this: a program is something the kernel can map into memory and start executing - a segment to load and an address to jump to. And these are only two fields out of 155kb.</p>
+<p>Except the entry point is not quite the whole truth. <code>ls</code> is dynamically linked, and when you run a dynamically-linked program the kernel does not jump to its entry point at all. It jumps to the <em>interpreter</em> - the dynamic linker - and lets it load the libraries and eventually call your code. The interpreter is just another field in the file, a path string, and <code>readelf</code> will point it out:</p>
+<pre tabindex="0"><code>frn@debian:~$ readelf -p .interp /bin/ls
+  [     0]  /lib64/ld-linux-x86-64.so.2
+</code></pre><p>So what if we point it somewhere else?</p>
+<pre tabindex="0"><code>frn@debian:~$ cat fakeld.s
+.global _start
+_start:
+    mov $1, %rax          # write(
+    mov $2, %rdi          #   stderr,
+    lea msg(%rip), %rsi   #   msg,
+    mov $msglen, %rdx     #   len)
+    syscall
+    mov $60, %rax         # exit(
+    mov $3, %rdi          #   3)
+    syscall
+msg: .ascii &#34;[fakeld] all your base are belong to us\n&#34;
+    msglen = . - msg
+frn@debian:~$ gcc -nostdlib -no-pie -o /tmp/fakeld fakeld.s
+</code></pre><p>The interpreter path sits at a fixed offset in the file - <code>readelf -l</code> lists it as the <code>INTERP</code> segment, at <code>0x394</code> - so I can overwrite it in place and run the result:</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls lshj
+frn@debian:~$ python3 -c &#39;f = open(&#34;lshj&#34;, &#34;r+b&#34;); f.seek(0x394); f.write(b&#34;/tmp/fakeld\x00&#34;)&#39;
+frn@debian:~$ readelf -p .interp lshj
+  [     0]  /tmp/fakeld
+frn@debian:~$ ./lshj
+[fakeld] all your base are belong to us
+</code></pre><p><code>ls</code> never ran. I did not touch one byte of its code - all 155kb is still there - but the kernel went to the interpreter first, and the interpreter was mine. What a &ldquo;program&rdquo; does is not always something inside the program.</p>
+<p>Scripts make that idea very clear. A shell script is only text. It is &ldquo;executable&rdquo; only because its first line names an interpreter and the kernel hands the file to it. Which means the interprter does not have to be a shell. So let&rsquo;s point it at <code>cat</code>:</p>
+<pre tabindex="0"><code>frn@debian:~$ printf &#39;#!/bin/cat\nhello, I am data and code at once\n&#39; &gt; s
+frn@debian:~$ chmod +x s &amp;&amp; ./s
+#!/bin/cat
+hello, I am data and code at once
+</code></pre><p>The &ldquo;program&rdquo; prints itself. If we point the same file at <code>/bin/true</code> instead, it does nothing at all - <code>true</code> ignores its argument and exits - so what a script <em>does</em> is decided entirely by whatever line one points to. but let&rsquo;s push harder, with a script whose interpreter is another script:</p>
+<pre tabindex="0"><code>frn@debian:~$ printf &#39;#!/bin/cat\n&#39; &gt; inner ; chmod +x inner
+frn@debian:~$ printf &#39;#!/tmp/sh/inner\npayload\n&#39; &gt; outer ; chmod +x outer
+frn@debian:~$ ./outer
+#!/bin/cat
+#!/tmp/sh/inner
+payload
+</code></pre><p>The kernel followed the chain - <code>outer</code> to <code>inner</code> to <code>cat</code> - and <code>cat</code> printed both files. So what if we point a script at itself?</p>
+<pre tabindex="0"><code>frn@debian:~$ printf &#39;#!/tmp/sh/selfie\n&#39; &gt; selfie ; chmod +x selfie
+frn@debian:~$ ./selfie
+bash: ./selfie: /tmp/sh/selfie: bad interpreter: Too many levels of symbolic links
+</code></pre><p>It followed the chain until it noticed the loop, then gave up with the error it normally uses for symlink loops - though there is not a symlink anywhere here, just a file pointing at itslf. There is a counter, and we hit it. (There is a size limit too: if you make the interpreter line a few hundred characters, the kernel cuts it off at 255. The rule is enforced through a fixed buffer.)</p>
+<p>Every wall we hit so far looked like a fixed rule. But where does the list of rules live? It lives in the kernel - in a function that tries the file against each format it knows: <code>search_binary_handler</code>. <code>binfmt_misc</code> lets you add to it. Here is a file in a format nothing recognizes; it starts with the bytes <code>ZeroWing</code>:</p>
+<pre tabindex="0"><code>frn@debian:~$ printf &#39;ZeroWing\nthe kernel runs me now\n&#39; &gt; note.zerowing
+frn@debian:~$ chmod +x note.zerowing
+frn@debian:~$ strace -e execve ./note.zerowing
+execve(&#34;./note.zerowing&#34;, [&#34;./note.zerowing&#34;], 0x7ffeb60752c0 /* 20 vars */) = -1 ENOEXEC (Exec format error)
+</code></pre><p><code>ENOEXEC</code> again - the kernel has no handler that recognizes this file. Now let&rsquo;s teach it one: any file whose magic is <code>ZeroWing</code> should run through <code>cat</code>.</p>
+<pre tabindex="0"><code>frn@debian:~$ echo &#39;:zerowing:M::ZeroWing::/bin/cat:&#39; | sudo tee /proc/sys/fs/binfmt_misc/register
+frn@debian:~$ cat /proc/sys/fs/binfmt_misc/zerowing
+enabled
+interpreter /bin/cat
+flags:
+offset 0
+magic 5a65726f57696e67
+</code></pre><p>And the same file, not one byte changed, is now a program:</p>
+<pre tabindex="0"><code>frn@debian:~$ strace -e execve ./note.zerowing
+execve(&#34;./note.zerowing&#34;, [&#34;./note.zerowing&#34;], 0x7ffda9111b70 /* 20 vars */) = 0
+frn@debian:~$ ./note.zerowing
+ZeroWing
+the kernel runs me now
+</code></pre><p>Wrapping all of this: a 155kb binary with its program headers or its entry point zeroed: not a program. A binary whose interpreter was swapped: runs, but runs the swapped interpreter. A text file that does whatever its first line says, and dies if that line points back at itself. A <code>ZeroWing</code> file that was garbage until I registered a handler, and then wasn&rsquo;t.</p>
+<p>So a program is not a kind of file. It is a file the kernel has agreed to run - and the agreement has terms. If we break any term, the file stops being a program, whatever is inside it. The line between data and program is in the contract - and the contract is the kernel&rsquo;s to enforce and, if you ask the right way, yours to modify.</p>
+<p>One last break. Take a file that satisfies every term we listed: a valid ELF, program headers intact, a real entry point. By the contract, it is a program. Copy <code>ls</code> once more and change a single field - <code>e_machine</code>, the two bytes that say which CPU the code was built for (offset 18). We flip it from x86-64 to AArch64 and see what happens.</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls archmix
+frn@debian:~$ python3 -c &#39;f = open(&#34;archmix&#34;, &#34;r+b&#34;); f.seek(18); f.write(b&#34;\xb7\x00&#34;)&#39;
+frn@debian:~$ readelf -h archmix | grep -E &#39;Type|Machine&#39;
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+</code></pre><p><code>readelf</code> reads it without complaint: a valid 64-bit executable, four <code>LOAD</code> segments. Nothing we broke earlier is broken here - there is a segment to load and an address to jump to. But:</p>
+<pre tabindex="0"><code>frn@debian:~$ ./archmix
+bash: ./archmix: cannot execute binary file: Exec format error
+frn@debian:~$ strace -e execve ./archmix
+execve(&#34;./archmix&#34;, [&#34;./archmix&#34;], 0x7fff7df220b0 /* 20 vars */) = -1 ENOEXEC (Exec format error)
+</code></pre><p><code>ENOEXEC</code>, on a file that satisfies everything we listed. <code>e_machine</code> is part of the ABI: the rules for how code and the processor fit together - instruction encoding, registers, how a syscall is made, etc.. x86-64 instructions mean nothing to an ARM core, so the kernel checks the architecture first, before it maps anything. If the CPU cannot run the code, everything else is irrelevant.</p>
+
+</main>
+        <footer>
+</footer>
+
+          
+
+</body>
+</html>

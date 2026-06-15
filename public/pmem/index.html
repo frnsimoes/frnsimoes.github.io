@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>Where did 400 MiB go? Fernando Simões
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 2rem 0;
+    }
+
+    main {
+        max-width: 50em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer { display: none; }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre {
+        background-color: #f6f6f6;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-size: 0.7em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1.2em; margin-top: 1.6em; margin-bottom: 0.3em; }
+
+    main h2 + ul, main h2 + p { margin-top: 0.3em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        margin-top: 0.3em;
+        list-style: disc;
+        padding-left: 1em;
+    }
+
+    ul.blog-posts li { margin-bottom: 0.3rem; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+
+     
+    .home-wrap {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+        margin-right: -14em;
+    }
+
+    .home-main { flex: 1; min-width: 0; }
+
+    .collage-right {
+        flex: 0 0 210px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .collage-right img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+     
+    @media (max-width: 1280px) {
+        .home-wrap { margin-right: 0; display: block; }
+        .collage-right { display: none; }
+    }
+
+    .bio-columns {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .bio-col {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    h3 { margin-top: 0em; }
+
+    .see-all { margin-top: 1.8em; }
+    .see-all a { font-weight: 600; text-decoration: none; }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; Where did 400 MiB go?
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>Where did 400 MiB go?</h4>
+
+<time datetime='2026-03-21'>March 21, 2026</time>
+
+<p>I restarted all 60+ pods of a Node.js websocket app earlier today. Every single pod sitting at ~330 MiB of memory. Except one, which was double the rest - at 640 MiB.</p>
+<p>This is a statefulset. Memory jumped instead of growing gradually: ~230 MiB baseline, then a step to ~400 around 18:30, stabilized around 310, then another jump to ~640 at 20:00 and flatlined there. Discrete jumps, not a slow climb. Something was allocating memory in bursts and never releasing it.</p>
+<p>This pattern wasn&rsquo;t new to me. Some pods would spike during fetch bursts and come back down. Others would spike and stay there permanently.</p>
+<p>I had a perfect isolation scenario: one sick pod, sixty healthy ones. All with the same image, configuration, and roughly same number of websockets. The only difference was that an automation tool had been hammering this specific pod with message fetch requests. I SSH&rsquo;d into the node to check what was going on.</p>
+<pre tabindex="0"><code>--- PID 2043462 ---
+/usr/bin/tini -- /entrypoint.sh
+VmRSS:      1152 kB
+--- PID 2043476 ---
+node dist/main
+VmRSS:    679936 kB
+--- PID 2043573 ---
+/app/gows --socket /tmp/gows.sock
+VmRSS:     90884 kB
+</code></pre><p>Gows is the websocket proxy (written in Go) - 89 MiB. And node dist/main - the actual Node.js application - at 680 MiB.</p>
+<p>I ran the same commands on a healthy pod - dist/main at 268 MiB and gows at 82 MiB. The entire delta - all 412 MiB (!) - was in the Node.js process.</p>
+<p>I pulled smaps_rollup from both processes.</p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>sick</th>
+          <th>healthy</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Pss_Anon</td>
+          <td>615 MiB</td>
+          <td>209 MiB</td>
+      </tr>
+      <tr>
+          <td>Pss_File</td>
+          <td>11.7 MiB</td>
+          <td>11.7 MiB</td>
+      </tr>
+      <tr>
+          <td>Shared_Clean</td>
+          <td>65.5 MiB</td>
+          <td>65.5 MiB</td>
+      </tr>
+  </tbody>
+</table>
+<p>All the growth was in private dirty anonymous memory. We had no file-backed growth and no shared memory changes. The shared libraries were identical - same binary and .so files loaded.</p>
+<p>At this point I was fairly sure it was V8 heap. Made sense with the step-change pattern too - each burst of fetches creates a bunch of objects, V8 expands its old generation, and it never gives those pages back to the OS.</p>
+<p>Well, I was wrong. Or at least, not entirely right.</p>
+<p>I needed to see what V8 actually thought about its own memory. I used -USR1 and printed process.memoryUsage().</p>
+<p>The sick pod:</p>
+<pre tabindex="0"><code>{
+  &#34;rss&#34;: 697303040,
+  &#34;heapTotal&#34;: 135147520,
+  &#34;heapUsed&#34;: 126842024,
+  &#34;external&#34;: 25004037,
+  &#34;arrayBuffers&#34;: 33762595
+}
+</code></pre><p>The healthy pod:</p>
+<pre tabindex="0"><code>{
+  &#34;rss&#34;: 281395200,
+  &#34;heapTotal&#34;: 113913856,
+  &#34;heapUsed&#34;: 104892656,
+  &#34;external&#34;: 23737321,
+  &#34;arrayBuffers&#34;: 32256735
+}
+</code></pre><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>sick</th>
+          <th>healthy</th>
+          <th>delta</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>RSS</td>
+          <td>665 MiB</td>
+          <td>268 MiB</td>
+          <td>+397 MiB</td>
+      </tr>
+      <tr>
+          <td>heapTotal</td>
+          <td>129 MiB</td>
+          <td>109 MiB</td>
+          <td>+20 MiB</td>
+      </tr>
+      <tr>
+          <td>heapUsed</td>
+          <td>121 MiB</td>
+          <td>100 MiB</td>
+          <td>+21 MiB</td>
+      </tr>
+      <tr>
+          <td>external</td>
+          <td>24 MiB</td>
+          <td>23 MiB</td>
+          <td>+1 MiB</td>
+      </tr>
+  </tbody>
+</table>
+<p>V8 heap difference: 20 MiB. RSS difference: 397 MiB. The V8 heap was fine. JavaScript had no idea there was a problem. But the kernel saw 665 MiB of resident memory, and V8 could only account for ~180 MiB of it (heap + external + array buffers). <strong>377 MiB existed outside of V8 entirely</strong>.</p>
+<p>Ok, if it&rsquo;s not V8 heap, not external buffers, not array buffers, then where is it? The next obvious candidate are glibc&rsquo;s arenas. So I counted anonymous memory mappings in /proc/pid/smaps from both pods:</p>
+<pre tabindex="0"><code>Sick:    1803 mappings
+Healthy:  580 mappings
+</code></pre><p>1803 vs 580. I shipped MALLOC_ARENA_MAX=2 to limit glibc to 2 arenas.</p>
+<p>It didn&rsquo;t work. A pod got hammered, spiked to 576 MiB, and stayed there. I was missing something.</p>
+<p>So I went back in. This time I checked the size distribution of those anonymous mappings on the stuck pod:</p>
+<pre tabindex="0"><code>&lt;64KB:   13
+64KB-1MB: 1461
+&gt;1MB:    25
+</code></pre><p>Almost all in the 64KB-1MB range. I listed the actual regions:</p>
+<pre tabindex="0"><code>256KB 1e20080000-1e200c0000 rw-p 00000000 00:00 0
+256KB 2efb440000-2efb480000 rw-p 00000000 00:00 0
+256KB 3c708c0000-3c70900000 rw-p 00000000 00:00 0
+256KB 48d9340000-48d9380000 rw-p 00000000 00:00 0
+256KB 5a3a3c0000-5a3a400000 rw-p 00000000 00:00 0
+...
+</code></pre><p>All 256 KB. 1461 separate memory regions, all exactly the same size.</p>
+<p>This couldn&rsquo;t be glibc. With MALLOC_ARENA_MAX=2, there were only 2 arenas, and glibc grabs memory in much larger chunks anyway. So what allocates thousands of identically-sized 256 KB regions via mmap()? The only component in this process that manages its own memory like this, bypassing malloc() entirely, is V8. 1461 * 256 KB ~ 365 MiB of heap pages sitting in memory.</p>
+<p>But process.memoryUsage() had reported heapTotal at only 129 MiB. How does V8 have 365 MiB of mmap&rsquo;d pages but only report 129 MiB?</p>
+<p>process.memoryUsage() reports heapUsed, which are the live objects V8 currently knows is in use. On the sick pod, 121 MiB. On the healthy one, 100 MiB. So I concluded V8 was fine and the problem was somewhere else.</p>
+<p>I used the Chrome DevTools Protocol to force a full garbage collection on the stuck pod, then checked memory:</p>
+<pre tabindex="0"><code>Before GC: RSS = 568 MiB, heapTotal = 129 MiB
+After GC:  RSS = 316 MiB, heapTotal = 107 MiB
+</code></pre><p>252 MiB gone.</p>
+<p>So the V8 theory was right all along. But was glibc arena fragmentation also real, or had I been chasing the wrong thing entirely?</p>
+<p>I properly tested both this time.</p>
+<p>The first try was with &ndash;max-old-space-size=256 only. This caps V8&rsquo;s old generation heap at 256 MiB, forcing it to actually collect garbage instead of sitting on it forever. I hammered the pod. Memory spiked to 619 MiB during the burst, then dropped to 350 MiB. Better. But 350 is still above the ~250 MiB baseline.</p>
+<p>Then I added MALLOC_ARENA_MAX=2 back. This time it dropped to 280 MiB.</p>
+
+</main>
+        <footer>
+</footer>
+
+          
+
+</body>
+</html>

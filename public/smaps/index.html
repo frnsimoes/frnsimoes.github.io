@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>What /proc sees in 19 MiB Fernando Simões
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 2rem 0;
+    }
+
+    main {
+        max-width: 50em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer { display: none; }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre {
+        background-color: #f6f6f6;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-size: 0.7em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1.2em; margin-top: 1.6em; margin-bottom: 0.3em; }
+
+    main h2 + ul, main h2 + p { margin-top: 0.3em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        margin-top: 0.3em;
+        list-style: disc;
+        padding-left: 1em;
+    }
+
+    ul.blog-posts li { margin-bottom: 0.3rem; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+
+     
+    .home-wrap {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+        margin-right: -14em;
+    }
+
+    .home-main { flex: 1; min-width: 0; }
+
+    .collage-right {
+        flex: 0 0 210px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .collage-right img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+     
+    @media (max-width: 1280px) {
+        .home-wrap { margin-right: 0; display: block; }
+        .collage-right { display: none; }
+    }
+
+    .bio-columns {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .bio-col {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    h3 { margin-top: 0em; }
+
+    .see-all { margin-top: 1.8em; }
+    .see-all a { font-weight: 600; text-decoration: none; }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; What /proc sees in 19 MiB
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>What /proc sees in 19 MiB</h4>
+
+<time datetime='2026-04-03'>April 3, 2026</time>
+
+<p>A few weeks ago <a href="/pmem/">I profiled a Node.js server</a> with recurring memory spikes. I found out dirty pages, allocator behavior and memory that did not return to the OS. To build a cleaner mental model, I stripped the problem down to something smaller: python3 -m http.server.</p>
+<pre tabindex="0"><code>root@debian:/# ps aux | grep http.server | grep -v grep
+root       479226  0.0  0.1  32104 19324 pts/1    T    16:10   0:00 python3 -m http.server
+</code></pre><p>19 MiB of resident memory. Where is every byte?</p>
+<p>To answer that, it helps to know that memory is managed in three layers, and each one has its own view of what&rsquo;s &ldquo;used.&rdquo;</p>
+<ul>
+<li>
+<p>The application allocates objects - strings, buffers, structs. When it calls free() or the garbage collector runs, the object is gone from the application&rsquo;s perspective.</p>
+</li>
+<li>
+<p>The allocator (glibc&rsquo;s malloc) sits between the application and the kernel. It requests pages from the OS in bulk and slices them into chunks. When the application frees an object, the allocator reclaims the chunk but usually keeps the page - it expects the application to allocate again soon.</p>
+</li>
+<li>
+<p>The kernel sees pages. A page is mapped or not, resident or not, dirty or clean. When the kernel reports Rss, it counts every resident page, including the ones the allocator is holding empty.</p>
+</li>
+</ul>
+<p>Each layer has its own perspective of what&rsquo;s &ldquo;free&rdquo;. This post is mostly about the kernel&rsquo;s point of view - but it&rsquo;s impossible to talk about memory without touching the other two layers.</p>
+<p>The kernel exposes everything it knows about a process&rsquo;s memory in <a href="https://man7.org/linux/man-pages/man5/proc_pid_maps.5.html">/proc/pid/maps</a>. Each line is a region of virtual memory that the kernel allocated for this process.</p>
+<pre tabindex="0"><code>00400000-00420000 r--p 00000000 103:02 935097    /usr/bin/python3.13
+00420000-0073f000 r-xp 00020000 103:02 935097    /usr/bin/python3.13
+0073f000-009f2000 r--p 0033f000 103:02 935097    /usr/bin/python3.13
+009f2000-009f3000 r--p 005f1000 103:02 935097    /usr/bin/python3.13
+009f3000-00a84000 rw-p 005f2000 103:02 935097    /usr/bin/python3.13
+00a84000-00af8000 rw-p 00000000 00:00 0
+1d84f000-1dabc000 rw-p 00000000 00:00 0          [heap]
+7fae4cd9f000-7fae4cf05000 rw-p 00000000 00:00 0
+...
+7fae4e03f000-7fae4e067000 r--p 00000000 103:02 920382    /usr/lib/x86_64-linux-gnu/libc.so.6
+7fae4e228000-7fae4e235000 rw-p 00000000 00:00 0
+...
+(8 more shared libraries, same pattern)
+...
+7fae4e37b000-7fae4e37d000 r-xp 00000000 00:00 0          [vdso]
+7fae4e37d000-7fae4e37e000 r--p 00000000 103:02 920377    /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+...
+7fae4e3b4000-7fae4e3b5000 rw-p 00000000 00:00 0
+7ffca9328000-7ffca9349000 rw-p 00000000 00:00 0          [stack]
+</code></pre><p>Every line follows the same format: an address range, permissions, an offset, a device, an inode, and sometimes a filename. Some lines point to files on disk (libssl.so.3, for example). Others are anonymous (like <code>7fae4e374000-7fae4e375000 rw-p 00000000 00:00 0</code>).</p>
+<p>The first line<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<pre tabindex="0"><code>(1)00400000-00420000 (2)r--p (3)00000000 (4)103:02 (5)935097    (6)/usr/bin/python3.13
+</code></pre><p>The binary (python3.13) appears 6 times in maps with different permissions and offsets. Each region of the file that needs different permissions (read-only data, executable code, read-write globals) gets its own VMA. The shared libraries follow the same pattern. But who loaded them?</p>
+<h2 id="shared-libraries">Shared libraries</h2>
+<p><a href="https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html">The dynamic linker</a>. readelf -l reveals his name:</p>
+<blockquote>
+<p>[Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]</p></blockquote>
+<p>There&rsquo;s a program header called INTERP, which points to /lib64/ld-linux-x86-64.so.2. This is a real program. You can run it directly, and if you do it will call you a strange lad, then tell you what it does:</p>
+<blockquote>
+<p>You have invoked &rsquo;ld.so&rsquo;, the program interpreter for dynamically-linked ELF programs. Usually, the program interpreter is invoked automatically when a dynamically-linked executable is started.</p></blockquote>
+<p>When the kernel loads python3, it doesn&rsquo;t jump to python3&rsquo;s entry point. It finds the INTERP header, maps the dynamic linker into memory, and jumps there. The linker opens each shared library, mmap&rsquo;s their LOAD segments (creating the VMAs we see in maps), resolves symbols, and only then jumps to python3&rsquo;s actual entry point.</p>
+<p>If you&rsquo;re interested in how the ELF loading sequence works end to end, I found this <a href="https://lwn.net/Articles/631631/">lwn article</a> really good.</p>
+<p>The binary declares its dependencies explicitly:</p>
+<pre tabindex="0"><code>root@debian:~# readelf -d /usr/bin/python3.13 | grep NEEDED
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libz.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libexpat.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+</code></pre><p>The linker reads this list and loads them all before python3&rsquo;s code runs.</p>
+<p>One thing worth noticing: ldd shows 5 libraries, and our maps output had 8 more - libssl, libcrypto, libbz2, and their Python wrappers. Those were loaded later, at runtime, via <a href="https://man7.org/linux/man-pages/man3/dlopen.3.html">dlopen()</a> - when Python imported modules like ssl or lzma. The linker handles startup dependencies and dlopen handles runtime dependencies.</p>
+<h2 id="anonymous-memory">Anonymous memory</h2>
+<p>/proc/pid/maps also show lines with no file at all:</p>
+<pre tabindex="0"><code>00a84000-00af8000 rw-p 00000000 00:00 0
+1d84f000-1dabc000 rw-p 00000000 00:00 0          [heap]
+7fae4cd9f000-7fae4cf05000 rw-p 00000000 00:00 0
+</code></pre><p>Anonymous memory is expensive. A file-backed page can be evicted from RAM and reloaded from disk because the file is still there. An anonymous page has no backing file. If the kernel needs to reclaim it, the only option is swap. If there&rsquo;s no swap, the page stays in RAM until the process frees it or dies.</p>
+<p>There&rsquo;s another layer to this. The kernel works in 4 KB pages, but applications allocate in smaller chunks. When python3 allocates a 32-byte string, glibc&rsquo;s malloc takes those 32 bytes from a 4 KB page it already owns. When the string is freed, malloc reclaims the 32 bytes internally but doesn&rsquo;t return the page to the kernel. The kernel still sees a Private_Dirty page with a valid PTE. It has no idea that most of the page is free.</p>
+<p>This is why Rss stays high after load drops. The application freed its objects. The allocator reclaimed the space. But the pages are still mapped, still resident. The memory &ldquo;never comes back&rdquo; because the allocator can choose not to return free chunks to the operating system.</p>
+<p>Despite the differences between the kernel and libc point of view, you can actually see the allocators perspective of resident bytes and used bytes with malloc_stats(3).</p>
+<pre tabindex="0"><code>root@debian:~# gdb --batch --pid 479226 -ex &#39;call (void)malloc_stats()&#39;
+0x00007f1f94435687 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+Arena 0:
+system bytes     =    2543616
+in use bytes     =    2215952
+Total (incl. mmap):
+system bytes     =    3362816
+in use bytes     =    3035152
+max mmap regions =          4
+max mmap bytes   =    1028096
+</code></pre><p>3.3 MiB held by the allocator, 3 MiB actually in use. The rest is free chunks the kernel still counts as resident.</p>
+<h2 id="the-page-cache">The page cache</h2>
+<p>Shared libraries are &ldquo;shared.&rdquo; But shared with whom, exactly?</p>
+<pre tabindex="0"><code>root@debian:~# cat /proc/479226/smaps_rollup
+Rss:               19324 kB
+Pss:               14879 kB
+Shared_Clean:       4988 kB
+Private_Clean:      4840 kB
+Private_Dirty:      9496 kB
+</code></pre><p>Shared with every other process that uses libc, libm, libz. When the kernel loads libc&rsquo;s .text segment, it doesn&rsquo;t give the pages directly to the process. It puts them in the page cache, which is a cache of file contents, and points the process&rsquo;s page table at those cached pages. If another python3 starts, its page table points to the same physical frames. In summary, there is one copy of libc&rsquo;s code in RAM, and it is used by everyone.</p>
+<p>But Rss doesn&rsquo;t know this. It counts every physical page mapped into the process. If libc&rsquo;s .text is 1.4 MiB and ten processes use it, all ten report that 1.4 MiB in their Rss. The same physical memory is counted ten times. Pss tries to fix this by dividing shared pages across processes - that&rsquo;s the 4.5 MiB gap between Rss (19 MiB) and Pss (14.8 MiB).</p>
+<p>So when someone asks &ldquo;how much memory is this process using?&rdquo;, the honest answer is: it depends on what you mean by &ldquo;using&rdquo;. If we kill this python3, what exactly comes back? The Shared_Clean pages stay because other processes still reference them. Private_Clean (4.8 MiB) gets reclaimed, it&rsquo;s file-backed but only this process had them mapped. Private_Dirty (9.4 MiB) gets reclaimed - heap, mmap, .bss, anonymous, no one else is referencing them. You get back roughly 14.3 MiB.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><code>00400000-00420000</code> is a range of virtual addresses. r&ndash;p is the permissions: readable (r), not writable (-), not executable (-), private (p). <code>00000000</code> is the offset into the file. <code>103:02</code> is the block device (major:minor). <code>935097</code> is the inode - the file&rsquo;s identity on disk. And /usr/bin/python3.13 is the file.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</main>
+        <footer>
+</footer>
+
+          
+
+</body>
+</html>

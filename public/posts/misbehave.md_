@@ -1,0 +1,326 @@
++++
+date = 2026-04-04
+title = "A map of memory misbehavior"
+labels = ["hide"]
+subjects = ["memory"]
+
++++
+
+This is a map of common memory behaviors in production. The goal is to answer a practical question: why does Rss stay high, grow unexpectedly, or doesn't correspond to what the application reports?
+
+There isn't a single answer. Memory is managed in layers, and each layer behaves differently.
+
+- The runtime (V8, JVM, Go) manages objects
+- The allocator (glibc) manages pages
+- The kernel manages physical memory
+
+I found out that most confusion comes from mixing these views.
+
+## The allocator keeps the pages - in use bytes
+
+The application calls free(). glibc marks the space as available internally but doesn't return the chunks to the kernel. The kernel still sees a resident, dirty, anonymous page. 
+
+This is expected behavior. glibc expects the application to allocate again soon. Returning pages to the OS via madvise() or munmap() and then requesting them again is expensive - it means page faults, TLB flushes, zeroing.
+
+But it creates a gap. After a traffic spike, for example, the application is idle, all objects are freed, and Rss is still at the spike level. You can find the gap in /proc/pid/smaps: Private_Dirty pages with no live objects in them. But the kernel has no idea about what's being used and what's not. 
+
+We need the userspace to tell us what's really happening, because free() and malloc() are the libc responsibilities. malloc_stats() shows it - "system bytes" is what the kernel gave, "in use bytes" is what the application is actually using. The difference is pages glibc is holding.
+
+```
+root@debian:~# gdb --batch --pid 1161684 -ex 'call (void)malloc_stats()'
+0x00007f1f94435687 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+Arena 0:
+system bytes     =    2543616
+in use bytes     =    2215952
+Total (incl. mmap):
+system bytes     =    3362816
+in use bytes     =    3035152
+max mmap regions =          4
+max mmap bytes   =    1028096
+[Inferior 1 (process 1161684) detached]
+```
+
+
+<details>
+  <summary>What would make glibc return the page to the kernel?</summary>
+<div class="details-content">
+I found out 2 ways: malloc_trim(0 and munmap(). The first one works only on the top, since [free pages in the middle of the heap cannot be trimmed](https://stackoverflow.com/questions/28612438/can-malloc-trim-release-memory-from-the-middle-of-the-heap#:~:text=Under%20617%20some%20allocation%20patterns,memory%20627%20from%20the%20system) munmap deletes mappings for a specific addres space. Pretty direct.
+
+[free pages in the middle of the heap cannot be trimmed](https://stackoverflow.com/questions/28612438/can-malloc-trim-release-memory-from-the-middle-of-the-heap#:~:text=under%20617%20some%20allocation%20patterns,memory%20627%20from%20the%20system)
+
+man 3 malloc_trim.
+man 2 mmap (search for munmap).
+
+</div>
+</details>
+
+<details>
+  <summary>What happens when a process reads or writes memory</summary>
+<div class="details-content">
+
+
+The MMU (a separate piece of hardware) translates virtual addresses to physical ones by walking the page table. If the translation is cached in the TLB, it's fast - the kernel isn't involved at all.
+
+If the MMU finds no PTE for that address, it raises a page fault, then the kernel handles it: finds which VMA owns the address, allocates a physical frame from the buddy allocator, fills it (from disk if file-backed, with zeros if anonymous), creates the PTE, and returns. The CPU retries. Now that page is resident.
+
+This is "demand paging". We have address ranges in VMA, but physical frames arent allocated until the process actually needs them. So a 100 MB mmap adds 100 MB to the process' virtual size, but not to its resident memory (which will grow only in the first access)
+
+Returning pages is expensive because when the page is returned the kernel removes the PTEs and invalidates TLB entries. When the application allocates again, every access to those addresses will fault one more time - then the kernel allocates, zeros them, creates PTE, all over again. glibc tries to avoid this by keeping pages mapped and reusing them internally.
+
+</div>
+</details>
+
+<br>
+
+## The allocator keeps the pages - brk()
+
+The heap (brk region) makes this worse. brk() grows the heap upward but can only shrink it from the top. One live allocation near the top pins everything below it. mmap-backed allocations don't have this problem - each one is an independent mapping that goes away on munmap().
+
+glibc switches between brk() and mmap() based on allocation size. The threshold defaults to 128 KB but adjusts dynamically. Small allocations go to the heap. Large ones go to mmap. If your application alternates between small and large allocations, the behavior is harder to predict.
+
+If you suspect the heap is pinned, compare the heap VMA size with what malloc_stats() reports for Arena 0. Arena 0 is the main arena, which uses brk(). If Arena 0 shows "system bytes" = 2.5 MB but "in use bytes" = 500 KB, there's 2 MB of free space inside the heap that glibc can't return because something near the top is pinning it. The exact location of the pinning allocation - you'd need to walk glibc's internal data structures with gdb to find it. Not something you do in production.
+
+<details>
+  <summary>What "small allocations go to the heap, large ones go to mmap" means?</summary>
+<div class="details-content">
+"Heap" and "stack" are conventions. The process address space has VMAs (virtual memory areas). Check /proc/pid/maps and you will see that besides [heap] and [stack] there are multiple file-backed and anonymous VMAs. I discussed this extensively [here](/smaps/).
+</div>
+</details>
+
+<br>
+
+## Arena fragmentation
+
+glibc creates separate memory pools (arenas) for different threads to avoid lock contention on malloc(). The default limit is 8 x number of CPU cores. On a 4-core machine, that's up to 32 arenas.
+
+Each arena grabs memory from the OS in large chunks. When a thread frees memory, glibc reclaims it inside that arena but doesn't necessarily return it to the kernel. If allocations are spread across 32 arenas and most of the live data ends up in 3 of them, the other 29 are mostly empty but still mapped.
+
+[I've had this problem before](/pmem/). The fix was MALLOC_ARENA_MAX=2. Memory usage dropped 40%. The same pattern shows up in Java (glibc arenas underneath the JVM), Ruby (the GVL makes multiple arenas pointless), and Python.
+
+You can see it in /proc/pid/smaps. Count the anonymous rw-p mappings. If there are hundreds or thousands of similarly-sized regions, that's arenas. malloc_info() (the XML version of malloc_stats()) shows per-arena breakdown.
+
+<details>
+  <summary>Analyzing malloc_info() output</summary>
+<div class="details-content">
+
+I ran malloc_info against my python3 -m http.server. Here is the output:
+
+    root@debian:~# gdb --batch --pid 1161684 -ex 'call (void)malloc_info(0, (void*)stdout)'
+    [Thread debugging using libthread_db enabled]
+    Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+    0x00007f1f94435687 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+    <malloc version="1">
+    <heap nr="0">
+    <sizes>
+      <size from="33" to="33" total="264" count="8"/>
+      <size from="49" to="49" total="98" count="2"/>
+      <size from="97" to="97" total="679" count="7"/>
+      <size from="113" to="113" total="678" count="6"/>
+      <size from="129" to="129" total="387" count="3"/>
+      <size from="145" to="145" total="870" count="6"/>
+      <size from="161" to="161" total="644" count="4"/>
+      <size from="177" to="177" total="1593" count="9"/>
+      <size from="193" to="193" total="1158" count="6"/>
+      <size from="209" to="209" total="1463" count="7"/>
+      <size from="225" to="225" total="450" count="2"/>
+      <size from="241" to="241" total="1687" count="7"/>
+      <size from="257" to="257" total="1542" count="6"/>
+      <size from="273" to="273" total="819" count="3"/>
+      <size from="289" to="289" total="1156" count="4"/>
+      <size from="305" to="305" total="2135" count="7"/>
+      <size from="321" to="321" total="2247" count="7"/>
+      <size from="337" to="337" total="1685" count="5"/>
+      <size from="353" to="353" total="1765" count="5"/>
+      <size from="369" to="369" total="1107" count="3"/>
+      <size from="385" to="385" total="1925" count="5"/>
+      <size from="401" to="401" total="1604" count="4"/>
+      <size from="417" to="417" total="834" count="2"/>
+      <size from="433" to="433" total="2598" count="6"/>
+      <size from="449" to="449" total="1347" count="3"/>
+      <size from="465" to="465" total="1395" count="3"/>
+      <size from="481" to="481" total="481" count="1"/>
+      <size from="497" to="497" total="1491" count="3"/>
+      <size from="8065" to="8065" total="8065" count="1"/>
+      <size from="17105" to="17105" total="17105" count="1"/>
+      <unsorted from="4113" to="4113" total="4113" count="1"/>
+    </sizes>
+    <total type="fast" count="0" size="0"/>
+    <total type="rest" count="138" size="327801"/>
+    <system type="current" size="2543616"/>
+    <system type="max" size="2543616"/>
+    <aspace type="total" size="2543616"/>
+    <aspace type="mprotect" size="2543616"/>
+    </heap>
+    <total type="fast" count="0" size="0"/>
+    <total type="rest" count="138" size="327801"/>
+    <total type="mmap" count="3" size="819200"/>
+    <system type="current" size="2543616"/>
+    <system type="max" size="2543616"/>
+    <aspace type="total" size="2543616"/>
+    <aspace type="mprotect" size="2543616"/>
+    </malloc>
+    [Inferior 1 (process 1161684) detached]
+    root@debian:~#
+
+Observations:
+- System current is what glibc asked the OS: 2.4MiB.
+- Rest total: 320 KiB are free chunks sitting in bins waiting to be reused. 
+- Total mmap: 800 KiB. 
+
+So we have 2.4 MiB allocated with 320 KiB free pages, the rest is actually in use. Total mmap are bigger allocations (3 chunks, count=3). 
+
+</div>
+</details>
+
+<details>
+  <summary>Reclaim has three layers</summary>
+<div class="details-content">
+
+We have three layers: kernel, allocator (libc) and the runtime.
+
+The kernel reclaims pages when free memory drops below a watermark. kswapd wakes up and starts evicting: file-backed clean pages get dropped (they can be reloaded from disk), file-backed dirty pages get flushed then dropped, anonymous pages go to swap if swap exists. [Gorman](https://www.kernel.org/doc/gorman/html/understand/understand005.html#toc13) explains zones, watermarks and kswapd very well.
+
+glibc gets pages from the kernel via brk() and mmap(), slices them into chunks, and hands them to the application. When the application calls free(), glibc reclaims the chunk internally but usually keeps the page. malloc_trim() can return free pages at the top of arenas to the kernel. glibc has an internal trim threshold - after free(), if free space at the top of the heap exceeds 128 KB (configurable via M_TRIM_THRESHOLD), it trims. But this only works for the top. Fragmented free space in the middle stays.
+
+The runtime (V8, JVM, Go) manages its own heap on top of the allocator. It mmaps large regions, subdivides them internally, and runs garbage collection to free dead objects. When GC runs, it frees space inside the runtime's heap. Whether those pages go back to the OS depends on the runtime entirely (and its settings, like we saw in the Nodejs problem post).
+
+cgroups v2 introduced memory.pressure (PSI - Pressure Stall Information), which lets a process monitor memory pressure and react before the OOM killer arrives. I don't know if runtimes are using it though. We can see these values in /proc/pressure. Cool thing: reading them, exporting them to, say, Prometheus, and forcing behavior based on pressure levels. Cool stuff.
+
+In containers, this matters a lot. The cgroup memory limit can call the OOM killer earlier, for example.
+
+</div>
+</details>
+
+<br>
+
+## GC delay
+
+Garbage-collected runtimes allocate memory from the OS and manage it inside the runtime itself. The GC frees dead objects but doesn't necessarily return pages to the OS. And it doesn't always run when you'd expect.
+
+<details>
+  <summary>Why can't I see GC state from /proc?</summary>
+<div class="details-content">
+because the kernel sees one big anonymous mapping. The runtime subdivides it internally. You need runtime tools (--trace-gc, jmap, runtime.ReadMemStats). This is the same blindness as with glibc internals, one layer up.
+</div>
+</details>
+
+<br>
+
+## Page cache confusion
+
+Besides the free / available differences, there are real problems in this area too. A process that mmaps a large file and accesses it randomly will pull pages into the cache aggressively. If the file is bigger than RAM, it can evict pages from other processes. This is the page cache thrashing problem. 
+
+<details>
+  <summary>How do I know if the page cache is helping or hurting?</summary>
+<div class="details-content">
+vmstat 1: if bi (blocks in) stays low while the application reads heavily, the cache is helping. If bi stays high for data already read, pages are being evicted and re-faulted. That's thrashing.
+
+vmtouch <file> or fincore (util-linux) show how much of a specific file is resident in cache. (Cool tool. Also check /proc/sys/vm/drop_caches if you are experimenting).
+
+A problematic case: sequential one-pass reads (log processing, backups). The kernel caches pages that won't be read again, evicting useful ones. posix_fadvise(POSIX_FADV_DONTNEED) after processing drops them.
+</div>
+</details>
+
+<br>
+
+## Shared memory accounting
+
+I already discussed about the Rss and Pss problem in [another post](/smaps/). The distinction is still important. Imagine a process that opens and closes millions of files. It will grow the dentry cache. The kernel will reclaim it under memory pressure, but not eagerly. /proc/meminfo's SReclaimable vs SUnreclaimable tells you how much the kernel can give back if needed. There's also slabtop, which shows the biggest kernel caches.
+
+## File descriptor leaks
+
+Every open socket has kernel-side cost - socket buffers (/proc/net/sockstat), inode and dentry cache (same problem as the share memory accounting). None of this shows in Rss. A process leaking connections can eat hundreds of MB in kernel memory that no per-process metric captures. ls /proc/pid/fd | wc -l is the quick check. cat /proc/net/sockstat shows the system-wide count. Scary if we are only monitoring Rss.
+
+<details>
+  <summary>What does /proc/net/sockstat actually show?</summary>
+<div class="details-content">
+
+    root@debian:~# cat /proc/net/sockstat
+    sockets: used 503
+    TCP: inuse 40 orphan 0 tw 10 alloc 76 mem 448
+    UDP: inuse 2 mem 1536
+    UDPLITE: inuse 0
+    RAW: inuse 1
+    FRAG: inuse 0 memory 0
+
+inuse: active TCP connections right now
+
+orphan: sockets that are no longer associated with any file descriptor.
+
+alloc: 76 allocated (but only 40 in use)
+
+mem: 448. 
+
+While searching for what `mem` means in this case, I found this [answer on serverfault](https://serverfault.com/questions/628635/what-is-the-unit-of-mem-and-memory-in-proc-net-sockstat). Just in case, I double checked the source code:
+
+	seq_printf(seq, "TCP: inuse %d orphan %d tw %d alloc %d mem %ld\n",
+		   sock_prot_inuse_get(net, &tcp_prot), orphans,
+		   refcount_read(&net->ipv4.tcp_death_row.tw_refcount) - 1,
+		   sockets, proto_memory_allocated(&tcp_prot));
+
+Meaning: 448 x 4096 bytes = 1.8 MB. *Consider this is practically an idle machine, by the way*
+</div>
+</details>
+
+<br>
+
+## tmpfs eating RAM
+
+tmpfs is backed by memory, not disk. Anything written to /dev/shm, /tmp (if tmpfs), or /run stays in RAM (or swap). It doesn't show up in any process's Rss because it's not mapped into a process - it's in the page cache, attributed to the filesystem.
+
+A cron job that writes temp files to /dev/shm and doesn't clean them up is a slow memory leak that won't show up in any per-process monitoring. df -h /dev/shm is the check:
+
+```
+root@debian:~# df -h /dev/shm
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           7.4G     0  7.4G   0% /dev/shm
+```
+
+<details>
+  <summary>Where does tmpfs memory shows up?</summary>
+<div class="details-content">
+Shmem is its own category.
+
+    root@debian:~# cat /proc/meminfo | grep Shmem
+    Shmem:              2688 kB
+    ShmemHugePages:        0 kB
+    ShmemPmdMapped:        0 kB
+
+</div>
+</details>
+
+<br>
+
+## MADV_FREE vs MADV_DONTNEED
+
+A process can tell the kernel "I don't need these pages anymore" without unmapping them. Two ways to do it, and they behave differently.
+
+madvise(MADV_DONTNEED): the kernel reclaims the pages immediately. Next access causes a page fault and gets a fresh zero page. Rss drops.
+
+madvise(MADV_FREE): the kernel marks the pages as lazily reclaimable. They stay in Rss until the kernel actually needs the memory. If the process writes to the page before the kernel reclaims it, the page is reused - no fault, no zeroing. This is faster for allocators that free and reallocate frequently.
+
+Go switched to MADV_FREE in 1.12, then back to [MADV_DONTNEED in 1.16](https://go.dev/doc/go1.16) after users complained that Rss didn't drop after GC. The memory was available to the system, but monitoring tools showed it as used. 
+
+
+---
+
+Reference table to confirm suspicions:
+
+| Suspicion | Command |
+|---|---|
+| glibc holding freed memory | `gdb --batch --pid PID -ex 'call (void)malloc_stats()'` |
+| Heap pinned by top allocation | `grep heap /proc/pid/maps` + compare with Arena 0 system/in-use bytes |
+| Arena fragmentation | `grep 'rw-p' /proc/pid/smaps \| wc -l` |
+| Arena per-arena breakdown | `gdb --batch --pid PID -ex 'call (void)malloc_info(0, (void*)stdout)'` |
+| GC not returning memory | Runtime-specific: `--trace-gc` (Node), `jmap` (Java), `runtime.ReadMemStats` (Go) |
+| Page cache thrashing | `vmstat 1` (watch `bi` column) |
+| Specific file in cache? | `vmtouch <file>` or `fincore <file>` |
+| Flush page cache (testing only) | `echo 3 > /proc/sys/vm/drop_caches` |
+| Slab/dentry cache growth | `slabtop` + `grep SReclaimable /proc/meminfo` |
+| fd leak | `ls /proc/pid/fd \| wc -l` |
+| Kernel socket memory | `cat /proc/net/sockstat` (mem field is in pages) |
+| tmpfs usage | `df -h /dev/shm` + `grep Shmem /proc/meminfo` |
+| MADV_FREE pages lingering | `grep LazyFree /proc/pid/smaps_rollup` |
+| Overall memory picture | `free -h` (check "available", not "free") |
+---
+Each of these could be its own investigation. For now, this is the map.

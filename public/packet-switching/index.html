@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>How packet switching won Fernando Simões
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 0.3em 2rem 0;
+    }
+
+    main {
+        max-width: 50em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer { display: none; }
+
+
+    a { color: #0000ee; }
+    a:visited { color: #551a8b; }
+
+    img { max-width: 100%; }
+
+    pre {
+        background-color: #f6f6f6;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        line-height: 1.45;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-size: 0.7em;
+    }
+
+    table {
+        font-size: 0.85em;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 0.3em 0.6em;
+    }
+
+    main h2 { font-size: 1.2em; margin-top: 1.6em; margin-bottom: 0.3em; }
+
+    main h2 + ul, main h2 + p { margin-top: 0.3em; }
+
+    .header-container { margin-bottom: 0.3em; }
+
+    ul.blog-posts {
+        margin-top: 0.3em;
+        list-style: disc;
+        padding-left: 1em;
+    }
+
+    ul.blog-posts li { margin-bottom: 0.3rem; }
+    ul.blog-posts li a { text-decoration: none; }
+
+    details summary {
+        font-family: monospace;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+
+    details .details-content {
+        background-color: #f2f2f2;
+        padding: 0.75em 1em;
+        margin-top: 0.5em;
+        font-size: 0.83em;
+        line-height: 1.6;
+    }
+
+    details.qa {
+        margin: 1.25rem 0;
+    }
+
+    details.qa summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+    }
+
+    details.qa summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details.qa summary::before {
+        content: "▸ ";
+    }
+
+    details.qa[open] summary::before {
+        content: "▾ ";
+    }
+
+    details.qa .answer {
+        margin-top: 0.75rem;
+    }
+
+     
+    .home-wrap {
+        display: flex;
+        gap: 2.5rem;
+        align-items: flex-start;
+        margin-right: -14em;
+    }
+
+    .home-main { flex: 1; min-width: 0; }
+
+    .collage-right {
+        flex: 0 0 210px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .collage-right img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+     
+    @media (max-width: 1280px) {
+        .home-wrap { margin-right: 0; display: block; }
+        .collage-right { display: none; }
+    }
+
+    .bio-columns {
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .bio-col {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    h3 { margin-top: 0em; }
+
+    .see-all { margin-top: 1.8em; }
+    .see-all a { font-weight: 600; text-decoration: none; }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; How packet switching won
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>How packet switching won</h4>
+
+<time datetime='2024-10-30'>October 30, 2024</time>
+
+<figure><img src="/static/packet-switching/telephone.png"
+    alt="A very bad attempt to draw a telephone">
+</figure>
+
+<p>I got obsessed with circuit switching a few months ago and couldn&rsquo;t stop thinking about it. Telecom engineers had to solve a hard problem: in the analog age, carbon microphones converted voice into electrical signals that traveled over copper wires, with amplifiers boosting the signal across distances. In the digital age the same copper wires remained, but the approach changed - the analog signal was sampled at intervals, quantized into bits, and transmitted. Both eras needed circuit switching, the strategy to keep two people talking over a dedicated path.</p>
+<p>In circuit switching, when host A calls host B, the network builds a dedicated path - A -&gt; switch1 → switch2 -&gt; switch3 -&gt; B - and that path reserves 64 kbps for a voice channel<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. The switches maintain hard state about which ports are connected, how long the connection has been active, and billing information. The path stays reserved for the entire call.</p>
+<p>But here&rsquo;s the problem: in a 10-minute phone call, person A talks for 3 minutes, person B talks for 2, and 5 minutes are silence. The circuit sits there the whole time with 64 kbps reserved, unusable by anyone else, even during silence.</p>
+<p>This works for voice because voice is continuous and predictable, but data is not. You request a webpage and there&rsquo;s a burst of packets, then nothing while you read for 2 minutes. An email is a few kilobytes, and then silence. With circuit switching you&rsquo;d reserve bandwidth for these brief spikes and leave the circuit idle 95% of the time.</p>
+<p>Packet switching killed this model because it doesn&rsquo;t require dedicated paths or hard state in routers. It breaks data into packets, stamps source and destination on each one, and lets the network figure it out. Packet 1 goes A -&gt; R1 -&gt; R2 -&gt; B, packet 2 might go A -&gt; R1 -&gt; R3 -&gt; B, and between packets the link is free for everyone else.</p>
+<p>Routers just read the header, check the destination, and forward. There are no billing timers or &ldquo;port 5 connected to port 12&rdquo;. Intelligence moved to the edges, where hosts handle reliability, retransmission, ordering, and congestion.</p>
+<p>The infrastructure was already there - copper wires, central offices, physical links. Packet switching won because it used all of it more efficiently, with no dedicated circuits for every connection. Its philosophy is simple: just let everyone share.</p>
+<p>But the transition took decades, and for years packet switching ran on top of circuit switching infrastructure.</p>
+<p>In the 1990s, connecting to the internet meant making a phone call<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. Your modem called the ISP&rsquo;s modem pool, and the telephone network established a circuit - your house -&gt; local exchange -&gt; ISP. A dedicated 64 kbps path, just like a voice call, with the phone company&rsquo;s switches tracking it as a connection and billing timers running.</p>
+<p>Your computer sent IP packets to the modem, the modem modulated them into <a href="https://www.eetimes.com/an-introduction-to-the-v-90-56k-modem/">analog signals</a> over the phone line, and the ISP&rsquo;s modem demodulated back to digital and forwarded to the internet.</p>
+<p>Here in Brazil we&rsquo;d connect after midnight or on weekends so we&rsquo;d only pay for one tick. You&rsquo;d plan your internet time.</p>
+<p>This hybrid existed because the last mile was telephone lines - copper twisted pair. ISPs had to use what was there. Cable modems did something similar with coaxial cable, and fiber eventually replaced both, but the pattern was always the same: reuse existing physical infrastructure.</p>
+<p>Packet switching won technically in the 1970s with ARPANET, but the economic model took longer to change than the technology. Consumers didn&rsquo;t get always-on flat-rate internet until the early 2000s, because the business model and physical infrastructure were still tied to circuits.</p>
+<p>I remember when DSL arrived in 2002 - no dial tone, no phone bill fear. The modem sounds disappeared. I didn&rsquo;t understand what I&rsquo;d lost until I understood what those sounds were doing.</p>
+<hr>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Voice digitization: 8-bit samples at 8 kHz = 64 kbps. <a href="https://dsp.stackexchange.com/questions/22107/why-is-telephone-audio-sampled-at-8-khz">https://dsp.stackexchange.com/questions/22107/why-is-telephone-audio-sampled-at-8-khz</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>If you&rsquo;re feeling technical, I recommend this blog post about the sound of dial-up: <a href="https://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html">https://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</main>
+        <footer>
+</footer>
+
+          
+
+</body>
+</html>

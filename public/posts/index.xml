@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Fernando Simões</title>
+    <link>https://frn.sh/posts/</link>
+    <description>Recent content in Blog on Fernando Simões</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Fri, 12 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tracing an 8kb Postgres read</title>
+      <link>https://frn.sh/8kb-read/</link>
+      <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/8kb-read/</guid>
+      <description>&lt;p&gt;A while ago I had an IOPS production incident, which I wrote about &lt;a href=&#34;https://frn.sh/iops&#34;&gt;here&lt;/a&gt;. What I want to do in this post, though, is measure what happened. To do this, I need to isolate the problem and place it in a context I fully control. You don&amp;rsquo;t need to read the incident report text to follow this one. Ok. Here is the plan: run the same query three times and measure each run: first with the pages in shared buffers, then with the pages only in the OS page cache, and finally reading everything from disk. After that, I compare the numbers with two disks hidden behind cloud abstractions: the EBS volume from the incident, and a Hetzner server I benchmarked a while ago.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>What /proc sees in 19 MiB</title>
+      <link>https://frn.sh/smaps/</link>
+      <pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/smaps/</guid>
+      <description>&lt;p&gt;A few weeks ago &lt;a href=&#34;https://frn.sh/pmem/&#34;&gt;I profiled a Node.js server&lt;/a&gt; with recurring memory spikes. I found out dirty pages, allocator behavior and memory that did not return to the OS. To build a cleaner mental model, I stripped the problem down to something smaller: python3 -m http.server.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;root@debian:/# ps aux | grep http.server | grep -v grep&#xA;root       479226  0.0  0.1  32104 19324 pts/1    T    16:10   0:00 python3 -m http.server&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;19 MiB of resident memory. Where is every byte?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Where did 400 MiB go?</title>
+      <link>https://frn.sh/pmem/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/pmem/</guid>
+      <description>&lt;p&gt;I restarted all 60+ pods of a Node.js websocket app earlier today. Every single pod sitting at ~330 MiB of memory. Except one, which was double the rest - at 640 MiB.&lt;/p&gt;&#xA;&lt;p&gt;This is a statefulset. Memory jumped instead of growing gradually: ~230 MiB baseline, then a step to ~400 around 18:30, stabilized around 310, then another jump to ~640 at 20:00 and flatlined there. Discrete jumps, not a slow climb. Something was allocating memory in bursts and never releasing it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The layers between select and disk</title>
+      <link>https://frn.sh/iops/</link>
+      <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/iops/</guid>
+      <description>&lt;p&gt;Follow-up: I later reproduced this on hardware I control and measured every cache layer - shared buffers, page cache, NVMe, EBS - in microseconds. &lt;a href=&#34;https://frn.sh/8kb-read&#34;&gt;What an 8 KB read costs&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;We had a Postgres incident earlier this week. A bunch of Heroku timeouts and queries running for more than 30 minutes. IOPS was hitting the pvosioned limit. I kept thinking: what actually happens when Postgres reads from disk?&lt;/p&gt;&#xA;&lt;p&gt;I knew I needed a better index. But before fixing anything, I wanted to understand what &amp;ldquo;reading from disk&amp;rdquo; actually means. How many layers of caching exist between a &lt;code&gt;SELECT&lt;/code&gt; and the actual storage device? And what happens when they all fail?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>108,725 forks</title>
+      <link>https://frn.sh/tforks/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/tforks/</guid>
+      <description>&lt;p&gt;First week at a new job. A colleague was showing me around our Grafana dashboards, just routine monitoring of the baremetal machines. One caught my eye: a machine with 32GB RAM and a top-of-the-line processor was hitting 90% CPU. A few containers running, no alerts, and nobody had reported anything.&lt;/p&gt;&#xA;&lt;p&gt;I ssh&amp;rsquo;ed and found a process with cmd &lt;code&gt;bash startup.sh&lt;/code&gt; that had been running for 28 minutes.&lt;/p&gt;&#xA;&lt;p&gt;I straced it for a few minutes:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Ok, we need to copy</title>
+      <link>https://frn.sh/cow/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/cow/</guid>
+      <description>&lt;p&gt;Redis memory issues:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;WARNING Memory overcommit must be enabled! Without it, a background&#xA;save or replication may fail under low memory condition.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Redis forks to do background saves, fork copies memory, and if there&amp;rsquo;s not enough memory for the copy it fails. Set overcommit to 1 and move on.&lt;/p&gt;&#xA;&lt;p&gt;I was certain I understood this, but I was wrong about the mechanism.&lt;/p&gt;&#xA;&lt;p&gt;Fork doesn&amp;rsquo;t copy memory. When the kernel creates the child process, both parent and child point to the same physical pages. The child gets its own page table, but every entry points to the same physical frames as the parent. No copying yet.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Breaking what a program is</title>
+      <link>https://frn.sh/program/</link>
+      <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/program/</guid>
+      <description>&lt;p&gt;Where does the kernel draw the line between &amp;ldquo;program&amp;rdquo; and &amp;ldquo;data&amp;rdquo;? Most of this post is me trying to break what a program is, from the kernel&amp;rsquo;s point of view - taking real programs apart, and handing the kernel things it should not accept - until the rule it is enforcing becomes clear.&lt;/p&gt;&#xA;&lt;p&gt;If you wanna follow along, you should probably take a look at these: the ELF format is laid out in &lt;code&gt;man 5 elf&lt;/code&gt;, and the kernel side - who is allowed to run what - lives in &lt;code&gt;fs/exec.c&lt;/code&gt; and the &lt;code&gt;fs/binfmt_*.c&lt;/code&gt; files in the kernel source.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>DEC-style terminal keyboard</title>
+      <link>https://frn.sh/tty/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/tty/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://frn.sh/static/tty/dec.png&#34; alt=&#34;alt&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;My birthday is next month, so I bought myself something I&amp;rsquo;d wanted for a while: a terminal keyboard. Last year I read this &lt;a href=&#34;https://www.linusakesson.net/programming/tty/&#34;&gt;article&lt;/a&gt; about the history of the terminal and it fascinated me. I found a DEC-style Televideo terminal keyboard from the 70s or 80s (I can&amp;rsquo;t be sure of the exact date) and took advantage of the opportunity to learn a few things.&lt;/p&gt;&#xA;&lt;p&gt;These old terminal keyboards were sold alongside a &amp;ldquo;computer terminal,&amp;rdquo; which was essentially a dumb display and input device. The real computing power lived in the mainframe, typically in another room of the office building. The terminal would send characters to the mainframe and display the results back to the user - it didn&amp;rsquo;t have its own operating system, and the notion of keycodes, scancodes, and other abstractions that we have nowadays didn&amp;rsquo;t exist in the same way.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How packet switching won</title>
+      <link>https://frn.sh/packet-switching/</link>
+      <pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/packet-switching/</guid>
+      <description>&lt;figure&gt;&lt;img src=&#34;https://frn.sh/static/packet-switching/telephone.png&#34;&#xA;    alt=&#34;A very bad attempt to draw a telephone&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;I got obsessed with circuit switching a few months ago and couldn&amp;rsquo;t stop thinking about it. Telecom engineers had to solve a hard problem: in the analog age, carbon microphones converted voice into electrical signals that traveled over copper wires, with amplifiers boosting the signal across distances. In the digital age the same copper wires remained, but the approach changed - the analog signal was sampled at intervals, quantized into bits, and transmitted. Both eras needed circuit switching, the strategy to keep two people talking over a dedicated path.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Builtins and source</title>
+      <link>https://frn.sh/shell-source/</link>
+      <pubDate>Wed, 22 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/shell-source/</guid>
+      <description>&lt;p&gt;Understanding how the shell manages environment variables and session state requires understanding builtins, process groups, and memory space. This post traces how these pieces connect.&lt;/p&gt;&#xA;&lt;h2 id=&#34;types-builtins&#34;&gt;Types, builtins&lt;/h2&gt;&#xA;&lt;p&gt;There is a classification in the shell called &lt;code&gt;builtin&lt;/code&gt;. Some commands are builtin:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ type cd&#xA;cd is a shell builtin&#xA;➜  ~ type echo&#xA;echo is a shell builtin&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;But some are not:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;➜  ~ type mkdir&#xA;mkdir is /usr/bin/mkdir&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When a shell runs a command, it does one of two things: execute something available in its own memory space (a builtin), or execute something external (via &lt;code&gt;execve&lt;/code&gt;).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sigterm a D state process</title>
+      <link>https://frn.sh/sigterm/</link>
+      <pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/sigterm/</guid>
+      <description>&lt;p&gt;Load average hit 12 on a 2 vCPU machine during a production incident.&lt;/p&gt;&#xA;&lt;p&gt;Linux load average counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;The global load average is an exponentially decaying average of&#xA;nr_running + nr_uninterruptible.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Regular sleep doesn&amp;rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The cost of not measuring</title>
+      <link>https://frn.sh/measuring/</link>
+      <pubDate>Thu, 15 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/measuring/</guid>
+      <description>&lt;p&gt;Probability theory has a precise model for what happens when you act without measuring: the multi-armed bandit problem.&lt;/p&gt;&#xA;&lt;p&gt;You&amp;rsquo;re in a casino with k slot machines, each paying out at a different rate, and n rounds to play. The question is how you split those rounds between &lt;em&gt;finding out&lt;/em&gt; and &lt;em&gt;cashing in&lt;/em&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The dumbest viable strategy is called &lt;a href=&#34;https://en.wikipedia.org/wiki/Explore-then-commit_algorithm&#34;&gt;Explore-Then-Commit&lt;/a&gt;: try each machine m times, average the payouts, then go with the winner. It works, but it&amp;rsquo;s not optimal. Measurement isn&amp;rsquo;t free. Too few rounds &lt;em&gt;exploring&lt;/em&gt;, and you commit with bad data. But if you explore too much, you burn rounds you could have spent on the best machine.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
