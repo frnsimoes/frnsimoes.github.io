@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Subjects on </title>
+    <link>https://frn.sh/subjects/</link>
+    <description>Recent content in Subjects on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sat, 21 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/subjects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Memory</title>
+      <link>https://frn.sh/c/memory/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/c/memory/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Production</title>
+      <link>https://frn.sh/c/production/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/c/production/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cpu</title>
+      <link>https://frn.sh/c/cpu/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/c/cpu/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,41 @@
+{{ define "main" }}
+
+<header class="home-header">
+    <h1>Fernando's Blog</h1>
+</header>
+
+<div class="home-main">
+
+{{ $parts := split .RawContent "<!--posts-->" }}
+
+<section class="home-about">
+{{ .RenderString (index $parts 0) }}
+</section>
+
+<h3>Blog posts</h3>
+<ul class="blog-posts">
+    {{ range (where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "post")).ByDate.Reverse }}
+    <li>
+        <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+</ul>
+
+<!-- <h3>Labs</h3> -->
+<!-- <ul class="blog-posts"> -->
+<!--     {{ range (where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "lab")).ByDate.Reverse }} -->
+<!--     <li> -->
+<!--         <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time> -->
+<!--         <a href="{{ .RelPermalink }}">{{ .Title }}</a> -->
+<!--     </li> -->
+<!--     {{ end }} -->
+<!-- </ul> -->
+
+{{ if ge (len $parts) 2 }}
+{{ .RenderString (index $parts 1) }}
+{{ end }}
+
+</div>
+
+{{ end }}

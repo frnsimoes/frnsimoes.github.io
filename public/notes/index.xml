@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on </title>
+    <link>https://frn.sh/notes/</link>
+    <description>Recent content in Notes on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sun, 28 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/notes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>First note</title>
+      <link>https://frn.sh/notes/first-note/</link>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/notes/first-note/</guid>
+      <description>&lt;p&gt;Hi!&lt;/p&gt;&#xA;&lt;p&gt;Design &lt;del&gt;stolen from&lt;/del&gt; inspired by &lt;a href=&#34;https://healeycodes.com/notes&#34;&gt;healeycodes.com/notes&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

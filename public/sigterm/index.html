@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>Sigterm a D state process 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.1em;
+        color: #000;
+        background: #fff;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 1rem 2rem 0;
+    }
+
+    main {
+        max-width: 42em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer {
+        max-width: 42em;
+        margin: 0 auto 2rem;
+        padding: 0 2rem;
+    }
+
+    img { max-width: 100%; }
+
+    pre {
+        background: #f6f6f6;
+        border: 1px solid #ddd;
+        padding: 12px 16px;
+        overflow-x: auto;
+        font-family: monospace;
+        line-height: 1.4;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+
+    th, td {
+        border: 1px solid #999;
+        padding: 0.3em 0.6em;
+    }
+
+    .post-figure-side {
+        float: right;
+        width: 18rem;
+        max-width: 45%;
+        margin: 0.25rem 0 0.75rem 1.5rem;
+    }
+    .post-figure-side img { width: 100%; height: auto; border: 1px solid #ddd; }
+    .post-figure-side figcaption {
+        font-size: 0.8em;
+        line-height: 1.3;
+        margin-top: 0.3rem;
+        color: #555;
+    }
+    @media (max-width: 640px) {
+        .post-figure-side { float: none; width: 100%; max-width: 100%; margin: 1rem 0; }
+    }
+
+    .footer-email { height: 1.05em; width: auto; vertical-align: middle; }
+
+    .notes-header h1 { margin: 0 0 0.5rem; }
+    .notes-header p { margin: 0 0 0.75rem; color: #333; }
+
+    .notes-list { margin-top: 2rem; }
+    .note {
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    .note:last-child { border-bottom: none; }
+    .note-meta time {
+        font-size: 0.8em;
+        color: #777;
+    }
+    .note-anchor { color: inherit; text-decoration: none; }
+    .note-anchor:hover time { color: #000; }
+    .note-title { font-size: 1.05em; margin: 0.25rem 0 0.25rem; }
+    .note-body p:first-child { margin-top: 0.25rem; }
+    .note-body p:last-child { margin-bottom: 0; }
+    .note:target .note-meta time { color: #000; font-weight: bold; }
+
+    .home-collage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .home-collage figure { margin: 0; width: 12rem; max-width: 45%; }
+    .home-collage img { width: 100%; height: auto; }
+    .home-collage figcaption {
+        font-size: 0.8em;
+        line-height: 1.3;
+        color: #555;
+        margin-top: 0.3rem;
+    }
+
+    h3 { font-size: 1em; margin: 1rem 0 0.25rem; }
+    h3 + p { margin-top: 0.25rem; }
+
+    .home-header {
+        padding: 0;
+        margin-bottom: 0.75rem;
+    }
+    .home-header h1 { margin: 0; }
+
+    .home-about { margin-bottom: 2rem; }
+    .home-about p { margin: 0 0 0.75rem; }
+
+    .home-others { margin-top: 2rem; }
+
+    .home-main p { margin: 0.25rem 0 0.75rem; }
+    .home-main .blog-posts { margin-top: 0.25rem; margin-bottom: 1rem; padding-left: 0; list-style: none; }
+    .home-main .blog-posts li { margin-bottom: 0.3em; }
+
+    main:has(.about-layout) { max-width: 60em; }
+    body:has(.about-layout) footer { max-width: 60em; }
+
+    .about-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 14rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .about-copy ul {
+        padding-left: 0;
+        list-style-position: inside;
+    }
+
+    .collage {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .collage figure { margin: 0; }
+    .collage img { display: block; width: 100%; height: auto; }
+    .collage figcaption { font-size: 0.8em; line-height: 1.25; margin-top: 0.25rem; }
+
+    .about-collage {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+    }
+
+    @media (max-width: 640px) {
+        .about-layout { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; Sigterm a D state process
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>Sigterm a D state process</h4>
+
+<time datetime='2025-04-08'>April 8, 2025</time>
+
+<p>A kernel mystery I hit today: load average at 12 on a 2 vCPU machine during a production incident.</p>
+<p>Linux <a href="https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html">load average</a> counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:</p>
+<pre><code>The global load average is an exponentially decaying average of
+nr_running + nr_uninterruptible.
+</code></pre>
+<p>Regular sleep doesn&rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.</p>
+<p>Fine. My processes were waiting on disk, disk waits put processes in D state, D state counts toward load average, and load average was 12. No surprises here.</p>
+<p>Then I killed them. I sent SIGTERM and they died immediately.</p>
+<p>That shouldn&rsquo;t have worked. If a process is in D state, signals should get queued - the process shouldn&rsquo;t respond until the kernel wakes it up. That&rsquo;s the point of uninterruptible sleep: the kernel is protecting an operation that can&rsquo;t be safely interrupted.</p>
+<p>I was confused, so I tested it. Wrote a kernel module that forces a process into D state. Kinda hacky, I know, but this is what happened:</p>
+<pre><code>set_current_state(TASK_UNINTERRUPTIBLE);
+schedule_timeout(60 * HZ);
+</code></pre>
+<p>Loaded it, confirmed the process was in D, and sent SIGKILL.</p>
+<pre><code>root@debian:/proc/1506781# kill -9 1506781
+root@debian:/proc/1506781# cat status | grep -i SigPnd
+SigPnd: 0000000000000100
+</code></pre>
+<p>Signal pending, which means the process is still alive and in D state. <a href="https://www.kernel.org/doc/html/v6.9/filesystems/proc.html#:~:text=For%20example%2C%20to%20get%20the%20status%20information,shared%20p%20=%20private%20(copy%20on%20write)">Bit 8 is set</a>, SIGKILL confirmed. It stayed there for 60 seconds until the timeout expired and the kernel woke it up. Only then did it process the signal and die.</p>
+<p>Even strace couldn&rsquo;t attach (traces of despair):</p>
+<pre><code>root@debian:~# strace -c -p 1506781
+strace: Process 1506781 attached
+^C^C
+^C^C^C^C
+</code></pre>
+<p>What? I started searching for explanations, and found a few:</p>
+<p>Processes don&rsquo;t stay in one state. A process doing disk I/O goes D, then S, then D, then S again as individual reads complete and new ones start. But, since load average samples every 5 seconds, maybe ones I killed might have been in an S window when the signal arrived.</p>
+<p>Or run queue pressure - 77 processes on 2 cores. Even if most are sleeping, the ones that wake up create queue depth, and some of those 12 could have been runnable processes waiting for a core.</p>
+<p>Or TASK_KILLABLE. <a href="https://lwn.net/Articles/288056/">Since 2.6.25</a> there&rsquo;s a third sleep state: TASK_UNINTERRUPTIBLE | TASK_WAKEKILL. It shows up as D in /proc and counts toward load average, but it dies on fatal signals. Some filesystem code paths use it. If the I/O waits were hitting TASK_KILLABLE paths, that would explain everything - processes appear in D, contribute to load average, but die on signal.</p>
+<p>That last one is the most satisfying explanation, and it resolves the contradiction completely.</p>
+<p>I haven&rsquo;t traced the kernel code path to confirm it. So I&rsquo;m not going to say that&rsquo;s what happened.</p>
+<p><strong>Update, April 2026</strong></p>
+<p>I traced the kernel code path. The third hypothesis was correct.</p>
+<p>The generic buffered read path in mm/filemap.c does not use TASK_UNINTERRUPTIBLE. It uses TASK_KILLABLE.</p>
+<p>When a process does a buffered file read and the page isn&rsquo;t in the page cache, the kernel needs to read it from disk. While waiting, filemap_get_pages puts the process to sleep using one of two functions: wait_on_page_locked_killable or lock_folio_killable. Both use TASK_KILLABLE as the sleep state.</p>
+<pre tabindex="0"><code>int __folio_lock_killable(struct folio *folio)
+{
+    return folio_wait_bit_common(folio, PG_locked, TASK_KILLABLE,
+                    EXCLUSIVE);
+}
+</code></pre><p>The non-killable version is right above it:</p>
+<pre tabindex="0"><code>void __folio_lock(struct folio *folio)
+{
+    folio_wait_bit_common(folio, PG_locked, TASK_UNINTERRUPTIBLE,
+                EXCLUSIVE);
+}
+</code></pre><p>TASK_KILLABLE is defined in include/linux/sched.h as:</p>
+<pre tabindex="0"><code>#define TASK_KILLABLE   (TASK_WAKEKILL | TASK_UNINTERRUPTIBLE)
+</code></pre><p>Processes that have the TASK_WAKEKILL flag are D, they add to loadavg, and they take on fatal signals.</p>
+<p>And SIGTERM is a <a href="https://unix.stackexchange.com/questions/490805/what-is-a-fatal-signal">fatal signal</a> when the process has no handler for it. For the kernel, a fatal signal is any signal whose default action is &ldquo;terminate&rdquo; and that hasn&rsquo;t been caught or ignored. The fact SIGTERM killed the process makes a lot of sense now.</p>
+<p>So the full story: process does a buffered read, page misses the cache, filemap_read calls lock_folio_killable, process sleeps in TASK_KILLABLE, shows as D, inflates load average. I send SIGTERM. No handler installed so it&rsquo;s fatal. TASK_WAKEKILL wakes the process. Process sees the pending signal and dies.</p>
+<p>This is why my kernel module test behaved differently. The module used raw TASK_UNINTERRUPTIBLE with no TASK_WAKEKILL flag. Mystery solved.</p>
+
+</main>
+        <footer>
+<hr>
+<small>
+<a href="/">home</a> · <a href="/notes/">notes</a> · <a href="/index.xml">rss</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a> · <img class="footer-email" src="/static/email.jpg" alt="email">
+</small>
+
+</footer>
+
+          
+
+</body>
+</html>

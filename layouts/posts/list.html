@@ -1,0 +1,12 @@
+{{ define "main" }}
+<ul class="blog-posts">
+    {{ range (where .Pages "Params.labels" "intersect" (slice "post")).ByDate.Reverse }}
+    <li>
+        <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}</time>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </li>
+    {{ else }}
+    <li>No posts yet</li>
+    {{ end }}
+</ul>
+{{ end }}
