@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cpu on </title>
+    <link>https://frn.sh/c/cpu/</link>
+    <description>Recent content in Cpu on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/c/cpu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Investigating 108,725 forks</title>
+      <link>https://frn.sh/tforks/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/tforks/</guid>
+      <description>&lt;p&gt;One of my machines (32GB RAM and 8vCPUs) was hitting 90% of CPU usage. A few containers running, no alerts.&lt;/p&gt;&#xA;&lt;p&gt;I ssh&amp;rsquo;ed and found a process with cmd &lt;code&gt;bash startup.sh&lt;/code&gt; that had been running for 28 minutes.&lt;/p&gt;&#xA;&lt;p&gt;I straced it for a few minutes:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;% time     seconds  usecs/call     calls    errors syscall&#xA;------ ----------- ----------- --------- --------- ----------------&#xA; 75.36   52.698676         390    134819     26094 wait4&#xA; 12.27    8.583416          78    108725           fork&#xA;  7.42    5.190671           5    926332           rt_sigprocmask&#xA;  2.69    1.881557           5    330523    165262 close&#xA;  1.17    0.817651           9     82631           pipe&#xA;  0.64    0.449359           5     78280           rt_sigaction&#xA;  0.24    0.164395           6     26094           rt_sigreturn&#xA;  0.21    0.147095           5     26094     26094 ioctl&#xA;------ ----------- ----------- --------- --------- ----------------&#xA;100.00   69.932820          40   1713498    217450 total&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;108,725 forks and 134,819 wait4 calls. The delta is 26,094 - exactly the number of wait4 errors. Also the same exact number for ioctl and rt_sigreturn! The script was forking children and waiting on processes it didn&amp;rsquo;t create.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sigterm a D state process</title>
+      <link>https://frn.sh/sigterm/</link>
+      <pubDate>Tue, 08 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/sigterm/</guid>
+      <description>&lt;p&gt;A kernel mystery I hit today: load average at 12 on a 2 vCPU machine during a production incident.&lt;/p&gt;&#xA;&lt;p&gt;Linux &lt;a href=&#34;https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html&#34;&gt;load average&lt;/a&gt; counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;The global load average is an exponentially decaying average of&#xA;nr_running + nr_uninterruptible.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Regular sleep doesn&amp;rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

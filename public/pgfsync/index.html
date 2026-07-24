@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>The lock around WAL flush 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.1em;
+        color: #000;
+        background: #fff;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 1rem 2rem 0;
+    }
+
+    main {
+        max-width: 42em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer {
+        max-width: 42em;
+        margin: 0 auto 2rem;
+        padding: 0 2rem;
+    }
+
+    img { max-width: 100%; }
+
+    .blog-posts {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .blog-posts li {
+        display: grid;
+        grid-template-columns: 7em minmax(0, 1fr);
+        column-gap: 0.35em;
+        align-items: baseline;
+        margin-bottom: 0.35em;
+    }
+
+    .blog-posts time {
+        width: 7em;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .blog-posts a {
+        min-width: 0;
+    }
+
+    @media (max-width: 520px) {
+        .blog-posts li {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    pre {
+        background: #f6f6f6;
+        border: 1px solid #ddd;
+        padding: 12px 16px;
+        overflow-x: auto;
+        font-family: monospace;
+        line-height: 1.4;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+
+    th, td {
+        border: 1px solid #999;
+        padding: 0.3em 0.6em;
+    }
+
+    .post-figure-side {
+        float: right;
+        width: 18rem;
+        max-width: 45%;
+        margin: 0.25rem 0 0.75rem 1.5rem;
+    }
+    .post-figure-side img { width: 100%; height: auto; border: 1px solid #ddd; }
+    .post-figure-side figcaption {
+        font-size: 0.8em;
+        line-height: 1.3;
+        margin-top: 0.3rem;
+        color: #555;
+    }
+    @media (max-width: 640px) {
+        .post-figure-side { float: none; width: 100%; max-width: 100%; margin: 1rem 0; }
+    }
+
+    .footer-email { height: 1.05em; width: auto; vertical-align: middle; }
+
+    .notes-header h1 { margin: 0 0 0.5rem; }
+    .notes-header p { margin: 0 0 0.75rem; color: #333; }
+
+    .notes-list { margin-top: 2rem; }
+    .note {
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    .note:last-child { border-bottom: none; }
+    .note-meta time {
+        font-size: 0.8em;
+        color: #777;
+    }
+    .note-anchor { color: inherit; text-decoration: none; }
+    .note-anchor:hover time { color: #000; }
+    .note-title { font-size: 1.05em; margin: 0.25rem 0 0.25rem; }
+    .note-body p:first-child { margin-top: 0.25rem; }
+    .note-body p:last-child { margin-bottom: 0; }
+    .note:target .note-meta time { color: #000; font-weight: bold; }
+
+    .home-collage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .home-collage figure { margin: 0; width: 12rem; max-width: 45%; }
+    .home-collage img { width: 100%; height: auto; }
+    .home-collage figcaption {
+        font-size: 0.8em;
+        line-height: 1.3;
+        color: #555;
+        margin-top: 0.3rem;
+    }
+
+    h3 { font-size: 1em; margin: 1rem 0 0.25rem; }
+    h3 + p { margin-top: 0.25rem; }
+
+    .home-header {
+        padding: 0;
+        margin-bottom: 0.75rem;
+    }
+    .home-header h1 { margin: 0; }
+
+    .home-about { margin-bottom: 2rem; }
+    .home-about p { margin: 0 0 0.75rem; }
+
+    .home-others { margin-top: 2rem; }
+
+    .home-main p { margin: 0.25rem 0 0.75rem; }
+    .home-main .blog-posts { margin-top: 0.25rem; margin-bottom: 1rem; padding-left: 0; list-style: none; }
+    .home-main .blog-posts li { margin-bottom: 0.3em; }
+
+    main:has(.about-layout) { max-width: 60em; }
+    body:has(.about-layout) footer { max-width: 60em; }
+
+    .about-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 14rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .about-copy ul {
+        padding-left: 0;
+        list-style-position: inside;
+    }
+
+    .collage {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .collage figure { margin: 0; }
+    .collage img { display: block; width: 100%; height: auto; }
+    .collage figcaption { font-size: 0.8em; line-height: 1.25; margin-top: 0.25rem; }
+
+    .about-collage {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+    }
+
+    @media (max-width: 640px) {
+        .about-layout { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; The lock around WAL flush
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>The lock around WAL flush</h4>
+
+<time datetime='2026-07-18'>July 18, 2026</time>
+
+<p>A slow-storage wait event is ambiguous: the queue can form before the slow operation or after it. If the slow part happens inside a lock, one slow IO cascades into thousands of stuck backends. If it happens outside, though, the same slowness stays contained. This is the story of why 1193 backends piled up behind a WAL append on a database that barely writes, while 194 backends doing reads stayed fine.</p>
+<p>Once I had an interesting Postgres IO degradation event - the bottleneck wasn&rsquo;t sequential scans. After a few hours the storage burst balance was exhausted, connections jumped from 200 (baseline) to a few thousand, and checkpoint lag spiked to hours.</p>
+<p>At the same time, Postgres hit the antiwraparound threshold of 200M and autovacuum was triggered across databases with old frozen XIDs.</p>
+<pre tabindex="0"><code>wait_event_type |     wait_event      | count
+-----------------+---------------------+-------
+ LWLock          | WALWrite            |  1193
+ IO              | DataFileRead        |   194
+ IO              | DataFileWrite       |     4
+ Lock            | frozenid            |     2
+ IO              | WalSync             |     1
+</code></pre><p>This time I was surprised. My first guess was: Oh, ok, probably another sequential scan issue. But that wasn&rsquo;t it. Look at WALWrite vs DataFileRead.</p>
+<p>Why are backend processes being locked behind a simple WAL write? Before I looked at pg_stats, my first guess was that autovacuum was the culprit. But only two processes were locked on frozenid - that wasn&rsquo;t it. WALWrite is not an IO wait, it&rsquo;s a lock event. Processes were waiting on each other.</p>
+<p>I remember I thought: but why? A WAL record is small, and writing to it is an append. Well, today I had the chance to dig deeper by reading <a href="https://github.com/postgres/postgres/blob/master/src/backend/access/transam/xlog.c#L2325">xlog.c</a> in the source code.</p>
+<h3 id="the-insert-path">The insert path</h3>
+<p>The first thing I found was the insert side.</p>
+<pre tabindex="0"><code>* Inserting to WAL is protected by a small fixed number of WAL insertion
+* locks. To insert to the WAL, you must hold one of the locks - it doesn&#39;t
+* matter which one.
+</code></pre><p>We have 8 <code>NUM_XLOGINSERT_LOCKS</code>. The insert itself is two steps:</p>
+<pre tabindex="0"><code>* 1. Reserve the right amount of space from the WAL. The current head of
+*    reserved space is kept in Insert-&gt;CurrBytePos, and is protected by
+*    insertpos_lck.
+*
+* 2. Copy the record to the reserved WAL space. This involves finding the
+*    correct WAL buffer containing the reserved space, and copying the
+*    record in place. This can be done concurrently in multiple processes.
+</code></pre><p>Step 1 is serialized, and they say so in <code>ReserveXLogInsertLocation</code>:</p>
+<pre tabindex="0"><code>* This is the performance critical part of XLogInsert that must be serialized
+* across backends. The rest can happen mostly in parallel. Try to keep this
+* section as short as possible, insertpos_lck can be heavily contended on a
+* busy system.
+</code></pre><p>Under the spinlock:</p>
+<pre tabindex="0"><code>SpinLockAcquire(&amp;Insert-&gt;insertpos_lck);
+
+startbytepos = Insert-&gt;CurrBytePos;
+endbytepos = startbytepos + size;
+prevbytepos = Insert-&gt;PrevBytePos;
+Insert-&gt;CurrBytePos = endbytepos;
+Insert-&gt;PrevBytePos = startbytepos;
+
+SpinLockRelease(&amp;Insert-&gt;insertpos_lck);
+</code></pre><p>That&rsquo;s only three reads and two writes. Not that much work. If this was the problem, I would&rsquo;ve seen <code>LWLock:WALInsertLock</code>. But I didn&rsquo;t.</p>
+<h3 id="the-flush-path">The flush path</h3>
+<p>The flush path is more interesting:</p>
+<pre tabindex="0"><code>* WALWriteLock: must be held to write WAL buffers to disk (XLogWrite or
+* XLogFlush).
+(...)
+* info_lck is only held long enough to read/update the protected variables,
+* so it&#39;s a plain spinlock. The other locks are held longer (potentially
+* over I/O operations), so we use LWLocks for them.
+</code></pre><p>So flush is 1 lock, exclusive. Very different from the 8 locks of the insert path. Since there&rsquo;s only one WAL stream and one device, this is where successful inserts fall into. It makes sense.</p>
+<p>XLogWrite does a pg_pwrite under that lock. The write path often only has to copy WAL data into the kernel/page cache, although it can also stall if the kernel/device is already under pressure. After that, we get fsync - issue_xlog_fsync, which goes through the block layer, the driver, across the network. The durable wait is usually the dangerous part. This also makes sense.</p>
+<p>Out of all those 1193 backends, most were not doing I/O themselves. They were sleeping while waiting for the backend holding WALWriteLock to finish.</p>
+<p>But shouldn&rsquo;t the kernel have handled this issue? Storage saturation doesn&rsquo;t signal anything to the kernel because there were no errors - things were waiting on a lock, that&rsquo;s it. Once storage saturated, requests beyond the baseline were effectively throttled, increasing fsync latency. From the kernel&rsquo;s point of view the device got slower, and the fsync inside the critical section takes longer, the lock is held longer, and 1193 backends wait longer for the lock.</p>
+<h3 id="what-happens-inside-a-datafileread">What happens inside a DataFileRead</h3>
+<p>The answer is at <a href="https://github.com/postgres/postgres/blob/master/src/backend/storage/buffer/bufmgr.c">bufmgr.c</a> - a read looks up the page in the shared buffers first, and that lookup is partitioned. Take a look at BufferAlloc:</p>
+<pre tabindex="0"><code>LWLockAcquire(newPartitionLock, LW_SHARED);
+existing_buf_id = BufTableLookup(&amp;newTag, newHash);
+if (existing_buf_id &gt;= 0)
+{
+    BufferDesc *buf;
+    bool        valid;
+
+    buf = GetBufferDescriptor(existing_buf_id);
+    valid = PinBuffer(buf, strategy, false);
+
+    /* Can release the mapping lock as soon as we&#39;ve pinned it */
+    LWLockRelease(newPartitionLock);
+    ...
+    return buf;
+}
+
+/*
+ * Didn&#39;t find it in the buffer pool.  We&#39;ll have to initialize a new
+ * buffer.  Remember to unlock the mapping lock while doing the work.
+ */
+LWLockRelease(newPartitionLock);
+</code></pre><p>&ldquo;Pin&rdquo; here means: mark this buffer as in use, so nothing else recycles its slot while you&rsquo;re reading it. It&rsquo;s a counter that goes up when reading the page, and down when the read is done.</p>
+<p>The read lock in this case is LW_SHARED - it&rsquo;s not exclusive like the WAL flush lock. The most important difference though is when the read lock gets released: right after the lookup, on both paths. BufferAlloc finds the buffer, drops the lock, and returns without touching disk while holding the lock. This is the meaning of the comment on the miss path: unlock while doing the work, the read comes after, outside this function.</p>
+<p>The distinction: WAL holds one exclusive lock across the fsync, read drops its lock before IO happens. The slow part - waiting on the device per se - is inside the lock for WAL and outside it for reads.</p>
+<p>This is why the 194 DataFileRead didn&rsquo;t pile up. Each issued read waited on its own IO, and there were no locks between reads. DataFileRead grows with how many IOs are in flight. WALWrite grows with how long one backend holds the flush lock, even though the device beneath is the same for both.</p>
+<p>(Reads do serialize in one case: two backends wanting the same page that isn&rsquo;t loaded into shared buffers yet - in this case, one reads it, the other waits. But that&rsquo;s one page at one instant. Backends scanning different pages never hit it.)</p>
+<h3 id="why-not-just-split-the-flush-lock">Why not just split the flush lock?</h3>
+<p>If reads scale by partitioning the buffer table, why not do the same to the WAL flush? I searched. Someone tried exactly this in a <a href="https://www.postgresql.org/message-id/CAGz5QCLUZKRezjnhu2VtU5K-1-JGeGf+aJk8iqvF80z4QNywAw@mail.gmail.com">2016 pgsql-hackers thread</a>. The idea was to move the flush out of WALWriteLock and into a separate WALFlushLock, so an OS write could happen while a fsync was still in progress.</p>
+<p>But it made things worse. Throughput dropped 10 to 12% because the contention split and grew. In their own words:</p>
+<pre tabindex="0"><code>But, we didn&#39;t see any performance improvements, rather it decreased by 10%-12%.
+Hence to measure the wait events, we performed a run for 30 minutes with 64 clients.
+
+HEAD
+------------------------
+48642 LWLockNamed | WALWriteLock
+
+With Patch
+----------------------------------
+31889 LWLockNamed | WALFlushLock
+25212 LWLockNamed | WALWriteLock
+
+The contention on WAL Write Lock was reduced, but together with WAL Flush
+lock, the total contention got increased.
+
+...
+
+Due to reduced contention on WAL Write Lock, lot of backends are going for
+small os writes, sometimes on same 8KB page, i.e., write calls are not
+properly accumulated.
+</code></pre><p>There were two reasons: the cost for lock acquire/release was now double, and splitting broke the batching - &ldquo;when fsync is going, we are not able to accumulate sufficient data for the next fsync&rdquo;. The single fsync model is useful because it covers many commits (group commit). Splitting fsync means we now have to deal with batching in another way.</p>
+<p>The reason reads and WAL aren&rsquo;t symmetric is: different pages are independent, so there&rsquo;s no need to have only one lock reading different pages. WAL records are different - they are ordered (one log and stream). Its purpose is to be replayed in sequence, so you can&rsquo;t just shard the flush without paying the ordering back somewhere.</p>
+<p>Worth a caution, though: seeing WALWrite in the wait events doesn&rsquo;t prove the lock itself is the ceiling. Andres Freund, on a later report of the same contention, <a href="https://www.mail-archive.com/pgsql-hackers@postgresql.org/msg317461.html">doubted the lock was the prime issue</a> and noted Postgres scaling further without it dominating. In my case the lock was a symptom - the device underneath was saturated - not the root cause.</p>
+<hr>
+<h3 id="things-i-still-dont-know">Things I still don&rsquo;t know</h3>
+<p>There are things I still don&rsquo;t know: I don&rsquo;t know how much autovacuum impacted IO exhaustion - the storage-balance metric was measured at the instance level, so it included vacuum reads, query reads, checkpoint writes, and WAL activity. Peak was most writes, which points away from the vacuum reads. But the vacuum <em>was</em> writing too since it generates WAL.</p>
+<p>I also don&rsquo;t have a fsync number because I didn&rsquo;t check pg_stat_wal during the incident, which is annoying. 1193 is an observed queue length, not a direct fsync-latency measurement.</p>
+<p>We can use Little&rsquo;s Law in order to make sense of the numbers: queue length = arrival rate * waiting time.</p>
+<p>These numbers are illustrative, not a claim that I measured 5000 commits/s in this incident:</p>
+<ul>
+<li>5000 flush/commit arrivals per second * 1ms service time = 5 backends</li>
+<li>5000 flush/commit arrivals per second * 240ms service time = 1200 backends</li>
+</ul>
+<p>The point is not the exact 240ms. The point is that once fsync/service time moves from single-digit milliseconds to hundreds of milliseconds, the queue can become four digits very quickly. The missing variables are the flush arrival rate and ms_per_sync from pg_stat_wal.</p>
+<h3 id="what-this-was-really-about">What this was really about</h3>
+<p>I learned a lot. LWLock:WALWrite is not really &ldquo;oh boy, there are lots of wal writes right now&rdquo;. It represents something more threatening: there&rsquo;s a lock, something is holding that lock, everyone else who is waiting on the line is sleeping. There&rsquo;s only one flush path, and once a backend is holding that lock across a slow flush, the others cannot progress until it completes. This is threatening because of how fast service time scales up and the queue fills. What happened during the incident is a clear example of this.</p>
+<hr>
+<p><em>Operational values have been rounded and identifying details omitted; the technical behavior is unchanged.</em></p>
+
+</main>
+        <footer>
+<hr>
+<small>
+<a href="/">home</a> · <a href="/notes/">notes</a> · <a href="/index.xml">rss</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a> · <img class="footer-email" src="/static/email.jpg" alt="email">
+</small>
+
+</footer>
+
+          
+
+</body>
+</html>

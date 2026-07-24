@@ -1,0 +1,18 @@
+{{ if not .IsHome }}
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="{{ "/" | relURL }}">frn.sh</a>
+        {{ if and (eq .Section "posts") .IsPage }}
+            &raquo; {{ .Title }}
+        {{ else if eq .Kind "term" }}
+            &raquo; {{ .Title | urlize }}
+        {{ else if eq .Kind "taxonomy" }}
+            &raquo; subject
+        {{ else if .IsSection }}
+            &raquo; {{ .Title | urlize }}
+        {{ else if and .IsPage .File }}
+            &raquo; {{ .Title | urlize }}
+        {{ end }}
+    </nav>
+</div>
+{{ end }}

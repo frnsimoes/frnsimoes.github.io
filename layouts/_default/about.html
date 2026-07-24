@@ -1,0 +1,19 @@
+{{ define "main" }}
+<h4>{{ .Title }}</h4>
+<div class="about-layout">
+    <div class="about-copy">
+        {{ .Content }}
+    </div>
+    <div class="collage about-collage">
+        {{ range $filename, $caption := .Site.Data.collage }}
+            {{ $path := printf "collage/%s" $filename }}
+            {{ if fileExists (printf "static/%s" $path) }}
+            <figure>
+                <img src="{{ $path | relURL }}" alt="{{ $caption }}" loading="lazy">
+                <figcaption>{{ $caption }}</figcaption>
+            </figure>
+            {{ end }}
+        {{ end }}
+    </div>
+</div>
+{{ end }}

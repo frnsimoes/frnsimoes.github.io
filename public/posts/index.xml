@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on </title>
+    <link>https://frn.sh/posts/</link>
+    <description>Recent content in Blog on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sat, 18 Jul 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The lock around WAL flush</title>
+      <link>https://frn.sh/pgfsync/</link>
+      <pubDate>Sat, 18 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/pgfsync/</guid>
+      <description>&lt;p&gt;A slow-storage wait event is ambiguous: the queue can form before the slow operation or after it. If the slow part happens inside a lock, one slow IO cascades into thousands of stuck backends. If it happens outside, though, the same slowness stays contained. This is the story of why 1193 backends piled up behind a WAL append on a database that barely writes, while 194 backends doing reads stayed fine.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>An experiment on Postgres read latency</title>
+      <link>https://frn.sh/8kb-read/</link>
+      <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/8kb-read/</guid>
+      <description>&lt;p&gt;We had an IOPS incident a few months back. I couldn&amp;rsquo;t observe what was happening because EBS hides the storage implementation details - I couldn&amp;rsquo;t tell whether Postgres was serving pages from shared_buffers, linux page cache or physical storage. Since those layers have very different latencies, I wanted to measure each of them independently. So I experimented in a more controlled environment: how a shared buffer hit, an OS page cache hit, and a disk hit differ.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Where did 400 MiB go?</title>
+      <link>https://frn.sh/pmem/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/pmem/</guid>
+      <description>&lt;p&gt;Doing some routine upgrades tonight. I restarted 60 pods of a Nodejs websocket application. Every pod came back at ~250 MiB of memory. One of them soon started to be hammerd by some automation tool we have, and memory spike from ~250 to 600+ MiB. And stayed there.&lt;/p&gt;&#xA;&lt;p&gt;This pattern wasn&amp;rsquo;t new. I&amp;rsquo;ve been seeing this for months. Well, today I decided to understand what&amp;rsquo;s happening. My first bet is the usual culprit: V8&amp;rsquo;s garbage collection.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Investigating 108,725 forks</title>
+      <link>https://frn.sh/tforks/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/tforks/</guid>
+      <description>&lt;p&gt;One of my machines (32GB RAM and 8vCPUs) was hitting 90% of CPU usage. A few containers running, no alerts.&lt;/p&gt;&#xA;&lt;p&gt;I ssh&amp;rsquo;ed and found a process with cmd &lt;code&gt;bash startup.sh&lt;/code&gt; that had been running for 28 minutes.&lt;/p&gt;&#xA;&lt;p&gt;I straced it for a few minutes:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;% time     seconds  usecs/call     calls    errors syscall&#xA;------ ----------- ----------- --------- --------- ----------------&#xA; 75.36   52.698676         390    134819     26094 wait4&#xA; 12.27    8.583416          78    108725           fork&#xA;  7.42    5.190671           5    926332           rt_sigprocmask&#xA;  2.69    1.881557           5    330523    165262 close&#xA;  1.17    0.817651           9     82631           pipe&#xA;  0.64    0.449359           5     78280           rt_sigaction&#xA;  0.24    0.164395           6     26094           rt_sigreturn&#xA;  0.21    0.147095           5     26094     26094 ioctl&#xA;------ ----------- ----------- --------- --------- ----------------&#xA;100.00   69.932820          40   1713498    217450 total&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;108,725 forks and 134,819 wait4 calls. The delta is 26,094 - exactly the number of wait4 errors. Also the same exact number for ioctl and rt_sigreturn! The script was forking children and waiting on processes it didn&amp;rsquo;t create.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Breaking a program</title>
+      <link>https://frn.sh/program/</link>
+      <pubDate>Tue, 21 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/program/</guid>
+      <description>&lt;p&gt;I want to understand what are the boundaries of what a program is. To do this, I&amp;rsquo;m going to break &lt;code&gt;ls&lt;/code&gt;. If you want to follow along, you can take a look at these: the ELF format is laid out in &lt;code&gt;man 5 elf&lt;/code&gt;, and the kernel side - who is allowed to run what - lives in &lt;a href=&#34;https://elixir.bootlin.com/linux/v7.1/source/fs/exec.c&#34;&gt;&lt;code&gt;fs/exec.c&lt;/code&gt;&lt;/a&gt; and the &lt;code&gt;fs/binfmt_*.c&lt;/code&gt; files in the kernel source.&lt;/p&gt;&#xA;&lt;p&gt;For a program to run, the kernel only need a few fields: the entry point and program headers. The first one tells the kernel where to jump to start executing the program, and the second what to map into memory.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sigterm a D state process</title>
+      <link>https://frn.sh/sigterm/</link>
+      <pubDate>Tue, 08 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/sigterm/</guid>
+      <description>&lt;p&gt;A kernel mystery I hit today: load average at 12 on a 2 vCPU machine during a production incident.&lt;/p&gt;&#xA;&lt;p&gt;Linux &lt;a href=&#34;https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html&#34;&gt;load average&lt;/a&gt; counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;The global load average is an exponentially decaying average of&#xA;nr_running + nr_uninterruptible.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Regular sleep doesn&amp;rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The cost of not measuring</title>
+      <link>https://frn.sh/measuring/</link>
+      <pubDate>Thu, 15 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/measuring/</guid>
+      <description>&lt;p&gt;The dumbest viable strategy is called &lt;a href=&#34;https://en.wikipedia.org/wiki/Explore-then-commit_algorithm&#34;&gt;Explore-Then-Commit&lt;/a&gt;: try each machine m times, average the payouts, then go with the winner. It works, but it&amp;rsquo;s not optimal. Measurement isn&amp;rsquo;t free. Too few rounds &lt;em&gt;exploring&lt;/em&gt;, and you commit with bad data. But if you explore too much, you burn rounds you could have spent on the best machine.&lt;/p&gt;&#xA;&lt;p&gt;Now look at the degenerate case of ETC: &lt;strong&gt;m = 0&lt;/strong&gt;. You walk in, you like the blue slot machine, so you decide to pull the blue machine forever. Every round you might be on the wrong machine, but you will never know because you have no way to tell that&amp;rsquo;s the case. Your regret grows linearly with time, which is the formal way of saying you bleed value on every single pull and die ignorant.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CS Papers</title>
+      <link>https://frn.sh/cs-papers/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/cs-papers/</guid>
+      <description>&lt;h3 id=&#34;queueing--load-modeling&#34;&gt;Queueing &amp;amp; Load Modeling&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.usenix.org/legacy/event/nsdi06/tech/full_papers/schroeder/schroeder.pdf&#34;&gt;Open Versus Closed: A Cautionary Tale&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://research.google/pubs/the-tail-at-scale/&#34;&gt;The Tail at Scale&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://queue.acm.org/detail.cfm?id=2209336&#34;&gt;Controlling Queue Delay (CoDel)&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;database&#34;&gt;Database&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.vldb.org/pvldb/vol9/p204-leis.pdf&#34;&gt;How Good Are Query Optimizers, Really?&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://dsf.berkeley.edu/cs286/papers/fiveminute-tr1986.pdf&#34;&gt;The Five-Minute Rule&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.vldb.org/pvldb/vol17/p4536-leis.pdf&#34;&gt;LeanStore: A High-Performance Storage Engine for NVMe SSDs&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;storage--io&#34;&gt;Storage &amp;amp; I/O&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.vldb.org/pvldb/vol16/p2090-haas.pdf&#34;&gt;What Modern NVMe Storage Can Do&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.cs.cit.tum.de/fileadmin/w00cfj/dis/papers/damon25_wake_up_call.pdf&#34;&gt;A Wake-Up Call for Kernel-Bypass on Modern Hardware&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://pure.itu.dk/ws/portalfiles/portal/90360680/main.pdf&#34;&gt;I/O Interface Independence with xNVMe&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.cs.cit.tum.de/fileadmin/w00cfj/dis/papers/latency.pdf&#34;&gt;Moving on From Group Commit: Autonomous Commit on NVMe SSDs&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://arxiv.org/pdf/2409.01580&#34;&gt;Foreactor: Exploiting Storage I/O Parallelism with Explicit Speculation&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;kernel&#34;&gt;Kernel&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.usenix.org/system/files/osdi22-zhong_1.pdf&#34;&gt;XRP: In-Kernel Storage Functions with eBPF&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.cs.princeton.edu/courses/archive/fall11/cos518/papers/livelock.pdf&#34;&gt;Eliminating Receive Livelock in an Interrupt-Driven Kernel&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;memory&#34;&gt;Memory&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.usenix.org/system/files/osdi21-hunter.pdf&#34;&gt;Beyond malloc efficiency to fleet efficiency (TCMalloc)&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://people.csail.mit.edu/delimitrou/papers/2024.asplos.memory.pdf&#34;&gt;Characterizing a Memory Allocator at Warehouse Scale&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;scheduling--load-balancing&#34;&gt;Scheduling &amp;amp; Load Balancing&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43438.pdf&#34;&gt;Borg&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/44824.pdf&#34;&gt;Maglev&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;datacenter-network&#34;&gt;Datacenter Network&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://ccr.sigcomm.org/online/files/p63-alfares.pdf&#34;&gt;A Scalable, Commodity Data Center Network Architecture (Fat-Tree)&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://queue.acm.org/detail.cfm?id=3022184&#34;&gt;Congestion-Based Congestion Control (BBR)&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://people.csail.mit.edu/alizadeh/papers/homa-sigcomm18.pdf&#34;&gt;Homa&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;observability&#34;&gt;Observability&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://research.google.com/archive/papers/dapper-2010-1.pdf&#34;&gt;Dapper&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.vldb.org/pvldb/vol8/p1816-teller.pdf&#34;&gt;Gorilla&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://notes.stephenholiday.com/Kafka.pdf&#34;&gt;Kafka: a Distributed Messaging System for Log Processing&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.brendangregg.com/usemethod.html&#34;&gt;Systems Performance / USE Method&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

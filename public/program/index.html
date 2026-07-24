@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+        <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+<title>Breaking a program 
+        </title>
+
+        <meta name="referrer" content="no-referrer-when-downgrade" />
+
+        <style>
+    body {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.1em;
+        color: #000;
+        background: #fff;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 1rem 2rem 0;
+    }
+
+    main {
+        max-width: 42em;
+        margin: 1.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    footer {
+        max-width: 42em;
+        margin: 0 auto 2rem;
+        padding: 0 2rem;
+    }
+
+    img { max-width: 100%; }
+
+    .blog-posts {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .blog-posts li {
+        display: grid;
+        grid-template-columns: 7em minmax(0, 1fr);
+        column-gap: 0.35em;
+        align-items: baseline;
+        margin-bottom: 0.35em;
+    }
+
+    .blog-posts time {
+        width: 7em;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .blog-posts a {
+        min-width: 0;
+    }
+
+    @media (max-width: 520px) {
+        .blog-posts li {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    pre {
+        background: #f6f6f6;
+        border: 1px solid #ddd;
+        padding: 12px 16px;
+        overflow-x: auto;
+        font-family: monospace;
+        line-height: 1.4;
+    }
+
+    pre code {
+        display: block;
+        white-space: pre;
+    }
+
+    code {
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-size: 0.9em;
+    }
+
+    th, td {
+        border: 1px solid #999;
+        padding: 0.3em 0.6em;
+    }
+
+    .post-figure-side {
+        float: right;
+        width: 18rem;
+        max-width: 45%;
+        margin: 0.25rem 0 0.75rem 1.5rem;
+    }
+    .post-figure-side img { width: 100%; height: auto; border: 1px solid #ddd; }
+    .post-figure-side figcaption {
+        font-size: 0.8em;
+        line-height: 1.3;
+        margin-top: 0.3rem;
+        color: #555;
+    }
+    @media (max-width: 640px) {
+        .post-figure-side { float: none; width: 100%; max-width: 100%; margin: 1rem 0; }
+    }
+
+    .footer-email { height: 1.05em; width: auto; vertical-align: middle; }
+
+    .notes-header h1 { margin: 0 0 0.5rem; }
+    .notes-header p { margin: 0 0 0.75rem; color: #333; }
+
+    .notes-list { margin-top: 2rem; }
+    .note {
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    .note:last-child { border-bottom: none; }
+    .note-meta time {
+        font-size: 0.8em;
+        color: #777;
+    }
+    .note-anchor { color: inherit; text-decoration: none; }
+    .note-anchor:hover time { color: #000; }
+    .note-title { font-size: 1.05em; margin: 0.25rem 0 0.25rem; }
+    .note-body p:first-child { margin-top: 0.25rem; }
+    .note-body p:last-child { margin-bottom: 0; }
+    .note:target .note-meta time { color: #000; font-weight: bold; }
+
+    .home-collage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .home-collage figure { margin: 0; width: 12rem; max-width: 45%; }
+    .home-collage img { width: 100%; height: auto; }
+    .home-collage figcaption {
+        font-size: 0.8em;
+        line-height: 1.3;
+        color: #555;
+        margin-top: 0.3rem;
+    }
+
+    h3 { font-size: 1em; margin: 1rem 0 0.25rem; }
+    h3 + p { margin-top: 0.25rem; }
+
+    .home-header {
+        padding: 0;
+        margin-bottom: 0.75rem;
+    }
+    .home-header h1 { margin: 0; }
+
+    .home-about { margin-bottom: 2rem; }
+    .home-about p { margin: 0 0 0.75rem; }
+
+    .home-others { margin-top: 2rem; }
+
+    .home-main p { margin: 0.25rem 0 0.75rem; }
+    .home-main .blog-posts { margin-top: 0.25rem; margin-bottom: 1rem; padding-left: 0; list-style: none; }
+    .home-main .blog-posts li { margin-bottom: 0.3em; }
+
+    main:has(.about-layout) { max-width: 60em; }
+    body:has(.about-layout) footer { max-width: 60em; }
+
+    .about-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 14rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .about-copy ul {
+        padding-left: 0;
+        list-style-position: inside;
+    }
+
+    .collage {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .collage figure { margin: 0; }
+    .collage img { display: block; width: 100%; height: auto; }
+    .collage figcaption { font-size: 0.8em; line-height: 1.25; margin-top: 0.25rem; }
+
+    .about-collage {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+    }
+
+    @media (max-width: 640px) {
+        .about-layout { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+    <body>
+        <header>
+<div class="header-container">
+    <nav class="breadcrumb">
+        <a href="/">frn.sh</a>
+        
+            &raquo; Breaking a program
+        
+    </nav>
+</div>
+
+</header>
+        <main>
+<h4>Breaking a program</h4>
+
+<time datetime='2025-10-21'>October 21, 2025</time>
+
+<p>I want to understand what are the boundaries of what a program is. To do this, I&rsquo;m going to break <code>ls</code>. If you want to follow along, you can take a look at these: the ELF format is laid out in <code>man 5 elf</code>, and the kernel side - who is allowed to run what - lives in <a href="https://elixir.bootlin.com/linux/v7.1/source/fs/exec.c"><code>fs/exec.c</code></a> and the <code>fs/binfmt_*.c</code> files in the kernel source.</p>
+<p>For a program to run, the kernel only need a few fields: the entry point and program headers. The first one tells the kernel where to jump to start executing the program, and the second what to map into memory.</p>
+<p>Let&rsquo;s first copy ls and check a few fields:</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls myls
+frn@debian:~$ readelf -h myls | grep -E &#39;Entry point|Number of program headers&#39;
+  Entry point address:               0x6760
+  Number of program headers:         14
+</code></pre><p>For us to break <code>ls</code>, we need to find where are these two fields&rsquo; offsets.<code>man 5 elf</code> gives the order of its fields. We start with program-headers in the offset 56:</p>
+<p>So, yes, let&rsquo;s start with it. Our first task is to open the copy, seek to 56, write two zero bytes over the count, then ask <code>readelf</code> whether it really went to zero:</p>
+<pre tabindex="0"><code>frn@debian:~$ python3 -c &#39;f = open(&#34;myls&#34;, &#34;r+b&#34;); f.seek(56); f.write(b&#34;\x00&#34;)&#39;
+...
+  Number of program headers:         0
+</code></pre><p>If you try to execute it, you will get &ldquo;Exec format error&rdquo;, so <code>execve</code> gets <code>-1</code> and raises ENOEXEC. This happens because, with no program headers, the kernel cannot tell which bytes are code or where they go in memory, so there is nothing for it to load.</p>
+<p>Now we copy <code>ls</code> again and break the other field - the entry point, an eight-byte field 24 bytes into the file:</p>
+<pre tabindex="0"><code>frn@debian:~$ python3 -c &#39;f = open(&#34;myls&#34;, &#34;r+b&#34;); f.seek(24); f.write(b&#34;\x00&#34; * 8)&#39;
+...
+  Entry point address:               0x0
+</code></pre><p>Execute it. No ENOEXEC because the program headers are intact and the kernel loads the file happily, <code>execve</code> returns 0 as well. But when the kernel tries to jump to the entry point and start running, there is no code - so we get a segfault (&ldquo;killed by SIGSEGV&rdquo;). Ok, so my first intuition is that a program is something the kernel can map into memory and start executing. If it has a segment to load, it&rsquo;s happy; an address to jump to, also happy.</p>
+<p><code>ls</code> is dynamically linked: and when we run a dynamically-linked program, the kernel does not jump to its entry point, it jumps to the <em>interpreter</em> - the dynamic linker - and lets it load the libraries and eventually call the code. The interpreter is just another field in the file, a path string, which you can see with readelf:</p>
+<pre tabindex="0"><code>frn@debian:~$ readelf -p .interp /bin/ls
+  [     0]  /lib64/ld-linux-x86-64.so.2
+</code></pre><p>So what if we point it somewhere else?</p>
+<pre tabindex="0"><code>frn@debian:~$ cat fakeld.s
+.global _start
+_start:
+    mov $1, %rax          # write(stderr, msg, len)
+    mov $2, %rdi          
+    lea msg(%rip), %rsi   
+    mov $msglen, %rdx     
+    syscall
+    mov $60, %rax         # exit(3)
+    mov $3, %rdi          
+    syscall
+msg: .ascii &#34;[fakeld] all your base are belong to us\n&#34;
+    msglen = . - msg
+frn@debian:~$ gcc -nostdlib -no-pie -o /tmp/fakeld fakeld.s
+</code></pre><p>The interpreter path sits at a fixed offset in the file - <code>readelf -l</code> lists it as the <code>INTERP</code> segment, at <code>0x394</code> - so I can overwrite it in place and run the result:</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls lshj
+frn@debian:~$ python3 -c &#39;f = open(&#34;lshj&#34;, &#34;r+b&#34;); f.seek(0x394); f.write(b&#34;/tmp/fakeld\x00&#34;)&#39;
+frn@debian:~$ ./lshj
+[fakeld] all your base are belong to us
+</code></pre><p><code>ls</code> never ran. The kernel went to the interpreter first, and the interpreter was fakeld.</p>
+<hr>
+<h3 id="scripts">Scripts</h3>
+<p>Scripts make that idea very clear. A shell script is only text. It is &ldquo;executable&rdquo; because its first line tells the kernel what&rsquo;s the script&rsquo;s interpreter. Let&rsquo;s make this clear by point it to <code>cat</code>:</p>
+<pre tabindex="0"><code>frn@debian:~$ printf &#39;#!/bin/cat\nCats: all your base are belong to us\n&#39; &gt; s
+frn@debian:~$ chmod +x s &amp;&amp; ./s
+#!/bin/cat
+Cats: all your base are belong to us
+</code></pre><p>The &ldquo;program&rdquo; prints itself. If we point the same file at <code>/bin/true</code> instead, it won&rsquo;t do anything - <code>true</code> ignores its argument and exits - so what a script <em>does</em> is decided entirely by whatever line one points to.</p>
+<p>It seems we are discovering <em>rules</em>. And we really are. These rules live in the kernel, in a function that tries the file against each format it knows: <code>search_binary_handler</code>. <code>binfmt_misc</code> lets you add more. Take for example a file in a format nothing recognizes; it starts with the bytes <code>ZeroWing</code>:</p>
+<pre tabindex="0"><code>frn@debian:~$ printf &#39;ZeroWing\nthe kernel runs me now\n&#39; &gt; note.zerowing
+frn@debian:~$ chmod +x note.zerowing
+frn@debian:~$ strace -e execve ./note.zerowing
+execve(&#34;./note.zerowing&#34;, [&#34;./note.zerowing&#34;], 0x7ffeb60752c0 /* 20 vars */) = -1 ENOEXEC (Exec format error)
+</code></pre><p><code>ENOEXEC</code> again - the kernel has no handler that recognizes this file. Note that the problem isn&rsquo;t the extension <code>zerowing</code>, the issue is that the first line of the file is garbage to the kernel because <code>ZeroWing</code> means nothing.</p>
+<p>Now that this is clear, let&rsquo;s teach the kernel one more format: any file whose magic<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> is <code>ZeroWing</code> should run through <code>cat</code>.</p>
+<pre tabindex="0"><code>frn@debian:~$ echo &#39;:zerowing:M::ZeroWing::/bin/cat:&#39; | sudo tee /proc/sys/fs/binfmt_misc/register
+</code></pre><p>Now you can <code>cat</code> /proc/sys/fs/binfmt_misc/zerowing and see: the interpreter is set to <code>/bin/cat</code>.</p>
+<p>We didn&rsquo;t change anything in the file, but it&rsquo;s now a program:</p>
+<pre tabindex="0"><code>frn@debian:~$ ./note.zerowing
+ZeroWing
+the kernel runs me now
+</code></pre><hr>
+<h3 id="e_machine">e_machine</h3>
+<p>Ok, so wrapping all of this so far: a simple binary with its program headers or its entry point zeroed: not a program. A binary whose interpreter was swapped: it runs, but runs the swapped interpreter. A text file that does whatever its first line says, and dies if that line points back at itself. A <code>ZeroWing</code> file that was garbage until I registered a handler.</p>
+<p>This makes things clear to me. A program is a file the kernel knows how to run.</p>
+<p>One last break. Take a file that has every detail we listed: a valid ELF, program headers intact, a real entry point. By the contract, it is a program.</p>
+<p>But copy <code>ls</code> once more. Let&rsquo;s change another field now - <code>e_machine</code>. This field represent which CPU the code was built for (offset 18). I changed it from x86-64 to AArch64 to see what happens:</p>
+<pre tabindex="0"><code>frn@debian:~$ cp /bin/ls archmix
+frn@debian:~$ python3 -c &#39;f = open(&#34;archmix&#34;, &#34;r+b&#34;); f.seek(18); f.write(b&#34;\xb7\x00&#34;)&#39;
+frn@debian:~$ readelf -h archmix | grep -E &#39;Type|Machine&#39;
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+</code></pre><p><code>readelf</code> reads it without any issues: a valid 64-bit executable with four <code>LOAD</code> segments. We have a valid entry point too. But when I try to run it, <code>ENOEXEC</code> again. <code>e_machine</code> is part of the ABI: rules for how code and the processor work together - instruction encoding, registers, how a syscall is made, etc. This also means x86-64 instructions are not valid to an ARM core, for obvious reasons. So the kernel checks the architecture first, before it maps anything. If the CPU cannot run the code, everything else is irrelevant.</p>
+<hr>
+<h3 id="june-2026-update">June 2026 update</h3>
+<p>Since I wrote this article, I&rsquo;ve read multiple interesting materials exploring files and programs. Two of them are simply great, and I highly recommend if this got you interested and you want to dig deeper.</p>
+<ul>
+<li><a href="https://github.com/corkami/docs/blob/master/talks.md#file-formats">Ange Albertini</a> - Funky file formats CCC 2014 is pure gold.</li>
+<li><a href="https://muppetlabs.com/~breadbox/software/tiny/teensy.html">Brian Raiter</a>  - How to compose from scratch an ELF file the kernel has agreed to run.</li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>The magic field is the hex for ASCII ZeroWing. <code>binfmt_misc</code> entry matches any file whose first 8 bytes are ZeroWing (offset 0) and runs through <code>/bin/cat</code>. In this case, the magic field is <code>5a65726f57696e67</code>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</main>
+        <footer>
+<hr>
+<small>
+<a href="/">home</a> · <a href="/notes/">notes</a> · <a href="/index.xml">rss</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a> · <img class="footer-email" src="/static/email.jpg" alt="email">
+</small>
+
+</footer>
+
+          
+
+</body>
+</html>

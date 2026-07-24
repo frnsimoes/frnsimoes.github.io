@@ -1,0 +1,6 @@
+{{ with .Site.Menus.footer }}
+<hr>
+<small>
+{{ range $i, $item := . }}{{ if $i }} · {{ end }}{{ if $item.Params.img }}<img class="footer-email" src="{{ $item.Params.img }}" alt="email">{{ else }}<a href="{{ $item.URL }}">{{ $item.Name }}</a>{{ end }}{{ end }}
+</small>
+{{ end }}

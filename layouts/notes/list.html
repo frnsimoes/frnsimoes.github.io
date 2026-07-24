@@ -1,0 +1,24 @@
+{{ define "main" }}
+<div class="notes-header">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+</div>
+
+<div class="notes-list">
+    {{ range .Pages.ByDate.Reverse }}
+    <article class="note" id="{{ .File.ContentBaseName }}">
+        <div class="note-meta">
+            <a class="note-anchor" href="#{{ .File.ContentBaseName }}">
+                <time datetime='{{ .Date.Format "2006-01-02" }}'>{{ .Date.Format "January 2, 2006" }}</time>
+            </a>
+        </div>
+        {{ with .Title }}<h2 class="note-title">{{ . }}</h2>{{ end }}
+        <div class="note-body">
+            {{ .Content }}
+        </div>
+    </article>
+    {{ else }}
+    <p>No notes yet.</p>
+    {{ end }}
+</div>
+{{ end }}

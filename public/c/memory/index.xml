@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Memory on </title>
+    <link>https://frn.sh/c/memory/</link>
+    <description>Recent content in Memory on </description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Sat, 21 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/c/memory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Where did 400 MiB go?</title>
+      <link>https://frn.sh/pmem/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/pmem/</guid>
+      <description>&lt;p&gt;Doing some routine upgrades tonight. I restarted 60 pods of a Nodejs websocket application. Every pod came back at ~250 MiB of memory. One of them soon started to be hammerd by some automation tool we have, and memory spike from ~250 to 600+ MiB. And stayed there.&lt;/p&gt;&#xA;&lt;p&gt;This pattern wasn&amp;rsquo;t new. I&amp;rsquo;ve been seeing this for months. Well, today I decided to understand what&amp;rsquo;s happening. My first bet is the usual culprit: V8&amp;rsquo;s garbage collection.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
