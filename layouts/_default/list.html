@@ -1,0 +1,6 @@
+{{ define "main" }}
+<header class="page-header">
+    <h1>{{ .Title }}</h1>
+</header>
+{{ partial "post-list.html" (dict "pages" .Pages "Site" .Site) }}
+{{ end }}

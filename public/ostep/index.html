@@ -1,0 +1,103 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<title>Videos</title> 
+</head> 
+
+<body vlink="#00aacc" text="black" link="#00aacc" bgcolor="white" alink="orange">
+
+<center><table><tbody><tr><td width="500pt">
+
+<center>
+<font color="#00aacc">
+<h1>Videos</h1> 
+</font> 
+</center> 
+
+<h2>Overview</h2> 
+
+<p>Videos and notes from class will be posted here.</p> 
+
+<p><b>Lecture 1:</b> Introduction to the class, including the basics of 
+what an OS does, and the major themes of the course: virtualization, 
+concurrency, and persistence. Overview of how the class works. Finally, 
+introduction to CPU virtualization, and start of discussion on 
+mechanisms to support it. <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-jan23.pdf">Notes</a> - Video: <a href="https://youtu.be/3uMbb9dLtlE">Part 1</a> - <a href="https://youtu.be/K4qbAiC77Yo">Part 2</a> - <a href="https://youtu.be/LVxN7ZkGh3w">Part 3</a> </p> 
+
+<p><b>Discussion 1:</b> Introduction to project p1a, some simple Unix utilities. <a href="https://youtu.be/rgcq9x8LtGQ">Video</a> - <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/discuss1.tgz">Code</a> </p> 
+
+<p><b>Lecture 2:</b> Recapitulation of mechanisms to support CPU 
+virtualization, and completion of said topic. Introduction to CPU 
+scheduling (policies). Introduction to homeworks for CPU virtualization 
+chapters. <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-jan30.pdf">Notes</a> - Video: <a href="https://youtu.be/oTd72Yp2m8w">Part 1</a> - <a href="https://youtu.be/Q09UgVfragU">Part 2</a> - <a href="https://youtu.be/fin5-82L-r8">Part 3</a> </p> 
+
+<p><b>Discussion 2:</b> Introduction to project p1b, adding a system call to xv6. <a href="https://www.youtube.com/watch?v=vR6z2QGcoo8">Video</a> </p> 
+
+<p><b>Lecture 3:</b> CPU scheduling policy (continued). Focus on 
+multi-level feedback queue (Part 1). Introduction to virtual memory, 
+including simplest mechanism called dynamic relocation (Part 2). Wrap up
+ dynamic relocation, talk about segmentations (Part 3). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-feb6.pdf">Notes (1,2)</a> Notes (3) - Video: <a href="https://youtu.be/cAiwISFta4g">Part 1</a> <a href="https://youtu.be/I0RIlSN0DzM">Part 2</a> <a href="https://youtu.be/0WVoWlOT-kY">Part 3</a> </p> 
+
+<p><b>Discussion 3:</b> Introduction to project p2a, the Unix shell. <a href="https://youtu.be/76PfvXTwF04">Video</a> </p> 
+
+<p><b>Lecture 4:</b> Review of dynamic relocation and segmentation, and 
+problems. Intro to paging (Part 1). More on paging mechanisms, and 
+intrinsic problems (Part 2). Introduction to TLBs (Part 3). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-feb13.pdf">Notes</a> - Video: <a href="https://youtu.be/wAx_h3HkIX0">Part 1</a> <a href="https://youtu.be/7BOXM2XgGO4">Part 2</a> <a href="https://youtu.be/LprKOBsALGA">Part 3</a> </p> 
+
+<p><b>Lecture 5:</b> Review of paging and its problems. How to handle 
+the fact that linear page tables are too big? Hint: multi-level page 
+tables (Part 1). How to handle the fact that programs might use more 
+memory than is physically available? Hint: swap to disk. (Part 2). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-feb20.pdf">Notes</a> - Video: <a href="https://www.youtube.com/watch?v=ggPkFxOTwHY">Part 1</a> <a href="https://www.youtube.com/watch?v=4tPXkN5nRQs">Part 2</a> </p> 
+
+<p><b>Discussion 5:</b> Intro to xv6 scheduler. <a href="https://www.youtube.com/watch?v=eYfeOT1QYmg">Video</a> </p> 
+
+<p><b>Lecture 6:</b> Intro to concurrency (Part 1). Understanding a 
+simple data race, the lack of mutual exclusion, and indeterminate 
+outcomes (Part 2). How to build a simple spin lock using atomic 
+exchange, how to add locks to a list or hash table (Part 3). Notes: <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-feb27.pdf">Part 1</a> Part 2 - Video: <a href="https://www.youtube.com/watch?v=4PghlMdp9cU">Part 1</a> <a href="https://www.youtube.com/watch?v=hivv8F-LjzY">Part 2</a> <a href="https://youtu.be/BoLYvNp2Lc4">Part 3</a> </p> 
+
+<p><b>Discussion 6:</b> C fun and games. <a href="https://www.youtube.com/watch?v=nW5lK_AGLb0">Video</a> - <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/discuss6.tgz">Code</a> </p> 
+
+<p><b>Lecture 7:</b> More concurrency. Review of spin locks and their 
+problems. Ticket locks, yield(), and park()/unpark() (Part 1). Wrap up 
+of locks (for now). Introduction to condition variables, and the 
+fork/join problem (Part 2). Continued fork/join, intro to bounder buffer
+ (producer/consumer) problem (Part 3). Handouts: <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/Handout-CVDef+ForkJoinProblem.pdf">Fork/Join</a> <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/Handout-PC.pdf">Producer/Consumer</a> - Notes: <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-mar6.pdf">Parts 1,2</a> <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-mar7.pdf">Part 3</a> - Video: <a href="https://www.youtube.com/watch?v=G95w4ghn42A">Part 1</a> <a href="https://www.youtube.com/watch?v=X5clCyJ4uuk">Part 2</a> <a href="https://youtu.be/RN8A9EvKBdY">Part 3</a> </p> 
+
+<p><b>Discussion 7:</b> Intro to p3. <a href="https://www.youtube.com/watch?v=z6dqk6iBBRY">Video</a> </p> 
+
+<p><b>Lecture 8:</b> Remembering producer/consumer (Part 1). Ending producer/consumer, intro to semaphores (Part 2). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-mar13.pdf">Notes.</a> Handouts: <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/Handout-Semaphores.pdf">Semaphores.</a> Video: <a href="https://youtu.be/U1LfmL7f1h8">Part 1</a> <a href="https://youtu.be/cuY8r8RXqAY">Part 2</a> <a href="https://youtu.be/WVHRaqom0yo">Part 3 (Discussion)</a> </p> 
+
+<p><b>Lecture 9:</b> Bugs and deadlock (Part 1). Review (Part 2). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-mar20.pdf">Notes.</a> <a href="https://youtu.be/Fnp_K63ss44">Part 1</a> <a href="https://youtu.be/AMG29dlH8t0">Part 2</a> </p> 
+
+<p><b>Review:</b> <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-mar21.pdf">Notes.</a> <a href="https://youtu.be/doHSi2ffu9I">Video</a> </p> 
+
+<p><b>Lecture 10:</b> Introduction to Persistence. The Hard Disk Drive. Disk Scheduling. <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-apr3.pdf">Notes.</a> - Video: <a href="https://youtu.be/SQz2CTpI-NM">Part1</a> <a href="https://youtu.be/15dJR01z82k">Part2</a> <a href="https://youtu.be/yErUVST4Fv0">Part 3</a> </p> 
+
+<p><b>Discussion 10:</b> xv6 and Thread Creation. <a href="https://www.youtube.com/watch?v=G9nW9UbkT7s">Video</a> </p> 
+
+<p><b>Lecture 11:</b> RAID. Levels 0, 1, 4, and 5. File System API and Abstractions. Notes: <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-apr10.pdf">1</a> <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-apr11.pdf">2</a> - Video: <a href="https://youtu.be/XF0mKxLrSVs">Part 1</a> <a href="https://youtu.be/h3WKYo1B19U">Part 2</a> <a href="https://youtu.be/Mn9g9XWec28">Part 3</a> and <a href="https://youtu.be/EDFoFlzZ8_w">Part 4</a> </p> 
+
+<p><b>Discuss 11:</b> Brief intro to MapReduce. <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-apr11.pdf">Notes</a> (same as above) - Video: <a href="https://youtu.be/tSiJ_oBSOZE">Part 1</a> </p> 
+
+<p><b>Lecture 12:</b> Intro to on-disk file system structures (Part 1). Access methods (Part 2). Caching + Stuff (Part 3). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-apr17.pdf">Notes</a> - Video: <a href="https://youtu.be/QMjJlCqUYW4">Part 1</a> <a href="https://youtu.be/87vv7nVdTDA">Part 2</a> <a href="https://youtu.be/5n0AdNuBObU">Part 3</a> </p> 
+
+<p><b>Discuss 12:</b> Q/A on MapReduce. Video: <a href="https://youtu.be/jVmWrr8y0Uw">Part 1</a> </p> 
+
+<p><b>Lecture 13:</b> Intro to crash consistency (Part 1). Crash consistency and journaling (Part 2). Fast File System (Part 3). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-apr24.pdf">Notes</a> - Video: <a href="https://youtu.be/piwPJ0sLV0Y">Part 1</a> <a href="https://youtu.be/MgnQV-ss1wc">Part 2</a> <a href="https://youtu.be/wwvMNItRyl8">Part 3</a> </p> 
+
+<p><b>Lecture 14:</b> LFS intro (Part 1). More LFS, including garbage 
+collection (Part 2). Flash-based SSDs (Part 3). So-called words of 
+wisdom (Part 4). <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-may1.pdf">Notes</a> - Video: <a href="https://youtu.be/59XSFnXQ-9Q">Part 1</a> <a href="https://youtu.be/6fbm9u7__L0">Part 2</a> <a href="https://youtu.be/vvttbstRdj8">Part 3</a> <a href="https://youtu.be/sKTyhqvTUBU">Part 4</a> </p> 
+
+<p><b>Review:</b> <a href="https://pages.cs.wisc.edu/~remzi/Classes/537/Spring2018/Discussion/note-may7.pdf">Notes</a> - Video: <a href="https://youtu.be/TSiMDPFquO4">Part 1</a> <a href="https://youtu.be/jIcw7B36oBU">Part 2</a> </p> 
+
+<p>.</p> 
+
+
+</td> </tr> </tbody></table> </center>   
+
+
+
+
+
+</body></html>

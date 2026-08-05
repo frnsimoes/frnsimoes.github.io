@@ -1,0 +1,14 @@
+{{ define "main" }}
+<header class="page-header">
+    <h1>{{ .Title }}</h1>
+</header>
+{{ range .Data.Terms.Alphabetical }}
+<section class="listing-section">
+    <h2><a href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a></h2>
+    {{ with .Page.Description }}<p>{{ . }}</p>{{ end }}
+    {{ partial "post-list.html" (dict "pages" .Pages "Site" $.Site) }}
+</section>
+{{ else }}
+<p class="empty-state">No subjects yet.</p>
+{{ end }}
+{{ end }}

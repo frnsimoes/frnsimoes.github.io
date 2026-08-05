@@ -1,0 +1,5 @@
+{{ if not .IsHome }}
+<header class="site-header">
+    <nav aria-label="Main navigation"><a href="{{ "/" | relURL }}">← {{ .Site.Title }}</a></nav>
+</header>
+{{ end }}

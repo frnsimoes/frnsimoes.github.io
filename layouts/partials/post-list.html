@@ -1,0 +1,12 @@
+<ul class="post-list">
+    {{ range .pages.ByDate.Reverse }}
+    <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{ if not .Date.IsZero }}
+        <small>- <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format (default "Jan 2, 2006" .Site.Params.dateFormat) }}</time></small>
+        {{ end }}
+    </li>
+    {{ else }}
+    <li>No posts yet.</li>
+    {{ end }}
+</ul>

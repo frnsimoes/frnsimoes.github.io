@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="{{ with .Site.LanguageCode }}{{ . }}{{ else }}en-US{{ end }}">
+<head>
+    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script><!-- End Cloudflare Web Analytics -->
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    {{- partial "favicon.html" . }}
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{ . }} · {{ end }}{{ .Site.Title }}{{ end }}</title>
+    {{ with .OutputFormats.Get "rss" -}}
+    <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ $.Site.Title }}">
+    {{ end -}}
+    {{- partial "style.html" . }}
+    {{- partial "custom_head.html" . }}
+</head>
+<body>
+    <div class="site-shell">
+        {{- partial "header.html" . -}}
+        <main id="main-content">{{- block "main" . }}{{- end }}</main>
+        {{- partial "footer.html" . -}}
+    </div>
+    {{- partial "custom_body.html" . }}
+</body>
+</html>

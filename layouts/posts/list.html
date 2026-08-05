@@ -1,0 +1,7 @@
+{{ define "main" }}
+<header class="page-header">
+    <h1>{{ .Title }}</h1>
+</header>
+{{ $posts := (where .Pages "Params.labels" "intersect" (slice "post")).ByDate.Reverse }}
+{{ partial "post-list.html" (dict "pages" $posts "Site" .Site) }}
+{{ end }}

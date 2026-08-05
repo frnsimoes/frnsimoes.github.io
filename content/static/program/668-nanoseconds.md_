@@ -1,0 +1,44 @@
++++
+date = 2026-06-21
+title = "668 nanoseconds on a network disk"
+labels = ["post"]
+subjects = ["storage", "production"]
++++
+
+A while ago I was crazily searching for a solution to leave Heroku's database model and go somewhere else. Since we've been running a cluster on Hetzner, I decided to check it out. I picked a Hetzner CCX33 - 8vCPUs, 32 GB RAM, 240 GB NVMe. 
+
+Hetzner doesn't say explicitly what kind of storage is this. It only says "SSD", the CCX family is vCPU dedicated, and they offer other storage models. In the [announcement](https://archive.org/details/hetzner.com_news_new-dedicated-vcpu-cloud-server_) of this model, they only say the machine's storage is a NVMe SSD.
+
+But what kind of NVMe SSD? Is these have dedicated vCPUs can I assume they also have local attached storage?
+
+And... I ran `fio` on the disk, to find out if "ssd" was actually a local ssd or a network-attached storage. I needed the first because high IOPS was a priority.
+
+I tested random 8kb reads, `--direct=1` to bypass the page cache, `iodepth=32`, `numjobs=4`, and libaio:
+
+```
+read: IOPS=325k
+clat: p1=668ns, p50=123us, p99=1.3ms
+```
+
+325,000 IOPS. The p50 of 123 microseconds looks great - it's faster than a local NVMe I have at home, which never answered a single read below 61 microseconds.
+
+Look at p1 though: 668 nanoseconds. How can this be possible?
+
+`--direct=1` bypasses the OS page cache, so this is not Linux serving me a cached page. Well, as far as I know, nothing mechanical answers in 668ns. Home NVMe has a floor around 61 microseconds. Sub-microsecond is RAM.
+
+So this is probably something below the OS layer - the storage backend, a controller, a cache in front of the actual device. 
+
+Let's go back to numbers to try and understand this better. This time, instead of read events, I'm going to dispatch write ones.
+
+```
+write: IOPS=10.2k
+clat: p50=12.1ms, p99=16.2ms
+```
+
+12 ms for an 8kb write to become durable. That'a totally different story from the read event. 
+
+With this two benchmarks, we can be sure that reads were served from a cache somewhere. This raises a few questions:
+
+**Cache: hot vs cold reads**
+
+

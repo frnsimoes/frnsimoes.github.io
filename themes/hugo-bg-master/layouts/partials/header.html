@@ -1,0 +1,17 @@
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script><!-- End Cloudflare Web Analytics -->
+<div class="header-container">
+    <nav class="breadcrumb">
+        {{ if .IsHome }}
+            frn.sh
+        {{ else }}
+            <a href="{{ "/" | relURL }}">frn.sh</a>
+            {{ if eq .Section "posts" }}
+                &raquo; {{ .Title | urlize }}
+            {{ else if .IsSection }}
+                &raquo; {{ .Title | urlize }}
+            {{ else if and .IsPage .File }}
+                &raquo; {{ .Title | urlize }}
+            {{ end }}
+        {{ end }}
+    </nav>
+</div>

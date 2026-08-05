@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="Fernando Simões — systems engineer. Debugging stories from production down to the kernel.">
+<link rel="shortcut icon" href="https://frn.sh/favicon.ico" />
+
+    <title>Reads vs writes under pressure · Fernando Simões</title>
+    <style>
+    html {
+        color-scheme: light;
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        margin: 0;
+        background: white;
+        color: black;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .site-shell {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem;
+    }
+
+    img, video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    h1 {
+        margin: 0 0 0.75rem;
+        font-size: 1.4rem;
+        line-height: 1.25;
+    }
+
+    h2 {
+        margin: 2rem 0 0.75rem;
+        font-size: 1.1rem;
+        line-height: 1.3;
+    }
+
+    h3 { font-size: 1rem; }
+
+    p { margin: 0.75rem 0; }
+
+    .home-header p { margin: 0.15rem 0; }
+
+    .post-list {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+    .post-list li { margin: 0.4rem 0; }
+    .post-list time { white-space: nowrap; }
+
+    .site-header { margin-bottom: 2rem; }
+
+    .article-header { margin-bottom: 1.5rem; }
+    .article-header h1 { margin-bottom: 0.25rem; }
+    .article-header p { margin: 0; }
+
+    .prose {
+        line-height: 1.65;
+        overflow-wrap: break-word;
+    }
+
+    .prose h2 {
+        margin-top: 2rem;
+        font-size: 1.25rem;
+    }
+
+    .prose h3 {
+        margin-top: 1.75rem;
+        font-size: 1.1rem;
+    }
+
+    .prose ul,
+    .prose ol { padding-left: 1.5rem; }
+
+    .prose pre {
+        overflow-x: auto;
+        padding: 0.75rem;
+        background: #f5f5f5;
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .prose code {
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+
+    .prose pre code {
+        font-size: inherit;
+        white-space: pre;
+    }
+
+    .prose table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .prose th,
+    .prose td {
+        padding: 0.3rem 0.5rem;
+        border: 1px solid #999;
+        text-align: left;
+    }
+
+    figure { margin: 1.5rem 0; }
+
+    figcaption {
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+
+    .home-collage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .home-collage figure {
+        width: 12rem;
+        max-width: 45%;
+        margin: 0;
+    }
+
+    .home-collage img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .post-figure-side {
+        float: right;
+        width: 18rem;
+        max-width: 45%;
+        margin: 0.25rem 0 0.75rem 1.5rem;
+    }
+
+    .listing-section + .listing-section { margin-top: 2rem; }
+
+    .about-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 12rem;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .collage {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .collage figure { margin: 0; }
+
+    details { margin: 1rem 0; }
+    details summary { cursor: pointer; font-weight: bold; }
+
+    .site-footer { margin-top: 3rem; }
+    .site-footer hr { margin-bottom: 0.75rem; }
+    .site-footer p { margin: 0; }
+
+    @media (max-width: 640px) {
+        .site-shell { padding: 1.5rem 1rem; }
+        .about-layout { grid-template-columns: 1fr; }
+        .post-figure-side {
+            float: none;
+            width: 100%;
+            max-width: 100%;
+            margin: 1rem 0;
+        }
+    }
+</style>
+
+
+</head>
+<body>
+    <div class="site-shell">
+<header class="site-header">
+    <nav aria-label="Main navigation"><a href="/">← Fernando Simões</a></nav>
+</header>
+
+<main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>Reads vs writes under pressure</h1>
+        
+        <p><small><time datetime="2026-07-18">Jul 18, 2026</time></small></p>
+        
+    </header>
+    <div class="prose">
+        <p>Take a look at this wait-event table:</p>
+<pre tabindex="0"><code>wait_event_type | wait_event    | count
+----------------+---------------+-------
+LWLock          | WALWrite      |  1193
+IO              | DataFileRead  |   194
+IO              | DataFileWrite |     4
+Lock            | frozenid      |     2
+IO              | WalSync       |     1
+</code></pre><p>1193 backends on WALWrite made no sense at all. This was a Postgres whose normal workload barely wrote anything. IOPS had exhausted a few hours earlier, connections had climbed from a few hundred to a few thousand, checkpoints were hours behind, and Postgres also had crossed the anti-wraparound threshold, so autovacuum was working with old frozen XIDs.</p>
+<p>Since writes seemed to be bonking the database, I needed to understand why. Postgres was running on the baseline IOPS (~4k at that moment), so any IO operations would wait, but reads and writes do not wait in the same way.</p>
+<p>The question now turned from &ldquo;what&rsquo;s happening?&rdquo; to &ldquo;why is the writing queue so much longer?&rdquo;. The kind of question you only answer after an incident, and only at 2am when sleep isn&rsquo;t happening.</p>
+<p>I found out one interesting thing xlog.c: Postgres flushes into WAL while holding an info_lck.</p>
+<pre tabindex="0"><code>* WALWriteLock: must be held to write WAL buffers to disk (XLogWrite or
+* XLogFlush).
+(...)
+* info_lck is only held long enough to read/update the protected variables,
+* so it&#39;s a plain spinlock. The other locks are held longer (potentially
+* over I/O operations), so we use LWLocks for them.
+</code></pre><p>It&rsquo;s one exclusive lock. It makes sense.</p>
+<p>XLogWrite does a pg_pwrite under that lock. The write path often only has to copy WAL data into the kernel/page cache, although it can also stall if the kernel/device is already under pressure - ta da! After that, we get fsync on issue_xlog_fsync, which goes through the block layer, driver, maybe across the network.</p>
+<p>So it took only one flush in a lock to hold all those 1193 backends. Next question: Shouldn&rsquo;t the kernel have handled this issue? Storage saturation doesn&rsquo;t signal anything to the kernel because there were no errors - things were waiting on a lock, that&rsquo;s it. Once storage saturated, requests beyond the baseline were effectively throttled, increasing fsync latency. From the kernel&rsquo;s point of view the device got slower, and the fsync inside the critical section takes longer, the lock is held longer, and 1193 backends wait longer for the lock.</p>
+<p>But since we had so many more reads than writes, why only 194 DataFileRead? The answer is in bufmgr.c:</p>
+<pre tabindex="0"><code>LWLockAcquire(newPartitionLock, LW_SHARED);
+existing_buf_id = BufTableLookup(&amp;newTag, newHash);
+if (existing_buf_id &gt;= 0)
+{
+    BufferDesc *buf;
+    bool        valid;
+
+    buf = GetBufferDescriptor(existing_buf_id);
+    valid = PinBuffer(buf, strategy, false);
+
+    /* Can release the mapping lock as soon as we&#39;ve pinned it */
+    LWLockRelease(newPartitionLock);
+    ...
+    return buf;
+}
+
+/*
+ * Didn&#39;t find it in the buffer pool.  We&#39;ll have to initialize a new
+ * buffer.  Remember to unlock the mapping lock while doing the work.
+ */
+LWLockRelease(newPartitionLock);
+</code></pre><p>A read looks up the page in the shared buffers first, and that lookup is partitioned.</p>
+<p>&ldquo;Pin&rdquo; here means: mark this buffer as in use, so nothing else recycles its slot while you are reading it. It&rsquo;s a counter.</p>
+<p>The read lock is also a LW_SHARED - which means it&rsquo;s not an exclusive lock like the WAL flush lock. The most important difference though is when the read lock gets released: right after the lookup, on both paths. BufferAlloc finds the buffer, drops the lock, and returns without touching disk while holding the lock. This is the meaning of the comment on the miss path: unlock while doing the work, the read comes after, outside this function. Reads drop the lock <em>before IO happens</em>.</p>
+<p>DataFileRead grows with how many IOs are in flight, and WALWrite grows with how long one backend holds the flush lock, even though the device beneath is the same for both of them.</p>
+<p>So we can have multiple parallel reads (they only serialize if the reads are trying to read the same page), which will be serviced independently. Flushes need to wait in a single line. That&rsquo;s the difference.</p>
+<p>Why not just split the flush lock, then?</p>
+<p>If reads scale by partitioning the buffer table, why not do the same to the WAL flush? I searched. Someone tried exactly this in a <a href="https://www.postgresql.org/message-id/CAGz5QCLUZKRezjnhu2VtU5K-1-JGeGf+aJk8iqvF80z4QNywAw@mail.gmail.com">2016 pgsql-hackers thread</a>. The idea was to move the flush out of WALWriteLock and into a separate WALFlushLock, so an OS write could happen while a fsync was still in progress.</p>
+<p>But it made things worse. Throughput dropped 10 to 12% because the contention split and grew. In their own words:</p>
+<pre tabindex="0"><code>But, we didn&#39;t see any performance improvements, rather it decreased by 10%-12%.
+Hence to measure the wait events, we performed a run for 30 minutes with 64 clients.
+
+...
+
+Due to reduced contention on WAL Write Lock, lot of backends are going for small os writes,
+sometimes on same 8KB page, i.e., write calls are not properly accumulated.
+</code></pre><p>There were two reasons: the cost for lock acquire/release was now double, and splitting broke the batching - &ldquo;when fsync is going, we are not able to accumulate sufficient data for the next fsync&rdquo;. The single fsync model is useful because it covers many commits (group commit). Splitting fsync means we now have to deal with batching in another way.</p>
+<p>The reason reads and WAL aren&rsquo;t symmetric is: different pages are independent, so there&rsquo;s no need to have only one lock reading different pages. WAL records are different - they are ordered (one log and stream). Its purpose is to be replayed in sequence, so you can&rsquo;t just shard the flush without paying the ordering back somewhere.</p>
+<p>Worth a caution, though: seeing WALWrite in the wait events doesn&rsquo;t prove the lock itself is the ceiling. Andres Freund, on a later report of the same contention, <a href="https://www.mail-archive.com/pgsql-hackers@postgresql.org/msg317461.html">doubted the lock was the prime issue</a> and noted Postgres scaling further without it dominating. In my case the lock was a symptom - the device underneath was saturated - not the root cause.</p>
+<p>The point of all of this is that WAL-bound writes gets into a serialized queue. Reads are different since they usually release the shared-buffer mapping locks before performing I/O. Reads queue primarily at OS/storage level, not at Postgres level.</p>
+
+    </div>
+</article>
+</main><footer class="site-footer">
+    <hr>
+    <p><small>© 2026 Fernando Simões · <a href="/">home</a> · <a href="/index.xml">rss</a></small></p>
+</footer>
+</div>  
+
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{{ define "main" }}
+{{ $others := .Site.GetPage "/others" }}
+
+<header class="home-header">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+</header>
+
+<section aria-labelledby="notes-title">
+    <h2 id="notes-title">Notes</h2>
+    <ul class="post-list">
+        {{ range (where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "post")).ByDate.Reverse }}
+        <li>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <small>- <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format (default "Jan 2, 2006" .Site.Params.dateFormat) }}</time></small>
+        </li>
+        {{ end }}
+    </ul>
+</section>
+
+{{ with $others }}
+<section aria-labelledby="others-title">
+    <h2 id="others-title">{{ .Title }}</h2>
+    {{ .Content }}
+</section>
+{{ end }}
+{{ end }}
