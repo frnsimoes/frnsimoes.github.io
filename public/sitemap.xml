@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://frn.sh/</loc>
+    <lastmod>2026-08-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/io-uring/</loc>
+    <lastmod>2026-08-31T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/pgfsync/</loc>
+    <lastmod>2026-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/pmem/</loc>
+    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/sigterm/</loc>
+    <lastmod>2025-04-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/packet-switching/</loc>
+    <lastmod>2024-10-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/measuring/</loc>
+    <lastmod>2024-02-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/print-strace/</loc>
+    <lastmod>2023-12-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://frn.sh/cs-papers/</loc>
+  </url>
+</urlset>

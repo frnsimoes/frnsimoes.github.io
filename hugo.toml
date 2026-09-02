@@ -1,0 +1,20 @@
+baseURL = "https://frn.sh/"
+title = "Fernando Simões"
+author = "Fernando Simões"
+copyright = "Copyright © Fernando Simões."
+languageCode = "en-US"
+
+enableRobotsTXT = true
+
+# No taxonomy (/tags/, /c/) or section (/posts/) pages; the homepage lists everything.
+disableKinds = ["taxonomy", "term", "section"]
+
+# Allow raw HTML inside markdown (used for figures on the homepage).
+[markup.goldmark.renderer]
+  unsafe = true
+
+# Posts publish at /<filename>/ (e.g. content/posts/pmem.md -> /pmem/).
+[permalinks]
+  posts = "/:filename/"
+
+[params]

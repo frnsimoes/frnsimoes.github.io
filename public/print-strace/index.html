@@ -1,0 +1,274 @@
+<!doctype html><html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="https://frn.sh/favicon.ico">
+    <title>Line buffering, tty and write(2) · Fernando Simões</title>
+    <style>
+        html {
+            color-scheme: light;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: #171717;
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 1.125rem;
+        }
+
+        .site-shell {
+            max-width: 48rem;
+            margin: 0 auto;
+            padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2rem);
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            margin: 0 0 0.75rem;
+            font-size: clamp(1.7rem, 3vw, 2rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            margin: 2rem 0 0.75rem;
+            font-size: 1.25rem;
+            line-height: 1.25;
+        }
+
+        h3 { font-size: 1.1rem; }
+
+        p { margin: 0.75rem 0; }
+
+         
+        .home ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .home li { margin: 0.4rem 0; }
+        .home time { white-space: nowrap; }
+
+        .site-header { margin-bottom: 2rem; }
+
+         
+        .article-header { margin-bottom: 1.5rem; }
+        .article-header h1 { margin-bottom: 0.25rem; }
+        .article-header p { margin: 0; }
+
+        .prose {
+            max-width: 72ch;
+            line-height: 1.7;
+            overflow-wrap: break-word;
+        }
+
+        .prose p { margin: 0; }
+        .prose p + p { margin-top: 1.1em; }
+
+        .prose h2 {
+            margin: 2.75rem 0 0.7rem;
+            font-size: 1.4rem;
+            line-height: 1.2;
+        }
+
+        .prose h3 {
+            margin: 2rem 0 0.6rem;
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+
+        .prose ul,
+        .prose ol { padding-left: 1.5rem; }
+
+        .prose pre {
+            overflow-x: auto;
+            padding: 0.75rem;
+            background: #f5f5f5;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .prose code {
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .prose pre code {
+            font-size: inherit;
+            white-space: pre;
+        }
+
+        .prose table {
+            width: 100%;
+            margin: 1.25em 0;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .prose th,
+        .prose td {
+            padding: 0.3rem 0.5rem;
+            border: 1px solid #999;
+            text-align: left;
+        }
+
+        figure { margin: 1.5rem 0; }
+
+        figcaption {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .home-collage {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .home-collage figure {
+            width: 12rem;
+            max-width: 45%;
+            margin: 0;
+        }
+
+        .home-collage img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .post-figure-side {
+            float: right;
+            width: 18rem;
+            max-width: 45%;
+            margin: 0.25rem 0 0.75rem 1.5rem;
+        }
+
+        details { margin: 1rem 0; }
+        details summary { cursor: pointer; font-weight: bold; }
+
+        .site-footer { margin-top: 3rem; }
+        .site-footer hr { margin-bottom: 0.75rem; }
+        .site-footer p { margin: 0; }
+
+        @media (max-width: 640px) {
+            .site-shell { padding: 1.5rem 1rem; }
+            .post-figure-side {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-shell">
+        
+        <header class="site-header">
+            <nav aria-label="Main navigation"><a href="/">← Home</a></nav>
+        </header>
+        
+        <main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>Line buffering, tty and write(2)</h1>
+        
+        <p><small><time datetime="2023-12-20">Dec 20, 2023</time></small></p>
+        
+    </header>
+    <div class="prose">
+        <p>A few months back I encountered an interesting behavior while debugging a legacy Flask API running on Docker: since I had no time to setup a proper debugger, I began to add print statements to the backend code (don&rsquo;t judge me, I bet you are lazy too). The problem was: the print output was inconsistent: I tried to reload the React frontend once, and nothing appeared. Then I reload again. Nothing. A few more times, and suddenly the text was output in a single block.</p>
+<p>Why is that? First we need to understand what <code>print</code> is doing behind the scenes, and get a notion to the buffering from the operating system perspective.</p>
+<h3 id="how-does-print-work">How does print work?</h3>
+<pre tabindex="0"><code>import sys
+
+def hello():
+    print(&#34;hello from print&#34;)
+
+hello()
+</code></pre><p>Let me run this program with <code>strace</code> so we can get insights by checking out the syscalls:</p>
+<pre tabindex="0"><code>write(1, &#34;hello from print\n&#34;, 17hello from print
+)      = 1
+</code></pre><p>We can see that print called <code>write(2)</code>. The first argument, 1, is the stdout; The second one is what we want to print to stdout, and the third is the size. We can also see that print appended a new line (<code>\n</code>) by default.</p>
+<p>With the information we have right now, there are two questions that requires our attention: 1. Why does print appended a new line? 2. How <code>write(2)</code> works?</p>
+<h3 id="the-historical-context-of-n-and-why-print-uses-it">The historical context of \n and why print uses it</h3>
+<p>We actually had physical terminals in the early days of computing, and even before. For example, stock tickers were &rsquo;electro-mechanical machines consisting of a typewriter, a long pair of wires, and a ticker tape printer, designed to distribute stock prices over long distances in real time&rsquo;<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Later, the Telex network<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> was developed, enabling the transmission of messages via teleprinters over telephone lines.</p>
+<p>Teletypes were <em>devices</em>, external physical tools, with a keyboard, wires, and screen, used to write something to be send to another location. They got extinct, but the &ldquo;teletype as a device&rdquo; didn&rsquo;t.</p>
+<p>But how does the teletype&rsquo;s keyboard sends words to the teletype screen? Imagine a phrase is being typed: &ldquo;hello from new york city&rdquo;; at what moment should the teletype send the message? How does it know it is complete? The terminal has two modes: <em>cooked</em> (!!!) mode and <em>raw</em> mode. What&rsquo;s the difference? Raw mode works like this:</p>
+<ul>
+<li>Input is delivered to the application immediately, without waiting for a new line (<code>\n</code>, remember?).</li>
+<li>Special characters (such as backspace) are not pre-processed (so if the user typed AB<BACKSPACE>C, raw mode interprets it as is).</li>
+<li>Line editing features are disabled.</li>
+</ul>
+<h3 id="buffering-modes">Buffering modes?</h3>
+<p>New lines, as we saw, are used as delimiters to signal that the message is ready to be consumed. This subtle pratice from the early days arrived to our days translated by the notion of <em>buffering modes</em>.</p>
+<p>We have three main buffering modes: line, blocking and non-blocking. This is not a Python specific feature. It&rsquo;s in the C standard library. The system call <code>setvbuf</code> is called behind the scenes whenever an I/O function (including <code>write(2)</code>) from libc is called; the OS handles the buffering and we are free to not care much about this. From manpage:</p>
+<p>Line, blocking and non-blocking buffering is not something that is specific to Python. It&rsquo;s in the C standard library. <code>setvbuf</code> is called behind the scenes whenever an I/O function from libc is called; the OS handles the buffering and we are free to not care much about this. From manpage:</p>
+<blockquote>
+<p>The three types of buffering available are unbuffered, block buffered, and line buffered.  When an output stream is unbuffered, information appears on the destination file or terminal as soon as written; when it is block buffered, many characters are saved up and written as a block; when it is line buffered, characters are saved up until a newline is output or input is read from any stream attached to a terminal device (typically stdin). (&hellip;)</p></blockquote>
+<blockquote>
+<p>Normally all files are block buffered. If a stream refers to a terminal (as stdout normally does), it is line buffered. (&hellip;) The setvbuf() function may be used on any open stream to change its buffer.</p></blockquote>
+<p>But Python doesn&rsquo;t always use line buffering. If we pipe the output (or redirect it) of this program to cat, for example, Python will change to block buffering, outputting the print contents only when the buffer is full. (I think the size of the buffer is 8KB?). We can check this out with something like this:</p>
+<pre tabindex="0"><code>import time
+
+while True:
+    print(&#34;hello from print&#34;)
+    time.sleep(.01)
+</code></pre><p>If you <code>python file.py | cat</code>, you won&rsquo;t see &ldquo;hello from print&rdquo; being written to stdout. You will only see the block of text once the buffer is full, so it will output everything at once.</p>
+<h3 id="ok-how-does-write2-work">Ok, how does write(2) work?</h3>
+<p><code>strace</code> showed us that the operating system calls <code>write(fd, ...)</code> when Python prints something. But what&rsquo;s really happening? I found a really great answer in the <a href="https://man7.org/tlpi/">Linux Programming Interface</a>: <code>write(2)</code> doesn&rsquo;t directly access the physical file or terminal (such as stdout). Instead, it transfers data from a user-space buffer to a kernel buffer cache.</p>
+<p>For disk files, the operating system may defer writing to the physical storage device for performance reasons. The data is eventually flushed to the file either by the kernel (when the buffer fills up) or explicitly by the program (via <code>fflush</code>, for example).</p>
+<p>If a process issues a <code>read()</code> for data that has been written but not yet flushed to disk, the operating system will supply the data from the buffer cache rather than the physical file. For terminals, <code>write()</code> may bypass this deferred behavior, depending on whether the stream is line-buffered or unbuffered.</p>
+<p>The pass-through-buffers behavior is an important mechanism to reduce system calls (the <code>flush</code> occurs only when certain conditions are satisfied; but image what would happen if this was not the case).</p>
+<h2 id="alright-but-why-didnt-print-write-to-docker-stdout">Alright, but why didn&rsquo;t print write to docker stdout?</h2>
+<p>One thing I did not understand at first was why Docker wasn&rsquo;t writing to stdout. I was calling <code>print()</code>, right? I was executing the process. Everything was cool. I found out that the inconsistency happened because Python determines its buffering mode based on whether the output file descriptor is connected to a terminal, as detected by <code>isatty()</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
+<p>In a Docker container, unless the -t flag is used, the standard output is not connected to a terminal but instead to a pipe or a file-like object. This causes <code>isatty()</code> to return false, and Python switches from line buffering to block buffering.</p>
+<p>When a Python program runs, its standard output is typically attached to a file descriptor, which could point to a terminal, a file, or a pipe. The behavior of <code>isatty()</code> is central here:</p>
+<ul>
+<li>If <code>isatty()</code> returns true (indicating the file descriptor is a terminal), Python defaults to line buffering. Each line (ending with \n) triggers an immediate flush to stdout.</li>
+<li>If <code>isatty()</code> returns false (e.g., for pipes or files), Python uses block buffering, where data accumulates in an internal buffer (usually 4KB or 8KB) before being flushed.</li>
+</ul>
+<p>Without the <a href="https://docs.docker.com/reference/cli/docker/container/run/#tty">-t</a> flag, Docker does not attach a pseudo-terminal to the container’s stdout, so <code>isatty()</code> fails. Consequently, Python treats stdout as a pipe, enabling block buffering.</p>
+<p>Docker has a pseudo-TTY<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, When you pass the -t flag to Docker, it creates a pseudo-TTY and attaches it to the container&rsquo;s stdin and stdout. Internally, this makes <code>isatty()</code> return true, as the file descriptor is now associated with a terminal-like device. The pseudo-TTY essentially simulates a real terminal, altering how the Python runtime configures stdout.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.linusakesson.net/programming/tty/">https://www.linusakesson.net/programming/tty/</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://en.wikipedia.org/wiki/Telex">https://en.wikipedia.org/wiki/Telex</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://www.man7.org/linux/man-pages/man3/isatty.3.html">https://www.man7.org/linux/man-pages/man3/isatty.3.html</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>I was searching for more information and found <a href="https://stackoverflow.com/questions/30137135/confused-about-docker-t-option-to-allocate-a-pseudo-tty">this</a> to be a good explanation.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+    </div>
+</article>
+</main>
+        <footer class="site-footer">
+            <hr>
+            <p><small>© 2026 Fernando Simões · <a href="/">home</a> · <a href="/index.xml">rss</a> · <a href="mailto:frn@frn.sh">email</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a></small></p>
+        </footer>
+    </div>
+</body>
+</html>

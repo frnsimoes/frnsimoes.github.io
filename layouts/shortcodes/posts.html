@@ -1,0 +1,9 @@
+{{- /* The homepage post list. A post is listed when its front matter has labels = ["post"]. */ -}}
+<ul>
+    {{ range (where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "post")).ByDate.Reverse }}
+    <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <small>- <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time></small>
+    </li>
+    {{ end }}
+</ul>
