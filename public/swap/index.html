@@ -1,0 +1,289 @@
+<!doctype html><html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="https://frn.sh/favicon.ico">
+    <title>Swap, memory pressure and the Go GC · Fernando Simões</title>
+    <style>
+        html {
+            color-scheme: light;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: #171717;
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 1.125rem;
+        }
+
+         
+        .site-shell {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2rem);
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            margin: 0 0 0.75rem;
+            font-size: clamp(1.7rem, 3vw, 2rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            margin: 2rem 0 0.75rem;
+            font-size: 1.25rem;
+            line-height: 1.25;
+        }
+
+        h3 { font-size: 1.1rem; }
+
+        p { margin: 0.75rem 0; }
+
+         
+        .home { max-width: 40rem; }
+
+        .home ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .home li { margin: 0.4rem 0; }
+        .home time { white-space: nowrap; }
+
+         
+        .notes-list small { color: #666; }
+
+        .misc-collage {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+            max-width: 32rem;
+            margin: 1.5rem 0;
+        }
+
+        .misc-collage figure { margin: 0; }
+        .misc-collage img { display: block; width: 100%; }
+
+        .site-header { margin-bottom: 2rem; max-width: 48rem; }
+
+         
+        .article-header { margin-bottom: 1.5rem; max-width: 48rem; }
+        .article-header h1 { margin-bottom: 0.25rem; }
+        .article-header p { margin: 0; }
+
+        .prose {
+            max-width: 48rem;
+            line-height: 1.7;
+            overflow-wrap: break-word;
+        }
+
+        .prose p {
+            margin: 0;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .prose blockquote p { text-align: left; }
+        .prose p + p,
+        .prose .post-figure-margin + p { margin-top: 1.1em; }
+
+        .prose h2 {
+            margin: 2.75rem 0 0.7rem;
+            font-size: 1.4rem;
+            line-height: 1.2;
+        }
+
+        .prose h3 {
+            margin: 2rem 0 0.6rem;
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+
+        .prose ul,
+        .prose ol { padding-left: 1.5rem; }
+
+        .prose pre {
+            overflow-x: auto;
+            padding: 0.75rem;
+             
+            background: #f5f5f5 !important;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .prose code {
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .prose pre code {
+            font-size: inherit;
+            white-space: pre;
+        }
+
+         
+        .prose blockquote {
+            position: relative;
+            overflow: hidden;
+             
+            margin: 1.2375rem 0;
+            padding-left: 2ch;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .prose blockquote::before {
+            content: ">\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            white-space: pre;
+            overflow: hidden;
+        }
+
+        .prose blockquote p + p { margin-top: 1.6em; }
+
+        .prose table {
+            width: 100%;
+            margin: 1.25em 0;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .prose th,
+        .prose td {
+            padding: 0.3rem 0.5rem;
+            border: 1px solid #999;
+            text-align: left;
+        }
+
+        figure { margin: 1.5rem 0; }
+
+         
+        .prose figure { text-align: left; }
+         
+        .prose figure > img { width: 100%; height: auto; }
+
+        figcaption {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        .post-figure-side {
+            float: right;
+            width: 18rem;
+            max-width: 45%;
+            margin: 0.25rem 0 0.75rem 1.5rem;
+        }
+
+         
+        .post-figure-margin {
+            float: right;
+            clear: right;
+            width: 20rem;
+            margin: 0.25rem -22rem 1rem 1.5rem;
+        }
+
+        .post-figure-margin img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 76rem) {
+            .post-figure-margin {
+                float: none;
+                width: 100%;
+                margin: 1rem 0;
+            }
+        }
+
+        details { margin: 1rem 0; }
+        details summary { cursor: pointer; font-weight: bold; }
+
+        .site-footer { margin-top: 3rem; max-width: 48rem; }
+        .site-footer hr { margin-bottom: 0.75rem; }
+        .site-footer p { margin: 0; }
+
+        @media (max-width: 640px) {
+            .site-shell { padding: 1.5rem 1rem; }
+            .post-figure-side {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-shell">
+        
+        <header class="site-header">
+            <nav aria-label="Main navigation"><a href="/">← Home</a></nav>
+        </header>
+        
+        <main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>Swap, memory pressure and the Go GC</h1>
+        
+        <p><small><time datetime="2026-09-08">Sep 8, 2026</time></small></p>
+        
+    </header>
+    <div class="prose">
+          <figure class="post-figure-margin">
+    <img src="/gogc/prod-anon-rss-burst.png" alt="Grafana panel of anonymous RSS for the Go process in production: flat at 33 MiB, then rising to 570 MiB in about 15 seconds">
+  </figure>
+<p>I recently ran into a problem with cgroup running two processes, with <code>memory.max</code> set to 900 MiB. The main process is a Go program with a baseline RSS of around 32 MiB; the other, a neighboring HTTP server, uses ~400 MiB. The problem was that, randomly through the day, the Go process would experience a massiv spike in anonymous memory, growing from 32 MiB to 500+ MiB, which triggered an OOM kill.</p>
+<p>Since I don&rsquo;t actually have access to this code, and don&rsquo;t want to fork it to maintain our own version, I decided to run pyroscope.ebpf to check what was going on during heap spikes. And I found out that the Go process basically does the following during a spike: calls <code>io.ReadAll</code> then <code>proto.Unmarshal</code>. So we start with a blob of bytes and then deserialize it into a protobuf. We also spend a significant amount of time in <code>runtime.growslice</code>, which Go calls to grow the <code>io.ReadAll</code> slice when it reaches capacity.</p>
+  <figure class="post-figure-margin">
+    <img src="/gogc/readall-flamegraph.png" alt="">
+  </figure>
+<p>During the weekend I had an idea: ok, I don&rsquo;t want to fork this library, but what if I set <code>memory.high</code> and a swap to push the anonymous pages away from memory during spikes? Would that work? This sounded like a great idea. But I had a few questions:</p>
+<ul>
+<li>Swapping is a kernel&rsquo;s job. The kernel decides what to evict based on &ldquo;accessed&rdquo; and &ldquo;active&rdquo; flags it keeps in its internal LRU algorithm. Since I&rsquo;m running two processes in the same cgroup, how do I know the kernel is going to evict the Go&rsquo;s heap and not the neighbor&rsquo;s process heap?</li>
+<li>If this works and the kernel actually evicts the pages that were recently allocated, what will happen when the garbage collector runs and decides to read the heap and walk the <code>scan</code> spans?</li>
+<li><code>memory.high</code> throttles the process/thread, but how would that look under load, if I would set it to, say, 700 MiB, a tight margin considering <code>memory.max</code> is 900 MiB?</li>
+</ul>
+<p>Well, I had no alternatives but to measure. I built a mock program that allocates to the heap. The cgroup in this test is the same one I run in production: memory.max has 900 MiB. I set memory.high to 700 MiB.</p>
+<p>First question: under continuous pressure, what really happens? Do we have something like a loop where keeps reading <code>scan</code> pages while the kernel keeps evicting them, leading to a spiral of major page faults and a back-and-forth between memory and swap? To answer this, I ran with a cgroup containing only one process, because I want to isolate the interaction between the GC and the kernel reclaim.</p>
+  <figure style="text-align: left">
+    <img src="/gogc/churn-prod-full.svg" alt="">
+  </figure>
+<p>Swap peaked at 500 MiB, so the back-and-forth is real. Since memory.high is set to 700 MiB, there&rsquo;s simply no room to keep the whole thing live in memory. The kernel evicts by age, and some of those pages are the ones the GC will read in its next cycle. So the GC faults them, and the kernel evicts other pages. This is also something Hertz et al noticed on the 2005 paper: &ldquo;Because the mark-sweep based collectors do not perform compaction, objects become spread out over a range of pages. Once heap pages are evicted, visiting these pages during a collection triggers a cascade of page faults and orders-of-magnitude increases in execution time.&rdquo;</p>
+<p>Also, take a look at the threads stalling I collected from <a href="https://docs.kernel.org/accounting/psi.html">PSI</a> - memory pressure rise to 20-30% after swap fills. <a href="https://elixir.bootlin.com/linux/v7.2.2/source/mm/memcontrol.c#L2505"><code>memory.high</code> throttles the allocating threads</a>: The kernel makes them sleep to slow down allocation.</p>
+<p>Second question: in the production setup, with the two processes sharing the same cgroup: what will the kernel do? Will it swap the Go&rsquo;s pages or the neighbor&rsquo;s? I ran the mock program with two different setups: in the first one, the neighbor&rsquo;s heap was allocated and not touched for the whole duration of the test. In the second, I forced a read from the heap every 15 seconds.</p>
+  <figure style="text-align: left">
+    <img src="/gogc/spike-swap-compare.svg" alt="">
+  </figure>
+<p>In the first setup, the neighbor&rsquo;s heap was never accessed after it was created, so the kernel evicted its pages first. In the second, the neighbor accesses its heap every 15 seconds. This makes the cycle repeat: the kernel evicts pages from both processes, and both processes later need to read some of those pages back from swap.</p>
+<p>In 2005, Hertz et al wrote the <a href="https://people.cs.umass.edu/~emery/pubs/f034-hertz.pdf">Garbage Collection Without Paging paper</a>, which says that when an application does not fit memory, the GC can cause paging. My first test reproduced this: the process read 7.5 GiB from swap in four minutes, and threads were stalled for 9% of that time. The second test, with the idle neighbor, read only 4 MiB from swap in six minutes. And the third, with the neighbor actively reading its heap, read 2.1 GiB. So the worst case scenario is when the kernel has to swap-in a lot. This happens when there are no cold pages - which implies that there are not enough available memory for pages to age without being swapped.</p>
+
+    </div>
+</article>
+</main>
+        <footer class="site-footer">
+            <hr>
+            <p><small><a href="/about">about</a> · <a href="/index.xml">rss</a> · <a href="mailto:frn@frn.sh">email</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a></small></p>
+        </footer>
+    </div>
+</body>
+</html>

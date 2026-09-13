@@ -1,0 +1,272 @@
+<!doctype html><html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="https://frn.sh/favicon.ico">
+    <title>About · Fernando Simões</title>
+    <style>
+        html {
+            color-scheme: light;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: #171717;
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 1.125rem;
+        }
+
+         
+        .site-shell {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2rem);
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            margin: 0 0 0.75rem;
+            font-size: clamp(1.7rem, 3vw, 2rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            margin: 2rem 0 0.75rem;
+            font-size: 1.25rem;
+            line-height: 1.25;
+        }
+
+        h3 { font-size: 1.1rem; }
+
+        p { margin: 0.75rem 0; }
+
+         
+        .home { max-width: 40rem; }
+
+        .home ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .home li { margin: 0.4rem 0; }
+        .home time { white-space: nowrap; }
+
+         
+        .notes-list small { color: #666; }
+
+        .misc-collage {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+            max-width: 32rem;
+            margin: 1.5rem 0;
+        }
+
+        .misc-collage figure { margin: 0; }
+        .misc-collage img { display: block; width: 100%; }
+
+        .site-header { margin-bottom: 2rem; max-width: 48rem; }
+
+         
+        .article-header { margin-bottom: 1.5rem; max-width: 48rem; }
+        .article-header h1 { margin-bottom: 0.25rem; }
+        .article-header p { margin: 0; }
+
+        .prose {
+            max-width: 48rem;
+            line-height: 1.7;
+            overflow-wrap: break-word;
+        }
+
+        .prose p {
+            margin: 0;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .prose blockquote p { text-align: left; }
+        .prose p + p,
+        .prose .post-figure-margin + p { margin-top: 1.1em; }
+
+        .prose h2 {
+            margin: 2.75rem 0 0.7rem;
+            font-size: 1.4rem;
+            line-height: 1.2;
+        }
+
+        .prose h3 {
+            margin: 2rem 0 0.6rem;
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+
+        .prose ul,
+        .prose ol { padding-left: 1.5rem; }
+
+        .prose pre {
+            overflow-x: auto;
+            padding: 0.75rem;
+             
+            background: #f5f5f5 !important;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .prose code {
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .prose pre code {
+            font-size: inherit;
+            white-space: pre;
+        }
+
+         
+        .prose blockquote {
+            position: relative;
+            overflow: hidden;
+             
+            margin: 1.2375rem 0;
+            padding-left: 2ch;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .prose blockquote::before {
+            content: ">\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            white-space: pre;
+            overflow: hidden;
+        }
+
+        .prose blockquote p + p { margin-top: 1.6em; }
+
+        .prose table {
+            width: 100%;
+            margin: 1.25em 0;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .prose th,
+        .prose td {
+            padding: 0.3rem 0.5rem;
+            border: 1px solid #999;
+            text-align: left;
+        }
+
+        figure { margin: 1.5rem 0; }
+
+         
+        .prose figure { text-align: left; }
+         
+        .prose figure > img { width: 100%; height: auto; }
+
+        figcaption {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        .post-figure-side {
+            float: right;
+            width: 18rem;
+            max-width: 45%;
+            margin: 0.25rem 0 0.75rem 1.5rem;
+        }
+
+         
+        .post-figure-margin {
+            float: right;
+            clear: right;
+            width: 20rem;
+            margin: 0.25rem -22rem 1rem 1.5rem;
+        }
+
+        .post-figure-margin img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 76rem) {
+            .post-figure-margin {
+                float: none;
+                width: 100%;
+                margin: 1rem 0;
+            }
+        }
+
+        details { margin: 1rem 0; }
+        details summary { cursor: pointer; font-weight: bold; }
+
+        .site-footer { margin-top: 3rem; max-width: 48rem; }
+        .site-footer hr { margin-bottom: 0.75rem; }
+        .site-footer p { margin: 0; }
+
+        @media (max-width: 640px) {
+            .site-shell { padding: 1.5rem 1rem; }
+            .post-figure-side {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-shell">
+        
+        <header class="site-header">
+            <nav aria-label="Main navigation"><a href="/">← Home</a></nav>
+        </header>
+        
+        <main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>About</h1>
+        
+    </header>
+    <div class="prose">
+        <p>I&rsquo;m Fernando, an infrastructure and software person. I like watching computers misbehave in production.</p>
+<p>I try to keep the format loose. These are mostly war stories and short notes. I also use this page to practice <a href="https://www.structuredprocrastination.com/">structured procrastination</a>.</p>
+<!-- <div class="misc-collage"> -->
+<!--     <figure> -->
+<!--         <img src="/collage/06.jpg" alt="Hänsel und Gretel plaque at the Bosque Alemão (German Woods) in Curitiba" loading="lazy"> -->
+<!--         <figcaption>Hänsel und Gretel plaque at the Bosque Alemão (German Woods) in Curitiba</figcaption> -->
+<!--     </figure> -->
+<!--     <figure> -->
+<!--         <img src="/collage/02.jpg" alt="My son's custom Lego build" loading="lazy"> -->
+<!--         <figcaption>My son's custom Lego build: mad scientist and robot headed to outer space. Yes, the stairs are there just in case.</figcaption> -->
+<!--     </figure> -->
+<!-- </div> -->
+
+    </div>
+</article>
+</main>
+        <footer class="site-footer">
+            <hr>
+            <p><small><a href="/about">about</a> · <a href="/index.xml">rss</a> · <a href="mailto:frn@frn.sh">email</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a></small></p>
+        </footer>
+    </div>
+</body>
+</html>

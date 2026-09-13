@@ -1,0 +1,299 @@
+<!doctype html><html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="https://frn.sh/favicon.ico">
+    <title>A 40ms Go garbage collector pause · Fernando Simões</title>
+    <style>
+        html {
+            color-scheme: light;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: #171717;
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 1.125rem;
+        }
+
+         
+        .site-shell {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2rem);
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            margin: 0 0 0.75rem;
+            font-size: clamp(1.7rem, 3vw, 2rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            margin: 2rem 0 0.75rem;
+            font-size: 1.25rem;
+            line-height: 1.25;
+        }
+
+        h3 { font-size: 1.1rem; }
+
+        p { margin: 0.75rem 0; }
+
+         
+        .home { max-width: 40rem; }
+
+        .home ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .home li { margin: 0.4rem 0; }
+        .home time { white-space: nowrap; }
+
+         
+        .notes-list small { color: #666; }
+
+        .misc-collage {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+            max-width: 32rem;
+            margin: 1.5rem 0;
+        }
+
+        .misc-collage figure { margin: 0; }
+        .misc-collage img { display: block; width: 100%; }
+
+        .site-header { margin-bottom: 2rem; max-width: 48rem; }
+
+         
+        .article-header { margin-bottom: 1.5rem; max-width: 48rem; }
+        .article-header h1 { margin-bottom: 0.25rem; }
+        .article-header p { margin: 0; }
+
+        .prose {
+            max-width: 48rem;
+            line-height: 1.7;
+            overflow-wrap: break-word;
+        }
+
+        .prose p {
+            margin: 0;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .prose blockquote p { text-align: left; }
+        .prose p + p,
+        .prose .post-figure-margin + p { margin-top: 1.1em; }
+
+        .prose h2 {
+            margin: 2.75rem 0 0.7rem;
+            font-size: 1.4rem;
+            line-height: 1.2;
+        }
+
+        .prose h3 {
+            margin: 2rem 0 0.6rem;
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+
+        .prose ul,
+        .prose ol { padding-left: 1.5rem; }
+
+        .prose pre {
+            overflow-x: auto;
+            padding: 0.75rem;
+             
+            background: #f5f5f5 !important;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .prose code {
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .prose pre code {
+            font-size: inherit;
+            white-space: pre;
+        }
+
+         
+        .prose blockquote {
+            position: relative;
+            overflow: hidden;
+             
+            margin: 1.2375rem 0;
+            padding-left: 2ch;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .prose blockquote::before {
+            content: ">\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A>\A";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            white-space: pre;
+            overflow: hidden;
+        }
+
+        .prose blockquote p + p { margin-top: 1.6em; }
+
+        .prose table {
+            width: 100%;
+            margin: 1.25em 0;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .prose th,
+        .prose td {
+            padding: 0.3rem 0.5rem;
+            border: 1px solid #999;
+            text-align: left;
+        }
+
+        figure { margin: 1.5rem 0; }
+
+         
+        .prose figure { text-align: left; }
+         
+        .prose figure > img { width: 100%; height: auto; }
+
+        figcaption {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        .post-figure-side {
+            float: right;
+            width: 18rem;
+            max-width: 45%;
+            margin: 0.25rem 0 0.75rem 1.5rem;
+        }
+
+         
+        .post-figure-margin {
+            float: right;
+            clear: right;
+            width: 20rem;
+            margin: 0.25rem -22rem 1rem 1.5rem;
+        }
+
+        .post-figure-margin img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 76rem) {
+            .post-figure-margin {
+                float: none;
+                width: 100%;
+                margin: 1rem 0;
+            }
+        }
+
+        details { margin: 1rem 0; }
+        details summary { cursor: pointer; font-weight: bold; }
+
+        .site-footer { margin-top: 3rem; max-width: 48rem; }
+        .site-footer hr { margin-bottom: 0.75rem; }
+        .site-footer p { margin: 0; }
+
+        @media (max-width: 640px) {
+            .site-shell { padding: 1.5rem 1rem; }
+            .post-figure-side {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-shell">
+        
+        <header class="site-header">
+            <nav aria-label="Main navigation"><a href="/">← Home</a></nav>
+        </header>
+        
+        <main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>A 40ms Go garbage collector pause</h1>
+        
+        <p><small><time datetime="2026-09-09">Sep 9, 2026</time></small></p>
+        
+    </header>
+    <div class="prose">
+        <p>I recently had the chance to test the <a href="https://dsf.berkeley.edu/cs286/papers/fiveminute-tr1986.pdf">5 minute rule to trade memory for disk access</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. I&rsquo;m running a cgroup with two processes. The main one is a Go program that spikes from 32 to 500+ MiB in RSS in only a few seconds, which triggers an OOM kill. The neighbor program is an HTTP server: baseline is around 400 MiB with no spikes. So I tried swapping.</p>
+  <details>
+  <summary>Setup</summary>
+<p>The setup in a few words: two processes in a 900 MiB cgroup with 500 MiB of swap on Hetzner box. The mock allocator: the neighbour holds 400 MiB and reads its own heap every 15 seconds. The Go process keeps 60 MiB live and, every 98 seconds, adds 300 MiB at 36 MiB/s, keeping it for 30 seconds. GOGC=100, GOMAXPROCS=2. Kernel 6.8. 17 spikes in 30 minutes. The mock allocator, ebpf scripts, and all there rest can be found in <a href="https://github.com/frnsimoes/go-gc-swap-cost/blob/main/bpf/stw.bt">this repository</a> for reproduction</p>
+  </details>
+<p>Before running the experiment, my main concern was that the GC would ask the kernel to read pages that were on disk, which would <a href="https://www.linux.org.hk/archive/20260522-271-linux-kernel-developers-target-page-faul.html">fault</a>, and then the kernel would have to bring those pages back to RAM. That happend, but the cost of <em>reading metadata from swap</em> was the one that caught my attention the most.</p>
+<p>Here are the plots from metadata cost:</p>
+<img src="/gogc/hz-strip-metadata.svg" alt="">
+<p>The left plot shows we had 43 pauses that swapped-in. Maximum cost here was 40ms. The right plot is the size of the garbage collector&rsquo;s metadata during a spike - GC&rsquo;s metadata &ldquo;other&rdquo; doesn&rsquo;t shrink. I wrote a <a href="https://github.com/frnsimoes/go-gc-swap-cost/blob/main/bpf/stw.bt">small bpftrace script</a> to understand what was happening, because either the garbage collector was hitting the disk while the world was stopped, or it was waiting for someone else who was hitting the disk.</p>
+<p>The script is counting the page faults and recording where the process was when the faults occurred. Every long pause was essentially page faults. The script makes the fault probe only when <code>@stw_start[pid]</code> is set.</p>
+<p>The worst pause was <code>39902 us, faults during it 228, 39013 us in faults</code>: a 40ms pause with 228 page faults. 39ms of those 40 were spent in those faults. The script also saves the stack of the process at each fault, but bpftrace printed them as raw addresses because it couldn&rsquo;t read the binary&rsquo;s symbol. So I passed the addresses to <code>go tool addr2line</code> with the same binary (go 1.23) and it gave the function and source line for each trace:</p>
+<pre tabindex="0"><code>0x42e5c8  runtime.(*spanSet).reset        mspanset.go:231
+0x4219de  runtime.finishsweep_m           mcentral.go:71
+0x4276a4  runtime.nextMarkBitArenaEpoch   mheap.go:2481
+0x421a65  runtime.finishsweep_m           mgcsweep.go:268
+0x4629cf  runtime.gcStart.func2           mgc.go:724
+0x46dd8a  runtime.systemstack             asm_amd64.s
+</code></pre><p>These are GC&rsquo;s <a href="https://cs.opensource.google/go/go/+/release-branch.go1.23:src/runtime/HACKING.md;l=214">bookkeeping functions.</a>. Go&rsquo;s runtime reuses those pages and doesn&rsquo;t free them. For example: <a href="https://cs.opensource.google/go/go/+/release-branch.go1.23:src/runtime/mspanset.go;l=230">runtime.reset</a> &ldquo;resets a spanset which is empty. It also clean up any left over blocks&rdquo;. Then we have the <a href="https://cs.opensource.google/go/go/+/release-branch.go1.23:src/runtime/mgcsweep.go;l=229">finishsweep_m</a> which only runs when the world is stopped and &ldquo;ensures that all spans are swept&rdquo;.</p>
+<p>And nextMarkBitArenaEpoch comments:</p>
+<pre tabindex="0"><code>// nextMarkBitArenaEpoch establishes a new epoch for the arenas
+// holding the mark bits. The arenas are named relative to the
+// current GC cycle which is demarcated by the call to finishweep_m.
+</code></pre><p>That&rsquo;s a potential failure mode that I didn&rsquo;t know about. Go&rsquo;s GC has to stop-the-world in two moments: when it performs a <a href="https://cs.opensource.google/go/go/+/release-branch.go1.27:src/runtime/mgc.go;l=24">sweep termination</a>, and when it performs a <a href="https://cs.opensource.google/go/go/+/release-branch.go1.27:src/runtime/mgc.go;l=61">mark termination</a>, and at those moments it was trying to access those pages that had been swapped by the kernel.</p>
+<p>So here is what happens:</p>
+<p>The runtime allocates those pages. They are not freed, but reused. Those pages are read in GC cycles, which don&rsquo;t happen that often. Because the kernel evicts pages <a href="https://elixir.bootlin.com/linux/v6.8/source/include/linux/mmzone.h">by age</a>, it sends the least accessed pages to swap. The GC runs, stops the world, tries to read those pages, but now we have a major page fault, the kernel needs to read PTEs, get the offsets of where those pages are on the swap disk, read those pages, find new frames for them in memory, wait for the disk, put them back in memory - just to keep it short.</p>
+<p>Those 40ms seems inoffensive when read blunt. But we are talking about a stop-the-world pause. Those 40ms means everything stopped, including in-flight requests. 40ms is 800 times the median of the pause latency. It happens two or three times per memory spike. <em>It is</em> a lot. Swap has a bad reputation overall in the industry. For example: <a href="https://www.elastic.co/docs/deploy-manage/deploy/self-managed/setup-configuration-memory">Elasticsearch says swap is bad for performance</a>, but <a href="https://chrisdown.name/2018/01/02/in-defence-of-swap.html">Chris Down</a> is right. Swap <em>may be good depending on the nature of your problem</em>. In my case, it was good enough - even though I decided not to use it. But had I been running low-latency software, I would never use it.</p>
+<hr>
+<p>Notes: I mentioned other costs. The allocator cost is the most important one I found - mail me if you need more information.</p>
+<p>The mock allocator allocates a batch of 560 KiB of objects. Without swap the allocation costs 3 to 5 ms. But when pages are in swap, during spikes, the same batch took 105 ms on the NVMe and 903ms on the network disk. Why does this happen? The runtime reuses memory that was freed earlier. If that memory is on disk, <a href="https://cs.opensource.google/go/go/+/release-branch.go1.27:src/runtime/malloc.go;l=65">the runtime has to zero it</a> - which means bringing it back to RAM</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Also check: <a href="https://queue.acm.org/doi/10.1145/1413254.1413264">https://queue.acm.org/doi/10.1145/1413254.1413264</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+    </div>
+</article>
+</main>
+        <footer class="site-footer">
+            <hr>
+            <p><small><a href="/about">about</a> · <a href="/index.xml">rss</a> · <a href="mailto:frn@frn.sh">email</a> · <a href="https://linkedin.com/in/frnsimoes">linkedin</a></small></p>
+        </footer>
+    </div>
+</body>
+</html>

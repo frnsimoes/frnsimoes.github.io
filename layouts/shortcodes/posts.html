@@ -1,0 +1,10 @@
+{{- /* Homepage notes. Add labels = ["post"] and a date to include a post. */ -}}
+{{- $notes := where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice "post") -}}
+<ul class="notes-list">
+{{ range $notes.ByDate.Reverse }}
+    <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <small>- <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time></small>
+    </li>
+{{ end }}
+</ul>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fernando&#39;s Homepage on Fernando Simões</title>
+    <link>https://frn.sh/</link>
+    <description>Recent content in Fernando&#39;s Homepage on Fernando Simões</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <copyright>Copyright © Fernando Simões.</copyright>
+    <lastBuildDate>Tue, 08 Sep 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://frn.sh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Swap, memory pressure and the Go GC</title>
+      <link>https://frn.sh/swap/</link>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/swap/</guid>
+      <description>&lt;figure class=&#34;post-figure-margin&#34;&gt;&#xA;    &lt;img src=&#34;https://frn.sh/gogc/prod-anon-rss-burst.png&#34; alt=&#34;Grafana panel of anonymous RSS for the Go process in production: flat at 33 MiB, then rising to 570 MiB in about 15 seconds&#34;&gt;&#xA;  &lt;/figure&gt;&#xA;&lt;p&gt;I recently ran into a problem with cgroup running two processes, with &lt;code&gt;memory.max&lt;/code&gt; set to 900 MiB. The main process is a Go program with a baseline RSS of around 32 MiB; the other, a neighboring HTTP server, uses ~400 MiB. The problem was that, randomly through the day, the Go process would experience a massiv spike in anonymous memory, growing from 32 MiB to 500+ MiB, which triggered an OOM kill.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>io_uring without readahead</title>
+      <link>https://frn.sh/io-uring/</link>
+      <pubDate>Mon, 31 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/io-uring/</guid>
+      <description>&lt;p&gt;Someone &lt;a href=&#34;https://github.com/tursodatabase/turso/pull/8389&#34;&gt;opened a PR&lt;/a&gt; to implement readahead in Turso. It was a throwaway implementation, but a good excuse to measure io_uring and understand more about it.&lt;/p&gt;&#xA;&lt;p&gt;Turso has two backends. &lt;code&gt;syscall&lt;/code&gt; uses pread(2). &lt;code&gt;io_uring&lt;/code&gt; uses io_uring, and opens the database file with O_DIRECT with no option to use buffered I/O. O_DIRECT takes away kernel readahead, so getting it back means implementing it in the application.&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;&#xA;&lt;p&gt;Without readahead, io_uring issues only one entry at a time. The problem is the lack of concurrency: each read waits for the previous one. The application knows that &amp;ldquo;hey, at this time, I need page 100&amp;rdquo;, which means: Turso submits a read SQE for page 100, then waits for it. The scan continues. Now Turso needs page 101, so it submits a new read SQE that page.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>1193 backends on WALWrite, and lore</title>
+      <link>https://frn.sh/pgfsync/</link>
+      <pubDate>Sat, 18 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/pgfsync/</guid>
+      <description>&lt;p&gt;An interesting wait event table I found in production:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;wait_event_type | wait_event    | count&#xA;----------------+---------------+-------&#xA;LWLock          | WALWrite      |  1193&#xA;IO              | DataFileRead  |   194&#xA;IO              | DataFileWrite |     4&#xA;Lock            | frozenid      |     2&#xA;IO              | WalSync       |     1&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;1193 backends were waiting on WALWrite. This was a nasty production incident - we ran out of IOPS first, then an anti-wraparound autovacuum started running, which made everything worse: checkpoint lag and connections went through the roof. But the thing that really impacted customers while the incident was going on was a specific endpoint that inserts data into this database. A few weeks after the incident, I took a look at that table again. The first thing I thought: why does WAL need a lock? Later, I found an interesting comment in xlog.c:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>A Node.js heap mystery</title>
+      <link>https://frn.sh/pmem/</link>
+      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/pmem/</guid>
+      <description>&lt;p&gt;I encountered another production mystery - a Node.js app was consuming 665 MiB of memory. I didn&amp;rsquo;t know where it was coming from, so I read the profile:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{&#xA;  &amp;#34;rss&amp;#34;: 697303040,&#xA;  &amp;#34;heapTotal&amp;#34;: 135147520,&#xA;  &amp;#34;heapUsed&amp;#34;: 126842024,&#xA;  &amp;#34;external&amp;#34;: 25004037,&#xA;  &amp;#34;arrayBuffers&amp;#34;: 33762595&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;heapTotal&lt;/code&gt; was only 129 MiB (!). &lt;code&gt;heapUsed&lt;/code&gt; is included in &lt;code&gt;heapTotal&lt;/code&gt;, so even if we add &lt;code&gt;arrayBuffers&lt;/code&gt;, V8 was seeing 161.09 MiB. Not even close to those 665 MiB from RSS. So where is the rest?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Investigating 108,725 forks</title>
+      <link>https://frn.sh/tforks/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/tforks/</guid>
+      <description>&lt;p&gt;One of the servers was hitting 90% CPU utilization. A few containers running, no alerts. I ssh&amp;rsquo;ed and found a process with cmd &lt;code&gt;bash startup.sh&lt;/code&gt; that had been running for 28 minutes. I straced it for a few minutes:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;% time     seconds  usecs/call     calls    errors syscall&#xA;------ ----------- ----------- --------- --------- ----------------&#xA; 75.36   52.698676         390    134819     26094 wait4&#xA; 12.27    8.583416          78    108725           fork&#xA;  7.42    5.190671           5    926332           rt_sigprocmask&#xA;  2.69    1.881557           5    330523    165262 close&#xA;  1.17    0.817651           9     82631           pipe&#xA;  0.64    0.449359           5     78280           rt_sigaction&#xA;  0.24    0.164395           6     26094           rt_sigreturn&#xA;  0.21    0.147095           5     26094     26094 ioctl&#xA;------ ----------- ----------- --------- --------- ----------------&#xA;100.00   69.932820          40   1713498    217450 total&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;108,725 forks and 134,819 wait4 calls. The delta is 26,094 - the exact same number of wait4 errors. Also the same exact number for ioctl and rt_sigreturn. I searched but didn&amp;rsquo;t find the file. Since this process was running, I could read the exact script from file descriptor 255. This was a supervisor process. It created a bunch of children using fork, then waited for them via wait4, and managed their file descriptors and masks.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Betting a coffee on a socket leak</title>
+      <link>https://frn.sh/response-body/</link>
+      <pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/response-body/</guid>
+      <description>&lt;p&gt;I joined this company a while back and during my first week someone called me to take a look at a mysterious service that would start returning 502s a few days after being restarted. They were basically in a loop. Whenever it happened, someone had to go there and restart the service.&lt;/p&gt;&#xA;&lt;p&gt;The service itself was really small, it only processed PDFs: a request arrived with an ID, the ID was used to download a PDF from AWS S3, make some changes in memory, and then upload it back to the bucket.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sigterm a D state process</title>
+      <link>https://frn.sh/sigterm/</link>
+      <pubDate>Tue, 08 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>https://frn.sh/sigterm/</guid>
+      <description>&lt;p&gt;A kernel mystery I hit today: load average at 12 on a 2 vCPU machine during a production incident.&lt;/p&gt;&#xA;&lt;p&gt;Linux &lt;a href=&#34;https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html&#34;&gt;load average&lt;/a&gt; counts three things: processes running on a CPU, processes waiting in the run queue, and processes in uninterruptible sleep - D state. From the kernel source:&lt;/p&gt;&#xA;&lt;pre&gt;&lt;code&gt;The global load average is an exponentially decaying average of&#xA;nr_running + nr_uninterruptible.&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;Regular sleep doesn&amp;rsquo;t count, so if load average says 12, those 12 were either running, runnable, or in D. A system doing heavy disk I/O can show high load average with near-zero CPU utilization.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
