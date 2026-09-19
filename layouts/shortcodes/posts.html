@@ -1,0 +1,13 @@
+{{- /* Homepage notes. Add labels = ["post"] and a date to include a post.
+     Add "favorite" to labels to mark it with a "*".
+     {{< posts "favorite" >}} lists only favorites, without the "*". */ -}}
+{{- $label := .Get 0 | default "post" -}}
+{{- $notes := where (where .Site.RegularPages "Section" "posts") "Params.labels" "intersect" (slice $label) -}}
+<ul class="notes-list">
+{{ range $notes.ByDate.Reverse }}
+    <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ if and (ne $label "favorite") (in .Params.labels "favorite") }}<span class="favorite" title="favorite">*</span>{{ end }}
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+    </li>
+{{ end }}
+</ul>
