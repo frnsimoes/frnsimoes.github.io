@@ -1,0 +1,28 @@
+{{- /* Random notes: every content/random/*.md shown in full, newest first.
+     A note with front matter `topic` links, next to its date, to the next older note on the same topic. */ -}}
+{{ define "main" }}
+<article>
+    <header class="article-header">
+        <h1>{{ .Title }}</h1>
+    </header>
+    {{ with site.GetPage "/random" }}{{ $notes := .RegularPages.ByDate.Reverse }}{{ range $i, $note := $notes }}
+    <section class="prose note" id="{{ .File.ContentBaseName }}">
+        {{ with .Params.topics }}{{ warnf "%s: the field is topic, not topics" $note.File.Path }}{{ end }}
+        {{ $topic := .Params.topic }}
+        {{ if reflect.IsSlice $topic }}{{ warnf "%s: a note has one topic, not a list" $note.File.Path }}{{ $topic = false }}{{ end }}
+        {{ $prev := false }}
+        {{ with $topic }}{{ range after (add $i 1) $notes }}
+            {{ if and (not $prev) (eq .Params.topic $topic) }}{{ $prev = . }}{{ end }}
+        {{ end }}{{ end }}
+        <header class="note-header">
+            {{ with .Title }}<h2>{{ . }}</h2>{{ end }}
+            <span>
+                {{- if not .Date.IsZero }}<a class="note-date" href="#{{ .File.ContentBaseName }}"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Mon Jan 02 2006" }}</time></a>{{ end -}}
+                {{ with $prev }}<span class="note-related"> · see also <a href="#{{ .File.ContentBaseName }}" title="{{ with .Title }}{{ . }}{{ else }}{{ .Plain | strings.TrimSpace | truncate 60 }}{{ end }}">{{ if eq .Date.Year $note.Date.Year }}{{ .Date.Format "Jan 2" }}{{ else }}{{ .Date.Format "Jan 2, 2006" }}{{ end }}</a></span>{{ end -}}
+            </span>
+        </header>
+        {{ .Content }}
+    </section>
+    {{ end }}{{ else }}{{ errorf "random.html: content/random not found" }}{{ end }}
+</article>
+{{ end }}
