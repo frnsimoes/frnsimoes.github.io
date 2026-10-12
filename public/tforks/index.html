@@ -1,0 +1,109 @@
+<!doctype html><html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title>Investigating 108,725 forks - Fernando Simões</title>
+    <style>
+         
+         
+        body { max-width: 40rem; margin: 1rem auto; padding: 0 1rem; font-size: 1.125rem; line-height: 1.5; }
+        img, video { max-width: 100%; height: auto; }
+        .prose pre {
+            overflow-x: auto;
+            padding: 0.75rem;
+             
+            background: #f5f5f5 !important;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+        .prose code { font-family: monospace; font-size: 0.9em; }
+        .prose pre code { font-size: inherit; white-space: pre; }
+        table { border-collapse: collapse; }
+        th, td { padding: 0.2em 0.5em; border: 1px solid; }
+         
+        h1.name { margin-bottom: 0.25rem; font-size: 1.65em; }
+        .intro p:first-child { margin-top: 0; }
+         
+        .intro p + p { margin: 0; }
+        .intro { margin-bottom: 1em; }
+         
+        .sidenote {
+            float: right;
+            clear: right;
+            width: 20rem;
+            margin: 0.3rem -22rem 1rem 1.5rem;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            text-align: left;
+            hyphens: manual;
+        }
+        .footnotes { display: none; }
+        @media (min-width: 66rem) {
+            body { margin-left: min(calc(50% - 21rem), calc(100% - 65rem)); }
+        }
+        @media (max-width: 66rem) {
+            .sidenote { display: none; }
+            .footnotes { display: block; }
+        }
+         
+         
+        .license img { display: block; width: 66px; height: auto; }
+        img.email { height: 1.2em; width: auto; vertical-align: -0.2em; }
+         
+        .collage { display: flex; justify-content: center; gap: 0.5rem; margin: 2rem 0 1rem; }
+        .collage img { height: 7rem; width: auto; }
+         
+        .footer-photo .hint { text-align: center; }
+        .footer-photo .ball { width: 5rem; margin-inline: auto; aspect-ratio: 1; border-radius: 50%; overflow: hidden; cursor: pointer; transform-origin: 50% 100%; }
+        .footer-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% 45%; transform: scale(1.35); transform-origin: 72% 50%; }
+    </style>
+</head>
+<body>
+    <div class="site-shell">
+        <header class="site-top">
+            <p class="name"><a href="/">Fernando Simões</a></p>
+            
+        </header>
+        <main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>Investigating 108,725 forks</h1>
+        
+        <p><small><time datetime="2025-12-11">Dec 11, 2025</time></small></p>
+        
+    </header>
+    
+    
+    <div class="prose">
+        <p>One of the servers was hitting 90% CPU utilization. A few containers running, no alerts. I ssh&rsquo;ed and found a process with cmd <code>bash startup.sh</code> that had been running for 28 minutes. I straced it for a few minutes:</p>
+<pre><code>% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 75.36   52.698676         390    134819     26094 wait4
+ 12.27    8.583416          78    108725           fork
+  7.42    5.190671           5    926332           rt_sigprocmask
+  2.69    1.881557           5    330523    165262 close
+  1.17    0.817651           9     82631           pipe
+  0.64    0.449359           5     78280           rt_sigaction
+  0.24    0.164395           6     26094           rt_sigreturn
+  0.21    0.147095           5     26094     26094 ioctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   69.932820          40   1713498    217450 total
+</code></pre>
+<p>108,725 forks and 134,819 wait4 calls. The delta is 26,094 - the exact same number of wait4 errors. Also the same exact number for ioctl and rt_sigreturn. I searched but didn&rsquo;t find the file. Since this process was running, I could read the exact script from file descriptor 255. This was a supervisor process. It created a bunch of children using fork, then waited for them via wait4, and managed their file descriptors and masks.</p>
+<p>This happened on the second day of this new job, at 8pm. I burned the machine and started a new one.</p>
+
+    </div>
+</article>
+</main>
+        <footer class="site-footer">
+            <p>frn@frn.sh - <a href="/index.xml">RSS</a></p>
+            <a class="license" rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/by-sa.svg" alt="Creative Commons BY-SA 4.0"></a>
+        </footer>
+    </div>
+</body>
+</html>

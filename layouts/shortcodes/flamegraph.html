@@ -1,0 +1,9 @@
+{{- $src := .Get "src" -}}
+<figure>
+  <div style="overflow-x: auto;">
+    <object type="image/svg+xml" data="{{ $src }}" style="width: 100%; min-width: 800px;">
+      <img src="{{ $src }}" alt="{{ .Get "alt" | default "flamegraph" }}">
+    </object>
+  </div>
+  {{- with .Get "caption" }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
+</figure>
