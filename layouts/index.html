@@ -1,0 +1,72 @@
+{{- /* Homepage. All content, in order, is content/_index.md. */ -}}
+{{ define "main" }}
+<div class="home">
+    {{ .Content }}
+</div>
+<script>
+    // Each click throws the image up; gravity brings it back to its resting
+    // spot, where it loses energy and squashes on impact until it settles.
+    // Clicking off-centre also kicks it sideways, away from the click; a damped
+    // spring pulls it back while it rolls.
+    const GRAVITY = 2600;
+    const LAUNCH = 700;
+    const RESTITUTION = 0.55;
+    const MIN_BOUNCE = 80;
+    const SIDE_KICK = 320;
+    const SPRING = 30;
+    const DAMPING = 6;
+
+    document.querySelectorAll(".footer-photo .ball").forEach(ball => {
+        let y = 0, v = 0, x = 0, vx = 0, squash = 0, last = 0, running = false;
+
+        const step = now => {
+            const dt = Math.min(Math.max(now - last, 0) / 1000, 1 / 30);
+            last = now;
+
+            if (y < 0 || v !== 0) {
+                v += GRAVITY * dt;
+                y += v * dt;
+                if (y >= 0 && v > 0) {
+                    y = 0;
+                    squash = Math.min(v / LAUNCH, 1) * 0.3;
+                    v = v * RESTITUTION > MIN_BOUNCE ? -v * RESTITUTION : 0;
+                }
+            }
+            squash *= Math.exp(-dt * 14);
+
+            vx += (-SPRING * x - DAMPING * vx) * dt;
+            x += vx * dt;
+            const roll = x / (ball.offsetWidth / 2) * 180 / Math.PI;
+
+            const stretch = Math.min(Math.abs(v) / LAUNCH, 1) * 0.1;
+            const sy = 1 + stretch - squash;
+            const sx = 1 - stretch / 2 + squash;
+            ball.style.transform =
+                `translate(${x}px, ${y}px) scale(${sx}, ${sy}) ` +
+                `translateY(-50%) rotate(${roll}deg) translateY(50%)`;
+
+            const settled = y === 0 && v === 0 && squash < 0.003
+                && Math.abs(x) < 0.5 && Math.abs(vx) < 5;
+            if (settled) {
+                x = vx = 0;
+                ball.style.transform = "";
+                running = false;
+                return;
+            }
+            requestAnimationFrame(step);
+        };
+
+        ball.addEventListener("click", event => {
+            const box = ball.getBoundingClientRect();
+            const offCentre = (event.clientX - box.left) / box.width - 0.5;
+            vx -= (offCentre * 2 + (Math.random() - 0.5) * 0.6) * SIDE_KICK;
+            v = Math.max(Math.min(v, 0) - LAUNCH, -1.5 * LAUNCH);
+            if (!running) {
+                running = true;
+                last = performance.now();
+                requestAnimationFrame(step);
+            }
+        });
+    });
+</script>
+{{ end }}
