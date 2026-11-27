@@ -1,0 +1,14 @@
+{{- /* /notes/: every content/random/*.md, newest first, listed like the posts on the home page.
+     A note without a title is listed by the start of its text. */ -}}
+{{ define "main" }}
+<div class="home">
+    <ul class="notes-list">
+    {{ with site.GetPage "/random" }}{{ range .RegularPages.ByDate.Reverse }}
+        <li>
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time> -
+            <a href="{{ .RelPermalink }}">{{ with .Title }}{{ . }}{{ else }}{{ .Plain | strings.TrimSpace | truncate 60 }}{{ end }}</a>
+        </li>
+    {{ end }}{{ else }}{{ errorf "random.html: content/random not found" }}{{ end }}
+    </ul>
+</div>
+{{ end }}

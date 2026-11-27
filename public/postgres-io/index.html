@@ -1,0 +1,179 @@
+<!doctype html><html lang="en-US">
+<head>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3202e1bdaab9492ea9f89b5e4a212077"}'></script>
+    <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title>A short history of read streams in Postgres - Fernando Simões</title>
+    <style>
+         
+         
+        body { max-width: 40rem; margin: 1rem auto; padding: 0 1rem; font-size: 1.125rem; line-height: 1.5; }
+        img, video { max-width: 100%; height: auto; }
+        .prose pre {
+            overflow-x: auto;
+            padding: 0.75rem;
+             
+            background: #f5f5f5 !important;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+        .prose code { font-family: monospace; font-size: 0.9em; }
+        .prose pre code { font-size: inherit; white-space: pre; }
+        table { border-collapse: collapse; }
+        th, td { padding: 0.2em 0.5em; border: 1px solid; }
+         
+        h1.name { margin-bottom: 0.25rem; font-size: 1.65em; }
+        .intro p:first-child { margin-top: 0; }
+         
+        .intro p + p { margin: 0; }
+        .intro { margin-bottom: 1em; }
+         
+        .sidenote {
+            float: right;
+            clear: right;
+            width: 20rem;
+            margin: 0.3rem -22rem 1rem 1.5rem;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            text-align: left;
+            hyphens: manual;
+        }
+        .footnotes { display: none; }
+        @media (min-width: 66rem) {
+            body { margin-left: min(calc(50% - 21rem), calc(100% - 65rem)); }
+        }
+        @media (max-width: 66rem) {
+            .sidenote { display: none; }
+            .footnotes { display: block; }
+        }
+         
+         
+        .license img { display: block; width: 66px; height: auto; }
+        img.email { height: 1.2em; width: auto; vertical-align: -0.2em; }
+         
+        .collage { display: flex; justify-content: center; gap: 0.5rem; margin: 2rem 0 1rem; }
+        .collage img { height: 7rem; width: auto; }
+         
+        .footer-photo .hint { text-align: center; }
+        .footer-photo .ball { width: 5rem; margin-inline: auto; aspect-ratio: 1; border-radius: 50%; overflow: hidden; cursor: pointer; transform-origin: 50% 100%; }
+        .footer-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% 45%; transform: scale(1.35); transform-origin: 72% 50%; }
+    </style>
+</head>
+<body>
+    <div class="site-shell">
+        <header class="site-top">
+            <p class="name"><a href="/">frn.sh</a></p>
+            
+        </header>
+        <main id="main-content">
+<article>
+    <header class="article-header">
+        <h1>A short history of read streams in Postgres</h1>
+        
+        <p><small><time datetime="2026-11-22">Nov 22, 2026</time></small></p>
+        
+    </header>
+    
+    
+    <div class="prose">
+        <p>This post is a small collection of things I found out while reading about read combining in Postgres. I did some tests in production, and I was really surprised by how a page already in shared buffers could affect read combining. If that page is in the middle of a range, Postgres splits what could have been one big read into two smaller ones. This bothered me. So I decided to investigate and found an interesting sequence in the mailing list.</p>
+<p>In 2007, Heikki Linnakangas <a href="https://www.postgresql.org/message-id/46405393.507%40enterprisedb.com">proposed</a> a sequential scan roadmap for Postgres. One of the problems Heikki was trying to solve was how to optmize Postgres&rsquo; shared buffers when a table was larger than shared buffers. He argued that there&rsquo;s no point in spoiling shared buffers because the performance gains are minimal when the table is much larger than the buffer (say, 5 or 10 times more). Such scans also evicted other tables&rsquo; data from the buffer if there was no activity. So he proposed that, instead, big tables should reuse a small ring of buffers within shared buffers.</p>
+<p>Luke Lonergan <a href="https://www.postgresql.org/message-id/C3E62232E3BCF24CBA20D72BFDCB6BF803EB6A3F%40MI8NYCMAIL08.Mi8.com">replied</a> with an idea that went beyond the buffer ring: readahead inside the heap scan itself. The kernel already did readahead, but Postgres still asked for one 8 KiB page per syscall. Luke wanted Postgres to read N buffers ahead, issuing contiguous reads to the OS, which would be much larger than a single page. But Heikki was <a href="https://www.postgresql.org/message-id/464073B7.4070304%40enterprisedb.com">skeptical</a>, since the OS should handle readahead anyway. At this point, Andreas Zeugswetter <a href="https://www.postgresql.org/message-id/E1539E0ED7043848906A8FF995BDA57901FD9726%40m0143.s-mxs.net">pointed out</a> that doing it properly would need scatter-gather I/O, a single call that fills several buffers, and Gregory Stark <a href="https://www.postgresql.org/message-id/87bqgvz44y.fsf%40oxford.xeocode.com">went further</a> by saying that the real win would require async I/O.</p>
+<p>Heikki&rsquo;s idea was <a href="https://www.postgresql.org/docs/release/8.3.0/">merged</a> in Postgres 8.3.0. In 2009, the same <a href="https://www.postgresql.org/message-id/87ljw5c0lx.fsf%40oxford.xeocode.com">Greg Stark</a> introduced prefetch with <code>posix_fadvise</code> for bitmap heap scans in Postgres 8.4. It also introduced <code>effective_io_concurrency</code> to control how aggressively Postgres prefetched pages through the OS.</p>
+<p>In 2023, <a href="https://www.postgresql.org/message-id/CA+hUKGJkOiOCa+mag4BF+zHo7qo=o9CFheB8=g6uT5TUm2gkvA@mail.gmail.com">Thomas Munro opened a thread</a> that became read streams in Postgres 17.</p>
+<blockquote>
+<p>Hi,</p></blockquote>
+<blockquote>
+<p>Currently PostgreSQL reads (and writes) data files 8KB at a time.</p></blockquote>
+<p>Postgres had a <code>preadv</code> wrapper since version 14. This proposal used it for data files, to merge adjacent blocks into one IO. The idea was somewhat close to what Luke and Andreas were discussing in 2007: ask for several pages at once, even though their locations in shared buffers aren&rsquo;t necessarily contiguous. <code>preadv</code> takes a list of memory buffers and fills them from a contiguous range in the file, so 16 adjacent pages can become one 128 KiB read instead of 16 reads of 8 KiB.</p>
+<p>The beauty of read streams is that it lets the scan choose the next block through a callback. Postgres collects blocks by looking ahead, and then combines the adjacent ones up to the limit of <code>io_combine_limit</code> in Postgres 18.</p>
+<p>But there&rsquo;s a case where those adjacent blocks are split into multiple reads: when one page is already in shared buffers. Postgres doesn&rsquo;t need to read that page from disk, so it stops reading from disk when it reaches the page that is in the buffer, and starts another read after it. From <a href="https://github.com/postgres/postgres/blob/2f613719fa4eb47b0319f899220511465c5a55da/src/backend/storage/buffer/bufmgr.c#L1366">bufmgr.c</a>:</p>
+<blockquote>
+<p>Otherwise we already have an I/O to perform, but this block can&rsquo;t be included as it is already valid.  Split the I/O here.</p></blockquote>
+<p>So we want pages 0 to 15, but page 8 is cached. Instead of one read, we now have a read for pages 0 to 7, a cache hit, and another read for pages 9 to 15. We read fewer bytes, but send two requests. The worst case scenario is when you have every other page cached - now the same range needs eight separate 8 KiB reads.</p>
+<p>Combining reads and issuing them asynchronously solve different problems. Combining reduces the number of requests while async I/O lets Postgres start a read before it needs the result, keeping other reads in flight while it processes earlier pages. This was already part of Thomas&rsquo;s <a href="https://www.postgresql.org/message-id/CA+hUKGJkOiOCa+mag4BF+zHo7qo=o9CFheB8=g6uT5TUm2gkvA@mail.gmail.com">2023 proposal</a>: read streams would first provide larger synchronous reads, while giving scans an API that could later use async I/O without changing again - the infrastructure for async I/O arrived in <a href="https://www.postgresql.org/docs/18/release-18.html">Postgres 18</a></p>
+<p>Andres Freund made a comment about this case in January 2025. He <a href="https://www.postgresql.org/message-id/bgixmidc73doecg7wskq3k76g3nqnglqub7irbrwp4ppjsx43j%40fwre2x775mcl">called it</a> &ldquo;the - very common - case of a bunch of &ldquo;buffer misses&rdquo; followed by a &ldquo;buffer hit&rdquo;&rdquo;. A month later, Thomas <a href="https://www.postgresql.org/message-id/CA%2BhUKGK_%3D4CVmMHvsHjOVrK6t4F%3DLBpFzsrr3R%2BaJYN8kcTfWg%40mail.gmail.com">described the split</a> with an example:</p>
+<blockquote>
+<p>For example, if you ask to read 8 blocks, and the 6th one turns out to be a hit, ie already valid in the buffer pool, then we only need to read the first 5 from disk. Perhaps the 7th and 8th blocks will also need I/O, but we don&rsquo;t want StartReadBuffers() to start <em>two</em> I/Os, so the 6th block terminates our search.</p></blockquote>
+<p>In the same email, Thomas proposed keeping those extra buffers pinned and passing them back to <code>StartReadBuffers</code> on the next call, that way Postgres wouldn&rsquo;t have to unpin them and look them up again just because the read was split. The cached page would still break the read into separated requests, but handling the split would involve less work.</p>
+<p>In April 2026, Andres <a href="https://www.postgresql.org/message-id/E1w85Nq-002Wi5-1b@gemulon.postgresql.org">changed how far ahead a read stream looks</a>. Before, each hit reduced the look-ahead distance by 1, while each miss doubled it. With that rule, &ldquo;a miss followed by a hit will never have the distance grow beyond 2&rdquo;. In a <a href="https://www.postgresql.org/message-id/f3xxfrkafjxpyqxywcxricxgyizjirfceychyxsgn7bwjp5eda%40kwbduhy7tfmu">thread about index prefetching</a>, he also posted a WIP patch to separate two decisions previously controlled by a single internal look-ahead distance: how far ahead to issue I/O, and how far ahead to look for blocks to combine into one read.</p>
+
+    </div>
+</article>
+</main>
+        
+        
+        
+    </div>
+    <script>
+        
+        
+        
+        
+        const GRAVITY = 2600;
+        const LAUNCH = 700;
+        const RESTITUTION = 0.55;
+        const MIN_BOUNCE = 80;
+        const SIDE_KICK = 320;
+        const SPRING = 30;
+        const DAMPING = 6;
+    
+        document.querySelectorAll(".footer-photo .ball").forEach(ball => {
+            let y = 0, v = 0, x = 0, vx = 0, squash = 0, last = 0, running = false;
+    
+            const step = now => {
+                const dt = Math.min(Math.max(now - last, 0) / 1000, 1 / 30);
+                last = now;
+    
+                if (y < 0 || v !== 0) {
+                    v += GRAVITY * dt;
+                    y += v * dt;
+                    if (y >= 0 && v > 0) {
+                        y = 0;
+                        squash = Math.min(v / LAUNCH, 1) * 0.3;
+                        v = v * RESTITUTION > MIN_BOUNCE ? -v * RESTITUTION : 0;
+                    }
+                }
+                squash *= Math.exp(-dt * 14);
+    
+                vx += (-SPRING * x - DAMPING * vx) * dt;
+                x += vx * dt;
+                const roll = x / (ball.offsetWidth / 2) * 180 / Math.PI;
+    
+                const stretch = Math.min(Math.abs(v) / LAUNCH, 1) * 0.1;
+                const sy = 1 + stretch - squash;
+                const sx = 1 - stretch / 2 + squash;
+                ball.style.transform =
+                    `translate(${x}px, ${y}px) scale(${sx}, ${sy}) ` +
+                    `translateY(-50%) rotate(${roll}deg) translateY(50%)`;
+    
+                const settled = y === 0 && v === 0 && squash < 0.003
+                    && Math.abs(x) < 0.5 && Math.abs(vx) < 5;
+                if (settled) {
+                    x = vx = 0;
+                    ball.style.transform = "";
+                    running = false;
+                    return;
+                }
+                requestAnimationFrame(step);
+            };
+    
+            ball.addEventListener("click", event => {
+                const box = ball.getBoundingClientRect();
+                const offCentre = (event.clientX - box.left) / box.width - 0.5;
+                vx -= (offCentre * 2 + (Math.random() - 0.5) * 0.6) * SIDE_KICK;
+                v = Math.max(Math.min(v, 0) - LAUNCH, -1.5 * LAUNCH);
+                if (!running) {
+                    running = true;
+                    last = performance.now();
+                    requestAnimationFrame(step);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

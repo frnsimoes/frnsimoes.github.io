@@ -1,0 +1,433 @@
+<div class="bandit-sim">
+<style>
+  .bandit-sim {
+    font-family: ui-monospace, 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #111;
+    margin: 2em 0;
+    border-top: 1px solid #ddd;
+    padding-top: 1.25em;
+  }
+
+  .bandit-sim * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .bandit-strat {
+    text-align: center;
+    margin-bottom: 0.75em;
+  }
+
+  .bandit-strat-label { margin-right: 0.5em; }
+
+  .bandit-strat a {
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0 0.4em;
+  }
+
+  .bandit-strat a:hover { text-decoration: underline; }
+  .bandit-strat a.active { text-decoration: underline; font-weight: 600; }
+
+  .bandit-phase {
+    font-size: 12px;
+    color: #111;
+    text-align: center;
+    margin-bottom: 1em;
+    min-height: 1.6em;
+    font-style: italic;
+  }
+
+  /* Arms */
+  .bandit-arms-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1em;
+  }
+
+  .bandit-arm-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 6px;
+  }
+
+  .bandit-arm-col.b-selected .b-arm-letter { font-weight: 700; }
+  .bandit-arm-col.b-selected .b-arm-bar-fill { background: #111; }
+
+  .b-arm-letter {
+    font-size: 11px;
+    margin-bottom: 5px;
+    color: #111;
+  }
+
+  .b-arm-bar-wrap {
+    width: 28px;
+    height: 64px;
+    background: #fff;
+    border: 1px solid #ccc;
+    position: relative;
+    border-radius: 1px;
+  }
+
+  .b-arm-bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #888;
+    transition: height 0.2s;
+    height: 0%;
+    border-radius: 0 0 1px 1px;
+  }
+
+  .b-arm-avg {
+    font-size: 11px;
+    color: #111;
+    margin-top: 5px;
+  }
+
+  .b-arm-bonus {
+    font-size: 10px;
+    color: #555;
+    margin-top: 1px;
+  }
+
+  .b-arm-score {
+    font-size: 10px;
+    font-weight: 600;
+    color: #111;
+    margin-top: 1px;
+  }
+
+  /* Chart */
+  .bandit-sim canvas {
+    width: 100%;
+    display: block;
+    margin-bottom: 0.6em;
+  }
+
+  /* Controls + status on one line */
+  .bandit-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75em;
+  }
+
+  .bandit-controls a {
+    color: #00e;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 1em;
+  }
+
+  .bandit-controls a:hover { text-decoration: underline; }
+  .bandit-controls a.b-dim { color: #aaa; }
+
+  .b-status {
+    color: #111;
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .b-regret-num { color: #993333; }
+
+  .bandit-foot {
+    font-size: 11px;
+    color: #111;
+    font-style: italic;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding-top: 0.75em;
+  }
+</style>
+
+<div class="bandit-strat">
+  <span class="bandit-strat-label">strategy:</span>
+  <a class="active" data-bstrat="instinct" onclick="bSetStrategy('instinct')">m = 0</a>
+  <a data-bstrat="etc" onclick="bSetStrategy('etc')">ETC</a>
+</div>
+
+<div class="bandit-phase" id="bPhase">&nbsp;</div>
+
+<div class="bandit-arms-row" id="bArmsRow"></div>
+
+<canvas id="bChart" height="130"></canvas>
+
+<div class="bandit-bottom">
+  <div class="bandit-controls">
+    <a id="bPlayBtn" onclick="bTogglePlay()">&#9654; play</a>
+    <a onclick="bStepOnce()">step</a>
+    <a onclick="bReset()">reset</a>
+    <a onclick="bReset(true)" class="b-dim">clear all</a>
+  </div>
+  <div class="b-status">
+    round <span id="bRound">0</span>/100 &nbsp;&middot;&nbsp;
+    regret <span class="b-regret-num" id="bRegret">0.0</span><span id="bRegretRate"></span>
+  </div>
+</div>
+
+<div class="bandit-foot" id="bFoot">true payout rates are hidden.</div>
+
+<script>
+(function() {
+  const B_ARMS = [
+    { name: 'A', trueRate: 0.30 },
+    { name: 'B', trueRate: 0.70 },
+    { name: 'C', trueRate: 0.45 },
+    { name: 'D', trueRate: 0.55 },
+  ];
+  const B_MAX = 100;
+  const B_ETC_M = 10;
+
+  let bStrategy = 'instinct';
+  let bInstinctArm = null;
+  let bRound = 0;
+  let bTotalReward = 0;
+  let bOptimalReward = 0;
+  let bRegretVal = 0;
+  let bHistory = [];
+  let bPlaying = false;
+  let bInterval = null;
+  let bArmState = [];
+  let bCommitRound = null;
+  let bStoredRuns = {};
+
+  function bInitArms() {
+    bArmState = B_ARMS.map(a => ({
+      ...a, pulls: 0, totalReward: 0, avgReward: 0,
+      ucbScore: Infinity, bonus: Infinity, lastSelected: false,
+    }));
+    bInstinctArm = Math.floor(Math.random() * B_ARMS.length);
+    bCommitRound = null;
+  }
+
+  window.bReset = function(clearStored) {
+    bStopPlay();
+    if (bHistory.length > 0) bStoredRuns[bStrategy] = bHistory.slice();
+    if (clearStored) bStoredRuns = {};
+    bRound = 0; bTotalReward = 0; bOptimalReward = 0; bRegretVal = 0; bHistory = [];
+    bInitArms();
+    bRender();
+  };
+
+  window.bSetStrategy = function(s) {
+    if (bHistory.length > 0) bStoredRuns[bStrategy] = bHistory.slice();
+    bStrategy = s;
+    document.querySelectorAll('.bandit-strat a').forEach(a => {
+      a.classList.toggle('active', a.dataset.bstrat === s);
+    });
+    bReset();
+  };
+
+  function bPickArm() {
+    if (bStrategy === 'instinct') return bInstinctArm;
+    if (bStrategy === 'etc') {
+      const exploreTotal = B_ETC_M * B_ARMS.length;
+      if (bRound < exploreTotal) return bRound % B_ARMS.length;
+      if (bCommitRound === null) bCommitRound = bRound;
+      let best = 0;
+      for (let i = 1; i < bArmState.length; i++)
+        if (bArmState[i].avgReward > bArmState[best].avgReward) best = i;
+      return best;
+    }
+  }
+
+  function bPullArm(idx) {
+    const arm = bArmState[idx];
+    const reward = Math.random() < arm.trueRate ? 1 : 0;
+    arm.pulls++; arm.totalReward += reward; arm.avgReward = arm.totalReward / arm.pulls;
+    const bestRate = Math.max(...B_ARMS.map(a => a.trueRate));
+    bTotalReward += reward; bOptimalReward += bestRate;
+    bRegretVal = bOptimalReward - bTotalReward;
+    bHistory.push(bRegretVal);
+    bArmState.forEach((a, i) => a.lastSelected = (i === idx));
+    bRound++;
+  }
+
+  window.bStepOnce = function() {
+    if (bRound >= B_MAX) return;
+    bPullArm(bPickArm());
+    bRender();
+  };
+
+  window.bTogglePlay = function() {
+    if (bPlaying) { bStopPlay(); return; }
+    if (bRound >= B_MAX) bReset();
+    bPlaying = true;
+    document.getElementById('bPlayBtn').innerHTML = '&#9646;&#9646; pause';
+    bInterval = setInterval(() => {
+      if (bRound >= B_MAX) { bStopPlay(); return; }
+      bStepOnce();
+    }, 80);
+  };
+
+  function bStopPlay() {
+    bPlaying = false;
+    document.getElementById('bPlayBtn').innerHTML = '&#9654; play';
+    if (bInterval) clearInterval(bInterval);
+    bInterval = null;
+  }
+
+  function bRenderPhase() {
+    const el = document.getElementById('bPhase');
+    const done = bRound >= B_MAX;
+    if (bStrategy === 'instinct') {
+      const name = B_ARMS[bInstinctArm].name;
+      el.textContent = bRound === 0
+        ? 'picked arm ' + name + ' on instinct. pulling forever.'
+        : 'still pulling arm ' + name + '. no mechanism to discover a better one.';
+    } else if (bStrategy === 'etc') {
+      const exploreTotal = B_ETC_M * B_ARMS.length;
+      if (bRound < exploreTotal) {
+        el.textContent = 'exploring — ' + bRound + ' of ' + exploreTotal + ' rounds.';
+      } else {
+        let best = 0;
+        for (let i = 1; i < bArmState.length; i++)
+          if (bArmState[i].avgReward > bArmState[best].avgReward) best = i;
+        const isActualBest = B_ARMS[best].trueRate === Math.max(...B_ARMS.map(a => a.trueRate));
+        el.textContent = 'committed to arm ' + bArmState[best].name + '.'
+          + (done ? (isActualBest ? ' correct choice.' : ' wrong choice. regret is linear from here.') : '');
+      }
+    }
+  }
+
+  function bRenderArms() {
+    const maxPulls = Math.max(1, ...bArmState.map(a => a.pulls));
+    const done = bRound >= B_MAX;
+    const bestTrueIdx = B_ARMS.reduce((b, a, i) => a.trueRate > B_ARMS[b].trueRate ? i : b, 0);
+    const showBonus = bStrategy === 'ucb';
+    const container = document.getElementById('bArmsRow');
+    container.innerHTML = bArmState.map((arm, i) => {
+      const heightPct = (arm.pulls / maxPulls) * 100;
+      const avgStr = arm.pulls > 0 ? arm.avgReward.toFixed(2) : '—';
+      const bonusHtml = showBonus && arm.pulls > 0
+        ? `<div class="b-arm-bonus">+${arm.bonus.toFixed(2)}</div>
+           <div class="b-arm-score">${arm.ucbScore.toFixed(2)}</div>`
+        : '';
+      const trueHtml = done
+        ? `<div class="b-arm-avg" style="${i === bestTrueIdx ? 'color:#336633;font-weight:600' : 'color:#aaa'}">${arm.trueRate.toFixed(2)}</div>`
+        : '';
+
+      return `<div class="bandit-arm-col ${arm.lastSelected ? 'b-selected' : ''}">
+        <div class="b-arm-letter">${arm.name}</div>
+        <div class="b-arm-bar-wrap">
+          <div class="b-arm-bar-fill" style="height:${heightPct}%"></div>
+        </div>
+        <div class="b-arm-avg">${avgStr}</div>
+        ${bonusHtml}
+        ${trueHtml}
+      </div>`;
+    }).join('');
+  }
+
+  function bRender() {
+    bRenderPhase();
+    bRenderArms();
+
+    document.getElementById('bRound').textContent = bRound;
+    document.getElementById('bRegret').textContent = bRegretVal.toFixed(1);
+    document.getElementById('bRegretRate').textContent =
+      bRound > 0 ? ' (' + (bRegretVal / bRound).toFixed(2) + '/round)' : '';
+
+    if (bRound >= B_MAX) {
+      document.getElementById('bFoot').textContent = 'true payout rates revealed. B was the best arm.';
+    }
+
+    bRenderChart();
+  }
+
+  function bRenderChart() {
+    const canvas = document.getElementById('bChart');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    ctx.scale(dpr, dpr);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const pad = { top: 6, right: 20, bottom: 18, left: 28 };
+    const pw = w - pad.left - pad.right, ph = h - pad.top - pad.bottom;
+    ctx.clearRect(0, 0, w, h);
+
+    const bestRate = Math.max(...B_ARMS.map(a => a.trueRate));
+    const worstRate = Math.min(...B_ARMS.map(a => a.trueRate));
+    const maxLinear = (bestRate - worstRate) * B_MAX;
+    const yMax = Math.max(maxLinear, 10);
+
+    // grid lines
+    ctx.lineWidth = 1;
+    [0, 0.5, 1].forEach(t => {
+      const y = pad.top + ph * t;
+      ctx.strokeStyle = '#e8e8e8';
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
+      ctx.fillStyle = '#111'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'right';
+      ctx.fillText(Math.round(yMax * (1 - t)), pad.left - 3, y + 3);
+    });
+
+    // x labels
+    ctx.fillStyle = '#111'; ctx.font = '9px ui-monospace, monospace';
+    [[0, 'left'], [0.5, 'center'], [1, 'right']].forEach(([t, align]) => {
+      ctx.textAlign = align;
+      ctx.fillText(Math.round(B_MAX * t), pad.left + pw * t, h - 2);
+    });
+
+    // ETC commit line
+    if (bStrategy === 'etc' && bCommitRound !== null) {
+      const cx = pad.left + (bCommitRound / B_MAX) * pw;
+      ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+      ctx.beginPath(); ctx.moveTo(cx, pad.top); ctx.lineTo(cx, pad.top + ph); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#888'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'center';
+      ctx.fillText('commit', cx, pad.top + 8);
+    }
+
+    // linear worst case — more visible
+    ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top + ph);
+    ctx.lineTo(pad.left + pw, pad.top + ph - (maxLinear / yMax) * ph);
+    ctx.stroke(); ctx.setLineDash([]);
+
+    // stored runs
+    const bLabels = { instinct: 'm=0', etc: 'ETC' };
+    Object.entries(bStoredRuns).forEach(([strat, hist]) => {
+      if (!hist || hist.length < 2 || strat === bStrategy) return;
+      ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < hist.length; i++) {
+        const x = pad.left + (i / B_MAX) * pw;
+        const y = pad.top + ph - (hist[i] / yMax) * ph;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      const lastY = pad.top + ph - (hist[hist.length - 1] / yMax) * ph;
+      const lastX = pad.left + ((hist.length - 1) / B_MAX) * pw;
+      ctx.fillStyle = '#888'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'left';
+      ctx.fillText(bLabels[strat], lastX + 3, lastY + 3);
+    });
+
+    // current regret curve — prominent
+    if (bHistory.length > 1) {
+      ctx.strokeStyle = '#993333'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i < bHistory.length; i++) {
+        const x = pad.left + (i / B_MAX) * pw;
+        const y = pad.top + ph - (bHistory[i] / yMax) * ph;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      if (bHistory.length >= B_MAX) {
+        const lastY = pad.top + ph - (bHistory[bHistory.length - 1] / yMax) * ph;
+        ctx.fillStyle = '#993333'; ctx.font = '9px ui-monospace, monospace'; ctx.textAlign = 'left';
+        ctx.fillText(bLabels[bStrategy], pad.left + pw + 3, lastY + 3);
+      }
+    }
+  }
+
+  bInitArms(); bRender();
+  window.addEventListener('resize', bRenderChart);
+})();
+</script>
+</div>

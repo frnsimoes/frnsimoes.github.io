@@ -1,0 +1,22 @@
+{{- /* A post. Content: content/posts/<name>.md, published at /<filename>/. */ -}}
+{{ define "main" }}
+<article>
+    <header class="article-header">
+        <h1>{{ .Title }}</h1>
+        {{ if not .Date.IsZero }}
+        <p><small><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time></small></p>
+        {{ end }}
+    </header>
+    {{- /* Copy each footnote next to its reference as a sidenote. Only
+         single-paragraph footnotes match. */}}
+    {{ $content := string .Content }}
+    {{ range findRESubmatch `<li id="fn:(\d+)">\s*<p>((?s:.*?))&#160;<a href="#fnref:\d+" class="footnote-backref"` $content }}
+        {{ $n := index . 1 }}
+        {{ $ref := printf `<sup id="fnref:%s"><a href="#fn:%s" class="footnote-ref" role="doc-noteref">%s</a></sup>` $n $n $n }}
+        {{ $content = replace $content $ref (printf `%s<span class="sidenote"><sup>%s</sup> %s</span>` $ref $n (index . 2)) }}
+    {{ end }}
+    <div class="prose">
+        {{ $content | safeHTML }}
+    </div>
+</article>
+{{ end }}
